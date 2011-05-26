@@ -10,7 +10,7 @@ by Cardinal Blue <http://cardinalblue.com>
 
 ## DESCRIPTION:
 
-A modular Ruby REST client interface
+A modular and lightweight Ruby REST client interface
 
 ## REQUIREMENTS:
 
