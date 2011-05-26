@@ -13,6 +13,7 @@ module RestCore
   autoload :Event     , 'rest-core/event'
   autoload :Middleware, 'rest-core/middleware'
 
+  # middlewares
   autoload :AutoJsonDecode, 'rest-core/middleware/auto_json_decode'
   autoload :Cache         , 'rest-core/middleware/cache'
   autoload :CommonLogger  , 'rest-core/middleware/common_logger'
@@ -21,4 +22,7 @@ module RestCore
   autoload :ErrorDetector , 'rest-core/middleware/error_detector'
   autoload :ErrorHandler  , 'rest-core/middleware/error_handler'
   autoload :Timeout       , 'rest-core/middleware/timeout'
+
+  # apps
+  autoload :RestClient    , 'rest-core/app/rest-client'
 end
