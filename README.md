@@ -33,11 +33,20 @@ Or if you want development version, put this in Gemfile:
 ## SYNOPSIS:
 
     RestCore::Builder.client('YourClient') do
-      use CommonLogger, method(:puts)
+      use DefaultSite   , 'https://api.github.com/users/'
+      use AutoJsonDecode, true
+      use Cache         , {}
+      use CommonLogger  , method(:puts)
       run RestClient
     end
 
-    YourClient.new.get('http://github.com/api/v2/json/user/show/godfat')
+    client = YourClient.new
+    client.get('godfat')
+    client.get('godfat')
+
+    client.site = 'http://github.com/api/v2/json/user/show/'
+    client.get('godfat')
+    client.get('godfat')
 
 ## LICENSE:
 
