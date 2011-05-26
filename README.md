@@ -12,6 +12,14 @@ by Cardinal Blue <http://cardinalblue.com>
 
 A modular and lightweight Ruby REST client interface
 
+## WARNING:
+
+rest-core is still under heavy development, tests from [rest-graph][]
+can't even be run! Everything might change under this phase.
+This would be the new core of rest-graph.
+
+[rest-graph]: https://github.com/cardinalblue/rest-graph
+
 ## REQUIREMENTS:
 
 * Tested with MRI 1.8.7 and 1.9.2 and Rubinius 1.2.2.
