@@ -57,8 +57,8 @@ module RestCore::Client
     dup.lighten!(o)
   end
 
-  def url path, query={}, prefix=site, opts={}
-    "#{prefix}#{path}#{build_query_string(query, opts)}"
+  def url path, query={}, opts={}
+    "#{path}#{build_query_string(query, opts)}"
   end
 
   # extra options:
@@ -77,20 +77,20 @@ module RestCore::Client
   #       headers: Hash # additional hash you want to pass
   #                     # default: {}
   def get    path, query={}, opts={}, &cb
-    request(opts, [:get   , url(path, query, site, opts)], &cb)
+    request(opts, [:get   , url(path, query, opts)], &cb)
   end
 
   def delete path, query={}, opts={}, &cb
-    request(opts, [:delete, url(path, query, site, opts)], &cb)
+    request(opts, [:delete, url(path, query, opts)], &cb)
   end
 
   def post   path, payload={}, query={}, opts={}, &cb
-    request(opts, [:post  , url(path, query, site, opts), payload],
+    request(opts, [:post  , url(path, query, opts), payload],
             &cb)
   end
 
   def put    path, payload={}, query={}, opts={}, &cb
-    request(opts, [:put   , url(path, query, site, opts), payload],
+    request(opts, [:put   , url(path, query, opts), payload],
             &cb)
   end
 
@@ -115,7 +115,7 @@ module RestCore::Client
   def multi reqs, opts={}, &cb
     request({:async => true}.merge(opts),
       *reqs.map{ |(meth, path, query, payload)|
-        [meth, url(path, query || {}, site, opts), payload]
+        [meth, url(path, query || {}, opts), payload]
       }, &cb)
   end
 
