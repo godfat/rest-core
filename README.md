@@ -1,0 +1,58 @@
+# rest-core
+by Cardinal Blue <http://cardinalblue.com>
+
+## LINKS:
+
+* [github](http://github.com/cardinalblue/rest-core)
+* [rubygems](http://rubygems.org/gems/rest-core)
+* [rdoc](http://rdoc.info/projects/cardinalblue/rest-core)
+* [mailing list](http://groups.google.com/group/rest-core/topics)
+
+## DESCRIPTION:
+
+stub
+
+## FEATURES:
+
+* stub
+
+## REQUIREMENTS:
+
+* Tested with MRI 1.8.7 and 1.9.2 and Rubinius 1.2.2.
+  Because of development gems can't work well on JRuby,
+  let me know if rest-graph is working on JRuby, thanks!
+
+## INSTALLATION:
+
+    gem install rest-core
+
+Or if you want development version, put this in Gemfile:
+
+    gem 'rest-core', :git => 'git://github.com/cardinalblue/rest-core.git'
+
+## SYNOPSIS:
+
+    RestCore::Builder.client('YourClient') do
+      use CommonLogger, method(:puts)
+      run RestClient
+    end
+
+    YourClient.new.get('http://github.com/api/v2/json/user/show/godfat')
+
+## LICENSE:
+
+  Apache License 2.0
+
+  Copyright (c) 2010, Cardinal Blue
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     <http://www.apache.org/licenses/LICENSE-2.0>
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
