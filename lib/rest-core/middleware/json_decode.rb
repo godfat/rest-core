@@ -1,13 +1,13 @@
 
 require 'rest-core/middleware'
 
-class RestCore::AutoJsonDecode
-  def self.members; [:auto_decode]; end
+class RestCore::JsonDecode
+  def self.members; [:json_decode]; end
   include RestCore::Middleware
 
   def call env
     response = app.call(env)
-    if auto_decode(env)
+    if json_decode(env)
       response.merge(RESPONSE_BODY =>
         self.class.json_decode("[#{response[RESPONSE_BODY]}]").first)
         # [this].first is not needed for yajl-ruby
@@ -19,7 +19,6 @@ class RestCore::AutoJsonDecode
     response
   end
 
-  # ------------------------ json -------------------------
   module YajlRuby
     def self.extended mod
       mod.const_set(:ParseError, Yajl::ParseError)
@@ -82,5 +81,4 @@ class RestCore::AutoJsonDecode
     end
   end
   select_json!(self)
-  # ------------------------ json -------------------------
 end

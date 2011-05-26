@@ -21,7 +21,7 @@ RestCore::Builder.client('RestGraph',
   use DefaultSite   ,  'https://graph.facebook.com/'
   use ErrorDetector , lambda{ |env| env[RESPONSE_BODY]['error'] ||
                                     env[RESPONSE_BODY]['error_code'] }
-  use AutoJsonDecode, true
+  use JsonDecode    , true
 
   use Cache         , {}
   use Timeout       ,  10
@@ -119,7 +119,7 @@ module RestGraph::Client
 
   def parse_json! json
     self.data = json &&
-      check_sig_and_return_data(AutoJsonDecode.json_decode(json))
+      check_sig_and_return_data(JsonDecode.json_decode(json))
   rescue ParseError
     self.data = nil
   end
@@ -136,7 +136,7 @@ module RestGraph::Client
       "#{str.tr('-_', '+/')}==".unpack('m').first
     }
     self.data = check_sig_and_return_data(
-                  AutoJsonDecode.json_decode(json).merge('sig' => sig)){
+                  JsonDecode.json_decode(json).merge('sig' => sig)){
                     self.class.hmac_sha256(secret, json_encoded)
                   }
   rescue ParseError
@@ -184,7 +184,7 @@ module RestGraph::Client
 
   def fql_multi codes, query={}, opts={}, &cb
     old_rest('fql.multiquery',
-      {:queries => AutoJsonDecode.json_encode(codes)}.merge(query), opts, &cb)
+      {:queries => JsonDecode.json_encode(codes)}.merge(query), opts, &cb)
   end
 
   def exchange_sessions query={}, opts={}, &cb
