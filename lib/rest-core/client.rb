@@ -32,9 +32,7 @@ module RestCore::Client
 
   attr_reader :app
   def initialize o={}
-    (members + [:access_token]).each{ |name|
-      send("#{name}=", o[name]) if o.key?(name)
-    }
+    members.each{ |name| send("#{name}=", o[name]) if o.key?(name) }
     @app = self.class.builder.to_app
   end
 
