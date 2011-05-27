@@ -33,14 +33,24 @@ module RestCore::Middleware
   def fail env; app.fail(env) if app.respond_to?(:fail); end
   def log  env; app. log(env) if app.respond_to?(:log ); end
 
+  def try env
+    if app.respond_to?(:try)
+      app.try(env)
+    else
+      env
+    end
+  end
+
   module_function
   def request_uri env
+    e = try(env)
     # compacting the hash
-    if (query = env[REQUEST_QUERY].select{ |k, v| v }).empty?
-      env[REQUEST_PATH].to_s
+    if (query = e[REQUEST_QUERY].select{ |k, v| v }).empty?
+      e[REQUEST_PATH].to_s
     else
-      "#{env[REQUEST_PATH ]}?" \
+      "#{e[REQUEST_PATH ]}?" \
       "#{query.map{ |(k, v)| "#{k}=#{CGI.escape(v.to_s)}" }.join('&')}"
     end
   end
+  public :request_uri
 end
