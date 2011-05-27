@@ -33,9 +33,9 @@ module RestCore::Middleware
   def fail env; app.fail(env) if app.respond_to?(:fail); end
   def log  env; app. log(env) if app.respond_to?(:log ); end
 
-  def try env
-    if app.respond_to?(:try)
-      app.try(env)
+  def ask env
+    if app.respond_to?(:ask)
+      app.ask(env)
     else
       env
     end
@@ -43,7 +43,7 @@ module RestCore::Middleware
 
   module_function
   def request_uri env
-    e = try(env)
+    e = ask(env)
     # compacting the hash
     if (query = e[REQUEST_QUERY].select{ |k, v| v }).empty?
       e[REQUEST_PATH].to_s

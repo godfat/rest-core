@@ -6,10 +6,10 @@ class RestCore::DefaultSite
   include RestCore::Middleware
 
   def call env
-    app.call(try(env))
+    app.call(ask(env))
   end
 
-  def try env
+  def ask env
     if env[REQUEST_PATH].to_s.start_with?('http')
       env
     else
