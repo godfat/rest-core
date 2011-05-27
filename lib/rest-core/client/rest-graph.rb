@@ -14,9 +14,7 @@ require 'openssl'
 require 'cgi'
 
 RestCore::Builder.client('RestGraph',
-                         :app_id, :secret,
-                         :old_site,
-                         :old_server, :graph_server) do
+                         :data, :app_id, :secret, :old_site) do
 
   use DefaultSite   ,  'https://graph.facebook.com/'
   use ErrorDetector , lambda{ |env| env[RESPONSE_BODY]['error'] ||
@@ -67,6 +65,12 @@ class RestGraph::Error < RuntimeError
   def self.missing_token? error
     (error['error'] || {})['message'] =~ /^An active access token/ ||
     (error['error_code'] == 104) # Requires valid signature
+  end
+end
+
+module RestGraph::DefaultAttributes
+  def default_data
+    {}
   end
 end
 
@@ -195,6 +199,7 @@ module RestGraph::Client
 end
 
 RestGraph.send(:include, RestGraph::Client)
+RestGraph.send(:extend , RestGraph::DefaultAttributes)
 
 #   module Hmac
 #     # Fallback to ruby-hmac gem in case system openssl
