@@ -19,7 +19,7 @@ class RestCore::Cache
 
   protected
   def cache_key env
-    Digest::MD5.hexdigest(env['cache.key'] || env[REQUEST_URI])
+    Digest::MD5.hexdigest(env['cache.key'] || request_uri(env))
   end
 
   def cache_get env
@@ -27,7 +27,7 @@ class RestCore::Cache
     start_time = Time.now
     return unless value = cache(env)[cache_key(env)]
     log(env.merge('event' => Event::CacheHit.new(Time.now - start_time,
-                                                   env[REQUEST_URI])))
+                                                   request_uri(env))))
     env.merge(value)
   end
 
@@ -54,7 +54,7 @@ class RestCore::Cache
 
     start_time = Time.now
     log(env.merge('event' =>
-      Event::CacheCleared.new(Time.now - start_time, env[REQUEST_URI]))) if
+      Event::CacheCleared.new(Time.now - start_time, request_uri(env)))) if
         value.nil?
 
     cache(env)[cache_key(env)] = value

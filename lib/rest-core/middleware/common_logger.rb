@@ -10,7 +10,7 @@ class RestCore::CommonLogger
     start_time = Time.now
     response = app.call(env)
     log(env.merge('event' =>
-      Event::Requested.new(Time.now - start_time, env[REQUEST_URI])))
+      Event::Requested.new(Time.now - start_time, request_uri(env))))
     response
   end
 

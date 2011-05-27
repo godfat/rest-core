@@ -8,7 +8,7 @@ class RestCore::RestClient
   def call env
     response =
       ::RestClient::Request.execute(:method  => env[REQUEST_METHOD ],
-                                    :url     => env[REQUEST_URI    ],
+                                    :url     => request_uri(env)    ,
                                     :payload => env[REQUEST_PAYLOAD],
                                     :headers => env[REQUEST_HEADERS])
 

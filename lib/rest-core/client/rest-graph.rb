@@ -45,7 +45,7 @@ class RestGraph::Error < RuntimeError
   end
 
   def self.call env
-    error, url = env[RESPONSE_BODY], env[REQUEST_URI]
+    error, url = env[RESPONSE_BODY], Middleware.request_uri(env)
     return new(error, url) unless error.kind_of?(Hash)
     if    invalid_token?(error)
       InvalidAccessToken.new(error, url)

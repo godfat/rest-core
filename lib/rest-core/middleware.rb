@@ -1,7 +1,11 @@
 
 require 'rest-core'
 
+require 'cgi'
+
 module RestCore::Middleware
+  include RestCore
+
   def self.included mod
     mod.send(:include, RestCore)
     mod.send(:attr_reader, :app)
@@ -28,4 +32,15 @@ module RestCore::Middleware
   def call env; app.call(env)                          ; end
   def fail env; app.fail(env) if app.respond_to?(:fail); end
   def log  env; app. log(env) if app.respond_to?(:log ); end
+
+  module_function
+  def request_uri env
+    # compacting the hash
+    if (query = env[REQUEST_QUERY].select{ |k, v| v }).empty?
+      env[REQUEST_PATH].to_s
+    else
+      "#{env[REQUEST_PATH ]}?" \
+      "#{query.map{ |(k, v)| "#{k}=#{CGI.escape(v.to_s)}" }.join('&')}"
+    end
+  end
 end

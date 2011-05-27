@@ -55,8 +55,8 @@ module RestCore::Client
     dup.lighten!(o)
   end
 
-  def url path, query={}, opts={}
-    "#{path}#{build_query_string(query, opts)}"
+  def url path, query={}
+    Middleware.request_uri(REQUEST_PATH => path, REQUEST_QUERY => query)
   end
 
   # extra options:
@@ -75,21 +75,19 @@ module RestCore::Client
   #       headers: Hash # additional hash you want to pass
   #                     # default: {}
   def get    path, query={}, opts={}, &cb
-    request(opts, [:get   , url(path, query, opts)], &cb)
+    request(opts, [:get   , path, query], &cb)
   end
 
   def delete path, query={}, opts={}, &cb
-    request(opts, [:delete, url(path, query, opts)], &cb)
+    request(opts, [:delete, path, query], &cb)
   end
 
   def post   path, payload={}, query={}, opts={}, &cb
-    request(opts, [:post  , url(path, query, opts), payload],
-            &cb)
+    request(opts, [:post  , path, query, payload], &cb)
   end
 
   def put    path, payload={}, query={}, opts={}, &cb
-    request(opts, [:put   , url(path, query, opts), payload],
-            &cb)
+    request(opts, [:put   , path, query, payload], &cb)
   end
 
   # request by eventmachine (em-http)
@@ -111,16 +109,13 @@ module RestCore::Client
   end
 
   def multi reqs, opts={}, &cb
-    request({:async => true}.merge(opts),
-      *reqs.map{ |(meth, path, query, payload)|
-        [meth, url(path, query || {}, opts), payload]
-      }, &cb)
+    request({:async => true}.merge(opts), *reqs, &cb)
   end
 
   def request opts, *reqs, &cb
-    reqs.each{ |(meth, uri, payload)|
+    reqs.each{ |(meth, path, query, payload)|
       next if meth != :get     # only get result would get cached
-      cache_assign(opts, uri, nil)
+      cache_assign(opts, path, nil)
     } if opts[:cache] == false # remove cache if we don't want it
 
     if opts[:async]
@@ -128,8 +123,9 @@ module RestCore::Client
     else
       req = reqs.first
       app.call(build_env.merge(REQUEST_METHOD  => req[0],
-                               REQUEST_URI     => req[1],
-                               REQUEST_PAYLOAD => req[2],
+                               REQUEST_PATH    => req[1],
+                               REQUEST_QUERY   => req[2],
+                               REQUEST_PAYLOAD => req[3],
                                REQUEST_HEADERS => opts[:headers])
                                )[RESPONSE_BODY]
     end
@@ -149,10 +145,11 @@ module RestCore::Client
   private
   def request_em opts, reqs
     start_time = Time.now
-    rs = reqs.map{ |(meth, uri, payload)|
-      r = EM::HttpRequest.new(uri).send(meth, :body => payload,
-                                              :head => build_headers(opts))
-      if cached = cache_get(opts, uri)
+    rs = reqs.map{ |(meth, path, query, payload)|
+      r = EM::HttpRequest.new(path).send(meth, :body  => payload,
+                                               :head  => build_headers(opts),
+                                               :query => query)
+      if cached = cache_get(opts, path)
         # TODO: this is hack!!
         r.instance_variable_set('@response', cached)
         r.instance_variable_set('@state'   , :finish)
@@ -160,13 +157,13 @@ module RestCore::Client
         r.succeed(r)
       else
         r.callback{
-          cache_for(opts, uri, meth, r.response)
+          cache_for(opts, path, meth, r.response)
           log(env.merge('event' =>
-            Event::Requested.new(Time.now - start_time, uri)))
+            Event::Requested.new(Time.now - start_time, path)))
         }
         r.error{
           log(env.merge('event' =>
-            Event::Failed.new(Time.now - start_time, uri)))
+            Event::Failed.new(Time.now - start_time, path)))
         }
       end
       r
@@ -186,11 +183,5 @@ module RestCore::Client
         yield(results)
       end
     }
-  end
-
-  def build_query_string query={}, opts={}
-    q = query.select{ |k, v| v } # compacting the hash
-    return '' if q.empty?
-    return '?' + q.map{ |(k, v)| "#{k}=#{CGI.escape(v.to_s)}" }.join('&')
   end
 end
