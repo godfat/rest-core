@@ -16,7 +16,8 @@ require 'cgi'
 RestCore::Builder.client('RestGraph',
                          :data, :app_id, :secret, :old_site) do
 
-  use DefaultSite   ,  'https://graph.facebook.com/'
+  use DefaultSite   , 'https://graph.facebook.com/'
+  use CommonLogger  , method(:puts)
   use ErrorDetector , lambda{ |env| env[RESPONSE_BODY]['error'] ||
                                     env[RESPONSE_BODY]['error_code'] }
   use JsonDecode    , true
@@ -27,7 +28,6 @@ RestCore::Builder.client('RestGraph',
                        'Accept-Language' => 'en-us'}
 
   use ErrorHandler  , lambda{ |env| raise ::RestGraph::Error.call(env) }
-  use CommonLogger  , method(:puts)
 
   run RestClient
 end

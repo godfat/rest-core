@@ -126,7 +126,9 @@ module RestCore::Client
                                REQUEST_PATH    => req[1],
                                REQUEST_QUERY   => req[2],
                                REQUEST_PAYLOAD => req[3],
-                               REQUEST_HEADERS => opts[:headers])
+                               REQUEST_HEADERS => opts[:headers],
+                               'log'           => [],
+                               'error'         => [])
                                )[RESPONSE_BODY]
     end
   end

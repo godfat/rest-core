@@ -31,7 +31,10 @@ module RestCore::Middleware
   end
   def call env; app.call(env)                          ; end
   def fail env; app.fail(env) if app.respond_to?(:fail); end
-  def log  env; app. log(env) if app.respond_to?(:log ); end
+
+  def log env, event
+    (env['log'] ||= []) << event
+  end
 
   def ask env
     if app.respond_to?(:ask)
