@@ -26,11 +26,11 @@ class RestCore::Builder
     middles.map{ |(middle, args, block)| middle.members }.flatten
   end
 
-  def to_app
+  def to_app init=app
     # === foldr m.new app middles
-    middles.reverse.inject(app.new){ |app, (middle, args, block)|
+    middles.reverse.inject(init.new){ |app_, (middle, args, block)|
       begin
-        middle.new(app, *partial_deep_copy(args), &block)
+        middle.new(app_, *partial_deep_copy(args), &block)
       rescue ArgumentError => e
         raise ArgumentError.new("#{middle}: #{e}")
       end

@@ -36,22 +36,13 @@ module RestCore::Middleware
     (env['log'] ||= []) << event
   end
 
-  def ask env
-    if app.respond_to?(:ask)
-      app.ask(env)
-    else
-      env
-    end
-  end
-
   module_function
   def request_uri env
-    e = ask(env)
     # compacting the hash
-    if (query = e[REQUEST_QUERY].select{ |k, v| v }).empty?
-      e[REQUEST_PATH].to_s
+    if (query = env[REQUEST_QUERY].select{ |k, v| v }).empty?
+      env[REQUEST_PATH].to_s
     else
-      "#{e[REQUEST_PATH ]}?" \
+      "#{env[REQUEST_PATH ]}?" \
       "#{query.map{ |(k, v)| "#{k}=#{CGI.escape(v.to_s)}" }.join('&')}"
     end
   end

@@ -30,10 +30,11 @@ module RestCore::Client
     mod.send(:include, accessor)
   end
 
-  attr_reader :app
+  attr_reader :app, :ask
   def initialize o={}
     members.each{ |name| send("#{name}=", o[name]) if o.key?(name) }
     @app = self.class.builder.to_app
+    @ask = self.class.builder.to_app(Ask)
   end
 
   def attributes
@@ -56,7 +57,8 @@ module RestCore::Client
   end
 
   def url path, query={}
-    app.request_uri(REQUEST_PATH => path, REQUEST_QUERY => query)
+    Middleware.request_uri(
+      ask.call(REQUEST_PATH => path, REQUEST_QUERY => query))
   end
 
   # extra options:

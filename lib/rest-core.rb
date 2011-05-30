@@ -25,5 +25,6 @@ module RestCore
   autoload :Timeout       , 'rest-core/middleware/timeout'
 
   # apps
+  autoload :Ask           , 'rest-core/app/ask'
   autoload :RestClient    , 'rest-core/app/rest-client'
 end
