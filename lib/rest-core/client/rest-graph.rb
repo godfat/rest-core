@@ -23,12 +23,12 @@ RestCore::Builder.client('RestGraph',
                        'Accept-Language' => 'en-us'}
 
   use CommonLogger  , method(:puts)
-  use Cache         , {}
-  use ErrorHandler  , lambda{ |env| raise ::RestGraph::Error.call(env) }
-  use ErrorDetector , lambda{ |env| env[RESPONSE_BODY]['error'] ||
-                                    env[RESPONSE_BODY]['error_code'] }
-
-  use JsonDecode    , true
+  use Cache         , {} do
+    use ErrorHandler  , lambda{ |env| raise ::RestGraph::Error.call(env) }
+    use ErrorDetector , lambda{ |env| env[RESPONSE_BODY]['error'] ||
+                                      env[RESPONSE_BODY]['error_code'] }
+    use JsonDecode    , true
+  end
 
   run RestClient
 end

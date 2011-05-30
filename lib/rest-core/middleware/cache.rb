@@ -8,13 +8,58 @@ class RestCore::Cache
   def self.members; [:cache]; end
   include RestCore::Middleware
 
+  attr_reader :middles
+  def initialize app, cache, &block
+    @app, @cache, @middles = app, cache, []
+    instance_eval(&block) if block_given?
+  end
+
+  def use middle, *args, &block
+    middles << [middle, args, block]
+  end
+
+  def to_app init=app
+    # === foldr m.new app middles
+    middles.reverse.inject(init){ |app_, (middle, args, block)|
+      begin
+        middle.new(app_, *partial_deep_copy(args), &block)
+      rescue ArgumentError => e
+        raise ArgumentError.new("#{middle}: #{e}")
+      end
+    }
+  end
+
+  # def call env
+  #   cache_get(env) || if (response = app.call(env)) &&
+  #                         !(response[FAIL] || []).empty?
+  #                       response
+  #                     else
+  #                       cache_for(env, response)
+  #                     end
+  # end
+
+  def partial_deep_copy obj
+    case obj
+      when Array; obj.map{ |o| partial_deep_copy(o) }
+      when Hash ; obj.inject({}){ |r, (k, v)| r[k] = partial_deep_copy(v); r }
+      when Numeric, Symbol, TrueClass, FalseClass, NilClass; obj
+      else begin obj.dup; rescue TypeError; obj; end
+    end
+  end
+
   def call env
-    cache_get(env) || if (response = app.call(env)) &&
-                          !(response[FAIL] || []).empty?
-                        response
-                      else
-                        cache_for(env, response)
-                      end
+    if cached = cache_get(env)
+      to_app(Ask.new).call(cached)
+    else
+      response = app.call(env)
+      response_ = to_app(Ask.new).call(response)
+      if (response_[FAIL] || []).empty?
+        cache_for(env, response)
+        response_
+      else
+        response_
+      end
+    end
   end
 
   protected
