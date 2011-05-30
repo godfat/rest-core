@@ -13,14 +13,15 @@ require 'openssl'
 
 require 'cgi'
 
-RestCore::Builder.client('RestGraph',
-                         :data, :app_id, :secret, :old_site) do
+RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site,
+                         :access_token, :accept, :lang, :auto_decode) do
 
   use Timeout       , 10
 
   use DefaultSite   , 'https://graph.facebook.com/'
   use DefaultHeaders, {'Accept'          => 'application/json',
                        'Accept-Language' => 'en-us'}
+  use OauthToken    , 'access_token', nil
 
   use CommonLogger  , method(:puts)
   use Cache         , {} do
@@ -74,9 +75,28 @@ module RestGraph::DefaultAttributes
   def default_data
     {}
   end
+
+  def default_headers
+    {}
+  end
 end
 
 module RestGraph::Client
+  def access_token       ;    data['access_token']         ; end
+  def access_token= token;    data['access_token'] = token ; end
+  def accept             ; headers['Accept']               ; end
+  def accept=         val; headers['Accept']          = val; end
+  def lang               ; headers['Accept-Language']      ; end
+  def lang=           val; headers['Accept-Language'] = val; end
+
+  alias_method :oauth_token , :access_token
+  alias_method :oauth_token=, :access_token=
+
+  def self.included mod
+    mod.send(:alias_method, :auto_decode , :json_decode )
+    mod.send(:alias_method, :auto_decode=, :json_decode=)
+  end
+
   def next_page hash, opts={}, &cb
     if hash['paging'].kind_of?(Hash) && hash['paging']['next']
       request(opts, [:get, URI.encode(hash['paging']['next'])], &cb)
