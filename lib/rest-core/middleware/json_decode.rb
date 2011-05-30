@@ -15,8 +15,7 @@ class RestCore::JsonDecode
       response
     end
   rescue self.class.const_get(:ParseError) => error
-    app.fail(response.merge('exception' => error))
-    response
+    fail(response, error)
   end
 
   module YajlRuby

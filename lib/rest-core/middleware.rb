@@ -29,12 +29,10 @@ module RestCore::Middleware
     RUBY
     mod.module_eval("#{accessors}\n#{initialize}")
   end
-  def call env; app.call(env)                          ; end
-  def fail env; app.fail(env) if app.respond_to?(:fail); end
 
-  def log env, event
-    (env['log'] ||= []) << event
-  end
+  def call env     ; app.call(env)                               ; end
+  def fail env, obj; env.merge(FAIL => (env[FAIL] || []) + [obj]); end
+  def log  env, obj; env.merge(LOG  => (env[LOG]  || []) + [obj]); end
 
   module_function
   def request_uri env

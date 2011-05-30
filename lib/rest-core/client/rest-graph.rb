@@ -16,18 +16,19 @@ require 'cgi'
 RestCore::Builder.client('RestGraph',
                          :data, :app_id, :secret, :old_site) do
 
-  use DefaultSite   , 'https://graph.facebook.com/'
-  use CommonLogger  , method(:puts)
-  use ErrorDetector , lambda{ |env| env[RESPONSE_BODY]['error'] ||
-                                    env[RESPONSE_BODY]['error_code'] }
-  use JsonDecode    , true
+  use Timeout       , 10
 
-  use Cache         , {}
-  use Timeout       ,  10
+  use DefaultSite   , 'https://graph.facebook.com/'
   use DefaultHeaders, {'Accept'          => 'application/json',
                        'Accept-Language' => 'en-us'}
 
+  use CommonLogger  , method(:puts)
+  use Cache         , {}
   use ErrorHandler  , lambda{ |env| raise ::RestGraph::Error.call(env) }
+  use ErrorDetector , lambda{ |env| env[RESPONSE_BODY]['error'] ||
+                                    env[RESPONSE_BODY]['error_code'] }
+
+  use JsonDecode    , true
 
   run RestClient
 end

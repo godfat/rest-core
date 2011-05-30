@@ -9,12 +9,12 @@ class RestCore::Cache
   include RestCore::Middleware
 
   def call env
-    cache_get(env) || cache_for(env, app.call(env))
-  end
-
-  def fail env
-    cache_assign(env, nil)
-    app.fail(env)
+    cache_get(env) || if (response = app.call(env)) &&
+                          !(response[FAIL] || []).empty?
+                        response
+                      else
+                        cache_for(env, response)
+                      end
   end
 
   protected

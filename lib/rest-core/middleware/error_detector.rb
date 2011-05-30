@@ -8,10 +8,11 @@ class RestCore::ErrorDetector
   def call env
     response = app.call(env)
     if response[RESPONSE_BODY].kind_of?(Hash) &&
-       error_detector(env).call(response)
+       error = error_detector(env).call(response)
 
-      app.fail(response)
+      fail(response, error)
+    else
+      response
     end
-    response
   end
 end
