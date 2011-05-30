@@ -42,7 +42,7 @@ module RestCore::Middleware
     if (query = env[REQUEST_QUERY].select{ |k, v| v }).empty?
       env[REQUEST_PATH].to_s
     else
-      "#{env[REQUEST_PATH ]}?" \
+      "#{env[REQUEST_PATH]}?" \
       "#{query.map{ |(k, v)| "#{k}=#{CGI.escape(v.to_s)}" }.join('&')}"
     end
   end

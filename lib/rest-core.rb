@@ -9,6 +9,9 @@ module RestCore
   RESPONSE_BODY    = 'RESPONSE_BODY'
   RESPONSE_HEADERS = 'RESPONSE_HEADERS'
 
+  FAIL             = 'core.fail'
+  LOG              = 'core.log'
+
   autoload :Builder   , 'rest-core/builder'
   autoload :Client    , 'rest-core/client'
   autoload :Event     , 'rest-core/event'

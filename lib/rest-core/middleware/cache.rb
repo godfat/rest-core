@@ -26,8 +26,8 @@ class RestCore::Cache
     return unless cache(env)
     start_time = Time.now
     return unless value = cache(env)[cache_key(env)]
-    log(env, Event::CacheHit.new(Time.now - start_time, request_uri(env)))
-    env.merge(value)
+    log(env, Event::CacheHit.new(Time.now - start_time, request_uri(env))).
+      merge(value)
   end
 
   def cache_for env, response

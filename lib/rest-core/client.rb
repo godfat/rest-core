@@ -129,8 +129,8 @@ module RestCore::Client
                                REQUEST_QUERY   => req[2],
                                REQUEST_PAYLOAD => req[3],
                                REQUEST_HEADERS => opts[:headers],
-                               'log'           => [],
-                               'error'         => [])
+                               FAIL            => [],
+                               LOG             => [])
                                )[RESPONSE_BODY]
     end
   end

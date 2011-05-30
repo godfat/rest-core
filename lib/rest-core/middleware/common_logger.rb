@@ -7,19 +7,15 @@ class RestCore::CommonLogger
   include RestCore::Middleware
 
   def call env
-    flush(env)
     start_time = Time.now
-    response = app.call(env)
-    log(env, Event::Requested.new(Time.now - start_time, request_uri(env)))
-    flush(response)
-    response
+    flush(log(env, Event::Requested.new(Time.now - start_time,
+                                        request_uri(app.call(flush(env))))))
   end
 
   def flush env
     return unless log_method(env)
-    (env['log'] ||= []).each{ |event|
+    (env[LOG] ||= []).each{ |event|
       log_method(env).call("RestCore: #{event}") }
-    env['log'].clear
-    env
+    env.merge(LOG => [])
   end
 end
