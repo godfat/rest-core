@@ -58,7 +58,7 @@ module RestCore::Client
 
   def url path, query={}
     Middleware.request_uri(
-      ask.call(REQUEST_PATH => path, REQUEST_QUERY => query))
+      ask.call(build_env.merge(REQUEST_PATH => path, REQUEST_QUERY => query)))
   end
 
   # extra options:
