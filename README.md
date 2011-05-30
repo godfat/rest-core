@@ -39,8 +39,8 @@ Or if you want development version, put this in Gemfile:
     RestCore::Builder.client('YourClient') do
       use DefaultSite , 'https://api.github.com/users/'
       use JsonDecode  , true
-      use Cache       , {}
       use CommonLogger, method(:puts)
+      use Cache       , {}
       run RestClient
     end
 
