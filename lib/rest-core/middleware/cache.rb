@@ -1,64 +1,29 @@
 
 require 'rest-core/event'
 require 'rest-core/middleware'
+require 'rest-core/wrapper'
 
 require 'digest/md5'
 
 class RestCore::Cache
   def self.members; [:cache]; end
   include RestCore::Middleware
+  include RestCore::Wrapper
 
-  attr_reader :middles
+  attr_reader :wrapped
   def initialize app, cache, &block
-    @app, @cache, @middles = app, cache, []
-    instance_eval(&block) if block_given?
-  end
-
-  def use middle, *args, &block
-    middles << [middle, args, block]
-  end
-
-  def to_app init=app
-    # === foldr m.new app middles
-    middles.reverse.inject(init){ |app_, (middle, args, block)|
-      begin
-        middle.new(app_, *partial_deep_copy(args), &block)
-      rescue ArgumentError => e
-        raise ArgumentError.new("#{middle}: #{e}")
-      end
-    }
-  end
-
-  # def call env
-  #   cache_get(env) || if (response = app.call(env)) &&
-  #                         !(response[FAIL] || []).empty?
-  #                       response
-  #                     else
-  #                       cache_for(env, response)
-  #                     end
-  # end
-
-  def partial_deep_copy obj
-    case obj
-      when Array; obj.map{ |o| partial_deep_copy(o) }
-      when Hash ; obj.inject({}){ |r, (k, v)| r[k] = partial_deep_copy(v); r }
-      when Numeric, Symbol, TrueClass, FalseClass, NilClass; obj
-      else begin obj.dup; rescue TypeError; obj; end
-    end
+    super(&block)
+    @app, @cache, @wrapped = app, cache, to_app(Ask)
   end
 
   def call env
     if cached = cache_get(env)
-      to_app(Ask.new).call(cached)
+      wrapped.call(cached)
     else
-      response = app.call(env)
-      response_ = to_app(Ask.new).call(response)
-      if (response_[FAIL] || []).empty?
-        cache_for(env, response)
-        response_
-      else
-        response_
-      end
+      response         = app.call(env)
+      response_wrapped = wrapped.call(response)
+      cache_for(env, response) if (response_wrapped[FAIL] || []).empty?
+      response_wrapped
     end
   end
 

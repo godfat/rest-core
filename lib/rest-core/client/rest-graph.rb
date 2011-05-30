@@ -28,6 +28,7 @@ RestCore::Builder.client('RestGraph',
     use ErrorDetector , lambda{ |env| env[RESPONSE_BODY]['error'] ||
                                       env[RESPONSE_BODY]['error_code'] }
     use JsonDecode    , true
+    run Ask
   end
 
   run RestClient
