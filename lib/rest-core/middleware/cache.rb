@@ -10,10 +10,9 @@ class RestCore::Cache
   include RestCore::Middleware
   include RestCore::Wrapper
 
-  attr_reader :wrapped
   def initialize app, cache, &block
     super(&block)
-    @app, @cache, @wrapped = app, cache, to_app(Ask)
+    @app, @cache = app, cache
   end
 
   def call env

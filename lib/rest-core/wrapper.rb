@@ -4,12 +4,13 @@ require 'rest-core'
 module RestCore::Wrapper
   include RestCore
   def self.included mod
-    mod.send(:attr_reader, :app, :middles)
+    mod.send(:attr_reader, :app, :middles, :wrapped)
   end
 
   def initialize &block
     @middles = []
     instance_eval(&block) if block_given?
+    @wrapped = to_app
   end
 
   def use middle, *args, &block
@@ -22,7 +23,7 @@ module RestCore::Wrapper
 
   def members
     middles.map{ |(middle, args, block)|
-      if middle.public_method_defined?(:middles)
+      if middle.public_method_defined?(:wrapped)
         # TODO: this is hacky... try to avoid calling new!
         middle.members + middle.new(Ask.new, *args, &block).members
       else
