@@ -82,20 +82,25 @@ module RestGraph::DefaultAttributes
 end
 
 module RestGraph::Client
-  def access_token       ;    data['access_token']         ; end
-  def access_token= token;    data['access_token'] = token ; end
+  def self.included mod
+    mod.send(:alias_method, :auto_decode , :json_decode )
+    mod.send(:alias_method, :auto_decode=, :json_decode=)
+  end
+
+  def oauth_token        ;    data['access_token']         ; end
+  def oauth_token=  token;    data['access_token'] = token ; end
+  alias_method :access_token , :oauth_token
+  alias_method :access_token=, :oauth_token=
+
+  def secret_oauth_token ; "#{app_id}|#{secret}"           ; end
+  alias_method :secret_access_token, :secret_oauth_token
+
   def accept             ; headers['Accept']               ; end
   def accept=         val; headers['Accept']          = val; end
   def lang               ; headers['Accept-Language']      ; end
   def lang=           val; headers['Accept-Language'] = val; end
 
-  alias_method :oauth_token , :access_token
-  alias_method :oauth_token=, :access_token=
-
-  def self.included mod
-    mod.send(:alias_method, :auto_decode , :json_decode )
-    mod.send(:alias_method, :auto_decode=, :json_decode=)
-  end
+  def authorized?        ; !!oauth_token                   ; end
 
   def next_page hash, opts={}, &cb
     if hash['paging'].kind_of?(Hash) && hash['paging']['next']
