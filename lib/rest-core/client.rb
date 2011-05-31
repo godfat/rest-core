@@ -9,25 +9,26 @@ module RestCore::Client
       <<-RUBY
         def #{name}
           if (r = super).nil?
-            self.#{name} = middle_#{name}
+            self.#{name} = default_#{name}
           else
             r
           end
         end
 
-        def middle_#{name} app=app
+        def default_#{name} app=app
           if app.respond_to?(:#{name})
             app.#{name}({})
           elsif app.respond_to?(:wrapped)
-            middle_#{name}(app.wrapped) ||
-            middle_#{name}(app.app)
+            default_#{name}(app.wrapped) ||
+            default_#{name}(app.app)
           elsif app.respond_to?(:app)
-            middle_#{name}(app.app)
+            default_#{name}(app.app)
           else
             nil
           end
         end
-        private :middle_#{name}
+        private :default_#{name}
+
         self
       RUBY
     }
