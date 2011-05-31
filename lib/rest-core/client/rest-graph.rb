@@ -224,19 +224,16 @@ module RestGraph::Client
     request(opts, [:post, url('oauth/exchange_sessions', q)], &cb)
   end
 
-  def request opts, *reqs, &cb
-    super(opts2env(opts), *reqs, &cb)
-  end
-
   protected
-  def opts2env opts
-    opts.inject({}){ |r, (k, v)|
+  def build_env env={}
+    super(env.inject({}){ |r, (k, v)|
       case k
         when :auto_decode; r['json_decode'] = v
         when :secret     ; r['oauth_token'] = secret_oauth_token
+        else             ; r[k.to_s]        = v
       end
       r
-    }
+    })
   end
 end
 
