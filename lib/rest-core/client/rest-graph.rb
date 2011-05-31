@@ -32,7 +32,7 @@ RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site,
     run Ask
   end
 
-  use Defaults      , :data => {}, :headers => {}
+  use Defaults      , :data => {}
 
   run RestClient
 end
