@@ -79,6 +79,8 @@ describe RestGraph do
     rg.get('me', {}, :secret => true).should == 'ok'
     rg.url('me', {}, :secret => true).should ==
       'https://graph.facebook.com/me?access_token=1%7C2'
+    rg.url('me', {}, :secret => true, :site => '/').should ==
+      '/me?access_token=1%7C2'
   end
 
   should 'suppress auto-decode in an api call' do
