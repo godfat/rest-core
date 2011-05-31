@@ -9,12 +9,7 @@ module RestCore::Client
       <<-RUBY
         def #{name}
           if (r = super).nil?
-            self.#{name} =
-              if self.class.respond_to?(:default_#{name})
-                self.class.default_#{name} || middle_#{name}
-              else
-                middle_#{name}
-              end
+            self.#{name} = middle_#{name}
           else
             r
           end

@@ -24,6 +24,7 @@ module RestCore
   autoload :CommonLogger  , 'rest-core/middleware/common_logger'
   autoload :DefaultHeaders, 'rest-core/middleware/default_headers'
   autoload :DefaultSite   , 'rest-core/middleware/default_site'
+  autoload :Defaults      , 'rest-core/middleware/defaults'
   autoload :ErrorDetector , 'rest-core/middleware/error_detector'
   autoload :ErrorHandler  , 'rest-core/middleware/error_handler'
   autoload :JsonDecode    , 'rest-core/middleware/json_decode'

@@ -32,6 +32,8 @@ RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site,
     run Ask
   end
 
+  use Defaults      , :data => {}, :headers => {}
+
   run RestClient
 end
 
@@ -68,16 +70,6 @@ class RestGraph::Error < RuntimeError
   def self.missing_token? error
     (error['error'] || {})['message'] =~ /^An active access token/ ||
     (error['error_code'] == 104) # Requires valid signature
-  end
-end
-
-module RestGraph::DefaultAttributes
-  def default_data
-    {}
-  end
-
-  def default_headers
-    {}
   end
 end
 
@@ -238,7 +230,6 @@ module RestGraph::Client
 end
 
 RestGraph.send(:include, RestGraph::Client)
-RestGraph.send(:extend , RestGraph::DefaultAttributes)
 
 #   module Hmac
 #     # Fallback to ruby-hmac gem in case system openssl
