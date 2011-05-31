@@ -10,7 +10,7 @@ module RestCore::Middleware
     mod.send(:include, RestCore)
     mod.send(:attr_reader, :app)
     return unless mod.respond_to?(:members)
-    accessors = mod.members.map{ |member| <<-RUBY }.join("\n")
+    src = mod.members.map{ |member| <<-RUBY }
       def #{member} env
         if    env.key?('#{member}')
           env['#{member}']
@@ -24,12 +24,15 @@ module RestCore::Middleware
     args      = [:app] + mod.members
     args_list = args.join(', ')
     ivar_list = args.map{ |a| "@#{a}" }.join(', ')
-    initialize = <<-RUBY
+    src << <<-RUBY
       def initialize #{args_list}
         #{ivar_list} = #{args_list}
       end
+      self
     RUBY
-    mod.module_eval("#{accessors}\n#{initialize}")
+    accessor = Module.new.module_eval(src.join("\n"))
+    mod.const_set(:Accessor, accessor)
+    mod.send(:include, accessor)
   end
 
   def call env     ; app.call(env)                               ; end
