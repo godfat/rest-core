@@ -12,10 +12,12 @@ module RestCore::Middleware
     return unless mod.respond_to?(:members)
     accessors = mod.members.map{ |member| <<-RUBY }.join("\n")
       def #{member} env
-        if env.key?('#{member}')
+        if    env.key?('#{member}')
           env['#{member}']
+        elsif env.key?(:#{member} )
+          env[:#{member} ]
         else
-          @#{member}
+              @#{member}
         end
       end
     RUBY
