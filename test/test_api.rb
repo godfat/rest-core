@@ -77,7 +77,7 @@ describe RestGraph do
     rg = RestGraph.new(:auto_decode => false, :access_token => 'wrong',
                        :app_id => '1', :secret => '2')
     rg.get('me', {}, :secret => true).should == 'ok'
-    rg.url('me', {}, rg.site, :secret => true).should ==
+    rg.url('me', {}, :secret => true).should ==
       'https://graph.facebook.com/me?access_token=1%7C2'
   end
 
