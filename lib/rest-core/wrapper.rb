@@ -24,7 +24,7 @@ module RestCore::Wrapper
     middles.map{ |(middle, args, block)|
       if middle.public_method_defined?(:middles)
         # TODO: this is hacky... try to avoid calling new!
-        middle.new(Ask.new, *args, &block).members
+        middle.members + middle.new(Ask.new, *args, &block).members
       else
         middle.members
       end
