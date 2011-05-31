@@ -116,25 +116,24 @@ module RestCore::Client
     request({:async => true}.merge(opts), *reqs, &cb)
   end
 
-  def request opts, *reqs, &cb
+  def request opts, *reqs
     reqs.each{ |(meth, path, query, payload)|
       next if meth != :get     # only get result would get cached
       cache_assign(opts, path, nil)
     } if opts[:cache] == false # remove cache if we don't want it
 
-    if opts[:async]
-      request_em(opts, reqs, &cb)
-    else
-      req = reqs.first
-      app.call(build_env({
-        REQUEST_METHOD  => req[0],
-        REQUEST_PATH    => req[1],
-        REQUEST_QUERY   => req[2],
-        REQUEST_PAYLOAD => req[3],
-        REQUEST_HEADERS => opts['headers'],
-        FAIL            => [],
-        LOG             => []}.merge(opts)))[RESPONSE_BODY]
-    end
+    req = reqs.first
+    response = app.call(build_env({
+      REQUEST_METHOD  => req[0],
+      REQUEST_PATH    => req[1],
+      REQUEST_QUERY   => req[2] || {},
+      REQUEST_PAYLOAD => req[3],
+      REQUEST_HEADERS => opts['headers'],
+      FAIL            => [],
+      LOG             => []}.merge(opts)))[RESPONSE_BODY]
+
+    yield(response) if block_given?
+    response
   end
   # ------------------------ instance ---------------------
 
