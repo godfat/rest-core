@@ -35,7 +35,7 @@ describe RestGraph do
 
   should 'pass custom headers' do
     stub_request(:get, 'http://example.com/').with(
-      :headers => {'Accept'          => 'text/javascript',
+      :headers => {'Accept'          => 'application/json',
                    'Accept-Language' => 'en-us',
                    'Accept-Encoding' => 'gzip, deflate', # this is by ruby
                    'X-Forwarded-For' => '127.0.0.1',
