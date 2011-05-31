@@ -13,8 +13,7 @@ require 'openssl'
 
 require 'cgi'
 
-RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site,
-                         :access_token, :accept, :lang, :auto_decode) do
+RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site) do
 
   use Timeout       , 10
 
