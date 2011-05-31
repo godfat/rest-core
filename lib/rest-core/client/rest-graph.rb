@@ -23,7 +23,7 @@ RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site) do
   use OauthToken    , 'access_token', nil
 
   use CommonLogger  , method(:puts)
-  use Cache         , {} do
+  use Cache         , {}, nil do
     use ErrorHandler  , lambda{ |env| raise ::RestGraph::Error.call(env) }
     use ErrorDetector , lambda{ |env| env[RESPONSE_BODY]['error'] ||
                                       env[RESPONSE_BODY]['error_code'] }

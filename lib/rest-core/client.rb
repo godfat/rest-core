@@ -132,11 +132,6 @@ module RestCore::Client
   end
 
   def request opts, *reqs
-    reqs.each{ |(meth, path, query, payload)|
-      next if meth != :get     # only get result would get cached
-      cache_assign(opts, path, nil)
-    } if opts[:cache] == false # remove cache if we don't want it
-
     req = reqs.first
     response = app.call(build_env({
       REQUEST_METHOD  => req[0],

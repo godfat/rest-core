@@ -14,6 +14,7 @@ describe RestGraph do
   describe 'cache' do
     before do
       @url, @body = "https://graph.facebook.com/cache", '{"message":"ok"}'
+      @cache_key  = Digest::MD5.hexdigest(@url)
       @cache = {}
       @rg = RestGraph.new(:cache => @cache, :auto_decode => false)
       stub_request(:get, @url).to_return(:body => @body).times(1)
@@ -21,13 +22,12 @@ describe RestGraph do
 
     should 'enable cache if passing cache' do
       3.times{ @rg.get('cache').should == @body }
-      @cache.should == {@rg.send(:cache_key, {}, @url) => @body}
+      @cache.should == {@cache_key => @body}
     end
 
     should 'respect expires_in' do
       mock(@cache).method(:store){ mock!.arity{ -3 } }
-      mock(@cache).store(@rg.send(:cache_key, {}, @url), @body,
-                         :expires_in => 3)
+      mock(@cache).store(@cache_key, @body, :expires_in => 3)
       @rg.get('cache', {}, :expires_in => 3).should == @body
     end
 

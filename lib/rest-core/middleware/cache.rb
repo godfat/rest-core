@@ -6,23 +6,34 @@ require 'rest-core/wrapper'
 require 'digest/md5'
 
 class RestCore::Cache
-  def self.members; [:cache]; end
+  def self.members; [:cache, :expires_in]; end
   include RestCore::Middleware
   include RestCore::Wrapper
 
-  def initialize app, cache, &block
+  def initialize app, cache, expires_in, &block
     super(&block)
-    @app, @cache = app, cache
+    @app, @cache, @expires_in = app, cache, expires_in
   end
 
   def call env
-    if cached = cache_get(env)
+    e = if cache(env)
+          env
+        elsif env[REQUEST_METHOD] == :get
+          cache_assign(env, nil)
+        else
+          env
+        end
+
+    if cached = cache_get(e)
       wrapped.call(cached)
     else
-      response         = app.call(env)
+      response         = app.call(e)
       response_wrapped = wrapped.call(response)
-      cache_for(env, response) if (response_wrapped[FAIL] || []).empty?
-      response_wrapped
+      if (response_wrapped[FAIL] || []).empty?
+        cache_for(e, response).merge(response_wrapped)
+      else
+        response_wrapped
+      end
     end
   end
 
@@ -36,7 +47,7 @@ class RestCore::Cache
     start_time = Time.now
     return unless value = cache(env)[cache_key(env)]
     log(env, Event::CacheHit.new(Time.now - start_time, request_uri(env))).
-      merge(value)
+      merge(RESPONSE_BODY => value)
   end
 
   def cache_for env, response
@@ -44,28 +55,28 @@ class RestCore::Cache
     # fake post (opts[:post] => true) is considered get and need cache
     return response if env[REQUEST_METHOD] != :get unless env['cache.post']
 
-    value = response.select{ |k,v| k.start_with?('RESPONSE') }
+    value = response[RESPONSE_BODY]
 
-    if env['cache.expires_in'].kind_of?(Fixnum) &&
+    if expires_in(env).kind_of?(Fixnum) &&
        cache(env).method(:store).arity == -3
       cache(env).store(cache_key(env), value,
-                       :expires_in => env['cache.expires_in'])
+                       :expires_in => expires_in(env))
+      response
     else
-      cache_assign(env, value)
+      cache_assign(response, value)
     end
-
-    response
   end
 
   def cache_assign env, value
-    return value unless cache(env)
+    return env unless cache(env)
 
     start_time = Time.now
     cache(env)[cache_key(env)] = value
     if value.nil?
       log(env,
         Event::CacheCleared.new(Time.now - start_time, request_uri(env)))
+    else
+      env
     end
-    value
   end
 end
