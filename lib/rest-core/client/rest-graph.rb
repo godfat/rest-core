@@ -223,6 +223,21 @@ module RestGraph::Client
          :type => 'client_cred'}.merge(query)
     request(opts, [:post, url('oauth/exchange_sessions', q)], &cb)
   end
+
+  def request opts, *reqs, &cb
+    super(opts2env(opts), *reqs, &cb)
+  end
+
+  protected
+  def opts2env opts
+    opts.inject({}){ |r, (k, v)|
+      case k
+        when :auto_decode; r['json_decode'] = v
+        when :secret     ; r['oauth_token'] = secret_oauth_token
+      end
+      r
+    }
+  end
 end
 
 RestGraph.send(:include, RestGraph::Client)
