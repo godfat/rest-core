@@ -90,16 +90,6 @@ describe RestGraph do
     rg.auto_decode.should == true
   end
 
-  should 'call post_request after request' do
-    url = 'https://graph.facebook.com/feed/me'
-    stub_request(:put, url).
-      with(:body => 'message=hi%20there').to_return(:body => '[]')
-
-    mock.proxy(rg = RestGraph.new).post_request({}, url, '[]')
-    rg.put('feed/me', :message => 'hi there').
-      should == []
-  end
-
   should 'not raise exception when encountering error' do
     [500, 401, 402, 403].each{ |status|
       stub_request(:delete, 'https://graph.facebook.com/123').to_return(
