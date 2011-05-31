@@ -124,14 +124,14 @@ module RestCore::Client
       request_em(opts, reqs, &cb)
     else
       req = reqs.first
-      app.call(build_env.merge(
+      app.call(build_env({
         REQUEST_METHOD  => req[0],
         REQUEST_PATH    => req[1],
         REQUEST_QUERY   => req[2],
         REQUEST_PAYLOAD => req[3],
         REQUEST_HEADERS => opts['headers'],
         FAIL            => [],
-        LOG             => []).merge(opts))[RESPONSE_BODY]
+        LOG             => []}.merge(opts)))[RESPONSE_BODY]
     end
   end
   # ------------------------ instance ---------------------
@@ -139,8 +139,8 @@ module RestCore::Client
 
 
   protected
-  def build_env
-    attributes.inject({}){ |r, (k, v)|
+  def build_env env={}
+    attributes.merge(env).inject({}){ |r, (k, v)|
       r[k.to_s] = v unless v.nil?
       r
     }
