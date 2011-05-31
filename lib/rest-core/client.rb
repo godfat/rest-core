@@ -56,9 +56,11 @@ module RestCore::Client
     dup.lighten!(o)
   end
 
-  def url path, query={}
+  def url path, query={}, opts={}
     Middleware.request_uri(
-      ask.call(build_env.merge(REQUEST_PATH => path, REQUEST_QUERY => query)))
+      ask.call(build_env({
+        REQUEST_PATH  => path,
+        REQUEST_QUERY => query}.merge(opts))))
   end
 
   # extra options:
