@@ -8,12 +8,28 @@ module RestCore::Client
     src = mod.members.map{ |name|
       <<-RUBY
         def #{name}
-          if (r = super).nil? && self.class.respond_to?(:default_#{name})
-            self.#{name} = self.class.default_#{name}
+          if (r = super).nil?
+            self.#{name} =
+              if self.class.respond_to?(:default_#{name})
+                self.class.default_#{name} || #{name}_app_default
+              else
+                #{name}_app_default
+              end
           else
             r
           end
         end
+
+        def #{name}_app_default app=app
+          if app.respond_to?(:#{name})
+            app.#{name}({})
+          elsif app.respond_to?(:app)
+            #{name}_app_default(app.app)
+          else
+            nil
+          end
+        end
+        private :#{name}_app_default
         self
       RUBY
     }
