@@ -30,7 +30,7 @@ module RestCore::Middleware
       end
       self
     RUBY
-    accessor = Module.new.module_eval(src.join("\n"))
+    accessor = Module.new.module_eval(src.join("\n"), __FILE__, __LINE__)
     mod.const_set(:Accessor, accessor)
     mod.send(:include, accessor)
   end
