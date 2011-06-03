@@ -7,21 +7,21 @@ end
 
 describe RestGraph do
   should 'honor default attributes' do
-    TestHelper.test_defaults{ |name, mod|
-      RestGraph.new.send(name).should == RestGraph.send("default_#{name}")
+    RestGraph.members.reject{ |name|
+      name.to_s =~ /method$|handler$|detector$/ }.each{ |name|
+        RestGraph.new.send(name).should ==
+        RestGraph.new.send("default_#{name}")
     }
   end
 
   should 'use module to override default attributes' do
-    module BlahAttributes
+    klass = RestGraph.dup
+    klass.send(:include, Module.new do
       def default_app_id
         '1829'
       end
-    end
+    end)
 
-    TestHelper.ensure_rollback{
-      RestGraph.send(:extend, BlahAttributes)
-      RestGraph.default_app_id.should == '1829'
-    }
+    klass.new.app_id.should == '1829'
   end
 end
