@@ -16,9 +16,7 @@ class RestCore::Cache
   end
 
   def call env
-    e = if cache(env)
-          env
-        elsif env[REQUEST_METHOD] == :get
+    e = if env['cache.update'] && env[REQUEST_METHOD] == :get
           cache_assign(env, nil)
         else
           env
