@@ -21,30 +21,36 @@ describe RestGraph::Error do
       RestGraph::Error::AccessToken
   end
 
+  def error2env hash
+    {RestCore::RESPONSE_BODY => hash,
+     RestCore::REQUEST_PATH  => '/' ,
+     RestCore::REQUEST_QUERY => {}}
+  end
+
   should 'parse right' do
     %w[OAuthInvalidTokenException OAuthException].each{ |type|
-      RestGraph::Error.parse('error' => {'type' => type}).
+      RestGraph::Error.call(error2env('error' => {'type' => type})).
         should.kind_of?(RestGraph::Error::InvalidAccessToken)
     }
 
-    RestGraph::Error.parse('error' => {'type' => 'QueryParseException',
-                                    'message' => 'An active access token..'}).
+    RestGraph::Error.call(error2env('error'=>{'type'=>'QueryParseException',
+                                    'message'=>'An active access token..'})).
       should.kind_of?(RestGraph::Error::MissingAccessToken)
 
-    RestGraph::Error.parse('error' => {'type' => 'QueryParseException',
-                                    'message' => 'Oh active access token..'}).
+    RestGraph::Error.call(error2env('error'=>{'type'=>'QueryParseException',
+                                    'message'=>'Oh active access token..'})).
       should.not.kind_of?(RestGraph::Error::MissingAccessToken)
 
-    RestGraph::Error.parse('error_code' => 190).
+    RestGraph::Error.call(error2env('error_code' => 190)).
       should.kind_of?(RestGraph::Error::InvalidAccessToken)
 
-    RestGraph::Error.parse('error_code' => 104).
+    RestGraph::Error.call(error2env('error_code' => 104)).
       should.kind_of?(RestGraph::Error::MissingAccessToken)
 
-    RestGraph::Error.parse('error_code' => 999).
+    RestGraph::Error.call(error2env('error_code' => 999)).
       should.not.kind_of?(RestGraph::Error::AccessToken)
 
-    error = RestGraph::Error.parse(['not a hash'])
+    error = RestGraph::Error.call(error2env(['not a hash']))
     error.should.not.kind_of?(RestGraph::Error::AccessToken)
     error.should    .kind_of?(RestGraph::Error)
   end
@@ -53,8 +59,8 @@ describe RestGraph::Error do
     stub_request(:get, 'https://graph.facebook.com/me').
       to_return(:body => '{"error":"wrong"}').times(2)
 
-    rg = RestGraph.new(:cache => {}, :error_handler => lambda{|e,u|})
+    rg = RestGraph.new(:cache => {}, :error_handler => lambda{|env|env})
     rg.get('me'); rg.get('me')
-    rg.cache.values.should == [nil]
+    rg.cache.values.should == []
   end
 end
