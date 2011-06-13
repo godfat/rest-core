@@ -11,28 +11,24 @@ describe RestGraph do
     RR.verify
   end
 
-  describe 'log handler' do
+  describe 'log method' do
     should 'log whenever doing network request' do
       stub_request(:get, 'https://graph.facebook.com/me').
         to_return(:body => '{}')
 
-      mock(Time).now{ 666 }
-      mock(Time).now{ 999 }
-
       logger = []
-      rg = RestGraph.new(:log_handler => lambda{ |e|
-                                           logger << [e.duration, e.url] })
+      rg = RestGraph.new(:log_method => lambda{ |s| logger << [s] })
       rg.get('me')
 
-      logger.last.should == [333, 'https://graph.facebook.com/me']
+      logger.size.should == 1
     end
   end
 
   describe 'with Graph API' do
     before do
-      @id    = lambda{ |obj, url| obj }
+      @id    = lambda{ |env| env }
       @error = '{"error":{"type":"Exception","message":"(#2500)"}}'
-      @error_hash = RestGraph.json_decode(@error)
+      @error_hash = RestCore::JsonDecode.json_decode(@error)
 
       stub_request(:get, 'https://graph.facebook.com/me').
         to_return(:body => @error)
@@ -61,9 +57,9 @@ describe RestGraph do
     #                  {"key":"query","value":
     #                     "SELECT name FROM bad_table WHERE uid=12345"}]}
     before do
-      @id             = lambda{ |obj, url| obj }
+      @id             = lambda{ |env| env }
       @fql_error      = '{"error_code":603,"error_msg":"Unknown table: bad"}'
-      @fql_error_hash = RestGraph.json_decode(@fql_error)
+      @fql_error_hash = RestCore::JsonDecode.json_decode(@fql_error)
 
       @bad_fql_query  = 'SELECT name FROM bad_table WHERE uid="12345"'
       bad_fql_request = "https://api.facebook.com/method/fql.query?" \
