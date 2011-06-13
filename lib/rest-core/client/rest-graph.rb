@@ -190,7 +190,8 @@ module RestGraph::Client
       request(
         opts.merge(:uri => uri),
         [:post,
-         url("method/#{path}", {:format => 'json'}, old_server, opts),
+         url("method/#{path}", {:format => 'json'},
+             {:site => old_site}.merge(opts)),
          query],
         &cb)
     else
