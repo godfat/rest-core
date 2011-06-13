@@ -50,7 +50,7 @@ class RestCore::Cache
 
   def cache_for env, response
     return response unless cache(env)
-    # fake post (opts[:post] => true) is considered get and need cache
+    # fake post (env['cache.post'] => true) is considered get and need cache
     return response if env[REQUEST_METHOD] != :get unless env['cache.post']
 
     value = response[RESPONSE_BODY]
