@@ -68,7 +68,7 @@ Gem::Specification.new do |s|
   %q{test/test_timeout.rb},
   %q{CHANGES},
   %q{TODO}]
-  s.homepage = %q{https://github.com/godfat/rest-core}
+  s.homepage = %q{https://github.com/cardinalblue/rest-core}
   s.rdoc_options = [
   %q{--main},
   %q{README}]
