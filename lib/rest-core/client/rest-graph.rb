@@ -188,11 +188,11 @@ module RestGraph::Client
               {:site => old_site}.merge(opts))
     if opts[:post]
       request(
-        opts.merge(:uri => uri),
+        opts.merge('cache.key' => uri, 'cache.post' => true),
         [:post,
          url("method/#{path}", {:format => 'json'},
              {:site => old_site}.merge(opts)),
-         query],
+         {}, query],
         &cb)
     else
       request(opts, [:get, uri], &cb)
