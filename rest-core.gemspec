@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors = [
   %q{Cardinal Blue},
   %q{Lin Jen-Shin (godfat)}]
-  s.date = %q{2011-05-26}
-  s.description = %q{A modular Ruby REST client interface}
+  s.date = %q{2011-06-13}
+  s.description = %q{A modular and lightweight Ruby REST client interface}
   s.email = [%q{dev (XD) cardinalblue.com}]
   s.extra_rdoc_files = [
   %q{CHANGES},
@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
   %q{README.md},
   %q{Rakefile},
   %q{lib/rest-core.rb},
+  %q{lib/rest-core/app/ask.rb},
   %q{lib/rest-core/app/rest-client.rb},
   %q{lib/rest-core/builder.rb},
   %q{lib/rest-core/client.rb},
@@ -36,12 +37,16 @@ Gem::Specification.new do |s|
   %q{lib/rest-core/middleware/common_logger.rb},
   %q{lib/rest-core/middleware/default_headers.rb},
   %q{lib/rest-core/middleware/default_site.rb},
+  %q{lib/rest-core/middleware/defaults.rb},
   %q{lib/rest-core/middleware/error_detector.rb},
   %q{lib/rest-core/middleware/error_handler.rb},
   %q{lib/rest-core/middleware/json_decode.rb},
+  %q{lib/rest-core/middleware/oauth_token.rb},
   %q{lib/rest-core/middleware/timeout.rb},
   %q{lib/rest-core/version.rb},
+  %q{lib/rest-core/wrapper.rb},
   %q{lib/rest-graph/config_util.rb},
+  %q{rest-core.gemspec},
   %q{task/gemgem.rb},
   %q{test/common.rb},
   %q{test/config/rest-graph.yaml},
@@ -49,7 +54,6 @@ Gem::Specification.new do |s|
   %q{test/test_cache.rb},
   %q{test/test_default.rb},
   %q{test/test_error.rb},
-  %q{test/test_facebook.rb},
   %q{test/test_handler.rb},
   %q{test/test_load_config.rb},
   %q{test/test_misc.rb},
@@ -64,19 +68,18 @@ Gem::Specification.new do |s|
   %q{test/test_timeout.rb},
   %q{CHANGES},
   %q{TODO}]
-  s.homepage = %q{https://github.com/godfat/}
+  s.homepage = %q{https://github.com/godfat/rest-core}
   s.rdoc_options = [
   %q{--main},
   %q{README}]
   s.require_paths = [%q{lib}]
-  s.rubygems_version = %q{1.8.4}
-  s.summary = %q{A modular Ruby REST client interface}
+  s.rubygems_version = %q{1.8.5}
+  s.summary = %q{A modular and lightweight Ruby REST client interface}
   s.test_files = [
   %q{test/test_api.rb},
   %q{test/test_cache.rb},
   %q{test/test_default.rb},
   %q{test/test_error.rb},
-  %q{test/test_facebook.rb},
   %q{test/test_handler.rb},
   %q{test/test_load_config.rb},
   %q{test/test_misc.rb},
