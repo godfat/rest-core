@@ -31,7 +31,7 @@ RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site) do
     run Ask
   end
 
-  use Defaults      , :data => {}
+  use Defaults      , :data => {}, :old_site => 'https://api.facebook.com/'
 
   run RestClient
 end
@@ -183,7 +183,7 @@ module RestGraph::Client
 
   def old_rest path, query={}, opts={}, &cb
     uri = url("method/#{path}", {:format => 'json'}.merge(query),
-              old_server, opts)
+              {:site => old_site}.merge(opts))
     if opts[:post]
       request(
         opts.merge(:uri => uri),
