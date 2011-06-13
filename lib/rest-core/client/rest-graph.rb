@@ -73,6 +73,8 @@ class RestGraph::Error < RuntimeError
 end
 
 module RestGraph::Client
+  include RestCore
+
   def self.included mod
     mod.send(:alias_method, :auto_decode , :json_decode )
     mod.send(:alias_method, :auto_decode=, :json_decode=)
