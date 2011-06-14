@@ -31,7 +31,8 @@ RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site) do
     run Ask
   end
 
-  use Defaults      , :data => {}, :old_site => 'https://api.facebook.com/'
+  use Defaults      , :data     => lambda{{}},
+                      :old_site => 'https://api.facebook.com/'
 
   run RestClient
 end

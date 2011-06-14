@@ -10,7 +10,11 @@ class RestCore::Defaults
     singleton_class.module_eval do
       defaults.each{ |(key, value)|
         define_method(key) do |env|
-          value
+          if value.respond_to?(:call)
+            value.call
+          else
+            value
+          end
         end
       }
     end
