@@ -139,7 +139,7 @@ module RestGraph::Client
   def parse_fbs! fbs
     self.data = check_sig_and_return_data(
       # take out facebook sometimes there but sometimes not quotes in cookies
-      Rack::Utils.parse_query(fbs.to_s.tr('"', '')))
+      Rack::Utils.parse_query(fbs.to_s.sub(/^"/, '').sub(/"$/, '')))
   end
 
   def parse_json! json
