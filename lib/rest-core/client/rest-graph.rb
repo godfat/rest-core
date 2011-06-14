@@ -81,8 +81,12 @@ module RestGraph::Client
     mod.send(:alias_method, :auto_decode=, :json_decode=)
   end
 
-  def oauth_token        ;    data['access_token']         ; end
-  def oauth_token=  token;    data['access_token'] = token ; end
+  def oauth_token
+    data['access_token']         if data.kind_of?(Hash)
+  end
+  def oauth_token=  token
+    data['access_token'] = token if data.kind_of?(Hash)
+  end
   alias_method :access_token , :oauth_token
   alias_method :access_token=, :oauth_token=
 
