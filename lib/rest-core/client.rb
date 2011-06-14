@@ -142,8 +142,11 @@ module RestCore::Client
       FAIL            => [],
       LOG             => []}.merge(opts)))[RESPONSE_BODY]
 
-    yield(response) if block_given?
-    response
+    if block_given?
+      yield(response)
+    else
+      response
+    end
   end
   # ------------------------ instance ---------------------
 
