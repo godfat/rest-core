@@ -14,27 +14,27 @@ require 'openssl'
 require 'cgi'
 
 RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site) do
+  s = self.class # this is only for ruby 1.8!
+  use s::Timeout       , 10
 
-  use Timeout       , 10
+  use s::DefaultSite   , 'https://graph.facebook.com/'
+  use s::DefaultHeaders, {'Accept'          => 'application/json',
+                          'Accept-Language' => 'en-us'}
+  use s::OauthToken    , 'access_token', nil
 
-  use DefaultSite   , 'https://graph.facebook.com/'
-  use DefaultHeaders, {'Accept'          => 'application/json',
-                       'Accept-Language' => 'en-us'}
-  use OauthToken    , 'access_token', nil
-
-  use CommonLogger  , method(:puts)
-  use Cache         , {}, nil do
-    use ErrorHandler  , lambda{ |env| raise ::RestGraph::Error.call(env) }
-    use ErrorDetector , lambda{ |env| env[RESPONSE_BODY]['error'] ||
-                                      env[RESPONSE_BODY]['error_code'] }
-    use JsonDecode    , true
-    run Ask
+  use s::CommonLogger  , method(:puts)
+  use s::Cache         , {}, nil do
+    use s::ErrorHandler  , lambda{ |env| raise ::RestGraph::Error.call(env) }
+    use s::ErrorDetector , lambda{ |env| env[s::RESPONSE_BODY]['error'] ||
+                                         env[s::RESPONSE_BODY]['error_code'] }
+    use s::JsonDecode    , true
+    run s::Ask
   end
 
-  use Defaults      , :data     => lambda{{}},
-                      :old_site => 'https://api.facebook.com/'
+  use s::Defaults      , :data     => lambda{{}},
+                         :old_site => 'https://api.facebook.com/'
 
-  run RestClient
+  run s::RestClient
 end
 
 class RestGraph::Error < RuntimeError
