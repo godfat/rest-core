@@ -3,6 +3,9 @@ require 'rest-core'
 
 module RestCore::Client
   include RestCore
+
+  Unserializable = [Proc, Method, IO]
+
   def self.included mod
     # honor default attributes
     src = mod.members.map{ |name|
@@ -62,8 +65,15 @@ module RestCore::Client
   end
 
   def lighten! o={}
-    attributes.each{ |k, v| case v; when Proc, IO; send("#{k}=", false); end}
-    send(:initialize, o)
+    attributes.each{ |k, v| vv = case v;
+                                   when  Hash; lighten_hash(v)
+                                   when Array; lighten_array(v)
+                                   when *Unserializable; false
+                                   else v
+                                  end
+                            send("#{k}=", vv)}
+    initialize(o)
+    @app, @ask = lighten_app(app), lighten_app(ask)
     self
   end
 
@@ -158,6 +168,56 @@ module RestCore::Client
       r[k.to_s] = v unless v.nil?
       r
     }
+  end
+
+  def lighten_hash hash
+    Hash[hash.map{ |(key, value)|
+      case value
+        when  Hash; lighten_hash(value)
+        when Array; lighten_array(value)
+        when *Unserializable; [key, nil]
+        else [key, value]
+      end
+    }]
+  end
+
+  def lighten_array array
+    array.map{ |value|
+      case value
+        when  Hash; lighten_hash(value)
+        when Array; lighten_array(value)
+        when *Unserializable; nil
+        else value
+      end
+    }.compact
+  end
+
+  def lighten_app app
+    members = if app.class.respond_to?(:members)
+                app.class.members.map{ |key|
+                  case value = app.send(key, {})
+                    when  Hash; lighten_hash(value)
+                    when Array; lighten_array(value)
+                    when *Unserializable; nil
+                    else value
+                  end
+                }
+              else
+                []
+              end
+
+    if app.respond_to?(:app) && app.app
+      wrapped = if app.respond_to?(:wrapped) && app.wrapped
+                  lighten_app(app.wrapped)
+                else
+                  nil
+                end
+      app.class.new(lighten_app(app.app), *members){
+        @wrapped = wrapped if wrapped
+      }
+    else
+      app.class.new(*members)
+    end
   end
 
   private
