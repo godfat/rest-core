@@ -73,7 +73,7 @@ describe RestGraph do
 
   should 'parse signed_request' do
     secret = 'aloha'
-    json   = RestGraph.json_encode('ooh' => 'dir', 'moo' => 'bar')
+    json   = RestCore::JsonDecode.json_encode('ooh' => 'dir', 'moo' => 'bar')
     encode = lambda{ |str|
       [str].pack('m').tr("\n=", '').tr('+/', '-_')
     }

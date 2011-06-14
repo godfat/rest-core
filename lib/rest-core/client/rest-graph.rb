@@ -145,7 +145,7 @@ module RestGraph::Client
   def parse_json! json
     self.data = json &&
       check_sig_and_return_data(JsonDecode.json_decode(json))
-  rescue ParseError
+  rescue JsonDecode::ParseError
     self.data = nil
   end
 
@@ -164,7 +164,7 @@ module RestGraph::Client
                   JsonDecode.json_decode(json).merge('sig' => sig)){
                     self.class.hmac_sha256(secret, json_encoded)
                   }
-  rescue ParseError
+  rescue JsonDecode::ParseError
     self.data = nil
   end
 
@@ -230,6 +230,22 @@ module RestGraph::Client
       end
       r
     })
+  end
+
+  def check_sig_and_return_data cookies
+    cookies if secret && if block_given?
+                           yield
+                         else
+                           calculate_sig(cookies)
+                         end == cookies['sig']
+  end
+
+  def calculate_sig cookies
+    Digest::MD5.hexdigest(fbs_without_sig(cookies).join + secret)
+  end
+
+  def fbs_without_sig cookies
+    cookies.reject{ |(k, v)| k == 'sig' }.sort.map{ |a| a.join('=') }
   end
 
   def merge_data lhs, rhs
