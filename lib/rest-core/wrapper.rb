@@ -8,9 +8,9 @@ module RestCore::Wrapper
   end
 
   def initialize &block
-    @middles = []
+    @middles ||= []
     instance_eval(&block) if block_given?
-    @wrapped = to_app
+    @wrapped ||= to_app
   end
 
   def use middle, *args, &block

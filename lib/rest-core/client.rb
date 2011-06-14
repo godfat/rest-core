@@ -47,8 +47,8 @@ module RestCore::Client
 
   attr_reader :app, :ask
   def initialize o={}
-    @app = self.class.builder.to_app
-    @ask = self.class.builder.to_app(Ask)
+    @app ||= self.class.builder.to_app
+    @ask ||= self.class.builder.to_app(Ask)
     o.each{ |key, value| send("#{key}=", value) if respond_to?("#{key}=") }
   end
 
