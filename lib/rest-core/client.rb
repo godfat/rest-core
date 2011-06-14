@@ -150,7 +150,7 @@ module RestCore::Client
       REQUEST_PAYLOAD => req[3],
       REQUEST_HEADERS => opts['headers'],
       FAIL            => [],
-      LOG             => []}.merge(opts)))[RESPONSE_BODY]
+      LOG             => []}.merge(string_keys(opts))))[RESPONSE_BODY]
 
     if block_given?
       yield(response)
@@ -164,10 +164,14 @@ module RestCore::Client
 
   protected
   def build_env env={}
-    attributes.merge(env).inject({}){ |r, (k, v)|
+    string_keys(attributes).merge(env).inject({}){ |r, (k, v)|
       r[k.to_s] = v unless v.nil?
       r
     }
+  end
+
+  def string_keys hash
+    hash.inject({}){ |r, (k, v)| r[k.to_s] = v; r }
   end
 
   def lighten_hash hash

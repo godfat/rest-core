@@ -226,11 +226,11 @@ module RestGraph::Client
   protected
   def build_env env={}
     super(env.inject({}){ |r, (k, v)|
-      case k
-        when :auto_decode; r['json_decode' ] = v
-        when :secret     ; r['oauth_token' ] = secret_oauth_token
-        when :cache      ; r['cache.update'] = !!!v
-        else             ; r[k.to_s]         = v
+      case k.to_s
+        when 'auto_decode'; r['json_decode' ] = v
+        when 'secret'     ; r['oauth_token' ] = secret_oauth_token
+        when 'cache'      ; r['cache.update'] = !!!v
+        else              ; r[k.to_s]         = v
       end
       r
     })

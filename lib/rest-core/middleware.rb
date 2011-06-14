@@ -14,8 +14,6 @@ module RestCore::Middleware
       def #{member} env
         if    env.key?('#{member}')
           env['#{member}']
-        elsif env.key?(:#{member} )
-          env[:#{member} ]
         else
               @#{member}
         end
