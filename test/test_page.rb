@@ -12,7 +12,7 @@ describe RestGraph do
   end
 
   should 'get the next/prev page' do
-    rg = RestGraph.new
+    rg = RestGraph.new(:site => '', :cache => false)
     %w[next previous].each{ |type|
       kind = "#{type}_page"
       rg.send(kind, {})              .should == nil
@@ -25,7 +25,7 @@ describe RestGraph do
   end
 
   should 'merge all pages into one' do
-    rg = RestGraph.new
+    rg = RestGraph.new(:site => '', :cache => false)
     %w[next previous].each{ |type|
       kind = "#{type}_page"
       data = {'paging' => {type => 'zzz'}, 'data' => ['z']}
@@ -54,7 +54,7 @@ describe RestGraph do
   end
 
   should 'for_pages with callback' do
-    rg = RestGraph.new
+    rg = RestGraph.new(:site => '', :cache => false)
     %w[next previous].each{ |type|
       kind = "#{type}_page"
       data = {'paging' => {type => 'zzz'}, 'data' => ['z']}

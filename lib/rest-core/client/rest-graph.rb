@@ -230,6 +230,15 @@ module RestGraph::Client
       r
     })
   end
+
+  def merge_data lhs, rhs
+    [lhs, rhs].each{ |hash|
+      return rhs.reject{ |k, v| k == 'paging' } if
+        !hash.kind_of?(Hash) || !hash['data'].kind_of?(Array)
+    }
+    lhs['data'].unshift(*rhs['data'])
+    lhs
+  end
 end
 
 RestGraph.send(:include, RestGraph::Client)
