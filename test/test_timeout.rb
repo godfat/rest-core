@@ -19,7 +19,7 @@ describe RestGraph do
   end
 
   should 'override timeout' do
-    mock(Timeout).timeout(99){ true }
+    mock(Timeout).timeout(99){ {RestCore::RESPONSE_BODY => true} }
     RestGraph.new(:timeout => 1).get('me', {}, :timeout => 99).should == true
   end
 end
