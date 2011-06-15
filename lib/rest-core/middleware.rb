@@ -40,7 +40,7 @@ module RestCore::Middleware
   module_function
   def request_uri env
     # compacting the hash
-    if (query = env[REQUEST_QUERY].select{ |k, v| v }).empty?
+    if (query = (env[REQUEST_QUERY] || {}).select{ |k, v| v }).empty?
       env[REQUEST_PATH].to_s
     else
       q = if env[REQUEST_PATH] =~ /\?/ then '&' else '?' end
