@@ -27,43 +27,49 @@ describe RestGraph do
   should 'build correct headers' do
     rg = RestGraph.new(:accept => 'text/html',
                        :lang   => 'zh-tw')
-    rg.send(:build_headers).should == {'Accept'          => 'text/html',
-                                       'Accept-Language' => 'zh-tw'}
+
+    headers = rg.ask.call(rg.send(:build_env))[RestCore::REQUEST_HEADERS]
+    headers['Accept'         ].should == 'text/html'
+    headers['Accept-Language'].should == 'zh-tw'
   end
 
   should 'build empty query string' do
-    RestGraph.new.send(:build_query_string).should == ''
+    rg = RestGraph.new
+    (rg.ask.call(rg.send(:build_env))[RestCore::REQUEST_QUERY] || {}).
+      should == {}
   end
 
   should 'create access_token in query string' do
-    RestGraph.new(:access_token => 'token').send(:build_query_string).
-      should == '?access_token=token'
+    rg = RestGraph.new(:access_token => 'token')
+    (rg.ask.call(rg.send(:build_env))[RestCore::REQUEST_QUERY] || {}).
+      should == {'access_token' => 'token'}
   end
 
   should 'build correct query string' do
-    TestHelper.normalize_query(
-    RestGraph.new(:access_token => 'token').send(:build_query_string,
-                                                 :message => 'hi!!')).
-      should == '?access_token=token&message=hi%21%21'
+    rg = RestGraph.new(:access_token => 'token')
+    TestHelper.normalize_url(rg.url('', :message => 'hi!!')).
+      should == "#{rg.site}?access_token=token&message=hi%21%21"
 
-    TestHelper.normalize_query(
-    RestGraph.new.send(:build_query_string, :message => 'hi!!',
-                                            :subject => '(&oh&)')).
-      should == '?message=hi%21%21&subject=%28%26oh%26%29'
+    rg.access_token = nil
+    TestHelper.normalize_url(rg.url('', :message => 'hi!!',
+                                        :subject => '(&oh&)')).
+      should == "#{rg.site}?message=hi%21%21&subject=%28%26oh%26%29"
   end
 
   should 'auto decode json' do
-    RestGraph.new(:auto_decode => true).
-      send(:post_request, {}, '', '[]').should == []
+    rg = RestGraph.new(:auto_decode => true)
+    stub_request(:get, rg.site).to_return(:body => '[]')
+    rg.get('').should ==  []
   end
 
   should 'not auto decode json' do
-    RestGraph.new(:auto_decode => false).
-      send(:post_request, {}, '', '[]').should == '[]'
+    rg = RestGraph.new(:auto_decode => false)
+    stub_request(:get, rg.site).to_return(:body => '[]')
+    rg.get('').should == '[]'
   end
 
   should 'give attributes' do
     RestGraph.new(:auto_decode => false).attributes.keys.map(&:to_s).sort.
-      should == RestCore::RestGraphStruct.members.map(&:to_s).sort
+      should == RestGraph.members.map(&:to_s).sort
   end
 end
