@@ -82,10 +82,10 @@ module RestGraph::Client
   end
 
   def oauth_token
-    data['access_token']         if data.kind_of?(Hash)
+    data['oauth_token'] || data['access_token'] if data.kind_of?(Hash)
   end
   def oauth_token=  token
-    data['access_token'] = token if data.kind_of?(Hash)
+    data['oauth_token'] = token if data.kind_of?(Hash)
   end
   alias_method :access_token , :oauth_token
   alias_method :access_token=, :oauth_token=
