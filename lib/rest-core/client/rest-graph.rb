@@ -175,8 +175,8 @@ module RestGraph::Client
   # oauth related
 
   def authorize_url opts={}
-    query = {:client_id => app_id, :access_token => nil}.merge(opts)
-    "#{site}oauth/authorize#{build_query_string(query)}"
+    url('oauth/authorize',
+        {:client_id => app_id, :access_token => nil}.merge(opts))
   end
 
   def authorize! opts={}

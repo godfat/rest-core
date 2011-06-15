@@ -7,8 +7,9 @@ class RestCore::OauthToken
 
   def call env
     local = if oauth_token(env)
-              env.merge(REQUEST_QUERY => (env[REQUEST_QUERY] || {}).merge(
-                oauth_token_name(env) => oauth_token(env)))
+              env.merge(REQUEST_QUERY =>
+                          {oauth_token_name(env) => oauth_token(env)}.
+                           merge(env[REQUEST_QUERY] || {}))
             else
               env
             end
