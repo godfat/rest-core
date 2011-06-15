@@ -6,7 +6,7 @@ class RestCore::OauthToken
   include RestCore::Middleware
 
   def call env
-    app.call(env.merge(REQUEST_QUERY => env[REQUEST_QUERY].merge(
+    app.call(env.merge(REQUEST_QUERY => (env[REQUEST_QUERY] || {}).merge(
       oauth_token_name(env) => oauth_token(env))))
   end
 end
