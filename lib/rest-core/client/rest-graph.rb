@@ -22,7 +22,7 @@ RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site) do
                           'Accept-Language' => 'en-us'}
   use s::OauthToken    , 'access_token', nil
 
-  use s::CommonLogger  , method(:puts)
+  use s::CommonLogger  , lambda{|obj|obj}
   use s::Cache         , {}, nil do
     use s::ErrorHandler  , lambda{ |env| raise ::RestGraph::Error.call(env) }
     use s::ErrorDetector , lambda{ |env| env[s::RESPONSE_BODY]['error'] ||
