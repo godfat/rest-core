@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.files = [
   %q{.gitignore},
   %q{.gitmodules},
+  %q{.travis.yml},
   %q{CONTRIBUTORS},
   %q{Gemfile},
   %q{LICENSE},
@@ -98,7 +99,6 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<rest-client>, [">= 0"])
-      s.add_development_dependency(%q<em-http-request>, [">= 0"])
       s.add_development_dependency(%q<rack>, [">= 0"])
       s.add_development_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_development_dependency(%q<json>, [">= 0"])
@@ -107,9 +107,9 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<webmock>, [">= 0"])
       s.add_development_dependency(%q<bacon>, [">= 0"])
       s.add_development_dependency(%q<rr>, [">= 0"])
+      s.add_development_dependency(%q<rake>, [">= 0"])
     else
       s.add_dependency(%q<rest-client>, [">= 0"])
-      s.add_dependency(%q<em-http-request>, [">= 0"])
       s.add_dependency(%q<rack>, [">= 0"])
       s.add_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_dependency(%q<json>, [">= 0"])
@@ -118,10 +118,10 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<webmock>, [">= 0"])
       s.add_dependency(%q<bacon>, [">= 0"])
       s.add_dependency(%q<rr>, [">= 0"])
+      s.add_dependency(%q<rake>, [">= 0"])
     end
   else
     s.add_dependency(%q<rest-client>, [">= 0"])
-    s.add_dependency(%q<em-http-request>, [">= 0"])
     s.add_dependency(%q<rack>, [">= 0"])
     s.add_dependency(%q<yajl-ruby>, [">= 0"])
     s.add_dependency(%q<json>, [">= 0"])
@@ -130,5 +130,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<webmock>, [">= 0"])
     s.add_dependency(%q<bacon>, [">= 0"])
     s.add_dependency(%q<rr>, [">= 0"])
+    s.add_dependency(%q<rake>, [">= 0"])
   end
 end
