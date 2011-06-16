@@ -144,13 +144,13 @@ module RestCore::Client
   def request opts, *reqs
     req = reqs.first
     response = app.call(build_env({
-      REQUEST_METHOD  => req[0],
-      REQUEST_PATH    => req[1],
-      REQUEST_QUERY   => req[2] || {},
-      REQUEST_PAYLOAD => req[3],
+      REQUEST_METHOD  => req[0]         ,
+      REQUEST_PATH    => req[1]         ,
+      REQUEST_QUERY   => req[2]         ,
+      REQUEST_PAYLOAD => req[3]         ,
       REQUEST_HEADERS => opts['headers'],
-      FAIL            => [],
-      LOG             => []}.merge(string_keys(opts))))[RESPONSE_BODY]
+      FAIL            => []             ,
+      LOG             => []}.merge(opts)))[RESPONSE_BODY]
 
     if block_given?
       yield(response)
@@ -164,14 +164,22 @@ module RestCore::Client
 
   protected
   def build_env env={}
-    string_keys(attributes).merge(env).inject({}){ |r, (k, v)|
-      r[k.to_s] = v unless v.nil?
-      r
-    }
+    string_keys(attributes).merge(string_keys(env))
   end
 
   def string_keys hash
-    hash.inject({}){ |r, (k, v)| r[k.to_s] = v; r }
+    hash.inject({}){ |r, (k, v)|
+      if v.kind_of?(Hash)
+        r[k.to_s] = case k.to_s
+                      when REQUEST_QUERY, REQUEST_PAYLOAD, REQUEST_HEADERS
+                        string_keys(v)
+                      else;         v
+                    end
+      else
+        r[k.to_s] = v
+      end
+      r
+    }
   end
 
   def lighten_hash hash
