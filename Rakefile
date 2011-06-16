@@ -15,7 +15,7 @@ task 'gem:spec' do
     # s.executables = [s.name]
 
     %w[].each{ |g| s.add_runtime_dependency(g) }
-    %w[rest-client em-http-request rack yajl-ruby json json_pure ruby-hmac
+    %w[rest-client rack yajl-ruby json json_pure ruby-hmac
        webmock bacon rr rake].each{ |g| s.add_development_dependency(g) }
 
     s.authors     = ['Cardinal Blue', 'Lin Jen-Shin (godfat)']
