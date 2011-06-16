@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors = [
   %q{Cardinal Blue},
   %q{Lin Jen-Shin (godfat)}]
-  s.date = %q{2011-06-13}
-  s.description = %q{A modular and lightweight Ruby REST client interface}
+  s.date = %q{2011-06-16}
+  s.description = %q{A modular and lightweight Ruby REST client infrastructure and implementations}
   s.email = [%q{dev (XD) cardinalblue.com}]
   s.extra_rdoc_files = [
   %q{CHANGES},
@@ -50,21 +50,21 @@ Gem::Specification.new do |s|
   %q{task/gemgem.rb},
   %q{test/common.rb},
   %q{test/config/rest-graph.yaml},
+  %q{test/pending/test_load_config.rb},
+  %q{test/pending/test_multi.rb},
+  %q{test/pending/test_test_util.rb},
   %q{test/test_api.rb},
   %q{test/test_cache.rb},
   %q{test/test_default.rb},
   %q{test/test_error.rb},
   %q{test/test_handler.rb},
-  %q{test/test_load_config.rb},
   %q{test/test_misc.rb},
-  %q{test/test_multi.rb},
   %q{test/test_oauth.rb},
   %q{test/test_old.rb},
   %q{test/test_page.rb},
   %q{test/test_parse.rb},
   %q{test/test_rest-graph.rb},
   %q{test/test_serialize.rb},
-  %q{test/test_test_util.rb},
   %q{test/test_timeout.rb},
   %q{CHANGES},
   %q{TODO}]
@@ -74,23 +74,23 @@ Gem::Specification.new do |s|
   %q{README}]
   s.require_paths = [%q{lib}]
   s.rubygems_version = %q{1.8.5}
-  s.summary = %q{A modular and lightweight Ruby REST client interface}
+  s.summary = %q{A modular and lightweight Ruby REST client infrastructure and implementations}
   s.test_files = [
+  %q{test/pending/test_load_config.rb},
+  %q{test/pending/test_multi.rb},
+  %q{test/pending/test_test_util.rb},
   %q{test/test_api.rb},
   %q{test/test_cache.rb},
   %q{test/test_default.rb},
   %q{test/test_error.rb},
   %q{test/test_handler.rb},
-  %q{test/test_load_config.rb},
   %q{test/test_misc.rb},
-  %q{test/test_multi.rb},
   %q{test/test_oauth.rb},
   %q{test/test_old.rb},
   %q{test/test_page.rb},
   %q{test/test_parse.rb},
   %q{test/test_rest-graph.rb},
   %q{test/test_serialize.rb},
-  %q{test/test_test_util.rb},
   %q{test/test_timeout.rb}]
 
   if s.respond_to? :specification_version then
