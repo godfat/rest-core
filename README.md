@@ -42,7 +42,7 @@ Or if you want development version, put this in Gemfile:
       use DefaultSite , 'https://api.github.com/users/'
       use JsonDecode  , true
       use CommonLogger, method(:puts)
-      use Cache       , {}
+      use Cache       , {}, nil
       run RestClient
     end
 
