@@ -12,15 +12,16 @@ by Cardinal Blue <http://cardinalblue.com>
 
 A modular Ruby REST client collection/infrastructure.
 
-In an era of web service and mashup, we saw a blooming of REST API. One might
-wonder, how do we easily and elegantly use those API? Thanks that now we are
-all favoring REST over SOAP, building a dedicated client might not be that
-hard. So why not just build the dedicated clients ourselves?
+In this era of web services and mashups, we have seen a blooming of REST APIs.
+One might wonder, how do we use these API easily and elegantly? Since REST is
+simple (compared to SOAP and older APIs), it is possible to a build a
+dedicated client ourselves.
 
-One can simply use pre-built dedicated clients provided by rest-core,
-assuming this would be the most cases. Or if someone is not satisfied with
-the pre-built ones, one can use pre-built "middlewares" and "apps" provided
-by rest-core, to compose and build the dedicated "clients" (s)he prefers.
+We have developed “rest-core” with the core functionality needed for a REST
+client. In the cases of common APIs such as Facebook and Twitter, developers
+can simply use the pre-built dedicated clients provided by rest-core. It is
+also possible for developers to build custom clients for arbitrary REST APIs
+using the middleware provided by rest-core.
 
 ## REQUIREMENTS:
 
