@@ -9,10 +9,10 @@ RestCore::Builder.client('Github') do
 
   use s::CommonLogger  , lambda{|obj|obj}
   use s::Cache         , {}, nil do
-    use s::ErrorHandler  , lambda{ |env| raise env.inspect }
-    use s::ErrorDetector , lambda{ |env| env[s::RESPONSE_HEADERS]['status'].
-                                         first !~ /^2/ }
-    use s::JsonDecode    , true
+    use s::ErrorHandler , lambda{|env| raise env[s::RESPONSE_BODY]['message']}
+    use s::ErrorDetector, lambda{|env| env[s::RESPONSE_HEADERS]['status'].
+                                       first !~ /^2/}
+    use s::JsonDecode   , true
     run s::Ask
   end
 
