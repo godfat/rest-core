@@ -36,7 +36,7 @@ Or if you want development version, put this in Gemfile:
 
     gem 'rest-core', :git => 'git://github.com/cardinalblue/rest-core.git'
 
-## SYNOPSIS:
+## EXAMPLE:
 
     RestCore::Builder.client('YourClient') do
       use DefaultSite , 'https://api.github.com/users/'
@@ -53,6 +53,12 @@ Or if you want development version, put this in Gemfile:
     client.site = 'http://github.com/api/v2/json/user/show/'
     client.get('godfat')
     client.get('godfat')
+
+See [example][] for more complex examples, and [build-in clients][] for even
+more complex examples.
+
+[example]: https://github.com/cardinalblue/rest-core/tree/master/example
+[build-in clients]: https://github.com/cardinalblue/rest-core/tree/master/lib/rest-core/client
 
 ## LICENSE:
 
