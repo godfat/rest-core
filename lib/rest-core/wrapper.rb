@@ -4,13 +4,13 @@ require 'rest-core'
 module RestCore::Wrapper
   include RestCore
   def self.included mod
-    mod.send(:attr_reader, :app, :middles, :wrapped)
+    mod.send(:attr_reader, :init, :middles, :wrapped)
   end
 
   def initialize &block
     @middles ||= []
     instance_eval(&block) if block_given?
-    @wrapped ||= to_app
+    @wrapped ||= to_app(@init || Ask)
   end
 
   def use middle, *args, &block
@@ -18,7 +18,7 @@ module RestCore::Wrapper
   end
 
   def run app
-    @app = app
+    @init = app
   end
 
   def members
@@ -32,7 +32,7 @@ module RestCore::Wrapper
     }.flatten
   end
 
-  def to_app init=app
+  def to_app init=@init
     # === foldr m.new app middles
     middles.reverse.inject(init.new){ |app_, (middle, args, block)|
       begin
