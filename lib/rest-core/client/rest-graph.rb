@@ -20,7 +20,7 @@ RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site) do
   use s::DefaultSite   , 'https://graph.facebook.com/'
   use s::DefaultHeaders, {'Accept'          => 'application/json',
                           'Accept-Language' => 'en-us'}
-  use s::OauthToken    , 'access_token', nil
+  use s::Oauth2Query   , 'access_token', nil
 
   use s::CommonLogger  , lambda{|obj|obj}
   use s::Cache         , {}, nil do

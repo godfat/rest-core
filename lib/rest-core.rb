@@ -28,7 +28,7 @@ module RestCore
   autoload :ErrorDetector , 'rest-core/middleware/error_detector'
   autoload :ErrorHandler  , 'rest-core/middleware/error_handler'
   autoload :JsonDecode    , 'rest-core/middleware/json_decode'
-  autoload :OauthToken    , 'rest-core/middleware/oauth_token'
+  autoload :Oauth2Query   , 'rest-core/middleware/oauth2_query'
   autoload :Timeout       , 'rest-core/middleware/timeout'
 
   # apps

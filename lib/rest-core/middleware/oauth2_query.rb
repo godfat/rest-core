@@ -1,7 +1,7 @@
 
 require 'rest-core/middleware'
 
-class RestCore::OauthToken
+class RestCore::Oauth2Query
   def self.members; [:oauth_token_name, :oauth_token]; end
   include RestCore::Middleware
 
