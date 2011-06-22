@@ -1,4 +1,4 @@
-# rest-core
+# rest-core [![Build Status](http://travis-ci.org/godfat/rest-core.png)](http://travis-ci.org/godfat/rest-core)
 by Cardinal Blue <http://cardinalblue.com>
 
 ## LINKS:
@@ -7,6 +7,18 @@ by Cardinal Blue <http://cardinalblue.com>
 * [rubygems](http://rubygems.org/gems/rest-core)
 * [rdoc](http://rdoc.info/projects/cardinalblue/rest-core)
 * [mailing list](http://groups.google.com/group/rest-core/topics)
+
+## SUMMARY:
+
+In an era of web service and mashup, we saw a blooming of REST API. One might
+wonder, how do we easily and elegantly use those API? Thanks that now we are
+all favoring REST over SOAP, building a dedicated client might not be that
+hard. So why not just build the dedicated clients ourselves?
+
+One can simply use pre-built dedicated clients provided by rest-core,
+assuming this would be the most cases. Or if someone is not satisfied with
+the pre-built ones, one can use pre-built "middlewares" and "apps" provided
+by rest-core, to compose and build the dedicated "clients" (s)he prefers.
 
 ## DESCRIPTION:
 
@@ -60,9 +72,9 @@ We presents you rest-core.
 
 ## REQUIREMENTS:
 
-* Tested with MRI 1.8.7 and 1.9.2 and Rubinius 1.2.2.
-  Because of development gems can't work well on JRuby,
-  let me know if rest-core is working on JRuby, thanks!
+* Tested with MRI (official ruby) 1.9.2, 1.8.7, and trunk
+* Tested with Rubinius (rbx) 1.2.3
+* Tested with JRuby 1.6.2
 
 ## INSTALLATION:
 
