@@ -45,9 +45,9 @@ web service, but dedicated clients make us feel smooth to use for the
 particular web service.
 
 [rest-core][] is invented for that, inspired by [Rack][] and [Faraday][]. One
-can simply use pre-built dedicated clients provided by rest-core, we assumed
+can simply use pre-built dedicated clients provided by rest-core, assuming
 this would be the most cases. Or if someone is not satisfied with the
-pre-built one, one can use pre-built "middlewares" and "apps" provided by
+pre-built ones, one can use pre-built "middlewares" and "apps" provided by
 rest-core, to compose and build the dedicated clients (s)he prefers. Or, even
 go further that create custom "middlewares", which should be fairly easy,
 and use that along with pre-built ones to compose a very customized client.
