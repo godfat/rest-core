@@ -1,7 +1,5 @@
 
-RestCore::Builder.client('Github', :api_key,
-                                   :consumer_key,
-                                   :consumer_secret, :old_site) do
+RestCore::Builder.client('Github') do
   s = self.class # this is only for ruby 1.8!
   use s::Timeout       , 10
 
