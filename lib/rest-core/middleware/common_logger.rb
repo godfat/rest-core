@@ -8,8 +8,11 @@ class RestCore::CommonLogger
 
   def call env
     start_time = Time.now
-    response = app.call(flush(env))
+    response = app.call(flushed = flush(env))
     flush(log(response, log_request(start_time, response)))
+  rescue
+    flush(log(flushed, log_request(start_time, flushed)))
+    raise
   end
 
   def flush env
