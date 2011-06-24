@@ -12,12 +12,15 @@ module RestCore
   FAIL             = 'core.fail'
   LOG              = 'core.log'
 
-  # utilities
-  autoload :Builder   , 'rest-core/builder'
-  autoload :Client    , 'rest-core/client'
-  autoload :Event     , 'rest-core/event'
-  autoload :Middleware, 'rest-core/middleware'
-  autoload :Wrapper   , 'rest-core/wrapper'
+  # core utilities
+  autoload :Builder       , 'rest-core/builder'
+  autoload :Client        , 'rest-core/client'
+  autoload :Event         , 'rest-core/event'
+  autoload :Middleware    , 'rest-core/middleware'
+  autoload :Wrapper       , 'rest-core/wrapper'
+
+  # misc utilities
+  autoload :Hmac          , 'rest-core/util/hmac'
 
   # middlewares
   autoload :Cache         , 'rest-core/middleware/cache'
