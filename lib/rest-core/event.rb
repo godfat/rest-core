@@ -13,4 +13,5 @@ module RestCore
   class Event::CacheHit     < Event; end
   class Event::CacheCleared < Event; end
   class Event::Failed       < Event; end
+  class Event::WithHeader   < Event; end
 end
