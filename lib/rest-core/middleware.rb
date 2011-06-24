@@ -20,10 +20,11 @@ module RestCore::Middleware
       end
     RUBY
     args      = [:app] + mod.members
-    args_list = args.join(', ')
-    ivar_list = args.map{ |a| "@#{a}" }.join(', ')
+    para_list = args.map{ |a| "#{a}=nil"}.join(', ')
+    args_list = args                     .join(', ')
+    ivar_list = args.map{ |a| "@#{a}"   }.join(', ')
     src << <<-RUBY
-      def initialize #{args_list}
+      def initialize #{para_list}
         #{ivar_list} = #{args_list}
       end
       self
