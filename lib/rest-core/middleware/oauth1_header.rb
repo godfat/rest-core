@@ -39,7 +39,7 @@ class RestCore::Oauth1Header
 
   def attach_signature env, oauth_params
     params = reject_blank(oauth_params)
-    params.merge('oauth_signature' => escape(signature(env, params)))
+    params.merge('oauth_signature' => encode(signature(env, params)))
   end
 
   def signature env, params
@@ -54,9 +54,9 @@ class RestCore::Oauth1Header
     payload  = reject_blank(env[REQUEST_PAYLOAD] || {})
     params   = reject_blank(oauth_params.merge(query.merge(payload))).
       to_a.sort.map{ |(k, v)|
-        "#{escape(k.to_s)}=#{escape(v.to_s)}"}.join('&')
+        "#{encode(k.to_s)}=#{encode(v.to_s)}"}.join('&')
 
-    "#{method}&#{escape(base_uri)}&#{escape(params)}"
+    "#{method}&#{encode(base_uri)}&#{encode(params)}"
   end
 
   def nonce
@@ -70,7 +70,7 @@ class RestCore::Oauth1Header
                                      v.strip.empty? == true) }
   end
 
-  def escape string
+  def encode string
     URI.encode(string, /[^a-zA-Z0-9\-\.\_\~]/)
   end
 end
