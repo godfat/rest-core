@@ -2,17 +2,8 @@
 require 'rest-core'
 require 'rest-core/util/hmac'
 
-# optional http client
-begin; require 'restclient'     ; rescue LoadError; end
-begin; require 'em-http-request'; rescue LoadError; end
-
 # optional gem
-begin; require 'rack'           ; rescue LoadError; end
-
-# stdlib
-require 'openssl'
-
-require 'cgi'
+begin; require 'rack'; rescue LoadError; end
 
 RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site) do
   s = self.class # this is only for ruby 1.8!
