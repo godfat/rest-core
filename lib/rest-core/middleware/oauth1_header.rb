@@ -2,7 +2,7 @@
 require 'rest-core/middleware'
 require 'rest-core/util/hmac'
 
-require 'cgi'
+require 'uri'
 require 'openssl'
 
 class RestCore::Oauth1Header
@@ -71,6 +71,6 @@ class RestCore::Oauth1Header
   end
 
   def escape string
-    CGI.escape(string).gsub('+', '%20')
+    URI.encode(string, /[^a-zA-Z0-9\-\.\_\~]/)
   end
 end
