@@ -14,7 +14,7 @@ RestCore::Builder.client('Twitter', :data) do
 
   use s::Cache         , {}, nil do
     use s::ErrorHandler  , lambda{|env| raise env[s::RESPONSE_BODY]['error'] }
-    use s::ErrorDetector , lambda{|env| env[s::RESPONSE_STATUS] / 100 == 2 }
+    use s::ErrorDetector , lambda{|env| env[s::RESPONSE_STATUS] / 100 != 2 }
     use s::JsonDecode    , true
     run s::Ask
   end
