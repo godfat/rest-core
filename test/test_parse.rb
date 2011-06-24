@@ -104,7 +104,7 @@ describe RestGraph do
     key, data = 'top', 'secret'
     digest = OpenSSL::HMAC.digest('sha256', key, data)
     mock(OpenSSL::HMAC).digest('sha256', key, data){ raise 'boom' }
-    RestCore::Hmac.hmac_sha256(key, data).should == digest
+    RestCore::Hmac.sha256(key, data).should == digest
   end
 
   should 'generate correct fbs with correct sig' do

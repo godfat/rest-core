@@ -83,7 +83,7 @@ module Facebook::Client
     }
     self.data = check_sig_and_return_data(
                   JsonDecode.json_decode(json).merge('sig' => sig)){
-                    self.class.hmac_sha256(secret, json_encoded)
+                    Hmac.sha256(secret, json_encoded)
                   }
   rescue JsonDecode::ParseError
     self.data = nil
@@ -142,16 +142,4 @@ module Facebook::Client
   end
 end
 
-module Facebook::Hmac
-  # Fallback to ruby-hmac gem in case system openssl
-  # lib doesn't support SHA256 (OSX 10.5)
-  def hmac_sha256 key, data
-    OpenSSL::HMAC.digest('sha256', key, data)
-  rescue RuntimeError
-    require 'hmac-sha2'
-    HMAC::SHA256.digest(key, data)
-  end
-end
-
 Facebook.send(:include, Facebook::Client)
-Facebook.send(:extend , Facebook::Hmac)

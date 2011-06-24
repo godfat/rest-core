@@ -158,7 +158,7 @@ module RestGraph::Client
     }
     self.data = check_sig_and_return_data(
                   JsonDecode.json_decode(json).merge('sig' => sig)){
-                    Hmac.hmac_sha256(secret, json_encoded)
+                    Hmac.sha256(secret, json_encoded)
                   }
   rescue JsonDecode::ParseError
     self.data = nil
