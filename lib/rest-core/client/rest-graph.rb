@@ -1,5 +1,6 @@
 
 require 'rest-core'
+require 'rest-core/util/hmac'
 
 # optional http client
 begin; require 'restclient'     ; rescue LoadError; end
@@ -166,7 +167,7 @@ module RestGraph::Client
     }
     self.data = check_sig_and_return_data(
                   JsonDecode.json_decode(json).merge('sig' => sig)){
-                    self.class.hmac_sha256(secret, json_encoded)
+                    Hmac.hmac_sha256(secret, json_encoded)
                   }
   rescue JsonDecode::ParseError
     self.data = nil
@@ -262,16 +263,4 @@ module RestGraph::Client
   end
 end
 
-module RestGraph::Hmac
-  # Fallback to ruby-hmac gem in case system openssl
-  # lib doesn't support SHA256 (OSX 10.5)
-  def hmac_sha256 key, data
-    OpenSSL::HMAC.digest('sha256', key, data)
-  rescue RuntimeError
-    require 'hmac-sha2'
-    HMAC::SHA256.digest(key, data)
-  end
-end
-
 RestGraph.send(:include, RestGraph::Client)
-RestGraph.send(:extend , RestGraph::Hmac)
