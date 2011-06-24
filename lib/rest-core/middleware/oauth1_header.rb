@@ -33,10 +33,12 @@ class RestCore::Oauth1Header
 
   def attach_signature env, oauth_params
     params = reject_blank(oauth_params)
-    params.merge('oauth_signature' =>
-      CGI.escape([Hmac.sha1(
-                    "#{consumer_secret(env)}&",
-                    base_string(env, params))].pack('m').tr("\n", '')))
+    params.merge('oauth_signature' => CGI.escape(signature(env, params)))
+  end
+
+  def signature env, params
+    [Hmac.sha1("#{consumer_secret(env)}&",
+               base_string(env, params))].pack('m').tr("\n", '')
   end
 
   def base_string env, oauth_params
