@@ -19,6 +19,9 @@ module RestCore
   autoload :Middleware    , 'rest-core/middleware'
   autoload :Wrapper       , 'rest-core/wrapper'
 
+  # oauth1 utilities
+  autoload :ClientOauth1  , 'rest-core/client_oauth1'
+
   # misc utilities
   autoload :Hmac          , 'rest-core/util/hmac'
 
