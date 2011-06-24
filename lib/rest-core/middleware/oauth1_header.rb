@@ -23,7 +23,7 @@ class RestCore::Oauth1Header
     header = attach_signature(env,
       'oauth_consumer_key'     => consumer_key(env),
       'oauth_signature_method' => 'HMAC-SHA1',
-      'oauth_timestamps'       => Time.now.to_i,
+      'oauth_timestamp'        => Time.now.to_i,
       'oauth_nonce'            => nonce,
       'oauth_version'          => '1.0',
       'oauth_callback'         => callback(env))
