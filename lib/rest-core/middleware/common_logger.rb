@@ -9,13 +9,16 @@ class RestCore::CommonLogger
   def call env
     start_time = Time.now
     response = app.call(flush(env))
-    flush(log(response, Event::Requested.new(Time.now - start_time,
-                                             request_uri(response))))
+    flush(log(response, log_request(start_time, response)))
   end
 
   def flush env
     return env unless log_method(env)
     (env[LOG] || []).each{ |obj| log_method(env).call("RestCore: #{obj}") }
     env.merge(LOG => [])
+  end
+
+  def log_request start_time, response
+    Event::Requested.new(Time.now - start_time, request_uri(response))
   end
 end
