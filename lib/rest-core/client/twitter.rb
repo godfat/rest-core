@@ -6,8 +6,7 @@ RestCore::Builder.client('Twitter', :data) do
   use s::DefaultSite   , 'https://api.twitter.com/'
   use s::DefaultHeaders, {'Accept' => 'application/json'}
   use s::Oauth1Header  ,
-    'oauth/request_token', 'oauth/access_token', 'oauth/authorize',
-    nil, nil, nil, nil, nil, nil
+    'oauth/request_token', 'oauth/access_token', 'oauth/authorize'
 
   use s::CommonLogger  , method(:puts)
 
