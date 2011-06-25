@@ -13,7 +13,7 @@ RestCore::Builder.client('Linkedin', :data) do
 
   use s::Cache         , {}, nil do
     use s::ErrorHandler , lambda{|env| raise env[s::RESPONSE_BODY]['message']}
-    use s::ErrorDetector, lambda{|env| env[s::RESPONSE_STATUS] / 100 != 2 }
+    use s::ErrorDetectorHttp
     use s::JsonDecode    , true
     run s::Ask
   end

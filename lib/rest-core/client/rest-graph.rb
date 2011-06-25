@@ -15,10 +15,15 @@ RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site) do
   use s::Oauth2Query   , 'access_token', nil
 
   use s::CommonLogger  , lambda{|obj|obj}
+
   use s::Cache         , {}, nil do
     use s::ErrorHandler  , lambda{ |env| raise ::RestGraph::Error.call(env) }
-    use s::ErrorDetector , lambda{ |env| env[s::RESPONSE_BODY]['error'] ||
-                                         env[s::RESPONSE_BODY]['error_code'] }
+    use s::ErrorDetector , lambda{ |env|
+      if env[s::RESPONSE_BODY].kind_of?(Hash)
+        env[s::RESPONSE_BODY]['error'] ||
+        env[s::RESPONSE_BODY]['error_code']
+      end}
+
     use s::JsonDecode    , true
     run s::Ask
   end
