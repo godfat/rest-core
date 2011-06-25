@@ -14,7 +14,13 @@ RestCore::Builder.client('Linkedin', :data) do
   use s::CommonLogger  , method(:puts)
 
   use s::Cache         , {}, nil do
-    use s::ErrorHandler , lambda{|env| raise env[s::RESPONSE_BODY]['message']}
+    use s::ErrorHandler , lambda{|env|
+      if (body = env[s::RESPONSE_BODY]).kind_of?(Hash)
+        raise body['message']
+      else
+        raise body
+      end
+    }
     use s::ErrorDetectorHttp
     use s::JsonDecode    , true
     run s::Ask
