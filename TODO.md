@@ -8,6 +8,7 @@
 
 ## medium
 
+* namespace issue
 * what about async request? yield callback? coroutine?
 * dependency?
 
