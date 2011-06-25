@@ -38,6 +38,10 @@ module Twitter::Client
     data['oauth_token_secret'] = secret if data.kind_of?(Hash)
   end
 
+  def tweet status, opt={}
+    post('1/statuses/update.json', {:status => status}.merge(opt))
+  end
+
   private
   def set_token query
     self.data = query
