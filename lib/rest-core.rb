@@ -10,6 +10,7 @@ module RestCore
   RESPONSE_STATUS  = 'RESPONSE_STATUS'
   RESPONSE_HEADERS = 'RESPONSE_HEADERS'
 
+  ASK              = 'core.ask'
   FAIL             = 'core.fail'
   LOG              = 'core.log'
 
