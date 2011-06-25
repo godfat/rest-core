@@ -6,8 +6,10 @@ RestCore::Builder.client('Linkedin', :data) do
   use s::DefaultSite   , 'https://api.linkedin.com/'
   use s::DefaultHeaders, {'Accept' => 'application/json'}
   use s::DefaultQuery  , {'format' => 'json'}
+
   use s::Oauth1Header  ,
-    'uas/oauth/requestToken', 'uas/oauth/accessToken', 'https://www.linkedin.com/uas/oauth/authorize'
+    'uas/oauth/requestToken', 'uas/oauth/accessToken',
+    'https://www.linkedin.com/uas/oauth/authorize'
 
   use s::CommonLogger  , method(:puts)
 
