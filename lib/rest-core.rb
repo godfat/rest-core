@@ -34,6 +34,7 @@ module RestCore
   autoload :DefaultSite   , 'rest-core/middleware/default_site'
   autoload :Defaults      , 'rest-core/middleware/defaults'
   autoload :ErrorDetector , 'rest-core/middleware/error_detector'
+  autoload :ErrorDetectorHttp, 'rest-core/middleware/error_detector_http'
   autoload :ErrorHandler  , 'rest-core/middleware/error_handler'
   autoload :JsonDecode    , 'rest-core/middleware/json_decode'
   autoload :Oauth1Header  , 'rest-core/middleware/oauth1_header'
