@@ -2,7 +2,6 @@
 
 ## high
 
-* address cache in oauth1
 * middleware revisit (how to initialize?)
 * what does false and nil mean in env?
 
