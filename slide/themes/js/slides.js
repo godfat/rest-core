@@ -289,5 +289,8 @@ function main() {
     addTouchListeners();
 
     addTocLinksListeners();
+
+    // customization
+    showSlideNumbers();
   })();
 };
