@@ -2,8 +2,10 @@
 
 require 'nokogiri'
 
-landslide = `landslide -t themes --embed --direct-ouput slide.md`
-slide = Nokogiri::HTML.parse(landslide)
+cmd = 'landslide -t themes --embed slide.md'
+puts(cmd)
+system(cmd)
+slide = Nokogiri::HTML.parse(File.read('presentation.html'))
 
 # strip full path
 slide.css('.source a').each{ |n| n['href'] = n.inner_text }
