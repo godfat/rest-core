@@ -9,4 +9,4 @@
 
 ---
 
-end
+<img src="diagram/client-server.png"/>
