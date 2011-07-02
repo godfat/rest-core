@@ -5,7 +5,7 @@
 
     !haskell
 
-      newtype Prob a = getProb{ [a, Rational] }
+      newtype Prob a = { getProb :: [a, Rational] }
 
 ---
 
