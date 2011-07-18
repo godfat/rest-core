@@ -33,7 +33,7 @@ div.slide {
   display: none;
   position: absolute;
   overflow: hidden;
-  width: 900px;
+  width: 950px;
   height: 700px;
   left: 50%;
   top: 50%;
@@ -65,27 +65,27 @@ div.slide p {
 
 .slide.far-past {
   display: block;
-  margin-left: -2400px;
+  margin-left: -2500px;
 }
 
 .slide.past {
   display: block;
-  margin-left: -1400px;
+  margin-left: -1500px;
 }
 
 .slide.current {
   display: block;
-  margin-left: -450px;
+  margin-left: -475px;
 }
 
 .slide.future {
   display: block;
-  margin-left: 500px;
+  margin-left: 600px;
 }
 
 .slide.far-future {
   display: block;
-  margin-left: 1500px;
+  margin-left: 1600px;
 }
 
 body.three-d div.slides {
