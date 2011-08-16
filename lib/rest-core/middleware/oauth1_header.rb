@@ -55,8 +55,16 @@ class RestCore::Oauth1Header
   def base_string env, oauth_params
     method   = env[REQUEST_METHOD].to_s.upcase
     base_uri = env[REQUEST_PATH]
+    # TODO: the detection should be checking if it's
+    # application/x-www-form-urlencoded or not, instead of multipart or not.
+    # but since the Content-Type is generated in app (http client),
+    # we have no idea what it would be here. so simply guessing it...
+    payload  = if multipart?(env)
+                 {}
+               else
+                 reject_blank(env[REQUEST_PAYLOAD] || {})
+               end
     query    = reject_blank(env[REQUEST_QUERY]   || {})
-    payload  = reject_blank(env[REQUEST_PAYLOAD] || {})
     params   = reject_blank(oauth_params.merge(query.merge(payload))).
       to_a.sort.map{ |(k, v)|
         "#{encode(k.to_s)}=#{encode(v.to_s)}"}.join('&')
@@ -66,6 +74,11 @@ class RestCore::Oauth1Header
 
   def nonce
     [OpenSSL::Random.random_bytes(32)].pack('m').tr("+/=\n", '')
+  end
+
+  def multipart? env
+    !!(env[REQUEST_PAYLOAD] &&
+       env[REQUEST_PAYLOAD].find{ |k, v| v.kind_of?(IO) })
   end
 
   def reject_blank params
