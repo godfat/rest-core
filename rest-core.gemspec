@@ -8,24 +8,28 @@ Gem::Specification.new do |s|
   s.authors = [
   %q{Cardinal Blue},
   %q{Lin Jen-Shin (godfat)}]
-  s.date = %q{2011-06-22}
+  s.date = %q{2011-08-16}
   s.description = %q{A modular Ruby REST client collection/infrastructure.
 
-In an era of web service and mashup, we saw a blooming of REST API. One might
-wonder, how do we easily and elegantly use those API? Thanks that now we are
-all favoring REST over SOAP, building a dedicated client might not be that
-hard. So why not just build the dedicated clients ourselves?
+In this era of web services and mashups, we have seen a blooming of REST
+APIs. One might wonder, how do we use these APIs easily and elegantly?
+Since REST is very simple compared to SOAP, it is not hard to build a
+dedicated client ourselves.
 
-One can simply use pre-built dedicated clients provided by rest-core,
-assuming this would be the most cases. Or if someone is not satisfied with
-the pre-built ones, one can use pre-built "middlewares" and "apps" provided
-by rest-core, to compose and build the dedicated "clients" (s)he prefers.}
+We have developed [rest-core][] with composable middlewares to build a
+REST client, based on the effort from [rest-graph][]. In the cases of
+common APIs such as Facebook, Github, and Twitter, developers can simply
+use the built-in dedicated clients provided by rest-core, or do it yourself
+for any other REST APIs.
+
+[rest-core]: http://github.com/cardinalblue/rest-core
+[rest-graph]: http://github.com/cardinalblue/rest-graph}
   s.email = [%q{dev (XD) cardinalblue.com}]
   s.extra_rdoc_files = [
-  %q{CHANGES},
   %q{CONTRIBUTORS},
   %q{LICENSE},
-  %q{TODO}]
+  %q{TODO.md},
+  %q{CONTRIBUTORS}]
   s.files = [
   %q{.gitignore},
   %q{.gitmodules},
@@ -37,24 +41,35 @@ by rest-core, to compose and build the dedicated "clients" (s)he prefers.}
   %q{README},
   %q{README.md},
   %q{Rakefile},
+  %q{TODO.md},
+  %q{example/facebook.rb},
+  %q{example/github.rb},
   %q{lib/rest-core.rb},
   %q{lib/rest-core/app/ask.rb},
   %q{lib/rest-core/app/rest-client.rb},
   %q{lib/rest-core/builder.rb},
   %q{lib/rest-core/client.rb},
+  %q{lib/rest-core/client/github.rb},
+  %q{lib/rest-core/client/linkedin.rb},
   %q{lib/rest-core/client/rest-graph.rb},
+  %q{lib/rest-core/client/twitter.rb},
+  %q{lib/rest-core/client_oauth1.rb},
   %q{lib/rest-core/event.rb},
   %q{lib/rest-core/middleware.rb},
   %q{lib/rest-core/middleware/cache.rb},
   %q{lib/rest-core/middleware/common_logger.rb},
   %q{lib/rest-core/middleware/default_headers.rb},
+  %q{lib/rest-core/middleware/default_query.rb},
   %q{lib/rest-core/middleware/default_site.rb},
   %q{lib/rest-core/middleware/defaults.rb},
   %q{lib/rest-core/middleware/error_detector.rb},
+  %q{lib/rest-core/middleware/error_detector_http.rb},
   %q{lib/rest-core/middleware/error_handler.rb},
   %q{lib/rest-core/middleware/json_decode.rb},
-  %q{lib/rest-core/middleware/oauth_token.rb},
+  %q{lib/rest-core/middleware/oauth1_header.rb},
+  %q{lib/rest-core/middleware/oauth2_query.rb},
   %q{lib/rest-core/middleware/timeout.rb},
+  %q{lib/rest-core/util/hmac.rb},
   %q{lib/rest-core/version.rb},
   %q{lib/rest-core/wrapper.rb},
   %q{lib/rest-graph/config_util.rb},
@@ -73,20 +88,19 @@ by rest-core, to compose and build the dedicated "clients" (s)he prefers.}
   %q{test/test_handler.rb},
   %q{test/test_misc.rb},
   %q{test/test_oauth.rb},
+  %q{test/test_oauth1_header.rb},
   %q{test/test_old.rb},
   %q{test/test_page.rb},
   %q{test/test_parse.rb},
   %q{test/test_rest-graph.rb},
   %q{test/test_serialize.rb},
-  %q{test/test_timeout.rb},
-  %q{CHANGES},
-  %q{TODO}]
+  %q{test/test_timeout.rb}]
   s.homepage = %q{https://github.com/cardinalblue/rest-core}
   s.rdoc_options = [
   %q{--main},
   %q{README}]
   s.require_paths = [%q{lib}]
-  s.rubygems_version = %q{1.8.5}
+  s.rubygems_version = %q{1.8.7}
   s.summary = %q{A modular Ruby REST client collection/infrastructure.}
   s.test_files = [
   %q{test/pending/test_load_config.rb},
@@ -99,6 +113,7 @@ by rest-core, to compose and build the dedicated "clients" (s)he prefers.}
   %q{test/test_handler.rb},
   %q{test/test_misc.rb},
   %q{test/test_oauth.rb},
+  %q{test/test_oauth1_header.rb},
   %q{test/test_old.rb},
   %q{test/test_page.rb},
   %q{test/test_parse.rb},
