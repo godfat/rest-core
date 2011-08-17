@@ -26,6 +26,8 @@ module RestCore::Client
             default_#{name}(app.app)
           elsif app.respond_to?(:app)       # walk into next app
             default_#{name}(app.app)
+          elsif self.class.respond_to?("default_#{name}")
+            self.class.default_#{name}       # old class default style
           else
             nil
           end
