@@ -1,5 +1,5 @@
 
-RestCore::Builder.client('Twitter', :data) do
+Twitter = RestCore::Builder.client(:data) do
   s = self.class # this is only for ruby 1.8!
   use s::Timeout       , 10
 

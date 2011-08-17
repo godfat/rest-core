@@ -5,7 +5,7 @@ require 'rest-core/util/hmac'
 # optional gem
 begin; require 'rack'; rescue LoadError; end
 
-RestCore::Builder.client('RestGraph', :data, :app_id, :secret, :old_site) do
+RestGraph = RestCore::Builder.client(:data, :app_id, :secret, :old_site) do
   s = self.class # this is only for ruby 1.8!
   use s::Timeout       , 10
 
