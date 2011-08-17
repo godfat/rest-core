@@ -19,12 +19,12 @@ module RestCore::Client
         end
 
         def default_#{name} app=app
-          if app.respond_to?(:#{name})
+          if app.respond_to?(:#{name})      # instance value
             app.#{name}({})
-          elsif app.respond_to?(:wrapped)
-            default_#{name}(app.wrapped) ||
+          elsif app.respond_to?(:wrapped)   # wrapper value
+            default_#{name}(app.wrapped) || # walk into it
             default_#{name}(app.app)
-          elsif app.respond_to?(:app)
+          elsif app.respond_to?(:app)       # walk into next app
             default_#{name}(app.app)
           else
             nil
