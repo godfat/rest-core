@@ -1,5 +1,7 @@
 
-Twitter = RestCore::Builder.client(:data) do
+require 'rest-core'
+
+RestCore::Twitter = RestCore::Builder.client(:data) do
   s = self.class # this is only for ruby 1.8!
   use s::Timeout       , 10
 
@@ -55,5 +57,5 @@ module Twitter::Client
   end
 end
 
-Twitter.send(:include, RestCore::ClientOauth1)
-Twitter.send(:include,  Twitter::Client)
+RestCore::Twitter.send(:include, RestCore::ClientOauth1)
+RestCore::Twitter.send(:include,  Twitter::Client)

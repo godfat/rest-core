@@ -1,5 +1,5 @@
 
-RestCore::Builder.client('Linkedin', :data) do
+RestCore::Linkedin = RestCore::Builder.client(:data) do
   s = self.class # this is only for ruby 1.8!
   use s::Timeout       , 10
 
@@ -53,5 +53,5 @@ module Linkedin::Client
   end
 end
 
-Linkedin.send(:include, RestCore::ClientOauth1)
-Linkedin.send(:include, Linkedin::Client)
+RestCore::Linkedin.send(:include, RestCore::ClientOauth1)
+RestCore::Linkedin.send(:include, Linkedin::Client)

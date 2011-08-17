@@ -1,5 +1,7 @@
 
-RestCore::Builder.client('Github') do
+require 'rest-core'
+
+RestCore::Github = RestCore::Builder.client do
   s = self.class # this is only for ruby 1.8!
   use s::Timeout       , 10
 
