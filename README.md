@@ -42,7 +42,7 @@ Or if you want development version, put this in Gemfile:
 
 ## EXAMPLE:
 
-    RestCore::Builder.client('YourClient') do
+    YourClient = RestCore::Builder.client do
       use DefaultSite , 'https://api.github.com/users/'
       use JsonDecode  , true
       use CommonLogger, method(:puts)

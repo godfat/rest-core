@@ -3,7 +3,7 @@
 
 require 'rest-core'
 
-RestCore::Builder.client('Facebook', :data, :app_id, :secret, :old_site) do
+Facebook = RestCore::Builder.client(:data, :app_id, :secret, :old_site) do
   s = self.class # this is only for ruby 1.8!
   use s::Timeout       , 10
 
