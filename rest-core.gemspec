@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = [
   %q{Cardinal Blue},
   %q{Lin Jen-Shin (godfat)}]
-  s.date = %q{2011-08-19}
+  s.date = %q{2011-08-21}
   s.description = %q{A modular Ruby REST client collection/infrastructure.
 
 In this era of web services and mashups, we have seen a blooming of REST
@@ -25,11 +25,6 @@ for any other REST APIs.
 [rest-core]: http://github.com/cardinalblue/rest-core
 [rest-graph]: http://github.com/cardinalblue/rest-graph}
   s.email = [%q{dev (XD) cardinalblue.com}]
-  s.extra_rdoc_files = [
-  %q{CONTRIBUTORS},
-  %q{LICENSE},
-  %q{TODO.md},
-  %q{CONTRIBUTORS}]
   s.files = [
   %q{.gitignore},
   %q{.gitmodules},
@@ -69,36 +64,32 @@ for any other REST APIs.
   %q{lib/rest-core/middleware/oauth1_header.rb},
   %q{lib/rest-core/middleware/oauth2_query.rb},
   %q{lib/rest-core/middleware/timeout.rb},
+  %q{lib/rest-core/util/config.rb},
   %q{lib/rest-core/util/hmac.rb},
   %q{lib/rest-core/version.rb},
   %q{lib/rest-core/wrapper.rb},
-  %q{lib/rest-graph/config_util.rb},
-  %q{pending/test_load_config.rb},
   %q{pending/test_multi.rb},
   %q{pending/test_test_util.rb},
   %q{rest-core.gemspec},
   %q{task/.gitignore},
   %q{task/gemgem.rb},
   %q{test/common.rb},
-  %q{test/config/rest-graph.yaml},
+  %q{test/config/rest-core.yaml},
   %q{test/test_api.rb},
   %q{test/test_cache.rb},
   %q{test/test_default.rb},
   %q{test/test_error.rb},
   %q{test/test_handler.rb},
+  %q{test/test_load_config.rb},
   %q{test/test_misc.rb},
   %q{test/test_oauth.rb},
   %q{test/test_oauth1_header.rb},
   %q{test/test_old.rb},
   %q{test/test_page.rb},
   %q{test/test_parse.rb},
-  %q{test/test_rest-graph.rb},
   %q{test/test_serialize.rb},
   %q{test/test_timeout.rb}]
   s.homepage = %q{https://github.com/cardinalblue/rest-core}
-  s.rdoc_options = [
-  %q{--main},
-  %q{README}]
   s.require_paths = [%q{lib}]
   s.rubygems_version = %q{1.8.7}
   s.summary = %q{A modular Ruby REST client collection/infrastructure.}
@@ -108,13 +99,13 @@ for any other REST APIs.
   %q{test/test_default.rb},
   %q{test/test_error.rb},
   %q{test/test_handler.rb},
+  %q{test/test_load_config.rb},
   %q{test/test_misc.rb},
   %q{test/test_oauth.rb},
   %q{test/test_oauth1_header.rb},
   %q{test/test_old.rb},
   %q{test/test_page.rb},
   %q{test/test_parse.rb},
-  %q{test/test_rest-graph.rb},
   %q{test/test_serialize.rb},
   %q{test/test_timeout.rb}]
 
