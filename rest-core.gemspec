@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = [
   %q{Cardinal Blue},
   %q{Lin Jen-Shin (godfat)}]
-  s.date = %q{2011-08-16}
+  s.date = %q{2011-08-19}
   s.description = %q{A modular Ruby REST client collection/infrastructure.
 
 In this era of web services and mashups, we have seen a blooming of REST
@@ -73,14 +73,14 @@ for any other REST APIs.
   %q{lib/rest-core/version.rb},
   %q{lib/rest-core/wrapper.rb},
   %q{lib/rest-graph/config_util.rb},
+  %q{pending/test_load_config.rb},
+  %q{pending/test_multi.rb},
+  %q{pending/test_test_util.rb},
   %q{rest-core.gemspec},
   %q{task/.gitignore},
   %q{task/gemgem.rb},
   %q{test/common.rb},
   %q{test/config/rest-graph.yaml},
-  %q{test/pending/test_load_config.rb},
-  %q{test/pending/test_multi.rb},
-  %q{test/pending/test_test_util.rb},
   %q{test/test_api.rb},
   %q{test/test_cache.rb},
   %q{test/test_default.rb},
@@ -103,9 +103,6 @@ for any other REST APIs.
   s.rubygems_version = %q{1.8.7}
   s.summary = %q{A modular Ruby REST client collection/infrastructure.}
   s.test_files = [
-  %q{test/pending/test_load_config.rb},
-  %q{test/pending/test_multi.rb},
-  %q{test/pending/test_test_util.rb},
   %q{test/test_api.rb},
   %q{test/test_cache.rb},
   %q{test/test_default.rb},
