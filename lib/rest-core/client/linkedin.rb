@@ -31,7 +31,7 @@ RestCore::Linkedin = RestCore::Builder.client(:data) do
   run s::RestClient
 end
 
-module Linkedin::Client
+module RestCore::Linkedin::Client
   include RestCore
 
   def oauth_token
@@ -54,4 +54,4 @@ module Linkedin::Client
 end
 
 RestCore::Linkedin.send(:include, RestCore::ClientOauth1)
-RestCore::Linkedin.send(:include, Linkedin::Client)
+RestCore::Linkedin.send(:include, RestCore::Linkedin::Client)

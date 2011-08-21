@@ -31,7 +31,7 @@ RestCore::Twitter = RestCore::Builder.client(:data) do
   run s::RestClient
 end
 
-module Twitter::Client
+module RestCore::Twitter::Client
   include RestCore
 
   def oauth_token
@@ -58,4 +58,4 @@ module Twitter::Client
 end
 
 RestCore::Twitter.send(:include, RestCore::ClientOauth1)
-RestCore::Twitter.send(:include,  Twitter::Client)
+RestCore::Twitter.send(:include, RestCore::Twitter::Client)
