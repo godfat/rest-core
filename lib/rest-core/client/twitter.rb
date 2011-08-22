@@ -37,13 +37,13 @@ module RestCore::Twitter::Client
   def oauth_token
     data['oauth_token'] if data.kind_of?(Hash)
   end
-  def oauth_token=  token
+  def oauth_token= token
     data['oauth_token'] = token if data.kind_of?(Hash)
   end
   def oauth_token_secret
     data['oauth_token_secret'] if data.kind_of?(Hash)
   end
-  def oauth_token_secret=  secret
+  def oauth_token_secret= secret
     data['oauth_token_secret'] = secret if data.kind_of?(Hash)
   end
 
