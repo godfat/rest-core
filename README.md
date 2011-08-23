@@ -38,7 +38,8 @@ for any other REST APIs.
 
 Or if you want development version, put this in Gemfile:
 
-    gem 'rest-core', :git => 'git://github.com/cardinalblue/rest-core.git'
+    gem 'rest-core', :git => 'git://github.com/cardinalblue/rest-core.git',
+                     :submodules => true
 
 ## EXAMPLE:
 
