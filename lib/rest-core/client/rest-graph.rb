@@ -16,7 +16,7 @@ RestGraph = RestCore::Builder.client(:data, :app_id, :secret, :old_site) do
 
   use s::CommonLogger  , lambda{|obj|obj}
 
-  use s::Cache         , {}, nil do
+  use s::Cache         , {}, 3600 do
     use s::ErrorHandler  , lambda{ |env| raise ::RestGraph::Error.call(env) }
     use s::ErrorDetector , lambda{ |env|
       if env[s::RESPONSE_BODY].kind_of?(Hash)
