@@ -58,6 +58,10 @@ Or if you want development version, put this in Gemfile:
     require 'rest-core/client/rest-graph'
     RestGraph.new.get('4')                   # get user info
 
+See [example][] for more complex examples.
+
+[example]: https://github.com/cardinalblue/rest-core/tree/master/example
+
 ## Build Your Own Clients Example:
 
     require 'rest-core'
@@ -78,11 +82,9 @@ Or if you want development version, put this in Gemfile:
     client.get('godfat') # cache miss
     client.get('godfat') # cache hit
 
-See [example][] for more complex examples, and [build-in clients][] for even
-more complex examples.
+See [built-in clients][] for more complex examples.
 
-[example]: https://github.com/cardinalblue/rest-core/tree/master/example
-[build-in clients]: https://github.com/cardinalblue/rest-core/tree/master/lib/rest-core/client
+[built-in clients]: https://github.com/cardinalblue/rest-core/tree/master/lib/rest-core/client
 
 ## LICENSE:
 
