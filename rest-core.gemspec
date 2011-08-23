@@ -2,13 +2,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rest-core}
-  s.version = "0.0.1"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [
   %q{Cardinal Blue},
   %q{Lin Jen-Shin (godfat)}]
-  s.date = %q{2011-08-21}
+  s.date = %q{2011-08-24}
   s.description = %q{A modular Ruby REST client collection/infrastructure.
 
 In this era of web services and mashups, we have seen a blooming of REST
@@ -33,12 +33,13 @@ for any other REST APIs.
   %q{Gemfile},
   %q{LICENSE},
   %q{NOTE.md},
-  %q{README},
   %q{README.md},
   %q{Rakefile},
   %q{TODO.md},
   %q{example/facebook.rb},
   %q{example/github.rb},
+  %q{example/linkedin.rb},
+  %q{example/twitter.rb},
   %q{lib/rest-core.rb},
   %q{lib/rest-core/app/ask.rb},
   %q{lib/rest-core/app/rest-client.rb},
