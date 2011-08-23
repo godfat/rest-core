@@ -47,6 +47,10 @@ module RestCore::Linkedin::Client
     data['oauth_token_secret'] = secret if data.kind_of?(Hash)
   end
 
+  def me queries={}, opts={}
+    get('v1/people/~', queries, opts)
+  end
+
   private
   def set_token query
     self.data = query

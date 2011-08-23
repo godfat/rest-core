@@ -41,7 +41,24 @@ Or if you want development version, put this in Gemfile:
     gem 'rest-core', :git => 'git://github.com/cardinalblue/rest-core.git',
                      :submodules => true
 
-## EXAMPLE:
+## Built-in Clients Example:
+
+    require 'rest-core'
+
+    RestCore::Twitter.new.statuses('godfat') # get user tweets
+    RestCore::Github.new.get('users/godfat') # get user info
+
+    linkedin = RestCore::Linkedin.new(:consumer_key    => '...',
+                                      :consumer_secret => '...')
+    linkedin.authorize_url!   # copy and paste the URL in browser to authorize
+    linkedin.authorize!('..') # paste your code from browser
+    linkedin.me               # get current user info
+
+    # below is exactly the same as [rest-graph][]
+    require 'rest-core/client/rest-graph'
+    RestGraph.new.get('4')                   # get user info
+
+## Build Your Own Clients Example:
 
     require 'rest-core'
 
@@ -49,7 +66,7 @@ Or if you want development version, put this in Gemfile:
       use DefaultSite , 'https://api.github.com/users/'
       use JsonDecode  , true
       use CommonLogger, method(:puts)
-      use Cache       , {}, nil
+      use Cache       , {}, 3600
       run RestClient
     end
 
