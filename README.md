@@ -43,6 +43,8 @@ Or if you want development version, put this in Gemfile:
 
 ## EXAMPLE:
 
+    require 'rest-core'
+
     YourClient = RestCore::Builder.client do
       use DefaultSite , 'https://api.github.com/users/'
       use JsonDecode  , true
@@ -52,12 +54,12 @@ Or if you want development version, put this in Gemfile:
     end
 
     client = YourClient.new
-    client.get('godfat')
-    client.get('godfat')
+    client.get('godfat') # cache miss
+    client.get('godfat') # cache hit
 
     client.site = 'http://github.com/api/v2/json/user/show/'
-    client.get('godfat')
-    client.get('godfat')
+    client.get('godfat') # cache miss
+    client.get('godfat') # cache hit
 
 See [example][] for more complex examples, and [build-in clients][] for even
 more complex examples.
