@@ -29,8 +29,8 @@ for any other REST APIs.
 ## REQUIREMENTS:
 
 * Tested with MRI (official ruby) 1.9.2, 1.8.7, and trunk
-* Tested with Rubinius (rbx) 1.2.3
-* Tested with JRuby 1.6.2
+* Tested with Rubinius (rbx) 1.2
+* Tested with JRuby 1.6
 
 ## INSTALLATION:
 
