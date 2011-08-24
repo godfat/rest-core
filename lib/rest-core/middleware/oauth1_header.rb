@@ -78,7 +78,8 @@ class RestCore::Oauth1Header
 
   def multipart? env
     !!(env[REQUEST_PAYLOAD] &&
-       env[REQUEST_PAYLOAD].find{ |k, v| v.kind_of?(IO) })
+       env[REQUEST_PAYLOAD].find{ |k, v| v.kind_of?(IO) ||
+                                         v.respond_to?(:read) })
   end
 
   def reject_blank params
