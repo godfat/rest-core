@@ -2,13 +2,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rest-core}
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [
   %q{Cardinal Blue},
   %q{Lin Jen-Shin (godfat)}]
-  s.date = %q{2011-08-24}
+  s.date = %q{2011-08-25}
   s.description = %q{A modular Ruby REST client collection/infrastructure.
 
 In this era of web services and mashups, we have seen a blooming of REST
