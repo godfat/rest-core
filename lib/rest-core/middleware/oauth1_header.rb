@@ -64,7 +64,7 @@ class RestCore::Oauth1Header
                else
                  reject_blank(env[REQUEST_PAYLOAD] || {})
                end
-    query    = reject_blank(env[REQUEST_QUERY]   || {})
+    query    = reject_blank(env[REQUEST_QUERY] || {})
     params   = reject_blank(oauth_params.merge(query.merge(payload))).
       to_a.sort.map{ |(k, v)|
         "#{encode(k.to_s)}=#{encode(v.to_s)}"}.join('&')
