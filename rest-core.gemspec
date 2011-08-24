@@ -29,6 +29,7 @@ for any other REST APIs.
   %q{.gitignore},
   %q{.gitmodules},
   %q{.travis.yml},
+  %q{CHANGES.md},
   %q{CONTRIBUTORS},
   %q{Gemfile},
   %q{LICENSE},
