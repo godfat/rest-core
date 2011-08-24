@@ -5,7 +5,7 @@ RestCore::Twitter = RestCore::Builder.client(:data) do
   s = self.class # this is only for ruby 1.8!
   use s::Timeout       , 10
 
-  use s::DefaultSite   , 'https://api.twitter.com/1/'
+  use s::DefaultSite   , 'https://api.twitter.com/'
   use s::DefaultHeaders, {'Accept' => 'application/json'}
 
   use s::Oauth1Header  ,
@@ -47,13 +47,19 @@ module RestCore::Twitter::Client
     data['oauth_token_secret'] = secret if data.kind_of?(Hash)
   end
 
-  def tweet status, queries={}, opts={}
-    post('statuses/update.json',
-      {:status => status}.merge(queries), opts)
+  def tweet status, media=nil, opts={}
+    if media
+      post('1/statuses/update_with_media.json',
+        {:status => status, 'media[]' => media},
+        {},
+        {:site   => 'https://upload.twitter.com/'}.merge(opts))
+    else
+      post('1/statuses/update.json', {:status => status}, opts)
+    end
   end
 
   def statuses user, queries={}, opts={}
-    get('statuses/user_timeline.json', {:id => user}.merge(queries), opts)
+    get('1/statuses/user_timeline.json', {:id => user}.merge(queries), opts)
   end
 
   private
