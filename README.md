@@ -45,8 +45,8 @@ Or if you want development version, put this in Gemfile:
 
     require 'rest-core'
 
-    RestCore::Twitter.new.statuses('godfat') # get user tweets
-    RestCore::Github.new.get('users/godfat') # get user info
+    RestCore::Twitter.new.statuses('_cardinalblue') # get user tweets
+    RestCore::Github.new.get('users/cardinalblue')  # get user info
 
     linkedin = RestCore::Linkedin.new(:consumer_key    => '...',
                                       :consumer_secret => '...')
@@ -75,12 +75,12 @@ See [example][] for more complex examples.
     end
 
     client = YourClient.new
-    client.get('godfat') # cache miss
-    client.get('godfat') # cache hit
+    client.get('cardinalblue') # cache miss
+    client.get('cardinalblue') # cache hit
 
     client.site = 'http://github.com/api/v2/json/user/show/'
-    client.get('godfat') # cache miss
-    client.get('godfat') # cache hit
+    client.get('cardinalblue') # cache miss
+    client.get('cardinalblue') # cache hit
 
 See [built-in clients][] for more complex examples.
 
