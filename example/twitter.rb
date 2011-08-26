@@ -1,6 +1,6 @@
 
 require 'rest-core'
-RestCore::Twitter.new.statuses('godfat') # get user tweets
+RestCore::Twitter.new.statuses('_cardinalblue') # get user tweets
 
 twitter = RestCore::Twitter.new(:consumer_key    => '...',
                                 :consumer_secret => '...')

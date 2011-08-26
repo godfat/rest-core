@@ -1,4 +1,4 @@
 
 require 'rest-core'
 
-p RestCore::Github.new.get('users/godfat') # get user info
+p RestCore::Github.new.get('users/cardinalblue') # get user info
