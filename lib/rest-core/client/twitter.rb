@@ -49,10 +49,9 @@ module RestCore::Twitter::Client
 
   def tweet status, media=nil, opts={}
     if media
-      post('1/statuses/update_with_media.json',
+      post('https://upload.twitter.com/1/statuses/update_with_media.json',
         {:status => status, 'media[]' => media},
-        {},
-        {:site   => 'https://upload.twitter.com/'}.merge(opts))
+        {}, opts)
     else
       post('1/statuses/update.json', {:status => status}, opts)
     end
