@@ -2,13 +2,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rest-core}
-  s.version = "0.2.1"
+  s.version = "0.2.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [
   %q{Cardinal Blue},
   %q{Lin Jen-Shin (godfat)}]
-  s.date = %q{2011-08-25}
+  s.date = %q{2011-08-26}
   s.description = %q{A modular Ruby REST client collection/infrastructure.
 
 In this era of web services and mashups, we have seen a blooming of REST
@@ -93,7 +93,7 @@ for any other REST APIs.
   %q{test/test_timeout.rb}]
   s.homepage = %q{https://github.com/cardinalblue/rest-core}
   s.require_paths = [%q{lib}]
-  s.rubygems_version = %q{1.8.7}
+  s.rubygems_version = %q{1.8.9}
   s.summary = %q{A modular Ruby REST client collection/infrastructure.}
   s.test_files = [
   %q{test/test_api.rb},
@@ -115,7 +115,7 @@ for any other REST APIs.
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rest-client>, [">= 0"])
+      s.add_runtime_dependency(%q<rest-client>, [">= 0"])
       s.add_development_dependency(%q<rack>, [">= 0"])
       s.add_development_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_development_dependency(%q<json>, [">= 0"])

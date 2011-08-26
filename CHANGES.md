@@ -1,5 +1,11 @@
 # rest-core CHANGES
 
+## rest-core 0.2.2 -- 2011-08-26
+
+* Adding rest-client as a runtime dependency for now.
+  In the future, it should be taken out because of multiple
+  selectable HTTP client backend (rest-core app).
+
 ## rest-core 0.2.1 -- 2011-08-25
 
 * [twitter] Fixed default site
