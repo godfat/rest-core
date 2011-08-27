@@ -1,5 +1,10 @@
 # rest-core CHANGES
 
+## rest-core 0.2.3 -- 2011-08-27
+
+* Adding rack as a runtime dependency for now.
+  To reduce frustration for new comer...
+
 ## rest-core 0.2.2 -- 2011-08-26
 
 * Adding rest-client as a runtime dependency for now.
