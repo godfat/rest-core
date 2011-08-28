@@ -12,18 +12,12 @@ describe RestGraph do
   end
 
   should 'be serialized with lighten' do
-    engines = if RUBY_VERSION >= '1.9.2'
-                begin
-                  require 'psych'
-                  YAML::ENGINE.yamler = 'psych' # TODO: probably a bug?
-                  [Marshal, YAML, Psych]
-                rescue LoadError
-                  [Marshal, YAML]
-                end
-              elsif defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
-                [Marshal]
-              else
-                [YAML]
+    engines = begin
+                require 'psych'
+                YAML::ENGINE.yamler = 'psych' # TODO: probably a bug?
+                [Marshal, YAML, Psych]
+              rescue LoadError
+                [Marshal, YAML]
               end
 
     engines.each{ |engine|
