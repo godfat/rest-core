@@ -15,12 +15,12 @@ describe RestGraph do
     engines = begin
                 require 'psych'
                 YAML::ENGINE.yamler = 'psych' # TODO: probably a bug?
-                [Marshal, Psych, YAML]
+                [Psych, YAML, Marshal]
               rescue LoadError
-                [Marshal, YAML]
+                [YAML, Marshal]
               end
 
-    # no one wants to fix sych!
+    # sorry, it is marshal in 1.8 is broken
     if defined?(RUBY_ENGINE) && RUBY_ENGINE  == 'ruby' &&
                                 RUBY_VERSION == '1.8.7'
       engines.pop # REE 1.8.7
