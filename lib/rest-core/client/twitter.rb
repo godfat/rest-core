@@ -53,7 +53,7 @@ module RestCore::Twitter::Client
         {:status => status, 'media[]' => media},
         {}, opts)
     else
-      post('1/statuses/update.json', {:status => status}, opts)
+      post('1/statuses/update.json', {:status => status}, {}, opts)
     end
   end
 
