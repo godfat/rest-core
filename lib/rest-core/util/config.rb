@@ -17,11 +17,6 @@ module RestCore::Config
   end
 
   def load klass, path, env
-    return false if klass.const_defined?(DefaultModuleName)
-    RestCore::Config.load!(klass, path, env)
-  end
-
-  def load! klass, path, env
     config   = YAML.load(ERB.new(File.read(path)).result(binding))
     defaults = config[env]
     return false unless defaults
@@ -31,13 +26,18 @@ module RestCore::Config
     mod = if klass.const_defined?(DefaultModuleName)
             klass.const_get(DefaultModuleName)
           else
-            m = Module.new
-            klass.send(:extend, m)
-            klass.send(:const_set, DefaultModuleName, m)
-            m
+            klass.send(:const_set, DefaultModuleName, Module.new)
           end
 
-    mod.module_eval(defaults.inject([]){ |r, (k, v)|
+    singleton_class = if klass.respond_to?(:singleton_class)
+                        klass.singleton_class
+                      else
+                        class << klass; self; end
+                      end
+
+    klass.send(:extend, mod) unless singleton_class < mod
+
+    mod.module_eval(defaults.inject(["extend self\n"]){ |r, (k, v)|
       # quote strings, leave others free (e.g. false, numbers, etc)
       r << <<-RUBY
         def default_#{k}
