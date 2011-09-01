@@ -1,0 +1,13 @@
+
+source 'http://rubygems.org'
+
+gem 'rails', '2.3.14'
+
+gem 'rest-client' # for rest-core
+gem 'yajl-ruby'   # for rest-core
+gem 'rest-core', :path => '../../'
+
+group 'test' do
+  gem 'rr'
+  gem 'webmock'
+end
