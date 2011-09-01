@@ -50,7 +50,7 @@ describe RestCore::Facebook do
     stub_request(:post, 'https://graph.facebook.com/feed/me').
       with(:body => 'message=hi%20there').to_return(:body => 'ok')
 
-    RestCore::Facebook.new(:auto_decode => false).
+    RestCore::Facebook.new(:json_decode => false).
       post('feed/me', :message => 'hi there').should == 'ok'
   end
 
@@ -60,7 +60,7 @@ describe RestCore::Facebook do
       to_return(:body => 'ok')
 
     rg = RestCore::Facebook.new(
-      :auto_decode => false, :access_token => 'wrong',
+      :json_decode => false, :access_token => 'wrong',
       :app_id => '1', :secret => '2')
     rg.get('me', {}, :secret => true).should == 'ok'
     rg.url('me', {}, :secret => true).should ==
@@ -73,9 +73,9 @@ describe RestCore::Facebook do
     stub_request(:get, 'https://graph.facebook.com/woot').
       to_return(:body => 'bad json')
 
-    rg = RestCore::Facebook.new(:auto_decode => true)
-    rg.get('woot', {}, :auto_decode => false).should == 'bad json'
-    rg.auto_decode.should == true
+    rg = RestCore::Facebook.new(:json_decode => true)
+    rg.get('woot', {}, :json_decode => false).should == 'bad json'
+    rg.json_decode.should == true
   end
 
   should 'not raise exception when encountering error' do
@@ -91,7 +91,7 @@ describe RestCore::Facebook do
     stub(o = Object.new).to_s{ 'i am mock' }
     stub_request(:get, "https://graph.facebook.com/search?q=i%20am%20mock").
       to_return(:body => 'ok')
-    RestCore::Facebook.new(:auto_decode => false).
+    RestCore::Facebook.new(:json_decode => false).
       get('search', :q => o).should.eq 'ok'
   end
 end

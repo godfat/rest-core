@@ -12,7 +12,7 @@ describe RestCore::Facebook do
       @url, @body = "https://graph.facebook.com/cache", '{"message":"ok"}'
       @cache_key  = Digest::MD5.hexdigest(@url)
       @cache = {}
-      @rg = RestCore::Facebook.new(:cache => @cache, :auto_decode => false)
+      @rg = RestCore::Facebook.new(:cache => @cache, :json_decode => false)
       stub_request(:get, @url).to_return(:body => @body).times(1)
     end
 

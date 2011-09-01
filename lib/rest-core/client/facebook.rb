@@ -14,7 +14,7 @@ RestCore::Facebook = RestCore::Builder.client(
   use s::DefaultSite   , 'https://graph.facebook.com/'
   use s::DefaultHeaders, {'Accept'          => 'application/json',
                           'Accept-Language' => 'en-us'}
-  use s::Oauth2Query   , 'access_token', nil
+  use s::Oauth2Query   , nil
 
   use s::CommonLogger  , lambda{|obj|obj}
 
@@ -76,29 +76,21 @@ end
 module RestCore::Facebook::Client
   include RestCore
 
-  def self.included mod
-    mod.send(:alias_method, :auto_decode , :json_decode )
-    mod.send(:alias_method, :auto_decode=, :json_decode=)
-  end
-
-  def oauth_token
+  def access_token
     data['access_token'] || data['oauth_token'] if data.kind_of?(Hash)
   end
-  def oauth_token=  token
+
+  def access_token=  token
     data['access_token'] = token if data.kind_of?(Hash)
   end
-  alias_method :access_token , :oauth_token
-  alias_method :access_token=, :oauth_token=
 
-  def secret_oauth_token ; "#{app_id}|#{secret}"           ; end
-  alias_method :secret_access_token, :secret_oauth_token
-
+  def secret_access_token; "#{app_id}|#{secret}"           ; end
   def accept             ; headers['Accept']               ; end
   def accept=         val; headers['Accept']          = val; end
   def lang               ; headers['Accept-Language']      ; end
   def lang=           val; headers['Accept-Language'] = val; end
 
-  def authorized?        ; !!oauth_token                   ; end
+  def authorized?        ; !!access_token                  ; end
 
   def next_page hash, opts={}, &cb
     if hash['paging'].kind_of?(Hash) && hash['paging']['next']
@@ -182,7 +174,7 @@ module RestCore::Facebook::Client
   def authorize! opts={}
     query = {:client_id => app_id, :client_secret => secret}.merge(opts)
     self.data = Rack::Utils.parse_query(
-                  request({:auto_decode => false}.merge(opts),
+                  request({:json_decode => false}.merge(opts),
                           [:get, url('oauth/access_token', query)]))
   end
 
@@ -227,8 +219,7 @@ module RestCore::Facebook::Client
   def build_env env={}
     super(env.inject({}){ |r, (k, v)|
       case k.to_s
-        when 'auto_decode'; r['json_decode' ] = v
-        when 'secret'     ; r['oauth_token' ] = secret_oauth_token
+        when 'secret'     ; r['access_token'] = secret_access_token
         when 'cache'      ; r['cache.update'] = !!!v
         else              ; r[k.to_s]         = v
       end

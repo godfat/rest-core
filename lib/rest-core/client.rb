@@ -92,8 +92,8 @@ module RestCore::Client
   end
 
   # extra options:
-  #   auto_decode: Bool # decode with json or not in this API request
-  #                     # default: auto_decode in rest-graph instance
+  #   json_decode: Bool # decode with json or not in this API request
+  #                     # default: json_decode in rest-graph instance
   #       timeout: Int  # the timeout for this API request
   #                     # default: timeout in rest-graph instance
   #        secret: Bool # use secret_acccess_token or not

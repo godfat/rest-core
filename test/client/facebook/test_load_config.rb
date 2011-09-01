@@ -17,7 +17,7 @@ describe RestCore::Config do
   def check
     @klass.default_app_id     .should == 41829
     @klass.default_secret     .should == 'r41829'.reverse
-    @klass.default_auto_decode.should == false
+    @klass.default_json_decode.should == false
     @klass.default_lang       .should == 'zh-tw'
   end
 

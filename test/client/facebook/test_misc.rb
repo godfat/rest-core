@@ -53,19 +53,19 @@ describe RestCore::Facebook do
   end
 
   should 'auto decode json' do
-    rg = RestCore::Facebook.new(:auto_decode => true)
+    rg = RestCore::Facebook.new(:json_decode => true)
     stub_request(:get, rg.site).to_return(:body => '[]')
     rg.get('').should ==  []
   end
 
   should 'not auto decode json' do
-    rg = RestCore::Facebook.new(:auto_decode => false)
+    rg = RestCore::Facebook.new(:json_decode => false)
     stub_request(:get, rg.site).to_return(:body => '[]')
     rg.get('').should == '[]'
   end
 
   should 'give attributes' do
-    RestCore::Facebook.new(:auto_decode => false).attributes.
+    RestCore::Facebook.new(:json_decode => false).attributes.
       keys.map(&:to_s).sort.should.eq \
       RestCore::Facebook.members.map(&:to_s).sort
   end
