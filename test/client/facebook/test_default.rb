@@ -1,21 +1,17 @@
 
-if respond_to?(:require_relative, true)
-  require_relative 'common'
-else
-  require File.dirname(__FILE__) + '/common'
-end
+require 'rest-core/test'
 
-describe RestGraph do
+describe RestCore::Facebook do
   should 'honor default attributes' do
-    RestGraph.members.reject{ |name|
+    RestCore::Facebook.members.reject{ |name|
       name.to_s =~ /method$|handler$|detector$/ }.each{ |name|
-        RestGraph.new.send(name).should ==
-        RestGraph.new.send("default_#{name}")
+        RestCore::Facebook.new.send(name).should ==
+        RestCore::Facebook.new.send("default_#{name}")
     }
   end
 
   should 'use module to override default attributes' do
-    klass = RestGraph.dup
+    klass = RestCore::Facebook.dup
     klass.send(:include, Module.new do
       def default_app_id
         '1829'

@@ -1,11 +1,7 @@
 
-if respond_to?(:require_relative, true)
-  require_relative 'common'
-else
-  require File.dirname(__FILE__) + '/common'
-end
+require 'rest-core/test'
 
-describe RestGraph do
+describe RestCore::Facebook do
   after do
     WebMock.reset!
     RR.verify
@@ -17,7 +13,7 @@ describe RestGraph do
         to_return(:body => '{}')
 
       logger = []
-      rg = RestGraph.new(:log_method => lambda{ |s| logger << [s] })
+      rg = RestCore::Facebook.new(:log_method => lambda{ |s| logger << [s] })
       rg.get('me')
 
       logger.size.should == 1
@@ -35,13 +31,14 @@ describe RestGraph do
     end
 
     should 'call error_handler if error occurred' do
-      RestGraph.new(:error_handler => @id).get('me').should == @error_hash
+      RestCore::Facebook.new(:error_handler => @id).get('me').
+        should.eq @error_hash
     end
 
-    should 'raise ::RestGraph::Error in default error_handler' do
+    should 'raise ::RestCore::Facebook::Error in default error_handler' do
       begin
-        RestGraph.new.get('me')
-      rescue ::RestGraph::Error => e
+        RestCore::Facebook.new.get('me')
+      rescue ::RestCore::Facebook::Error => e
         e.error  .should == @error_hash
         e.message.should ==
           "#{@error_hash.inspect} from https://graph.facebook.com/me"
@@ -69,14 +66,14 @@ describe RestGraph do
     end
 
     should 'call error_handler if error occurred' do
-      RestGraph.new(:error_handler => @id).fql(@bad_fql_query).
+      RestCore::Facebook.new(:error_handler => @id).fql(@bad_fql_query).
         should == @fql_error_hash
     end
 
-    should 'raise ::RestGraph::Error in default error_handler' do
+    should 'raise ::RestCore::Facebook::Error in default error_handler' do
       begin
-        RestGraph.new.fql(@bad_fql_query)
-      rescue ::RestGraph::Error => e
+        RestCore::Facebook.new.fql(@bad_fql_query)
+      rescue ::RestCore::Facebook::Error => e
         e.error  .should == @fql_error_hash
         e.message.should.start_with?(
           "#{@fql_error_hash.inspect} from "          \

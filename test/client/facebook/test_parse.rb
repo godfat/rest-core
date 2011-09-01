@@ -1,14 +1,10 @@
 
-if respond_to?(:require_relative, true)
-  require_relative 'common'
-else
-  require File.dirname(__FILE__) + '/common'
-end
+require 'rest-core/test'
 
-describe RestGraph do
+describe RestCore::Facebook do
 
   should 'return nil if parse error, but not when call data directly' do
-    rg = RestGraph.new
+    rg = RestCore::Facebook.new
     rg.parse_cookies!({}).should == nil
     rg.data              .should == {}
   end
@@ -17,7 +13,7 @@ describe RestGraph do
     algorithm = 'HMAC-SHA256'
     user      = '{"country"=>"us", "age"=>{"min"=>21}}'
     data      = {'algorithm' => algorithm, 'user' => user}
-    rg        = RestGraph.new(:data => data, :secret => 'secret')
+    rg        = RestCore::Facebook.new(:data => data, :secret => 'secret')
     sig       = rg.send(:calculate_sig, data)
     rg.parse_fbs!("\"#{rg.fbs}\"").should == data.merge('sig' => sig)
   end
@@ -35,7 +31,7 @@ describe RestGraph do
         "__utma=123; __utmz=456.utmcsr=(d)|utmccn=(d)|utmcmd=(n); " \
         "fbs_#{app_id}=#{fbs}"
 
-      rg  = RestGraph.new(:app_id => app_id, :secret => secret)
+      rg  = RestCore::Facebook.new(:app_id => app_id, :secret => secret)
       rg.parse_rack_env!('HTTP_COOKIE' => http_cookie).
                       should.kind_of?(token ? Hash : NilClass)
       rg.access_token.should ==  token
@@ -59,20 +55,20 @@ describe RestGraph do
   end
 
   should 'not pass if there is no secret, prevent from forgery' do
-    rg = RestGraph.new
+    rg = RestCore::Facebook.new
     rg.parse_fbs!('"feed=me&sig=bddd192cf27f22c05f61c8bea24fa4b7"').
       should == nil
   end
 
   should 'parse json correctly' do
-    rg = RestGraph.new
+    rg = RestCore::Facebook.new
 
     rg.parse_json!('bad json')    .should == nil
     rg.parse_json!('{"no":"sig"}').should == nil
     rg.parse_json!('{"feed":"me","sig":"bddd192cf27f22c05f61c8bea24fa4b7"}').
       should == nil
 
-    rg = RestGraph.new(:secret => 'bread')
+    rg = RestCore::Facebook.new(:secret => 'bread')
     rg.parse_json!('{"feed":"me","sig":"20393e7823730308938a86ecf1c88b14"}').
       should == {'feed' => 'me', 'sig' => "20393e7823730308938a86ecf1c88b14"}
     rg.data.empty?.should == false
@@ -90,7 +86,7 @@ describe RestGraph do
     sig = OpenSSL::HMAC.digest('sha256', secret, json_encoded)
     signed_request = "#{encode[sig]}.#{json_encoded}"
 
-    rg = RestGraph.new(:secret => secret)
+    rg = RestCore::Facebook.new(:secret => secret)
     rg.parse_signed_request!(signed_request)
     rg.data['ooh'].should == 'dir'
     rg.data['moo'].should == 'bar'
@@ -108,12 +104,13 @@ describe RestGraph do
   end
 
   should 'generate correct fbs with correct sig' do
-    RestGraph.new(:access_token => 'fake', :secret => 's').fbs.should ==
+    RestCore::Facebook.new(:access_token => 'fake', :secret => 's').fbs.
+      should.eq \
       "access_token=fake&sig=#{Digest::MD5.hexdigest('access_token=fakes')}"
   end
 
   should 'parse fbs from facebook response which lacks sig...' do
-    rg = RestGraph.new(:access_token => 'a', :secret => 'z')
+    rg = RestCore::Facebook.new(:access_token => 'a', :secret => 'z')
     rg.parse_fbs!(rg.fbs)                           .should.kind_of?(Hash)
     rg.data.empty?.should == false
     rg.parse_fbs!(rg.fbs.sub(/sig\=\w+/, 'sig=abc')).should == nil
@@ -121,7 +118,7 @@ describe RestGraph do
   end
 
   should 'generate correct fbs with additional parameters' do
-    rg = RestGraph.new(:access_token => 'a', :secret => 'z')
+    rg = RestCore::Facebook.new(:access_token => 'a', :secret => 'z')
     rg.data['expires'] = '1234'
     rg.parse_fbs!(rg.fbs).should.kind_of?(Hash)
     rg.access_token      .should == 'a'

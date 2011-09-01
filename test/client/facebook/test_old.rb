@@ -1,11 +1,7 @@
 
-if respond_to?(:require_relative, true)
-  require_relative 'common'
-else
-  require File.dirname(__FILE__) + '/common'
-end
+require 'rest-core/test'
 
-describe RestGraph do
+describe RestCore::Facebook do
   after do
     WebMock.reset!
     RR.verify
@@ -17,14 +13,14 @@ describe RestGraph do
     stub_request(:get, "https://api.facebook.com/method/fql.query?#{query}").
       to_return(:body => '[]')
 
-    RestGraph.new.fql(fql).should == []
+    RestCore::Facebook.new.fql(fql).should == []
 
     token = 'token'.reverse
     stub_request(:get, "https://api.facebook.com/method/fql.query?#{query}" \
       "&access_token=#{token}").
       to_return(:body => '[]')
 
-    RestGraph.new(:access_token => token).fql(fql).should == []
+    RestCore::Facebook.new(:access_token => token).fql(fql).should == []
   end
 
   should 'do fql.mutilquery correctly' do
@@ -45,7 +41,7 @@ describe RestGraph do
     }
 
     stub_multi.call
-    RestGraph.new.fql_multi(:f0 => f0, :f1 => f1).should == []
+    RestCore::Facebook.new.fql_multi(:f0 => f0, :f1 => f1).should == []
   end
 
   should 'cache fake post in fql' do
@@ -56,25 +52,27 @@ describe RestGraph do
       with(:body => {:query => query}).
       to_return(:body => body)
 
-    RestGraph.new(:cache => (cache = {})).fql(query, {}, :post => true).
+    RestCore::Facebook.new(:cache => (cache = {})).
+      fql(query, {}, :post => true).
       first['name']   .should == 'Mark Zuckerberg'
     cache.size        .should == 1
     cache.values.first.should == body
 
     WebMock.reset! # should hit the cache
 
-    RestGraph.new(:cache => cache).fql(query, {}, :post => true).
+    RestCore::Facebook.new(:cache => cache).fql(query, {}, :post => true).
       first['name']   .should == 'Mark Zuckerberg'
     cache.size        .should == 1
     cache.values.first.should == body
 
     # query changed
     should.raise(WebMock::NetConnectNotAllowedError) do
-      RestGraph.new(:cache => cache).fql(query.upcase, {}, :post => true)
+      RestCore::Facebook.new(:cache => cache).
+        fql(query.upcase, {}, :post => true)
     end
 
     # cache should work for normal get
-    RestGraph.new(:cache => cache).fql(query).
+    RestCore::Facebook.new(:cache => cache).fql(query).
       first['name']   .should == 'Mark Zuckerberg'
     cache.size        .should == 1
     cache.values.first.should == body
@@ -86,8 +84,8 @@ describe RestGraph do
       'https://api.facebook.com/method/notes.create?format=json').
       to_return(:body => body)
 
-    RestGraph.new.old_rest('notes.create', {}, :auto_decode => false).
-      should == body
+    RestCore::Facebook.new.
+      old_rest('notes.create', {}, :auto_decode => false).should.eq body
   end
 
   should 'exchange sessions for access token' do
@@ -97,8 +95,8 @@ describe RestGraph do
               'sessions=bad%20bed').
       to_return(:body => '[{"access_token":"bogus"}]')
 
-    RestGraph.new(:app_id => 'id',
-                  :secret => 'di').
+    RestCore::Facebook.new(:app_id => 'id',
+                           :secret => 'di').
       exchange_sessions(:sessions => 'bad bed').
       first['access_token'].should == 'bogus'
   end
@@ -109,7 +107,7 @@ describe RestGraph do
       'access_token=123%7Cs&format=json&properties=app_id'
     ).to_return(:body => '{"app_id":"123"}')
 
-    RestGraph.new(:app_id => '123', :secret => 's').
+    RestCore::Facebook.new(:app_id => '123', :secret => 's').
       secret_old_rest('admin.getAppProperties', :properties => 'app_id').
       should == {'app_id' => '123'}
   end

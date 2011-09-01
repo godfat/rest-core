@@ -1,9 +1,5 @@
 
-if respond_to?(:require_relative, true)
-  require_relative 'common'
-else
-  require File.dirname(__FILE__) + '/common'
-end
+require 'rest-core/test'
 
 describe RestCore::Oauth1Header do
   before do

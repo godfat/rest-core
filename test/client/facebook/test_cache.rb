@@ -1,11 +1,7 @@
 
-if respond_to?(:require_relative, true)
-  require_relative 'common'
-else
-  require File.dirname(__FILE__) + '/common'
-end
+require 'rest-core/test'
 
-describe RestGraph do
+describe RestCore::Facebook do
   after do
     WebMock.reset!
     RR.verify
@@ -16,7 +12,7 @@ describe RestGraph do
       @url, @body = "https://graph.facebook.com/cache", '{"message":"ok"}'
       @cache_key  = Digest::MD5.hexdigest(@url)
       @cache = {}
-      @rg = RestGraph.new(:cache => @cache, :auto_decode => false)
+      @rg = RestCore::Facebook.new(:cache => @cache, :auto_decode => false)
       stub_request(:get, @url).to_return(:body => @body).times(1)
     end
 
@@ -48,7 +44,7 @@ describe RestGraph do
       stub_request(meth, url).to_return(:body => body).times(3)
 
       cache = {}
-      rg = RestGraph.new(:cache => cache)
+      rg = RestCore::Facebook.new(:cache => cache)
       3.times{
         if meth == :delete
           rg.send(meth, 'cache').should == {'message' => 'ok'}

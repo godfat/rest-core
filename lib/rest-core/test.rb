@@ -1,7 +1,5 @@
 
-require 'rubygems' if RUBY_VERSION < '1.9.2'
-require 'rack'     if RUBY_VERSION < '1.9.2' # autoload broken in 1.8?
-require 'rest-core/client/rest-graph'
+require 'rest-core/client/facebook'
 
 # need to require this before webmock in order to enable mocking in em-http
 
@@ -25,5 +23,11 @@ module TestHelper
 
   def normalize_url url
     url.sub(/\?.+/){ |query| TestHelper.normalize_query(query) }
+  end
+end
+
+module Kernel
+  def eq? rhs
+    self == rhs
   end
 end

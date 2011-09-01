@@ -5,7 +5,9 @@ require 'rest-core/util/hmac'
 # optional gem
 begin; require 'rack'; rescue LoadError; end
 
-RestGraph = RestCore::Builder.client(:data, :app_id, :secret, :old_site) do
+RestCore::Facebook = RestCore::Builder.client(
+  :data, :app_id, :secret, :old_site) do
+
   s = self.class # this is only for ruby 1.8!
   use s::Timeout       , 10
 
@@ -17,7 +19,8 @@ RestGraph = RestCore::Builder.client(:data, :app_id, :secret, :old_site) do
   use s::CommonLogger  , lambda{|obj|obj}
 
   use s::Cache         , {}, 3600 do
-    use s::ErrorHandler  , lambda{ |env| raise ::RestGraph::Error.call(env) }
+    use s::ErrorHandler  , lambda{ |env|
+                             raise ::RestCore::Facebook::Error.call(env) }
     use s::ErrorDetector , lambda{ |env|
       if env[s::RESPONSE_BODY].kind_of?(Hash)
         env[s::RESPONSE_BODY]['error'] ||
@@ -34,9 +37,9 @@ RestGraph = RestCore::Builder.client(:data, :app_id, :secret, :old_site) do
   run s::RestClient
 end
 
-class RestGraph::Error < RuntimeError
+class RestCore::Facebook::Error < RuntimeError
   include RestCore
-  class AccessToken        < RestGraph::Error; end
+  class AccessToken        < Facebook::Error; end
   class InvalidAccessToken < AccessToken     ; end
   class MissingAccessToken < AccessToken     ; end
 
@@ -70,7 +73,7 @@ class RestGraph::Error < RuntimeError
   end
 end
 
-module RestGraph::Client
+module RestCore::Facebook::Client
   include RestCore
 
   def self.included mod
@@ -259,4 +262,4 @@ module RestGraph::Client
   end
 end
 
-RestGraph.send(:include, RestGraph::Client)
+RestCore::Facebook.send(:include, RestCore::Facebook::Client)

@@ -1,11 +1,7 @@
 
-if respond_to?(:require_relative, true)
-  require_relative 'common'
-else
-  require File.dirname(__FILE__) + '/common'
-end
+require 'rest-core/test'
 
-describe RestGraph do
+describe RestCore::Facebook do
   after do
     WebMock.reset!
     RR.verify
@@ -30,7 +26,7 @@ describe RestGraph do
 
     engines.each{ |engine|
       test = lambda{ |obj| engine.load(engine.dump(obj)) }
-        rg = RestGraph.new(:log_handler => lambda{})
+        rg = RestCore::Facebook.new(:log_handler => lambda{})
       lambda{ test[rg] }.should.raise(TypeError)
       test[rg.lighten].should == rg.lighten
       lambda{ test[rg] }.should.raise(TypeError)
@@ -40,7 +36,7 @@ describe RestGraph do
   end
 
   should 'lighten takes options to change attributes' do
-    RestGraph.new.lighten(:timeout => 100    ).timeout.should == 100
-    RestGraph.new.lighten(:lang    => 'zh-TW').lang   .should == 'zh-TW'
+    RestCore::Facebook.new.lighten(:timeout => 100    ).timeout.should.eq 100
+    RestCore::Facebook.new.lighten(:lang    => 'zh-TW').lang.should.eq 'zh-TW'
   end
 end

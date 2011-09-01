@@ -1,11 +1,7 @@
 
-if respond_to?(:require_relative, true)
-  require_relative 'common'
-else
-  require File.dirname(__FILE__) + '/common'
-end
+require 'rest-core/test'
 
-describe RestGraph do
+describe RestCore::Facebook do
   after do
     WebMock.reset!
     RR.verify
@@ -13,9 +9,9 @@ describe RestGraph do
 
   should 'generate correct url' do
     TestHelper.normalize_url(
-    RestGraph.new(:access_token => 'awesome').url('path', :query => 'str')).
-      should ==
-        'https://graph.facebook.com/path?access_token=awesome&query=str'
+    RestCore::Facebook.new(:access_token => 'awesome').
+      url('path', :query => 'str')).should.eq \
+      'https://graph.facebook.com/path?access_token=awesome&query=str'
   end
 
   should 'request to correct server' do
@@ -28,9 +24,10 @@ describe RestGraph do
                   {'User-Agent'      => 'Ruby'})).       # this is by ruby
       to_return(:body => '{"data": []}')
 
-    RestGraph.new(:site   => 'http://nothing.godfat.org/',
-                  :lang   => 'zh-tw',
-                  :accept => 'text/plain').get('me').should == {'data' => []}
+    RestCore::Facebook.new(:site   => 'http://nothing.godfat.org/',
+                           :lang   => 'zh-tw',
+                           :accept => 'text/plain').
+                           get('me').should.eq({'data' => []})
   end
 
   should 'pass custom headers' do
@@ -44,16 +41,16 @@ describe RestGraph do
                   {'User-Agent'      => 'Ruby'})).       # this is by ruby
       to_return(:body => '{"data": []}')
 
-    RestGraph.new.request({:headers => {'X-Forwarded-For' => '127.0.0.1'}},
-                          [:get, 'http://example.com']).
-      should == {'data' => []}
+    RestCore::Facebook.new.request(
+      {:headers => {'X-Forwarded-For' => '127.0.0.1'}},
+      [:get, 'http://example.com']).should.eq({'data' => []})
   end
 
   should 'post right' do
     stub_request(:post, 'https://graph.facebook.com/feed/me').
       with(:body => 'message=hi%20there').to_return(:body => 'ok')
 
-    RestGraph.new(:auto_decode => false).
+    RestCore::Facebook.new(:auto_decode => false).
       post('feed/me', :message => 'hi there').should == 'ok'
   end
 
@@ -62,8 +59,9 @@ describe RestGraph do
       'https://graph.facebook.com/me?access_token=1|2').
       to_return(:body => 'ok')
 
-    rg = RestGraph.new(:auto_decode => false, :access_token => 'wrong',
-                       :app_id => '1', :secret => '2')
+    rg = RestCore::Facebook.new(
+      :auto_decode => false, :access_token => 'wrong',
+      :app_id => '1', :secret => '2')
     rg.get('me', {}, :secret => true).should == 'ok'
     rg.url('me', {}, :secret => true).should ==
       'https://graph.facebook.com/me?access_token=1%7C2'
@@ -75,7 +73,7 @@ describe RestGraph do
     stub_request(:get, 'https://graph.facebook.com/woot').
       to_return(:body => 'bad json')
 
-    rg = RestGraph.new(:auto_decode => true)
+    rg = RestCore::Facebook.new(:auto_decode => true)
     rg.get('woot', {}, :auto_decode => false).should == 'bad json'
     rg.auto_decode.should == true
   end
@@ -85,7 +83,7 @@ describe RestGraph do
       stub_request(:delete, 'https://graph.facebook.com/123').to_return(
         :body => '[]', :status => status)
 
-      RestGraph.new.delete('123').should == []
+      RestCore::Facebook.new.delete('123').should == []
     }
   end
 
@@ -93,6 +91,7 @@ describe RestGraph do
     stub(o = Object.new).to_s{ 'i am mock' }
     stub_request(:get, "https://graph.facebook.com/search?q=i%20am%20mock").
       to_return(:body => 'ok')
-    RestGraph.new(:auto_decode => false).get('search', :q => o).should == 'ok'
+    RestCore::Facebook.new(:auto_decode => false).
+      get('search', :q => o).should.eq 'ok'
   end
 end

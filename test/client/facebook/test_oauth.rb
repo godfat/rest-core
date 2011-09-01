@@ -1,13 +1,9 @@
 
-if respond_to?(:require_relative, true)
-  require_relative 'common'
-else
-  require File.dirname(__FILE__) + '/common'
-end
+require 'rest-core/test'
 
-describe RestGraph do
+describe RestCore::Facebook do
   before do
-    @rg  = RestGraph.new(:app_id => '29', :secret => '18')
+    @rg  = RestCore::Facebook.new(:app_id => '29', :secret => '18')
     @uri = 'http://zzz.tw'
   end
 
@@ -35,7 +31,7 @@ describe RestGraph do
   end
 
   should 'not append access_token in authorize_url even presented' do
-    RestGraph.new(:access_token => 'do not use me').authorize_url.
+    RestCore::Facebook.new(:access_token => 'do not use me').authorize_url.
       should == 'https://graph.facebook.com/oauth/authorize'
   end
 

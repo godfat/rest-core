@@ -1,9 +1,5 @@
 
-if respond_to?(:require_relative, true)
-  require_relative 'common'
-else
-  require File.dirname(__FILE__) + '/common'
-end
+require 'rest-core/test'
 
 require 'rest-core/util/config'
 ::Rails = Object.new
@@ -11,7 +7,7 @@ require 'rest-core/util/config'
 describe RestCore::Config do
 
   before do
-    @klass = RestGraph.dup
+    @klass = RestCore::Facebook.dup
   end
 
   after do

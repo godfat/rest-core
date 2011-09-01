@@ -1,23 +1,19 @@
 
-if respond_to?(:require_relative, true)
-  require_relative 'common'
-else
-  require File.dirname(__FILE__) + '/common'
-end
+require 'rest-core/test'
 
-describe RestGraph do
+describe RestCore::Facebook do
   after do
     WebMock.reset!
     RR.verify
   end
 
   should 'return true in authorized? if there is an access_token' do
-    RestGraph.new(:access_token => '1').authorized?.should == true
-    RestGraph.new(:access_token => nil).authorized?.should == false
+    RestCore::Facebook.new(:access_token => '1').authorized?.should == true
+    RestCore::Facebook.new(:access_token => nil).authorized?.should == false
   end
 
   should 'treat oauth_token as access_token as well' do
-    rg = RestGraph.new
+    rg = RestCore::Facebook.new
     hate_facebook = 'why the hell two different name?'
     rg.data['oauth_token'] = hate_facebook
     rg.authorized?.should == true
@@ -25,8 +21,8 @@ describe RestGraph do
   end
 
   should 'build correct headers' do
-    rg = RestGraph.new(:accept => 'text/html',
-                       :lang   => 'zh-tw')
+    rg = RestCore::Facebook.new(:accept => 'text/html',
+                                :lang   => 'zh-tw')
 
     headers = rg.ask.call(rg.send(:build_env))[RestCore::REQUEST_HEADERS]
     headers['Accept'         ].should == 'text/html'
@@ -34,19 +30,19 @@ describe RestGraph do
   end
 
   should 'build empty query string' do
-    rg = RestGraph.new
+    rg = RestCore::Facebook.new
     (rg.ask.call(rg.send(:build_env))[RestCore::REQUEST_QUERY] || {}).
       should == {}
   end
 
   should 'create access_token in query string' do
-    rg = RestGraph.new(:access_token => 'token')
+    rg = RestCore::Facebook.new(:access_token => 'token')
     (rg.ask.call(rg.send(:build_env))[RestCore::REQUEST_QUERY] || {}).
       should == {'access_token' => 'token'}
   end
 
   should 'build correct query string' do
-    rg = RestGraph.new(:access_token => 'token')
+    rg = RestCore::Facebook.new(:access_token => 'token')
     TestHelper.normalize_url(rg.url('', :message => 'hi!!')).
       should == "#{rg.site}?access_token=token&message=hi%21%21"
 
@@ -57,19 +53,20 @@ describe RestGraph do
   end
 
   should 'auto decode json' do
-    rg = RestGraph.new(:auto_decode => true)
+    rg = RestCore::Facebook.new(:auto_decode => true)
     stub_request(:get, rg.site).to_return(:body => '[]')
     rg.get('').should ==  []
   end
 
   should 'not auto decode json' do
-    rg = RestGraph.new(:auto_decode => false)
+    rg = RestCore::Facebook.new(:auto_decode => false)
     stub_request(:get, rg.site).to_return(:body => '[]')
     rg.get('').should == '[]'
   end
 
   should 'give attributes' do
-    RestGraph.new(:auto_decode => false).attributes.keys.map(&:to_s).sort.
-      should == RestGraph.members.map(&:to_s).sort
+    RestCore::Facebook.new(:auto_decode => false).attributes.
+      keys.map(&:to_s).sort.should.eq \
+      RestCore::Facebook.members.map(&:to_s).sort
   end
 end
