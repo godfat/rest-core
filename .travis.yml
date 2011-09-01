@@ -1,4 +1,10 @@
-script: 'git submodule update --init; bundle exec rake test'
+script: 'git submodule update --init; bundle exec rake test:travis'
+
+env:
+  - 'RESTGRAPH=rest-graph'
+  - 'RESTGRAPH=rails2'
+  - 'RESTGRAPH=rails3'
+
 rvm:
   - 1.8.7
   - 1.9.2
