@@ -334,8 +334,9 @@ module RestCore::Facebook::RailsUtil
 
   def rc_facebook_extract_options options, method
     # Hash[] is for ruby 1.8.7
+    # map(&:to_sym) is for ruby 1.8.7
     Hash[options.send(method){ |(k, v)|
-      RestCore::Facebook.members.member?(k) }]
+      RestCore::Facebook.members.map(&:to_sym).member?(k) }]
   end
   # ==================== end misc ================================
 end
