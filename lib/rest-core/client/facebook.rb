@@ -254,3 +254,5 @@ module RestCore::Facebook::Client
 end
 
 RestCore::Facebook.send(:include, RestCore::Facebook::Client)
+require 'rest-core/client/facebook/rails_util' if
+  Object.const_defined?(:Rails)
