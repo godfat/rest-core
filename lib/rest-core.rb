@@ -26,6 +26,7 @@ module RestCore
 
   # misc utilities
   autoload :Hmac          , 'rest-core/util/hmac'
+  autoload :Config        , 'rest-core/util/config'
 
   # middlewares
   autoload :Cache         , 'rest-core/middleware/cache'
@@ -50,4 +51,5 @@ module RestCore
   autoload :Github        , 'rest-core/client/github'
   autoload :Twitter       , 'rest-core/client/twitter'
   autoload :Linkedin      , 'rest-core/client/linkedin'
+  autoload :Facebook      , 'rest-core/client/facebook'
 end
