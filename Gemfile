@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 
 gemspec
 
-if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-  gem 'jruby-openssl'
-end
+gem 'rails', '2.3.14' if ENV['RESTGRAPH'] == 'rails2'
+gem 'rails', '3.0.9'  if ENV['RESTGRAPH'] == 'rails3'
+
+gem 'jruby-openssl', :platforms => [:jruby]
