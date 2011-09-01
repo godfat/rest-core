@@ -13,7 +13,7 @@ RestCore::Linkedin = RestCore::Builder.client(:data) do
 
   use s::CommonLogger  , method(:puts)
 
-  use s::Cache         , {}, 3600 do
+  use s::Cache         , nil, 3600 do
     use s::ErrorHandler , lambda{|env|
       if (body = env[s::RESPONSE_BODY]).kind_of?(Hash)
         raise body['message']

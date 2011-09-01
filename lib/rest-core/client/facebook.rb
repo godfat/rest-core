@@ -18,7 +18,7 @@ RestCore::Facebook = RestCore::Builder.client(
 
   use s::CommonLogger  , lambda{|obj|obj}
 
-  use s::Cache         , {}, 3600 do
+  use s::Cache         , nil, 3600 do
     use s::ErrorHandler  , lambda{ |env|
                              raise ::RestCore::Facebook::Error.call(env) }
     use s::ErrorDetector , lambda{ |env|
