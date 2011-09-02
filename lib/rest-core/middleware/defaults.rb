@@ -35,6 +35,12 @@ class RestCore::Defaults
   end
 
   def respond_to? msg
+    # since psych would call respond_to? before setting up
+    # instance variables when restoring ruby objects, we might
+    # be accessing undefined ivars in that case even all ivars are
+    # defined in initialize. we can't avoid this because we can't
+    # use singleton_class (otherwise we can't serialize this)
+    return super unless instance_variable_defined?(:@defaults)
     if (d = defaults({})) && d.key?(msg)
       true
     else
