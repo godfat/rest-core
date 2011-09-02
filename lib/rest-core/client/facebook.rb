@@ -2,9 +2,6 @@
 require 'rest-core'
 require 'rest-core/util/hmac'
 
-# optional gem
-begin; require 'rack'; rescue LoadError; end
-
 RestCore::Facebook = RestCore::Builder.client(
   :data, :app_id, :secret, :old_site) do
 
@@ -135,7 +132,7 @@ module RestCore::Facebook::Client
   def parse_fbs! fbs
     self.data = check_sig_and_return_data(
       # take out facebook sometimes there but sometimes not quotes in cookies
-      Rack::Utils.parse_query(fbs.to_s.sub(/^"/, '').sub(/"$/, '')))
+      Vendor.parse_query(fbs.to_s.sub(/^"/, '').sub(/"$/, '')))
   end
 
   def parse_json! json
@@ -173,7 +170,7 @@ module RestCore::Facebook::Client
 
   def authorize! opts={}
     query = {:client_id => app_id, :client_secret => secret}.merge(opts)
-    self.data = Rack::Utils.parse_query(
+    self.data = Vendor.parse_query(
                   request({:json_decode => false}.merge(opts),
                           [:get, url('oauth/access_token', query)]))
   end
