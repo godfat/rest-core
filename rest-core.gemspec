@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "0.3.0.pre.0"
+  s.version = "0.3.0.pre.1"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = [
@@ -117,6 +117,7 @@ Gem::Specification.new do |s|
   "test/client/facebook/test_parse.rb",
   "test/client/facebook/test_serialize.rb",
   "test/client/facebook/test_timeout.rb",
+  "test/client/twitter/test_api.rb",
   "test/test_oauth1_header.rb"]
   s.homepage = "https://github.com/cardinalblue/rest-core"
   s.require_paths = ["lib"]
@@ -136,6 +137,7 @@ Gem::Specification.new do |s|
   "test/client/facebook/test_parse.rb",
   "test/client/facebook/test_serialize.rb",
   "test/client/facebook/test_timeout.rb",
+  "test/client/twitter/test_api.rb",
   "test/test_oauth1_header.rb"]
 
   if s.respond_to? :specification_version then
