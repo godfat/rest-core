@@ -8,12 +8,12 @@ describe RestCore::Facebook::Error do
   end
 
   should 'have the right ancestors' do
-    RestCore::Facebook::Error::AccessToken.should < RestCore::Facebook::Error
+    RestCore::Facebook::Error::AccessToken.should.lt RestCore::Facebook::Error
 
-    RestCore::Facebook::Error::InvalidAccessToken.should <
+    RestCore::Facebook::Error::InvalidAccessToken.should.lt \
       RestCore::Facebook::Error::AccessToken
 
-    RestCore::Facebook::Error::MissingAccessToken.should <
+    RestCore::Facebook::Error::MissingAccessToken.should.lt \
       RestCore::Facebook::Error::AccessToken
   end
 
@@ -60,6 +60,6 @@ describe RestCore::Facebook::Error do
     rg = RestCore::Facebook.new(:cache         => {},
                                 :error_handler => lambda{|env|env})
     rg.get('me'); rg.get('me')
-    rg.cache.values.should == []
+    rg.cache.values.should.eq []
   end
 end

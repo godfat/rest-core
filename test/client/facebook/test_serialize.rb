@@ -28,10 +28,10 @@ describe RestCore::Facebook do
       test = lambda{ |obj| engine.load(engine.dump(obj)) }
         rg = RestCore::Facebook.new(:log_handler => lambda{})
       lambda{ test[rg] }.should.raise(TypeError)
-      test[rg.lighten].should == rg.lighten
+      test[rg.lighten].should.eq rg.lighten
       lambda{ test[rg] }.should.raise(TypeError)
       rg.lighten!
-      test[rg.lighten].should == rg
+      test[rg.lighten].should.eq rg
     }
   end
 

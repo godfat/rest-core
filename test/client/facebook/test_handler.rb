@@ -16,7 +16,7 @@ describe RestCore::Facebook do
       rg = RestCore::Facebook.new(:log_method => lambda{ |s| logger << [s] })
       rg.get('me')
 
-      logger.size.should == 1
+      logger.size.should.eq 1
     end
   end
 
@@ -39,8 +39,8 @@ describe RestCore::Facebook do
       begin
         RestCore::Facebook.new.get('me')
       rescue ::RestCore::Facebook::Error => e
-        e.error  .should == @error_hash
-        e.message.should ==
+        e.error  .should.eq @error_hash
+        e.message.should.eq \
           "#{@error_hash.inspect} from https://graph.facebook.com/me"
       end
     end
@@ -67,14 +67,14 @@ describe RestCore::Facebook do
 
     should 'call error_handler if error occurred' do
       RestCore::Facebook.new(:error_handler => @id).fql(@bad_fql_query).
-        should == @fql_error_hash
+        should.eq @fql_error_hash
     end
 
     should 'raise ::RestCore::Facebook::Error in default error_handler' do
       begin
         RestCore::Facebook.new.fql(@bad_fql_query)
       rescue ::RestCore::Facebook::Error => e
-        e.error  .should == @fql_error_hash
+        e.error  .should.eq @fql_error_hash
         e.message.should.start_with?(
           "#{@fql_error_hash.inspect} from "          \
           "https://api.facebook.com/method/fql.query?")

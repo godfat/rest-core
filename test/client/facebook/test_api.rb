@@ -62,10 +62,10 @@ describe RestCore::Facebook do
     rg = RestCore::Facebook.new(
       :json_decode => false, :access_token => 'wrong',
       :app_id => '1', :secret => '2')
-    rg.get('me', {}, :secret => true).should == 'ok'
-    rg.url('me', {}, :secret => true).should ==
+    rg.get('me', {}, :secret => true).should.eq 'ok'
+    rg.url('me', {}, :secret => true).should.eq \
       'https://graph.facebook.com/me?access_token=1%7C2'
-    rg.url('me', {}, :secret => true, :site => '/').should ==
+    rg.url('me', {}, :secret => true, :site => '/').should.eq \
       '/me?access_token=1%7C2'
   end
 
@@ -74,7 +74,7 @@ describe RestCore::Facebook do
       to_return(:body => 'bad json')
 
     rg = RestCore::Facebook.new(:json_decode => true)
-    rg.get('woot', {}, :json_decode => false).should == 'bad json'
+    rg.get('woot', {}, :json_decode => false).should.eq 'bad json'
     rg.json_decode.should == true
   end
 
@@ -83,7 +83,7 @@ describe RestCore::Facebook do
       stub_request(:delete, 'https://graph.facebook.com/123').to_return(
         :body => '[]', :status => status)
 
-      RestCore::Facebook.new.delete('123').should == []
+      RestCore::Facebook.new.delete('123').should.eq []
     }
   end
 

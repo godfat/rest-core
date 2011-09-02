@@ -18,6 +18,6 @@ describe RestCore::Facebook do
       end
     end)
 
-    klass.new.app_id.should == '1829'
+    klass.new.app_id.should.eq('1829')
   end
 end

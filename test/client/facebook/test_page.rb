@@ -11,12 +11,12 @@ describe RestCore::Facebook do
     rg = RestCore::Facebook.new(:site => '', :cache => false)
     %w[next previous].each{ |type|
       kind = "#{type}_page"
-      rg.send(kind, {})              .should == nil
-      rg.send(kind, {'paging' => []}).should == nil
-      rg.send(kind, {'paging' => {}}).should == nil
+      rg.send(kind, {})              .should.eq nil
+      rg.send(kind, {'paging' => []}).should.eq nil
+      rg.send(kind, {'paging' => {}}).should.eq nil
 
       stub_request(:get, 'zzz').to_return(:body => '["ok"]')
-      rg.send(kind, {'paging' => {type => 'zzz'}}).should == ['ok']
+      rg.send(kind, {'paging' => {type => 'zzz'}}).should.eq ['ok']
     }
   end
 
@@ -34,18 +34,18 @@ describe RestCore::Facebook do
       (2..4).each{ |pages|
         # merge data
         stub_request(:get, 'zzz').to_return(:body => '{"data":["y"]}')
-        rg.for_pages(data, pages, {}, kind).should == {'data' => %w[z y]}
+        rg.for_pages(data, pages, {}, kind).should.eq({'data' => %w[z y]})
 
         # this data cannot be merged
         stub_request(:get, 'zzz').to_return(:body => '{"data":"y"}')
-        rg.for_pages(data, pages, {}, kind).should == {'data' => %w[z]}
+        rg.for_pages(data, pages, {}, kind).should.eq({'data' => %w[z]})
       }
 
       stub_request(:get, 'zzz').to_return(:body =>
         '{"paging":{"'+type+'":"yyy"},"data":["y"]}')
       stub_request(:get, 'yyy').to_return(:body => '{"data":["x"]}')
 
-      rg.for_pages(data, 3, {}, kind).should == {'data' => %w[z y x]}
+      rg.for_pages(data, 3, {}, kind).should.eq({'data' => %w[z y x]})
     }
   end
 
@@ -61,30 +61,30 @@ describe RestCore::Facebook do
       ranges.each{ |page|
         rg.for_pages(data, page, {}, kind){ |r|
           if r
-            r.should == data
+            r.should.eq data
           else
             nils += 1
           end
-        }.should == data
+        }.should.eq data
       }
-      nils.should == ranges.to_a.size
+      nils.should.eq ranges.to_a.size
 
       (2..4).each{ |pages|
         # merge data
         stub_request(:get, 'zzz').to_return(:body => '{"data":["y"]}')
         expects = [{'data' => %w[y]}, nil]
         rg.for_pages(data, pages, {}, kind){ |r|
-          r.should == expects.shift
-        }.should == {'data' => %w[z y]}
-        expects.empty?.should == true
+          r.should.eq expects.shift
+        }.should.eq({'data' => %w[z y]})
+        expects.empty?.should.eq true
 
         # this data cannot be merged
         stub_request(:get, 'zzz').to_return(:body => '{"data":"y"}')
         expects = [{'data' => 'y'}, nil]
         rg.for_pages(data, pages, {}, kind){ |r|
-          r.should == expects.shift
-        }.should == {'data' => %w[z]}
-        expects.empty?.should == true
+          r.should.eq expects.shift
+        }.should.eq({'data' => %w[z]})
+        expects.empty?.should.eq true
       }
 
       stub_request(:get, 'zzz').to_return(:body =>
@@ -99,8 +99,8 @@ describe RestCore::Facebook do
         else
           r = rr
         end
-        r.should == expects.shift
-      }.should == {'data' => %w[z y x]}
+        r.should.eq expects.shift
+      }.should.eq({'data' => %w[z y x]})
     }
   end
 end

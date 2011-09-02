@@ -13,7 +13,7 @@ describe RestCore::Facebook do
 
   should 'return correct oauth url' do
     TestHelper.normalize_url(@rg.authorize_url(:redirect_uri => @uri)).
-    should == 'https://graph.facebook.com/oauth/authorize?' \
+    should.eq 'https://graph.facebook.com/oauth/authorize?' \
               'client_id=29&redirect_uri=http%3A%2F%2Fzzz.tw'
   end
 
@@ -26,13 +26,13 @@ describe RestCore::Facebook do
     result = {'access_token' => 'baken', 'expires' => '2918'}
 
     @rg.authorize!(:redirect_uri => @uri, :code => 'zzz').
-             should == result
-    @rg.data.should == result
+             should.eq result
+    @rg.data.should.eq result
   end
 
   should 'not append access_token in authorize_url even presented' do
     RestCore::Facebook.new(:access_token => 'do not use me').authorize_url.
-      should == 'https://graph.facebook.com/oauth/authorize'
+      should.eq 'https://graph.facebook.com/oauth/authorize'
   end
 
 end

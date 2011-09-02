@@ -17,24 +17,24 @@ describe RestCore::Facebook do
     end
 
     should 'enable cache if passing cache' do
-      3.times{ @rg.get('cache').should == @body }
-      @cache.should == {@cache_key => @body}
+      3.times{ @rg.get('cache').should.eq @body }
+      @cache.should.eq({@cache_key => @body})
     end
 
     should 'respect expires_in' do
       mock(@cache).method(:store){ mock!.arity{ -3 } }
       mock(@cache).store(@cache_key, @body, :expires_in => 3)
-      @rg.get('cache', {}, :expires_in => 3).should == @body
+      @rg.get('cache', {}, :expires_in => 3).should.eq @body
     end
 
     should 'update cache if there is cache option set to false' do
-      @rg.get('cache')                     .should == @body
+      @rg.get('cache')                     .should.eq @body
       stub_request(:get, @url).to_return(:body => @body.reverse).times(2)
-      @rg.get('cache')                     .should == @body
-      @rg.get('cache', {}, :cache => false).should == @body.reverse
-      @rg.get('cache')                     .should == @body.reverse
+      @rg.get('cache')                     .should.eq @body
+      @rg.get('cache', {}, :cache => false).should.eq @body.reverse
+      @rg.get('cache')                     .should.eq @body.reverse
       @rg.cache = nil
-      @rg.get('cache', {}, :cache => false).should == @body.reverse
+      @rg.get('cache', {}, :cache => false).should.eq @body.reverse
     end
   end
 
@@ -47,12 +47,12 @@ describe RestCore::Facebook do
       rg = RestCore::Facebook.new(:cache => cache)
       3.times{
         if meth == :delete
-          rg.send(meth, 'cache').should == {'message' => 'ok'}
+          rg.send(meth, 'cache').should.eq({'message' => 'ok'})
         else
-          rg.send(meth, 'cache', 'payload').should == {'message' => 'ok'}
+          rg.send(meth, 'cache', 'payload').should.eq({'message' => 'ok'})
         end
       }
-      cache.should == {}
+      cache.should.eq({})
     }
   end
 end

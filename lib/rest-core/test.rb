@@ -30,4 +30,8 @@ module Kernel
   def eq? rhs
     self == rhs
   end
+
+  def lt? rhs
+    self < rhs
+  end
 end

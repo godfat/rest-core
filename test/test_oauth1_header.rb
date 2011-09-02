@@ -25,7 +25,7 @@ describe RestCore::Oauth1Header do
   end
 
   should 'have correct base_string' do
-    @auth.base_string(@env, @oauth_params).should.equal(
+    @auth.base_string(@env, @oauth_params).should.eq(
       'POST&https%3A%2F%2Fapi.twitter.com%2Foauth%2Frequest_token&' \
       'oauth_callback%3Dhttp%253A%252F%252Flocalhost%253A3005%252F' \
       'the_dance%252Fprocess_callback%253Fservice_provider_id%253D' \
@@ -38,7 +38,7 @@ describe RestCore::Oauth1Header do
   should 'not use payload in multipart request for base_string' do
     @env = @env.merge(RestCore::REQUEST_PAYLOAD =>
                         {'file' => File.open(__FILE__)})
-    @auth.base_string(@env, @oauth_params).should.equal(
+    @auth.base_string(@env, @oauth_params).should.eq(
       'POST&https%3A%2F%2Fapi.twitter.com%2Foauth%2Frequest_token&' \
       'oauth_callback%3Dhttp%253A%252F%252Flocalhost%253A3005%252F' \
       'the_dance%252Fprocess_callback%253Fservice_provider_id%253D' \
@@ -49,7 +49,7 @@ describe RestCore::Oauth1Header do
   end
 
   should 'have correct signature' do
-    @auth.signature(@env, @oauth_params).should.equal(
+    @auth.signature(@env, @oauth_params).should.eq(
       '8wUi7m5HFQy76nowoCThusfgB+Q=')
   end
 end
