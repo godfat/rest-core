@@ -6,6 +6,6 @@ class RestCore::ErrorDetectorHttp < RestCore::ErrorDetector
   include RestCore::Middleware
 
   def initialize app
-    super(app, lambda{ |env| (env[RESPONSE_STATUS] || 200) / 100 != 2 })
+    super(app, lambda{ |env| (env[RESPONSE_STATUS] || 200) / 100 >= 4 })
   end
 end
