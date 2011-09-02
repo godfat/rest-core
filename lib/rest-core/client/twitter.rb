@@ -11,7 +11,7 @@ RestCore::Twitter = RestCore::Builder.client(:data) do
   use s::Oauth1Header  ,
     'oauth/request_token', 'oauth/access_token', 'oauth/authorize'
 
-  use s::CommonLogger  , method(:puts)
+  use s::CommonLogger  , lambda{|obj|obj}
 
   use s::Cache         , nil, 3600 do
     use s::ErrorHandler  , lambda{ |env|
