@@ -17,9 +17,10 @@ describe RestCore::Facebook do
               end
 
     # sorry, it is marshal in 1.8 is broken
-    if defined?(RUBY_ENGINE) && RUBY_ENGINE  == 'ruby' &&
-                                RUBY_VERSION == '1.8.7'
-      engines.pop # REE 1.8.7
+    if defined?(RUBY_ENGINE)
+      if RUBY_ENGINE  == 'ruby' && RUBY_VERSION == '1.8.7'
+        engines.pop # REE 1.8.7
+      end
     else
       engines.pop # MRI 1.8.7
     end
