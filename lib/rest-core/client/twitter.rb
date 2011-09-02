@@ -15,12 +15,7 @@ RestCore::Twitter = RestCore::Builder.client(:data) do
 
   use s::Cache         , nil, 3600 do
     use s::ErrorHandler  , lambda{ |env|
-      if (body = env[s::RESPONSE_BODY]).kind_of?(Hash)
-        raise body['error']
-      else
-        raise body
-      end
-    }
+                             raise ::RestCore::Twitter::Error.call(env) }
     use s::ErrorDetectorHttp
     use s::JsonDecode    , true
     run s::Ask
@@ -29,6 +24,45 @@ RestCore::Twitter = RestCore::Builder.client(:data) do
   use s::Defaults      , :data     => lambda{{}}
 
   run s::RestClient
+end
+
+class RestCore::Twitter::Error < RuntimeError
+  include RestCore
+  class ServerError         < Twitter::Error; end
+
+  class BadRequest          < Twitter::Error; end
+  class Unauthorized        < Twitter::Error; end
+  class Forbidden           < Twitter::Error; end
+  class NotFound            < Twitter::Error; end
+  class NotAcceptable       < Twitter::Error; end
+  class EnhanceYourCalm     < Twitter::Error; end
+
+  class InternalServerError < Twitter::Error::ServerError; end
+  class BadGateway          < Twitter::Error::ServerError; end
+  class ServiceUnavailable  < Twitter::Error::ServerError; end
+
+  attr_reader :error, :url
+  def initialize error, url=''
+    @error, @url = error, url
+    super("#{error.inspect} from #{url}")
+  end
+
+  def self.call env
+    error, url = env[RESPONSE_BODY], Middleware.request_uri(env)
+    return new(env[FAIL], url) unless error.kind_of?(Hash)
+    case env[RESPONSE_STATUS]
+      when 400; BadRequest
+      when 401; Unauthorized
+      when 403; Forbidden
+      when 404; NotFound
+      when 406; NotAcceptable
+      when 420; EnhanceYourCalm
+      when 500; InternalServerError
+      when 502; BadGateway
+      when 503; ServiceUnavailable
+      else    ; self
+    end.new(error, url)
+  end
 end
 
 module RestCore::Twitter::Client
