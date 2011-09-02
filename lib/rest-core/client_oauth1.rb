@@ -1,5 +1,5 @@
 
-require 'rack'
+require 'rest-core'
 
 module RestCore::ClientOauth1
   include RestCore

@@ -1,4 +1,6 @@
 
+require 'rest-core'
+
 RestCore::Linkedin = RestCore::Builder.client(:data) do
   s = self.class # this is only for ruby 1.8!
   use s::Timeout       , 10

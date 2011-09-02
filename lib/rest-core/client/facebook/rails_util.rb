@@ -2,8 +2,6 @@
 require 'cgi'
 require 'uri'
 
-require 'rest-core/client/facebook' unless defined?(RestCore::Facebook)
-
 class RestCore::Facebook
   module DefaultAttributes
     def default_canvas                ; ''   ; end

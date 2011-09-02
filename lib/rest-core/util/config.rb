@@ -2,8 +2,7 @@
 require 'erb'
 require 'yaml'
 
-require 'rest-core'
-
+module RestCore; end
 module RestCore::Config
   extend self
 
