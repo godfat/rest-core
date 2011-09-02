@@ -28,9 +28,8 @@ for any other REST APIs.
 
 ## REQUIREMENTS:
 
-* Tested with MRI (official ruby) 1.9.2, 1.8.7, and trunk
-* Tested with Rubinius (rbx) 1.2
-* Tested with JRuby 1.6
+* Tested with MRI (official CRuby) 1.8.7, 1.9.2, 1.9.3, Rubinius and JRuby
+* gem rest-client (for now)
 
 ## INSTALLATION:
 
