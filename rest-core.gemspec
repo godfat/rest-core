@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2011-09-02"
+  s.date = "2011-09-03"
   s.description = "A modular Ruby REST client collection/infrastructure.\n\nIn this era of web services and mashups, we have seen a blooming of REST\nAPIs. One might wonder, how do we use these APIs easily and elegantly?\nSince REST is very simple compared to SOAP, it is not hard to build a\ndedicated client ourselves.\n\nWe have developed [rest-core][] with composable middlewares to build a\nREST client, based on the effort from [rest-graph][]. In the cases of\ncommon APIs such as Facebook, Github, and Twitter, developers can simply\nuse the built-in dedicated clients provided by rest-core, or do it yourself\nfor any other REST APIs.\n\n[rest-core]: http://github.com/cardinalblue/rest-core\n[rest-graph]: http://github.com/cardinalblue/rest-graph"
   s.email = ["dev (XD) cardinalblue.com"]
   s.files = [
@@ -145,37 +145,10 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rest-client>, [">= 0"])
-      s.add_development_dependency(%q<yajl-ruby>, [">= 0"])
-      s.add_development_dependency(%q<rack>, [">= 0"])
-      s.add_development_dependency(%q<json>, [">= 0"])
-      s.add_development_dependency(%q<json_pure>, [">= 0"])
-      s.add_development_dependency(%q<ruby-hmac>, [">= 0"])
-      s.add_development_dependency(%q<webmock>, [">= 0"])
-      s.add_development_dependency(%q<bacon>, [">= 0"])
-      s.add_development_dependency(%q<rr>, [">= 0"])
-      s.add_development_dependency(%q<rake>, [">= 0"])
     else
       s.add_dependency(%q<rest-client>, [">= 0"])
-      s.add_dependency(%q<yajl-ruby>, [">= 0"])
-      s.add_dependency(%q<rack>, [">= 0"])
-      s.add_dependency(%q<json>, [">= 0"])
-      s.add_dependency(%q<json_pure>, [">= 0"])
-      s.add_dependency(%q<ruby-hmac>, [">= 0"])
-      s.add_dependency(%q<webmock>, [">= 0"])
-      s.add_dependency(%q<bacon>, [">= 0"])
-      s.add_dependency(%q<rr>, [">= 0"])
-      s.add_dependency(%q<rake>, [">= 0"])
     end
   else
     s.add_dependency(%q<rest-client>, [">= 0"])
-    s.add_dependency(%q<yajl-ruby>, [">= 0"])
-    s.add_dependency(%q<rack>, [">= 0"])
-    s.add_dependency(%q<json>, [">= 0"])
-    s.add_dependency(%q<json_pure>, [">= 0"])
-    s.add_dependency(%q<ruby-hmac>, [">= 0"])
-    s.add_dependency(%q<webmock>, [">= 0"])
-    s.add_dependency(%q<bacon>, [">= 0"])
-    s.add_dependency(%q<rr>, [">= 0"])
-    s.add_dependency(%q<rake>, [">= 0"])
   end
 end
