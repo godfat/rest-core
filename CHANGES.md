@@ -7,6 +7,7 @@
 * [facebook] Use json_decode instead of auto_decode as rest-graph
 * [twitter] Fixed opts in Twitter#tweet
 * [twitter] Introduced Twitter::Error instead of RuntimeError!
+* [twitter] By default log nothing
 * [rest-core] We no longer explicitly depends on Rack
 * [rest-core] Added a shorthand RC to access RestCore
 * [cache] All clients no longer have default hash cache
