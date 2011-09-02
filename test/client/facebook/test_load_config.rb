@@ -24,7 +24,7 @@ describe RestCore::Config do
   should 'honor rails config' do
     mock(Rails).env { 'test' }
     mock(Rails).root{ File.dirname(__FILE__) }
-    RestCore::Config.load_for_rails(@klass)
+    RestCore::Config.load_for_rails(@klass, 'facebook')
     check
   end
 
@@ -32,7 +32,8 @@ describe RestCore::Config do
     RestCore::Config.load(
       @klass,
       "#{File.dirname(__FILE__)}/config/rest-core.yaml",
-      'test')
+      'test',
+      'facebook')
     check
   end
 end
