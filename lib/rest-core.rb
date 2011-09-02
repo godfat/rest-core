@@ -53,3 +53,5 @@ module RestCore
   autoload :Linkedin      , 'rest-core/client/linkedin'
   autoload :Facebook      , 'rest-core/client/facebook'
 end
+
+RC = RestCore unless Object.const_defined?(:RC)
