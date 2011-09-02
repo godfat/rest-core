@@ -5,11 +5,13 @@
 * [facebook] RestGraph is Facebook now.
 * [facebook] Facebook::RailsUtil is imported from [rest-graph][]
 * [facebook] Use json_decode instead of auto_decode as rest-graph
+* [facebook] No longer calls URI.encode on Facebook broken URL
 * [twitter] Fixed opts in Twitter#tweet
 * [twitter] Introduced Twitter::Error instead of RuntimeError!
 * [twitter] By default log nothing
 * [rest-core] We no longer explicitly depends on Rack
 * [rest-core] Added a shorthand RC to access RestCore
+* [rest-core] Eliminated a lot of warnings
 * [cache] All clients no longer have default hash cache
 * [oauth2_query] Now we always use the term "access_token"
 * [config] Now Config#load and Config#load_for_rails take namespace
