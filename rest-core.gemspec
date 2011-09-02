@@ -2,9 +2,9 @@
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "0.2.3"
+  s.version = "0.3.0.pre.0"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
@@ -47,6 +47,7 @@ Gem::Specification.new do |s|
   "example/rails2/test/test_helper.rb",
   "example/rails2/test/unit/rails_util_test.rb",
   "example/rails3/Gemfile",
+  "example/rails3/README",
   "example/rails3/Rakefile",
   "example/rails3/app/controllers/application_controller.rb",
   "example/rails3/app/views/application/helper.html.erb",
