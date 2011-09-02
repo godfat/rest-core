@@ -12,6 +12,7 @@ module RestCore::Config
     root = File.expand_path(app.root)
     path = ["#{root}/config/rest-core.yaml", # YAML should use .yaml
             "#{root}/config/rest-core.yml" ].find{|p| File.exist?(p)}
+    return if path.nil?
     RestCore::Config.load(klass, path, app.env, namespace)
   end
 
