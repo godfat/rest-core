@@ -2,7 +2,7 @@
 require 'rest-core/middleware'
 require 'rest-core/util/hmac'
 
-require 'uri'
+require 'cgi'
 require 'openssl'
 
 class RestCore::Oauth1Header
@@ -44,7 +44,7 @@ class RestCore::Oauth1Header
 
   def attach_signature env, oauth_params
     params = reject_blank(oauth_params)
-    params.merge('oauth_signature' => encode(signature(env, params)))
+    params.merge('oauth_signature' => escape(signature(env, params)))
   end
 
   def signature env, params
@@ -67,9 +67,9 @@ class RestCore::Oauth1Header
     query    = reject_blank(env[REQUEST_QUERY] || {})
     params   = reject_blank(oauth_params.merge(query.merge(payload))).
       to_a.sort.map{ |(k, v)|
-        "#{encode(k.to_s)}=#{encode(v.to_s)}"}.join('&')
+        "#{escape(k.to_s)}=#{escape(v.to_s)}"}.join('&')
 
-    "#{method}&#{encode(base_uri)}&#{encode(params)}"
+    "#{method}&#{escape(base_uri)}&#{escape(params)}"
   end
 
   def nonce
@@ -89,7 +89,7 @@ class RestCore::Oauth1Header
                                      v.strip.empty? == true) }
   end
 
-  def encode string
-    URI.encode(string, /[^a-zA-Z0-9\-\.\_\~]/)
+  def escape string
+    CGI.escape(string).gsub('+', '%20')
   end
 end
