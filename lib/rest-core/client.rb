@@ -33,8 +33,6 @@ module RestCore::Client
           end
         end
         private :default_#{name}
-
-        self
       RUBY
     }
     # if RUBY_VERSION < '1.9.2'
@@ -42,10 +40,10 @@ module RestCore::Client
       def members
         super.map(&:to_sym)
       end
-      self
     RUBY
     # end
-    accessor = Module.new.module_eval(src.join("\n"), __FILE__, __LINE__)
+    accessor = Module.new
+    accessor.module_eval(src.join("\n"), __FILE__, __LINE__)
     mod.const_set('Accessor', accessor)
     mod.send(:include, accessor)
   end

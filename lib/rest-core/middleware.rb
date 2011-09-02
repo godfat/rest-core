@@ -27,9 +27,9 @@ module RestCore::Middleware
       def initialize #{para_list}
         #{ivar_list} = #{args_list}
       end
-      self
     RUBY
-    accessor = Module.new.module_eval(src.join("\n"), __FILE__, __LINE__)
+    accessor = Module.new
+    accessor.module_eval(src.join("\n"), __FILE__, __LINE__)
     mod.const_set(:Accessor, accessor)
     mod.send(:include, accessor)
   end
