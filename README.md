@@ -11,7 +11,7 @@ by Cardinal Blue <http://cardinalblue.com>
 
 ## DESCRIPTION:
 
-A modular Ruby REST client collection/infrastructure.
+A modular Ruby REST client collection/infrastructure
 
 In this era of web services and mashups, we have seen a blooming of REST
 APIs. One might wonder, how do we use these APIs easily and elegantly?
