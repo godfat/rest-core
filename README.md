@@ -1,4 +1,5 @@
 # rest-core [![Build Status](http://travis-ci.org/godfat/rest-core.png)](http://travis-ci.org/godfat/rest-core)
+
 by Cardinal Blue <http://cardinalblue.com>
 
 ## LINKS:
