@@ -1,6 +1,6 @@
 # rest-core CHANGES
 
-## rest-core 0.3.0 -- ?
+## rest-core 0.3.0 -- 2011-09-03
 
 * [facebook] RestGraph is Facebook now.
 * [facebook] Facebook::RailsUtil is imported from [rest-graph][]
