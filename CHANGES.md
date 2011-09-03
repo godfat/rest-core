@@ -16,6 +16,7 @@
 * [oauth2_query] Now we always use the term "access_token"
 * [config] Now Config#load and Config#load_for_rails take namespace
   e.g. rest-core.yaml:
+
       development:
         facebook:
           app_id: 123
