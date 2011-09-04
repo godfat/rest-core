@@ -3,10 +3,10 @@ require 'rest-core/test'
 
 describe RestCore::Wrapper do
   should 'wrap around simple middleware' do
-    mid = RestCore::Bypass.dup
-    mid.send(:include, RestCore::Wrapper)
+    wrapper = RestCore::Bypass.dup
+    wrapper.send(:include, RestCore::Wrapper)
     client = RestCore::Builder.client do
-      use mid do
+      use wrapper do
         use RestCore::Bypass
       end
       run RestCore::Ask
