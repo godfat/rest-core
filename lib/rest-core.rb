@@ -30,6 +30,7 @@ module RestCore
   autoload :Vendor        , 'rest-core/util/vendor'
 
   # middlewares
+  autoload :Bypass        , 'rest-core/middleware/bypass'
   autoload :Cache         , 'rest-core/middleware/cache'
   autoload :CommonLogger  , 'rest-core/middleware/common_logger'
   autoload :DefaultHeaders, 'rest-core/middleware/default_headers'
