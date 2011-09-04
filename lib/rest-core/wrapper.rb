@@ -28,7 +28,7 @@ module RestCore::Wrapper
         middle.members + middle.new(Ask.new, *args, &block).members
       else
         middle.members
-      end
+      end if middle.respond_to?(:members)
     }.flatten
   end
 
