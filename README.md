@@ -87,6 +87,55 @@ See [built-in clients][] for more complex examples.
 
 [built-in clients]: https://github.com/cardinalblue/rest-core/tree/master/lib/rest-core/client
 
+## GLOSSARY:
+
+* A _client_ is a class which can new connections to make requests.
+  For instance, `RestCore::Facebook.new.get('4')`
+
+* An _app_ is an HTTP client which would do the underneath HTTP requests.
+  For instance, `RestCore::RestClient` is an HTTP client which uses
+  rest-client gem (`::RestClient`) to make HTTP requests.
+
+* A _middleware_ is a component for a rest-core stack.
+  For instance, `RestCore::DefaultSite` is a middleware which would add
+  default site URL in front of the request URI if it is not started with
+  http://, thus you can do this: `RestCore::Facebook.get('4')` without
+  specifying where the site (Facebook) it is.
+
+* `RestCore::Wrapper` is a utility which could help you wrap a number of
+  middlewares into another middleware. Currently, it's used in
+  `RestCore::Buidler` and `RestCore::Cache`.
+
+* `RestCore::Builder` is a utility which could help you build a _client_
+  with a collection of _middlewares_ and an _app_. i.e. a rest-core stack.
+
+* `RestCore::Middleware` is a utility which could help you build a non-trivial
+  middleware. More explanation to come...
+
+* `RestCore::Client` is a module which would be included in a generated
+  _client_ by `RestCore::Builder`. It contains a number of convenient
+  functions which is generally useful.
+
+* `RestCore::ClientOAuth1` is a module which should be included in a OAuth1.0
+  client. It contains a number of convenient functions which is useful for an
+  OAuth 1.0 client.
+
+* An `env` is a hash which contains all the information for both request and
+  response. It's mostly seen in `@app.call(env)` See other explanation
+  such as `env[RestCore::REQUEST_METHOD]` for more detail.
+
+* `env[RestCore::REQUEST_METHOD]` is a symbol representing which HTTP method
+  would be used in the subsequent HTTP request. The possible values are
+  either: `:get`, `:post`, `:put` or `:delete`.
+
+* `env[RestCore::REQUEST_PATH]` is a string representing which HTTP path
+  would be used in the subsequent HTTP request. This path could also include
+  the protocol, not only the path. e.g. `"http://graph.facebook.com/4"` or
+  simply `"4"`. In the case of built-in Facebook client, the
+  `RestCore::DefaultSite` middleware would take care of the site.
+
+* `env[RestCore::REQUEST_QUERY]` is a hash
+
 ## LICENSE:
 
   Apache License 2.0
