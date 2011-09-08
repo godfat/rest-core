@@ -50,6 +50,7 @@ module RestCore
   autoload :RestClient    , 'rest-core/app/rest-client'
 
   # clients
+  autoload :Simple        , 'rest-core/client/simple'
   autoload :Github        , 'rest-core/client/github'
   autoload :Twitter       , 'rest-core/client/twitter'
   autoload :Linkedin      , 'rest-core/client/linkedin'
