@@ -121,6 +121,16 @@ module RestCore::Client
   end
 
   def request opts, *reqs
+    if block_given?
+      request_full(opts, *reqs){ |response|
+        yield(response[RESPONSE_BODY])
+      }
+    else
+      request_full(opts, *reqs)[RESPONSE_BODY]
+    end
+  end
+
+  def request_full opts, *reqs
     req = reqs.first
     response = app.call(build_env({
       REQUEST_METHOD  => req[0]         ,
@@ -129,7 +139,7 @@ module RestCore::Client
       REQUEST_PAYLOAD => req[3]         ,
       REQUEST_HEADERS => opts['headers'],
       FAIL            => []             ,
-      LOG             => []}.merge(opts)))[RESPONSE_BODY]
+      LOG             => []}.merge(opts)))
 
     if block_given?
       yield(response)
