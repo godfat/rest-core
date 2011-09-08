@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2011-09-04"
+  s.date = "2011-09-08"
   s.description = "A modular Ruby REST client collection/infrastructure\n\nIn this era of web services and mashups, we have seen a blooming of REST\nAPIs. One might wonder, how do we use these APIs easily and elegantly?\nSince REST is very simple compared to SOAP, it is not hard to build a\ndedicated client ourselves.\n\nWe have developed [rest-core][] with composable middlewares to build a\nREST client, based on the effort from [rest-graph][]. In the cases of\ncommon APIs such as Facebook, Github, and Twitter, developers can simply\nuse the built-in dedicated clients provided by rest-core, or do it yourself\nfor any other REST APIs.\n\n[rest-core]: http://github.com/cardinalblue/rest-core\n[rest-graph]: http://github.com/cardinalblue/rest-graph"
   s.email = ["dev (XD) cardinalblue.com"]
   s.files = [
@@ -75,10 +75,12 @@ Gem::Specification.new do |s|
   "lib/rest-core/client/facebook/rails_util.rb",
   "lib/rest-core/client/github.rb",
   "lib/rest-core/client/linkedin.rb",
+  "lib/rest-core/client/simple.rb",
   "lib/rest-core/client/twitter.rb",
   "lib/rest-core/client_oauth1.rb",
   "lib/rest-core/event.rb",
   "lib/rest-core/middleware.rb",
+  "lib/rest-core/middleware/bypass.rb",
   "lib/rest-core/middleware/cache.rb",
   "lib/rest-core/middleware/common_logger.rb",
   "lib/rest-core/middleware/default_headers.rb",
@@ -118,7 +120,9 @@ Gem::Specification.new do |s|
   "test/client/facebook/test_serialize.rb",
   "test/client/facebook/test_timeout.rb",
   "test/client/twitter/test_api.rb",
-  "test/test_oauth1_header.rb"]
+  "test/test_client.rb",
+  "test/test_oauth1_header.rb",
+  "test/test_wrapper.rb"]
   s.homepage = "https://github.com/cardinalblue/rest-core"
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.10"
@@ -138,7 +142,9 @@ Gem::Specification.new do |s|
   "test/client/facebook/test_serialize.rb",
   "test/client/facebook/test_timeout.rb",
   "test/client/twitter/test_api.rb",
-  "test/test_oauth1_header.rb"]
+  "test/test_client.rb",
+  "test/test_oauth1_header.rb",
+  "test/test_wrapper.rb"]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
