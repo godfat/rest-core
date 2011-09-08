@@ -46,7 +46,8 @@ module RestCore::Middleware
     else
       q = if env[REQUEST_PATH] =~ /\?/ then '&' else '?' end
       "#{env[REQUEST_PATH]}#{q}" \
-      "#{query.map{ |(k, v)| "#{k}=#{CGI.escape(v.to_s)}" }.join('&')}"
+      "#{query.map{ |(k, v)|
+        "#{CGI.escape(k.to_s)}=#{CGI.escape(v.to_s)}" }.join('&')}"
     end
   end
   public :request_uri
