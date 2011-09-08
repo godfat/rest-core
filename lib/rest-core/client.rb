@@ -120,28 +120,6 @@ module RestCore::Client
     request(opts, [:put   , path, query, payload], &cb)
   end
 
-  # request by eventmachine (em-http)
-
-  def aget    path, query={}, opts={}, &cb
-    get(path, query, {:async => true}.merge(opts), &cb)
-  end
-
-  def adelete path, query={}, opts={}, &cb
-    delete(path, query, {:async => true}.merge(opts), &cb)
-  end
-
-  def apost   path, payload={}, query={}, opts={}, &cb
-    post(path, payload, query, {:async => true}.merge(opts), &cb)
-  end
-
-  def aput    path, payload={}, query={}, opts={}, &cb
-    put(path, payload, query, {:async => true}.merge(opts), &cb)
-  end
-
-  def multi reqs, opts={}, &cb
-    request({:async => true}.merge(opts), *reqs, &cb)
-  end
-
   def request opts, *reqs
     req = reqs.first
     response = app.call(build_env({
@@ -231,48 +209,5 @@ module RestCore::Client
     else
       app.class.new(*members)
     end
-  end
-
-  private
-  def request_em opts, reqs
-    start_time = Time.now
-    rs = reqs.map{ |(meth, path, query, payload)|
-      r = EM::HttpRequest.new(path).send(meth, :body  => payload,
-                                               :head  => build_headers(opts),
-                                               :query => query)
-      if cached = cache_get(opts, path)
-        # TODO: this is hack!!
-        r.instance_variable_set('@response', cached)
-        r.instance_variable_set('@state'   , :finish)
-        r.on_request_complete
-        r.succeed(r)
-      else
-        r.callback{
-          cache_for(opts, path, meth, r.response)
-          log(env.merge('event' =>
-            Event::Requested.new(Time.now - start_time, path)))
-        }
-        r.error{
-          log(env.merge('event' =>
-            Event::Failed.new(Time.now - start_time, path)))
-        }
-      end
-      r
-    }
-    EM::MultiRequest.new(rs){ |m|
-      # TODO: how to deal with the failed?
-      clients = m.responses[:succeeded]
-      results = clients.map{ |client|
-        post_request(opts, client.uri, client.response)
-      }
-
-      if reqs.size == 1
-        yield(results.first)
-      else
-        log(env.merge('event' => Event::MultiDone.new(Time.now - start_time,
-          clients.map(&:uri).join(', '))))
-        yield(results)
-      end
-    }
   end
 end
