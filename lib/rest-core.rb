@@ -56,6 +56,7 @@ module RestCore
   autoload :Twitter       , 'rest-core/client/twitter'
   autoload :Linkedin      , 'rest-core/client/linkedin'
   autoload :Facebook      , 'rest-core/client/facebook'
+  autoload :Mixi          , 'rest-core/client/mixi'
 end
 
 RC = RestCore unless Object.const_defined?(:RC)
