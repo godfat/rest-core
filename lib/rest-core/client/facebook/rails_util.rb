@@ -221,8 +221,10 @@ module RestCore::Facebook::RailsUtil
   def rc_facebook_check_code
     return if rc_facebook.authorized? || !params[:code]
 
-    rc_facebook.authorize!(:code => params[:code],
-                          :redirect_uri => rc_facebook_normalized_request_uri)
+    rc_facebook.authorize!(
+      :code         => params[:code],
+      :redirect_uri => rc_facebook_normalized_request_uri)
+
     logger.debug(
       "DEBUG: Facebook: detected code with "   \
       "#{rc_facebook_normalized_request_uri}," \
