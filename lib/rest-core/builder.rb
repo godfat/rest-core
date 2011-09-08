@@ -11,11 +11,15 @@ class RestCore::Builder
   end
 
   def to_client *attrs
-    # struct = Struct.new(*members, *attrs) if RUBY_VERSION >= 1.9.2
-    struct = Struct.new(*(members + attrs))
+    fields = members + attrs
+    struct = if fields.empty?
+               Struct.new(nil)
+             else
+               Struct.new(*fields)
+             end
     client = Class.new(struct)
-    client.send(:include, Client)
     client.const_set('Struct', struct)
+    client.send(:include, Client)
     class << client; attr_reader :builder; end
     client.instance_variable_set(:@builder, self)
     client
