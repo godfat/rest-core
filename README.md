@@ -134,7 +134,41 @@ See [built-in clients][] for more complex examples.
   simply `"4"`. In the case of built-in Facebook client, the
   `RestCore::DefaultSite` middleware would take care of the site.
 
-* `env[RestCore::REQUEST_QUERY]` is a hash
+* `env[RestCore::REQUEST_QUERY]` is a hash which keys are query keys and
+  values are query values. Both keys and values' type should be String, not
+  Symbol. Values with nil or false would be ignored. Both keys and values
+  would be escaped automatically.
+
+* `env[RestCore::REQUEST_PAYLOAD]` is a hash which keys are payload keys and
+  values are payload values. Both keys and values' type should be String,
+  not Symbol. Values with nil or false would be ignored. Both keys and values
+  would be escaped automatically.
+
+* `env[RestCore::REQUEST_HEADERS]` is a hash which keys are header names and
+  values are header values. Both keys and values' type should be String,
+  not Symbol. Values with nil or false would be ignored.
+
+* `env[RestCore::RESPONSE_BODY]` is a string which is returned by the server.
+  Might be nil if there's no response or not yet making HTTP request.
+
+* `env[RestCore::RESPONSE_STATUS]` is a number which is returned by the
+  server for the HTTP status. Might be nil if there's no response or not
+  yet making HTTP request.
+
+* `env[RestCore::RESPONSE_HEADERS]` is a hash which is returned by the server
+  for the response headers. Both keys and values' type should be String.
+
+* `env[RestCore::ASK]` is a boolean (either `true` or `false` or `nil`) which
+  indicate that if we're only asking for the modified `env`, instead of making
+  real requests. It's used to ask for the real request URI, etc.
+
+* `env[RestCore::FAIL]` is an array which contains failing events. Events
+  could be any objects, it's handled by `RestCore::ErrorDetector` or any
+  other custom _middleware_.
+
+* `env[RestCore::LOG]` is an array which contains logging events. Events
+  could be any objects, it's handled by `RestCore::RestCore::CommonLogger` or
+  any other custom _middleware_.
 
 ## LICENSE:
 
