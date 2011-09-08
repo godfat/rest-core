@@ -54,9 +54,7 @@ Or if you want development version, put this in Gemfile:
     linkedin.authorize!('..') # paste your code from browser
     linkedin.me               # get current user info
 
-    # below is exactly the same as [rest-graph][]
-    require 'rest-core/client/rest-graph'
-    RestGraph.new.get('4')                   # get user info
+    RestCore::Facebook.new.get('4') # get user info
 
 See [example][] for more complex examples.
 
