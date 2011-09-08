@@ -17,7 +17,8 @@ class RestCore::CommonLogger
 
   def flush env
     return env if !log_method(env) || env[ASK]
-    (env[LOG] || []).each{ |obj| log_method(env).call("RestCore: #{obj}") }
+    (env[LOG] || []).compact.
+      each{ |obj| log_method(env).call("RestCore: #{obj}") }
     env.merge(LOG => [])
   end
 
