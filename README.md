@@ -167,7 +167,7 @@ See [built-in clients][] for more complex examples.
   other custom _middleware_.
 
 * `env[RestCore::LOG]` is an array which contains logging events. Events
-  could be any objects, it's handled by `RestCore::RestCore::CommonLogger` or
+  could be any objects, it's handled by `RestCore::CommonLogger` or
   any other custom _middleware_.
 
 ## LICENSE:
