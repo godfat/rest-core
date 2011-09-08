@@ -42,6 +42,7 @@ module RestCore
   autoload :ErrorHandler  , 'rest-core/middleware/error_handler'
   autoload :JsonDecode    , 'rest-core/middleware/json_decode'
   autoload :Oauth1Header  , 'rest-core/middleware/oauth1_header'
+  autoload :Oauth2Header  , 'rest-core/middleware/oauth2_header'
   autoload :Oauth2Query   , 'rest-core/middleware/oauth2_query'
   autoload :Timeout       , 'rest-core/middleware/timeout'
 
