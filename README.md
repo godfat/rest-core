@@ -85,6 +85,21 @@ See [built-in clients][] for more complex examples.
 
 [built-in clients]: https://github.com/cardinalblue/rest-core/tree/master/lib/rest-core/client
 
+## A simple interactive shell with [rib][]
+
+You need to install [rib][] in order to try this interactive shell:
+
+    gem install rib
+
+Then you can try this by running `rib rest-core`:
+
+    rest-core>> self.site = 'https://api.github.com/users/'
+    rest-core>> get 'cardinalblue', {}, :json_decode => true
+
+Which is using `RestCore::Universal` for accessing arbitrary websites.
+
+[rib]: https://github.com/godfat/rib
+
 ## GLOSSARY:
 
 * A _client_ is a class which can new connections to make requests.
