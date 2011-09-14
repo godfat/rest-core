@@ -41,9 +41,9 @@ describe RestCore::Facebook do
                   {'User-Agent'      => 'Ruby'})).       # this is by ruby
       to_return(:body => '{"data": []}')
 
-    RestCore::Facebook.new.request(
-      {:headers => {'X-Forwarded-For' => '127.0.0.1'}},
-      [:get, 'http://example.com']).should.eq({'data' => []})
+    RestCore::Facebook.new.get('http://example.com', {},
+      {:headers => {'X-Forwarded-For' => '127.0.0.1'}} ).
+      should.eq({'data' => []})
   end
 
   should 'post right' do

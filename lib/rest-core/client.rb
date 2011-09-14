@@ -105,41 +105,54 @@ module RestCore::Client
   #       headers: Hash # additional hash you want to pass
   #                     # default: {}
   def get    path, query={}, opts={}, &cb
-    request(opts, [:get   , path, query], &cb)
+    request(
+      {REQUEST_METHOD  => :get   ,
+       REQUEST_PATH    => path   ,
+       REQUEST_QUERY   => query  }.merge(opts), &cb)
   end
 
   def delete path, query={}, opts={}, &cb
-    request(opts, [:delete, path, query], &cb)
+    request(
+      {REQUEST_METHOD  => :delete,
+       REQUEST_PATH    => path   ,
+       REQUEST_QUERY   => query  }.merge(opts), &cb)
   end
 
   def post   path, payload={}, query={}, opts={}, &cb
-    request(opts, [:post  , path, query, payload], &cb)
+    request(
+      {REQUEST_METHOD  => :post  ,
+       REQUEST_PATH    => path   ,
+       REQUEST_QUERY   => query  ,
+       REQUEST_PAYLOAD => payload}.merge(opts), &cb)
   end
 
   def put    path, payload={}, query={}, opts={}, &cb
-    request(opts, [:put   , path, query, payload], &cb)
+    request(
+      {REQUEST_METHOD  => :put   ,
+       REQUEST_PATH    => path   ,
+       REQUEST_QUERY   => query  ,
+       REQUEST_PAYLOAD => payload}.merge(opts), &cb)
   end
 
-  def request opts, *reqs
+  def request env
     if block_given?
-      request_full(opts, *reqs){ |response|
+      app_call(env){ |response|
         yield(response[RESPONSE_BODY])
       }
     else
-      request_full(opts, *reqs)[RESPONSE_BODY]
+      app_call(env)[RESPONSE_BODY]
     end
   end
 
-  def request_full opts, *reqs
-    req = reqs.first
-    response = app.call(build_env({
-      REQUEST_METHOD  => req[0]         ,
-      REQUEST_PATH    => req[1]         ,
-      REQUEST_QUERY   => req[2]         ,
-      REQUEST_PAYLOAD => req[3]         ,
-      REQUEST_HEADERS => opts['headers'],
-      FAIL            => []             ,
-      LOG             => []}.merge(opts)))
+  def app_call env
+    response = app.call(build_env(
+      {REQUEST_METHOD  => :get,
+       REQUEST_PATH    => '/' ,
+       REQUEST_QUERY   => {}  ,
+       REQUEST_PAYLOAD => {}  ,
+       REQUEST_HEADERS => {}  ,
+       FAIL            => []  ,
+       LOG             => []  }.merge(env)))
 
     if block_given?
       yield(response)

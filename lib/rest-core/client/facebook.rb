@@ -91,7 +91,7 @@ module RestCore::Facebook::Client
 
   def next_page hash, opts={}, &cb
     if hash['paging'].kind_of?(Hash) && hash['paging']['next']
-      request(opts, [:get, hash['paging']['next']], &cb)
+      get(hash['paging']['next'], {}, opts, &cb)
     else
       yield(nil) if block_given?
     end
@@ -99,7 +99,7 @@ module RestCore::Facebook::Client
 
   def prev_page hash, opts={}, &cb
     if hash['paging'].kind_of?(Hash) && hash['paging']['previous']
-      request(opts, [:get, hash['paging']['previous']], &cb)
+      get(hash['paging']['previous'], {}, opts, &cb)
     else
       yield(nil) if block_given?
     end
@@ -171,8 +171,8 @@ module RestCore::Facebook::Client
   def authorize! opts={}
     query = {:client_id => app_id, :client_secret => secret}.merge(opts)
     self.data = Vendor.parse_query(
-                  request({:json_decode => false}.merge(opts),
-                          [:get, url('oauth/access_token', query)]))
+                  get(url('oauth/access_token'), query,
+                      {:json_decode => false}.merge(opts)))
   end
 
   # old rest facebook api, i will definitely love to remove them someday
@@ -181,15 +181,14 @@ module RestCore::Facebook::Client
     uri = url("method/#{path}", {:format => 'json'}.merge(query),
               {:site => old_site}.merge(opts))
     if opts[:post]
-      request(
-        opts.merge('cache.key' => uri, 'cache.post' => true),
-        [:post,
-         url("method/#{path}", {:format => 'json'},
-             {:site => old_site}.merge(opts)),
-         {}, query],
-        &cb)
+      post(url("method/#{path}", {:format => 'json'},
+               {:site => old_site}.merge(opts)),
+           query,
+           {}   ,
+           opts.merge('cache.key' => uri, 'cache.post' => true),
+           &cb)
     else
-      request(opts, [:get, uri], &cb)
+      get(uri, {}, opts, &cb)
     end
   end
 
@@ -209,7 +208,8 @@ module RestCore::Facebook::Client
   def exchange_sessions query={}, opts={}, &cb
     q = {:client_id => app_id, :client_secret => secret,
          :type => 'client_cred'}.merge(query)
-    request(opts, [:post, url('oauth/exchange_sessions', q)], &cb)
+    post(url('oauth/exchange_sessions', q),
+         {}, {}, opts, &cb)
   end
 
   protected
