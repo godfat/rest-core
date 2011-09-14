@@ -11,9 +11,9 @@ RestCore::Github = RestCore::Builder.client do
 
   use s::CommonLogger  , lambda{|obj|obj}
   use s::Cache         , nil, 3600 do
-    use s::ErrorHandler , lambda{|env| raise env[s::RESPONSE_BODY]['message']}
+    use s::ErrorHandler, lambda{|env| raise env[s::RESPONSE_BODY]['message']}
     use s::ErrorDetectorHttp
-    use s::JsonDecode   , true
+    use s::JsonDecode  , true
     run s::Ask
   end
 

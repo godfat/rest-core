@@ -14,10 +14,10 @@ RestCore::Twitter = RestCore::Builder.client(:data) do
   use s::CommonLogger  , lambda{|obj|obj}
 
   use s::Cache         , nil, 3600 do
-    use s::ErrorHandler  , lambda{ |env|
-                             raise ::RestCore::Twitter::Error.call(env) }
+    use s::ErrorHandler, lambda{ |env|
+                           raise ::RestCore::Twitter::Error.call(env) }
     use s::ErrorDetectorHttp
-    use s::JsonDecode    , true
+    use s::JsonDecode  , true
     run s::Ask
   end
 
