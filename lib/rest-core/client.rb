@@ -136,15 +136,15 @@ module RestCore::Client
 
   def request env
     if block_given?
-      app_call(env){ |response|
+      request_full(env){ |response|
         yield(response[RESPONSE_BODY])
       }
     else
-      app_call(env)[RESPONSE_BODY]
+      request_full(env)[RESPONSE_BODY]
     end
   end
 
-  def app_call env
+  def request_full env
     response = app.call(build_env(
       {REQUEST_METHOD  => :get,
        REQUEST_PATH    => '/' ,
