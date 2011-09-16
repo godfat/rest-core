@@ -15,9 +15,9 @@ describe RestCore::Wrapper do
     client.new.app.call({1=>2}).should.eq({1=>2})
   end
 
-  should 'raise RestCore::Error if no app specified' do
-    lambda{
-      RestCore::Builder.client.new
-    }.should.raise(RestCore::Error)
+  should 'default app is RestCore::Ask' do
+    wrapper = Class.new
+    wrapper.send(:include, RestCore::Wrapper)
+    wrapper.new.wrapped.class.should.eq RestCore::Ask
   end
 end

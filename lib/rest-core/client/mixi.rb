@@ -15,12 +15,9 @@ RestCore::Mixi = RestCore::Builder.client(
     use s::ErrorHandler  , lambda{ |env| p env }
     use s::ErrorDetectorHttp
     use s::JsonDecode    , true
-    run s::Ask
   end
 
   use s::Defaults      , :data     => lambda{{}}
-
-  run s::RestClient
 end
 
 module RestCore::Mixi::Client

@@ -24,4 +24,10 @@ class RestCore::Builder
     client.instance_variable_set(:@builder, self)
     client
   end
+
+  def initialize &block
+    @middles ||= []
+    instance_eval(&block) if block_given?
+    @init    ||= RestClient
+  end
 end

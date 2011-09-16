@@ -14,8 +14,5 @@ RestCore::Github = RestCore::Builder.client do
     use s::ErrorHandler, lambda{|env| raise env[s::RESPONSE_BODY]['message']}
     use s::ErrorDetectorHttp
     use s::JsonDecode  , true
-    run s::Ask
   end
-
-  run s::RestClient
 end

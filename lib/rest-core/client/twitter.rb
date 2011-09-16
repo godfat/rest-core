@@ -18,12 +18,9 @@ RestCore::Twitter = RestCore::Builder.client(:data) do
                            raise ::RestCore::Twitter::Error.call(env) }
     use s::ErrorDetectorHttp
     use s::JsonDecode  , true
-    run s::Ask
   end
 
   use s::Defaults      , :data     => lambda{{}}
-
-  run s::RestClient
 end
 
 class RestCore::Twitter::Error < RestCore::Error

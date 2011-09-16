@@ -25,12 +25,9 @@ RestCore::Linkedin = RestCore::Builder.client(:data) do
     }
     use s::ErrorDetectorHttp
     use s::JsonDecode  , true
-    run s::Ask
   end
 
   use s::Defaults      , :data     => lambda{{}}
-
-  run s::RestClient
 end
 
 module RestCore::Linkedin::Client

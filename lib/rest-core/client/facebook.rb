@@ -25,13 +25,10 @@ RestCore::Facebook = RestCore::Builder.client(
       end}
 
     use s::JsonDecode  , true
-    run s::Ask
   end
 
   use s::Defaults      , :data     => lambda{{}},
                          :old_site => 'https://api.facebook.com/'
-
-  run s::RestClient
 end
 
 class RestCore::Facebook::Error < RestCore::Error

@@ -10,7 +10,7 @@ module RestCore::Wrapper
   def initialize &block
     @middles ||= []
     instance_eval(&block) if block_given?
-    @wrapped ||= to_app(@init || Ask)
+    @wrapped ||= to_app
   end
 
   def use middle, *args, &block
@@ -32,8 +32,7 @@ module RestCore::Wrapper
     }.flatten
   end
 
-  def to_app init=@init
-    raise Error.new("You haven't setup any HTTP client") unless init
+  def to_app init=@init || Ask
     # === foldr m.new app middles
     middles.reverse.inject(init.new){ |app_, (middle, args, block)|
       begin
