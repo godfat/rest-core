@@ -1,7 +1,5 @@
 
-require 'rest-core/client/facebook'
-
-# need to require this before webmock in order to enable mocking in em-http
+require 'rest-core'
 
 require 'rr'
 require 'webmock'
