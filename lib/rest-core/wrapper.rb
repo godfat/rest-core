@@ -33,6 +33,7 @@ module RestCore::Wrapper
   end
 
   def to_app init=@init
+    raise Error.new("You haven't setup any HTTP client") unless init
     # === foldr m.new app middles
     middles.reverse.inject(init.new){ |app_, (middle, args, block)|
       begin

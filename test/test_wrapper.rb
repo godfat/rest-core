@@ -14,4 +14,10 @@ describe RestCore::Wrapper do
 
     client.new.app.call({1=>2}).should.eq({1=>2})
   end
+
+  should 'raise RestCore::Error if no app specified' do
+    lambda{
+      RestCore::Builder.client.new
+    }.should.raise(RestCore::Error)
+  end
 end
