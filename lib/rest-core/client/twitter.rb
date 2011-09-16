@@ -26,7 +26,7 @@ RestCore::Twitter = RestCore::Builder.client(:data) do
   run s::RestClient
 end
 
-class RestCore::Twitter::Error < RuntimeError
+class RestCore::Twitter::Error < RestCore::Error
   include RestCore
   class ServerError         < Twitter::Error; end
 

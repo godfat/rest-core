@@ -34,7 +34,7 @@ RestCore::Facebook = RestCore::Builder.client(
   run s::RestClient
 end
 
-class RestCore::Facebook::Error < RuntimeError
+class RestCore::Facebook::Error < RestCore::Error
   include RestCore
   class AccessToken        < Facebook::Error; end
   class InvalidAccessToken < AccessToken     ; end

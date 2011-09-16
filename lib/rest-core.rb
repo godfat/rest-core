@@ -17,6 +17,7 @@ module RestCore
   # core utilities
   autoload :Builder       , 'rest-core/builder'
   autoload :Client        , 'rest-core/client'
+  autoload :Error         , 'rest-core/error'
   autoload :Event         , 'rest-core/event'
   autoload :Middleware    , 'rest-core/middleware'
   autoload :Wrapper       , 'rest-core/wrapper'
