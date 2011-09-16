@@ -20,4 +20,11 @@ describe RestCore::Wrapper do
     wrapper.send(:include, RestCore::Wrapper)
     wrapper.new.wrapped.class.should.eq RestCore::Ask
   end
+
+  should 'switch default_app to RestCore::RestClient' do
+    wrapper = Class.new
+    wrapper.send(:include, RestCore::Wrapper)
+    wrapper.default_app = RestCore::RestClient
+    wrapper.new.wrapped.class.should.eq RestCore::RestClient
+  end
 end

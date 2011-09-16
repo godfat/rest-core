@@ -5,6 +5,12 @@ module RestCore::Wrapper
   include RestCore
   def self.included mod
     mod.send(:attr_reader, :init, :middles, :wrapped)
+    class << mod
+      attr_writer :default_app
+      def default_app
+        @default_app ||= RestCore::Ask
+      end
+    end
   end
 
   def initialize &block
@@ -32,7 +38,7 @@ module RestCore::Wrapper
     }.flatten
   end
 
-  def to_app init=@init || Ask
+  def to_app init=@init || self.class.default_app
     # === foldr m.new app middles
     middles.reverse.inject(init.new){ |app_, (middle, args, block)|
       begin

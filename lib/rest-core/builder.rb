@@ -6,6 +6,13 @@ class RestCore::Builder
   include RestCore
   include Wrapper
 
+  class << self
+    attr_writer :default_app
+  end
+  def self.default_app
+    @default_app ||= RestClient
+  end
+
   def self.client *attrs, &block
     new(&block).to_client(*attrs)
   end
@@ -28,6 +35,5 @@ class RestCore::Builder
   def initialize &block
     @middles ||= []
     instance_eval(&block) if block_given?
-    @init    ||= RestClient
   end
 end
