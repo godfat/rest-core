@@ -13,8 +13,7 @@ RestCore::Universal = RestCore::Builder.client(:data) do
     use s::ErrorHandler, nil
     use s::ErrorDetectorHttp
     use s::JsonDecode  , false
-    run s::Ask
   end
 
-  run s::RestClient
+  use s::Defaults      , :data => lambda{{}}
 end
