@@ -134,17 +134,17 @@ module RestCore::Client
        REQUEST_PAYLOAD => payload}.merge(opts), &cb)
   end
 
-  def request env
+  def request env, app=app
     if block_given?
-      request_full(env){ |response|
+      request_full(env, app){ |response|
         yield(response[RESPONSE_BODY])
       }
     else
-      request_full(env)[RESPONSE_BODY]
+      request_full(env, app)[RESPONSE_BODY]
     end
   end
 
-  def request_full env
+  def request_full env, app=app
     response = app.call(build_env(
       {REQUEST_METHOD  => :get,
        REQUEST_PATH    => '/' ,
