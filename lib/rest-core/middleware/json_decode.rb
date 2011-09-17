@@ -6,7 +6,7 @@ class RestCore::JsonDecode
   include RestCore::Middleware
 
   def call env
-    return app.call(env) if env[ASK]
+    return app.call(env) if env[DRY]
     response = app.call(env)
     if json_decode(env)
       response.merge(RESPONSE_BODY =>

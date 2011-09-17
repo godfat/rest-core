@@ -1,7 +1,7 @@
 
 require 'rest-core/middleware'
 
-class RestCore::Ask
+class RestCore::Dry
   include RestCore::Middleware
   def call env
     env

@@ -18,7 +18,7 @@ describe RestCore::Oauth1Header do
        'oauth_version'      => '1.0'                                        ,
        'oauth_signature_method' => 'HMAC-SHA1'}
 
-    @auth = RestCore::Oauth1Header.new(RestCore::Ask.new,
+    @auth = RestCore::Oauth1Header.new(RestCore::Dry.new,
       nil, nil, nil,
       'GDdmIQH6jhtmLUypg82g',
       'MCD8BKwGdgPHvAuvgvz4EQpqDAtx89grbuNMRd7Eh98')

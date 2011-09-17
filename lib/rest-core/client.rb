@@ -48,10 +48,10 @@ module RestCore::Client
     mod.send(:include, accessor)
   end
 
-  attr_reader :app, :ask
+  attr_reader :app, :dry
   def initialize o={}
     @app ||= self.class.builder.to_app
-    @ask ||= self.class.builder.to_app(Ask)
+    @dry ||= self.class.builder.to_app(Dry)
     o.each{ |key, value| send("#{key}=", value) if respond_to?("#{key}=") }
   end
 
@@ -73,7 +73,7 @@ module RestCore::Client
                                   end
                             send("#{k}=", vv)}
     initialize(o)
-    @app, @ask = lighten_app(app), lighten_app(ask)
+    @app, @dry = lighten_app(app), lighten_app(dry)
     self
   end
 
@@ -83,10 +83,10 @@ module RestCore::Client
 
   def url path, query={}, opts={}
     Middleware.request_uri(
-      ask.call(build_env({
+      dry.call(build_env({
         REQUEST_PATH  => path,
         REQUEST_QUERY => query,
-        ASK           => true}.merge(opts))))
+        DRY           => true}.merge(opts))))
   end
 
   # extra options:

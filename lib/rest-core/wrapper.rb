@@ -8,7 +8,7 @@ module RestCore::Wrapper
     class << mod
       attr_writer :default_app
       def default_app
-        @default_app ||= RestCore::Ask
+        @default_app ||= RestCore::Dry
       end
     end
   end
@@ -31,7 +31,7 @@ module RestCore::Wrapper
     middles.map{ |(middle, args, block)|
       if middle.public_method_defined?(:wrapped)
         # TODO: this is hacky... try to avoid calling new!
-        middle.members + middle.new(Ask.new, *args, &block).members
+        middle.members + middle.new(Dry.new, *args, &block).members
       else
         middle.members
       end if middle.respond_to?(:members)

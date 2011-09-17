@@ -171,8 +171,8 @@ Which is using `RestCore::Universal` for accessing arbitrary websites.
 * `env[RestCore::RESPONSE_HEADERS]` is a hash which is returned by the server
   for the response headers. Both keys and values' type should be String.
 
-* `env[RestCore::ASK]` is a boolean (either `true` or `false` or `nil`) which
-  indicate that if we're only asking for the modified `env`, instead of making
+* `env[RestCore::DRY]` is a boolean (either `true` or `false` or `nil`) which
+  indicates that if we're only asking for modified `env`, instead of making
   real requests. It's used to ask for the real request URI, etc.
 
 * `env[RestCore::FAIL]` is an array which contains failing events. Events

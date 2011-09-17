@@ -24,20 +24,20 @@ describe RestCore::Facebook do
     rg = RestCore::Facebook.new(:accept => 'text/html',
                                 :lang   => 'zh-tw')
 
-    headers = rg.ask.call(rg.send(:build_env))[RestCore::REQUEST_HEADERS]
+    headers = rg.dry.call(rg.send(:build_env))[RestCore::REQUEST_HEADERS]
     headers['Accept'         ].should.eq 'text/html'
     headers['Accept-Language'].should.eq 'zh-tw'
   end
 
   should 'build empty query string' do
     rg = RestCore::Facebook.new
-    (rg.ask.call(rg.send(:build_env))[RestCore::REQUEST_QUERY] || {}).
+    (rg.dry.call(rg.send(:build_env))[RestCore::REQUEST_QUERY] || {}).
       should.eq({})
   end
 
   should 'create access_token in query string' do
     rg = RestCore::Facebook.new(:access_token => 'token')
-    (rg.ask.call(rg.send(:build_env))[RestCore::REQUEST_QUERY] || {}).
+    (rg.dry.call(rg.send(:build_env))[RestCore::REQUEST_QUERY] || {}).
       should.eq({'access_token' => 'token'})
   end
 

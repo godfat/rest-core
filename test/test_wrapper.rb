@@ -9,16 +9,16 @@ describe RestCore::Wrapper do
       use wrapper do
         use RestCore::Bypass
       end
-      run RestCore::Ask
+      run RestCore::Dry
     end
 
     client.new.app.call({1=>2}).should.eq({1=>2})
   end
 
-  should 'default app is RestCore::Ask' do
+  should 'default app is RestCore::Dry' do
     wrapper = Class.new
     wrapper.send(:include, RestCore::Wrapper)
-    wrapper.new.wrapped.class.should.eq RestCore::Ask
+    wrapper.new.wrapped.class.should.eq RestCore::Dry
   end
 
   should 'switch default_app to RestCore::RestClient' do

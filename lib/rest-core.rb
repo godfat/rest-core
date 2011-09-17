@@ -10,7 +10,7 @@ module RestCore
   RESPONSE_STATUS  = 'RESPONSE_STATUS'
   RESPONSE_HEADERS = 'RESPONSE_HEADERS'
 
-  ASK              = 'core.ask'
+  DRY              = 'core.dry'
   FAIL             = 'core.fail'
   LOG              = 'core.log'
 
@@ -48,7 +48,7 @@ module RestCore
   autoload :Timeout       , 'rest-core/middleware/timeout'
 
   # apps
-  autoload :Ask           , 'rest-core/app/ask'
+  autoload :Dry           , 'rest-core/app/dry'
   autoload :RestClient    , 'rest-core/app/rest-client'
 
   # clients

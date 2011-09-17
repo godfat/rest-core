@@ -6,9 +6,9 @@ describe RestCore::Builder do
     RestCore::Builder.client.new.app.class.should.eq RestCore::RestClient
   end
 
-  should 'switch default_app to RestCore::Ask' do
+  should 'switch default_app to RestCore::Dry' do
     builder = RestCore::Builder.dup
-    builder.default_app = RestCore::Ask
-    builder.client.new.app.class.should.eq RestCore::Ask
+    builder.default_app = RestCore::Dry
+    builder.client.new.app.class.should.eq RestCore::Dry
   end
 end
