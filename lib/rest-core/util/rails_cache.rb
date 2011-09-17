@@ -6,3 +6,5 @@ module RestCore::RailsCache
   def store key, value,
             options={}; write(key, value, options); end
 end
+
+ActiveSupport::Cache::Store.send(:include, RestCore::RailsCache)

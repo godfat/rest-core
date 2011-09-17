@@ -19,7 +19,6 @@ end
 
 module RestCore::Facebook::RailsUtil
   def self.init app=Rails
-    ActiveSupport::Cache::Store.send(:include, RestCore::RailsCache)
     RestCore::Config.load_for_rails(RestCore::Facebook, 'facebook', app)
   end
 
