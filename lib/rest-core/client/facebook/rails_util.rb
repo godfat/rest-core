@@ -1,32 +1,25 @@
 
+require 'rest-core/util/rails_cache'
+
 require 'cgi'
 require 'uri'
 
-class RestCore::Facebook
-  module DefaultAttributes
-    def default_canvas                ; ''   ; end
-    def default_iframe                ; false; end
-    def default_auto_authorize        ; false; end
-    def default_auto_authorize_options; {}   ; end
-    def default_auto_authorize_scope  ; ''   ; end
-    def default_ensure_authorized     ; false; end
-    def default_write_session         ; false; end
-    def default_write_cookies         ; false; end
-    def default_write_handler         ;   nil; end
-    def default_check_handler         ;   nil; end
-  end
-
-  module RailsCache
-    def []    key       ;  read(key)                ; end
-    def []=   key, value; write(key, value)         ; end
-    def store key, value,
-              options={}; write(key, value, options); end
-  end
+class RestCore::Facebook::DefaultAttributes
+  def default_canvas                ; ''   ; end
+  def default_iframe                ; false; end
+  def default_auto_authorize        ; false; end
+  def default_auto_authorize_options; {}   ; end
+  def default_auto_authorize_scope  ; ''   ; end
+  def default_ensure_authorized     ; false; end
+  def default_write_session         ; false; end
+  def default_write_cookies         ; false; end
+  def default_write_handler         ;   nil; end
+  def default_check_handler         ;   nil; end
 end
 
 module RestCore::Facebook::RailsUtil
   def self.init app=Rails
-    ActiveSupport::Cache::Store.send(:include, RestCore::Facebook::RailsCache)
+    ActiveSupport::Cache::Store.send(:include, RestCore::RailsCache)
     RestCore::Config.load_for_rails(RestCore::Facebook, 'facebook', app)
   end
 
