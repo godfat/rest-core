@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   include RestCore::Facebook::RailsUtil
+  include RestCore::Flurry::RailsUtil
 
   before_filter :filter_common       , :only => [:index]
   before_filter :filter_canvas       , :only => [:canvas]

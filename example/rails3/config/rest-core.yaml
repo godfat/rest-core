@@ -5,6 +5,10 @@ development: &default
     secret: '456'
     canvas: 'can'
 
+  flurry:
+    api_key: 'key'
+    access_code: 'code'
+
 production:
   *default
 
