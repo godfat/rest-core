@@ -13,8 +13,7 @@ RestCore::Facebook = RestCore::Builder.client(
                           'Accept-Language' => 'en-us'}
   use s::Oauth2Query   , nil
 
-  use s::CommonLogger  , lambda{|obj|obj}
-
+  use s::CommonLogger  , nil
   use s::Cache         , nil, 3600 do
     use s::ErrorHandler,  lambda{ |env|
                             raise ::RestCore::Facebook::Error.call(env) }

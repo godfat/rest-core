@@ -9,7 +9,7 @@ RestCore::Github = RestCore::Builder.client do
   use s::DefaultHeaders, {'Accept' => 'application/json'}
   use s::Oauth2Query   , 'access_token', nil
 
-  use s::CommonLogger  , lambda{|obj|obj}
+  use s::CommonLogger  , nil
   use s::Cache         , nil, 3600 do
     use s::ErrorHandler, lambda{|env| raise env[s::RESPONSE_BODY]['message']}
     use s::ErrorDetectorHttp

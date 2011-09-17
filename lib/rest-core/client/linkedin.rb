@@ -13,8 +13,7 @@ RestCore::Linkedin = RestCore::Builder.client(:data) do
     'uas/oauth/requestToken', 'uas/oauth/accessToken',
     'https://www.linkedin.com/uas/oauth/authorize'
 
-  use s::CommonLogger  , method(:puts)
-
+  use s::CommonLogger  , nil
   use s::Cache         , nil, 3600 do
     use s::ErrorHandler, lambda{|env|
       if (body = env[s::RESPONSE_BODY]).kind_of?(Hash)
