@@ -4,7 +4,7 @@ require 'rest-core/util/rails_cache'
 require 'cgi'
 require 'uri'
 
-class RestCore::Facebook::DefaultAttributes
+module RestCore::Facebook::DefaultAttributes
   def default_canvas                ; ''   ; end
   def default_iframe                ; false; end
   def default_auto_authorize        ; false; end
