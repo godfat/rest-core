@@ -2,13 +2,13 @@
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "0.3.0"
+  s.version = "0.4.0.pre.0"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2011-09-16"
+  s.date = "2011-09-18"
   s.description = "A modular Ruby REST client collection/infrastructure\n\nIn this era of web services and mashups, we have seen a blooming of REST\nAPIs. One might wonder, how do we use these APIs easily and elegantly?\nSince REST is very simple compared to SOAP, it is not hard to build a\ndedicated client ourselves.\n\nWe have developed [rest-core][] with composable middlewares to build a\nREST client, based on the effort from [rest-graph][]. In the cases of\ncommon APIs such as Facebook, Github, and Twitter, developers can simply\nuse the built-in dedicated clients provided by rest-core, or do it yourself\nfor any other REST APIs.\n\n[rest-core]: http://github.com/cardinalblue/rest-core\n[rest-graph]: http://github.com/cardinalblue/rest-graph"
   s.email = ["dev (XD) cardinalblue.com"]
   s.executables = ["rib-rest-core"]
@@ -69,13 +69,14 @@ Gem::Specification.new do |s|
   "example/sinatra/config.ru",
   "example/twitter.rb",
   "lib/rest-core.rb",
-  "lib/rest-core/app/ask.rb",
+  "lib/rest-core/app/dry.rb",
   "lib/rest-core/app/rest-client.rb",
   "lib/rest-core/builder.rb",
   "lib/rest-core/client.rb",
   "lib/rest-core/client/facebook.rb",
   "lib/rest-core/client/facebook/rails_util.rb",
   "lib/rest-core/client/flurry.rb",
+  "lib/rest-core/client/flurry/rails_util.rb",
   "lib/rest-core/client/github.rb",
   "lib/rest-core/client/linkedin.rb",
   "lib/rest-core/client/mixi.rb",
@@ -104,6 +105,7 @@ Gem::Specification.new do |s|
   "lib/rest-core/test.rb",
   "lib/rest-core/util/config.rb",
   "lib/rest-core/util/hmac.rb",
+  "lib/rest-core/util/rails_util_util.rb",
   "lib/rest-core/util/vendor.rb",
   "lib/rest-core/version.rb",
   "lib/rest-core/wrapper.rb",

@@ -1,5 +1,59 @@
 # rest-core CHANGES
 
+## rest-core 0.4.0 -- ?
+
+### Incompatible changes:
+
+* [dry] Now `RestCore::Ask` is renamed to `RestCore::Dry` for better
+  understanding. Thanks miaout17
+
+* [client] Now `request` method takes an env and an app to make requests,
+  instead of a weird requests array.
+
+### Compatible changes:
+
+* [client] Introduced a new method `request_full` which is exactly the same
+  as `request` but also returns various information from the app, including
+  `RESPONSE_STATUS` and `RESPONSE_HEADERS`
+
+* [client] Removed various unused, untested, undocumented legacy from
+  rest-graph.
+
+* [error] Introduced `RestCore::Error` which is the base class for all
+  exceptions raised by rest-core
+
+* [builder] Now `RestCore::Builder.default_app` is the default app which
+  would be used for building clients without setting an app. By default,
+  it's `RestClient`, but you can change it if you like.
+
+* [builder] It no longer builds a @wrapped app. If you don't understand this,
+  then this does nothing for you. It's an internal change. (or bug fix)
+
+* [wrapper] Now `RestCore::Wrapper.default_app` is the default app which
+  would be used for wrapping middlewares without setting an app. By default,
+  it's `Dry`, but you can change it if you like.
+
+* [wrapped] Fixed a bug that force middlewares to implement `members` method,
+  which should be optional. Thanks miaout17
+
+* [simple]   Added a Simple client, which only wraps RestClient
+* [univeral] Added an Universal client, which could be used for anything
+* [flurry]   Added a Flurry client, along with its `Flurry::RailsUtil`
+* [mixi]     Added a Mixi client
+
+* [bypass] Added a Bypass middleware which does nothing but passing env
+* [oauth2_header] OAuth2Header is a middleware which would pass access_token
+  in header instead of in query string.
+* [common_logger] nil object would no longer be logged
+* [json_decode] Do nothing if we are being asked for env (dry mode)
+* [middleware] Now not only query values would be escaped, but also keys.
+
+* [rib-rest-core] Introduced an interactive shell. You'll need [rib][] to
+  run this: `rib rest-core`. It is using an universal client to access
+  arbitrary websites.
+
+[rib]: https://github.com/godfat/rib
+
 ## rest-core 0.3.0 -- 2011-09-03
 
 * [facebook] RestGraph is Facebook now.
