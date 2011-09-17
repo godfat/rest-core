@@ -1,5 +1,5 @@
 
-require 'rest-core/util/rails_cache'
+require 'rest-core/util/rails_util_util'
 
 require 'cgi'
 require 'uri'
@@ -18,8 +18,10 @@ module RestCore::Facebook::DefaultAttributes
 end
 
 module RestCore::Facebook::RailsUtil
+  include RestCore
+
   def self.init app=Rails
-    RestCore::Config.load_for_rails(RestCore::Facebook, 'facebook', app)
+    Config.load_for_rails(Facebook, 'facebook', app)
   end
 
   module Helper
@@ -32,9 +34,9 @@ module RestCore::Facebook::RailsUtil
     # skip if included already, any better way to detect this?
     return if controller.respond_to?(:rc_facebook, true)
 
-    controller.rescue_from(RestCore::Facebook::Error::AccessToken,
+    controller.rescue_from(Facebook::Error::AccessToken,
                            :with => :rc_facebook_on_access_token_error)
-    controller.helper(RestCore::Facebook::RailsUtil::Helper)
+    controller.helper(Facebook::RailsUtil::Helper)
     controller.instance_methods.select{ |method|
       method.to_s =~ /^rc_facebook/
     }.each{ |method| controller.send(:protected, method) }
@@ -42,9 +44,9 @@ module RestCore::Facebook::RailsUtil
 
   def rc_facebook_setup options={}
     rc_facebook_options_ctl.merge!(
-      rc_facebook_extract_options(options, :reject))
+      RailsUtilUtil.extract_options(Facebook.members, options, :reject))
     rc_facebook_options_new.merge!(
-      rc_facebook_extract_options(options, :select))
+      RailsUtilUtil.extract_options(Facebook.members, options, :select))
 
     # we'll need to reinitialize rc_facebook with the new options,
     # otherwise if you're calling rc_facebook before rc_facebook_setup,
@@ -76,7 +78,7 @@ module RestCore::Facebook::RailsUtil
 
   # override this if you need different app_id and secret
   def rc_facebook
-    @rc_facebook ||= RestCore::Facebook.new(rc_facebook_options_new)
+    @rc_facebook ||= Facebook.new(rc_facebook_options_new)
   end
 
   def rc_facebook_on_access_token_error error=nil
@@ -149,7 +151,7 @@ module RestCore::Facebook::RailsUtil
     if rc_facebook_options_ctl.has_key?(key)
       rc_facebook_options_ctl[key]
     else
-      RestCore::Facebook.send("default_#{key}")
+      Facebook.send("default_#{key}")
     end
   end
 
@@ -322,13 +324,6 @@ module RestCore::Facebook::RailsUtil
     !rc_facebook_oget(:auto_authorize_scope)  .blank? ||
     !rc_facebook_oget(:auto_authorize_options).blank? ||
      rc_facebook_oget(:auto_authorize)
-  end
-
-  def rc_facebook_extract_options options, method
-    # Hash[] is for ruby 1.8.7
-    # map(&:to_sym) is for ruby 1.8.7
-    Hash[options.send(method){ |(k, v)|
-      RestCore::Facebook.members.map(&:to_sym).member?(k) }]
   end
   # ==================== end misc ================================
 end
