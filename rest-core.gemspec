@@ -75,6 +75,7 @@ Gem::Specification.new do |s|
   "lib/rest-core/client.rb",
   "lib/rest-core/client/facebook.rb",
   "lib/rest-core/client/facebook/rails_util.rb",
+  "lib/rest-core/client/flurry.rb",
   "lib/rest-core/client/github.rb",
   "lib/rest-core/client/linkedin.rb",
   "lib/rest-core/client/mixi.rb",
@@ -127,6 +128,7 @@ Gem::Specification.new do |s|
   "test/client/facebook/test_serialize.rb",
   "test/client/facebook/test_timeout.rb",
   "test/client/twitter/test_api.rb",
+  "test/test_builder.rb",
   "test/test_client.rb",
   "test/test_oauth1_header.rb",
   "test/test_wrapper.rb"]
@@ -149,6 +151,7 @@ Gem::Specification.new do |s|
   "test/client/facebook/test_serialize.rb",
   "test/client/facebook/test_timeout.rb",
   "test/client/twitter/test_api.rb",
+  "test/test_builder.rb",
   "test/test_client.rb",
   "test/test_oauth1_header.rb",
   "test/test_wrapper.rb"]
