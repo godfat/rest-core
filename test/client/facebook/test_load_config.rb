@@ -2,7 +2,6 @@
 require 'rest-core/test'
 
 require 'rest-core/util/config'
-::Rails = Object.new
 
 describe RestCore::Config do
 
@@ -22,9 +21,10 @@ describe RestCore::Config do
   end
 
   should 'honor rails config' do
-    mock(Rails).env { 'test' }
-    mock(Rails).root{ File.dirname(__FILE__) }
-    RestCore::Config.load_for_rails(@klass, 'facebook')
+    app = Object.new
+    mock(app).env { 'test' }
+    mock(app).root{ File.dirname(__FILE__) }
+    RestCore::Config.load_for_rails(@klass, 'facebook', app)
     check
   end
 
