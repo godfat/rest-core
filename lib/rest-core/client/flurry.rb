@@ -81,7 +81,7 @@ module RestCore::Flurry::Client
   # => [1020437, 775889, 505662, 257149]
   def sum array
     reverse = array.reverse
-    reverse.map.with_index{ |_, index|
+    (0...reverse.size).map{ |index|
       reverse[1, index].inject(reverse.first, &:+)
     }.reverse
   end
