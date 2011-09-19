@@ -13,7 +13,7 @@ describe RestCore::Flurry do
     startDate = '2011-08-23'
     endDate   = '2011-09-19'
     @flurry = RestCore::Flurry.new
-    stub(@flurry).Time.stub!.now{ Time.parse(endDate) }
+    stub(Time).now{ Time.parse(endDate, nil) }
     stub_request(:get,
       "http://api.flurry.com/appMetrics/ActiveUsers?" \
       "startDate=#{startDate}&endDate=#{endDate}").

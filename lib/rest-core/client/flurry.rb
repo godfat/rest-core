@@ -68,9 +68,9 @@ module RestCore::Flurry::Client
   # >> f.weekly(f.metrics('ActiveUsers', {}, :weeks => 4))
   # => [244548, 270227, 248513, 257149]
   def weekly array
-    start = Time.parse(array.first.first).to_i
+    start = Time.parse(array.first.first, nil).to_i
     array.group_by{ |(date, value)|
-      current = Time.parse(date).to_i
+      current = Time.parse(date, nil).to_i
       - (current - start) / (86400*7)
     # calling .last to discard week numbers created by group_by
     }.sort.map(&:last).map{ |week|
