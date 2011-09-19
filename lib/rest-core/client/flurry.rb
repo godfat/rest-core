@@ -5,6 +5,7 @@ require 'time' # for Time.parse
 
 RestCore::Flurry = RestCore::Builder.client(:api_key, :access_code) do
   s = self.class # this is only for ruby 1.8!
+  use s::Timeout       , 10
 
   use s::DefaultSite   , 'http://api.flurry.com/'
   use s::DefaultHeaders, {'Accept' => 'application/json'}
