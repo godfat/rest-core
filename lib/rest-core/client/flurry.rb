@@ -17,8 +17,6 @@ RestCore::Flurry = RestCore::Builder.client(:api_key, :access_code) do
     use s::ErrorDetectorHttp
     use s::JsonDecode  , true
   end
-
-  run s::RestClient
 end
 
 module RestCore::Flurry::Client
