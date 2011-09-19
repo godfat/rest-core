@@ -10,7 +10,7 @@ RestCore::Github = RestCore::Builder.client do
   use s::Oauth2Query   , 'access_token', nil
 
   use s::CommonLogger  , nil
-  use s::Cache         , nil, 3600 do
+  use s::Cache         , nil, 600 do
     use s::ErrorHandler, lambda{|env| raise env[s::RESPONSE_BODY]['message']}
     use s::ErrorDetectorHttp
     use s::JsonDecode  , true

@@ -12,7 +12,7 @@ RestCore::Flurry = RestCore::Builder.client(:api_key, :access_code) do
   use s::DefaultQuery  , {}
 
   use s::CommonLogger  , nil
-  use s::Cache         , nil, 3600 do
+  use s::Cache         , nil, 600 do
     use s::ErrorHandler, lambda{|env| raise env[s::RESPONSE_BODY]['message']}
     use s::ErrorDetectorHttp
     use s::JsonDecode  , true

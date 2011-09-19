@@ -8,7 +8,7 @@ RestCore::Universal = RestCore::Builder.client(:data) do
   use s::DefaultQuery  , {}
 
   use s::CommonLogger  , method(:puts)
-  use s::Cache         , {}, 3600 do
+  use s::Cache         , {}, 600 do
     use s::ErrorHandler, nil
     use s::ErrorDetectorHttp
     use s::JsonDecode  , false

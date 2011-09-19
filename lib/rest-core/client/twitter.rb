@@ -12,7 +12,7 @@ RestCore::Twitter = RestCore::Builder.client(:data) do
     'oauth/request_token', 'oauth/access_token', 'oauth/authorize'
 
   use s::CommonLogger  , nil
-  use s::Cache         , nil, 3600 do
+  use s::Cache         , nil, 600 do
     use s::ErrorHandler, lambda{ |env|
                            raise ::RestCore::Twitter::Error.call(env) }
     use s::ErrorDetectorHttp

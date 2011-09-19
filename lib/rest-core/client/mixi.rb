@@ -10,7 +10,7 @@ RestCore::Mixi = RestCore::Builder.client(
   use s::Oauth2Header  , nil
 
   use s::CommonLogger  , nil
-  use s::Cache         , nil, 3600 do
+  use s::Cache         , nil, 600 do
     use s::ErrorHandler  , lambda{ |env| p env }
     use s::ErrorDetectorHttp
     use s::JsonDecode    , true

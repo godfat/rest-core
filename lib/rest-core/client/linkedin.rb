@@ -14,7 +14,7 @@ RestCore::Linkedin = RestCore::Builder.client(:data) do
     'https://www.linkedin.com/uas/oauth/authorize'
 
   use s::CommonLogger  , nil
-  use s::Cache         , nil, 3600 do
+  use s::Cache         , nil, 600 do
     use s::ErrorHandler, lambda{|env|
       if (body = env[s::RESPONSE_BODY]).kind_of?(Hash)
         raise body['message']
