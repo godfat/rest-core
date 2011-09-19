@@ -5,7 +5,7 @@ require 'cgi'
 require 'uri'
 
 module RestCore::Facebook::DefaultAttributes
-  def defalut_log_method            ; Rails.logger.method(:debug); end
+  def default_log_method            ; Rails.logger.method(:debug); end
   def default_cache                 ; Rails.cache                ; end
   def default_canvas                ; ''                         ; end
   def default_iframe                ; false                      ; end
