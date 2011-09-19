@@ -18,10 +18,8 @@ module RestCore::Facebook::DefaultAttributes
 end
 
 module RestCore::Facebook::RailsUtil
-  include RestCore
-
   def self.init app=Rails
-    Config.load_for_rails(Facebook, 'facebook', app)
+    RestCore::Config.load_for_rails(RestCore::Facebook, 'facebook', app)
   end
 
   module Helper
@@ -34,9 +32,9 @@ module RestCore::Facebook::RailsUtil
     # skip if included already, any better way to detect this?
     return if controller.respond_to?(:rc_facebook, true)
 
-    controller.rescue_from(Facebook::Error::AccessToken,
+    controller.rescue_from(RestCore::Facebook::Error::AccessToken,
                            :with => :rc_facebook_on_access_token_error)
-    controller.helper(Facebook::RailsUtil::Helper)
+    controller.helper(RestCore::Facebook::RailsUtil::Helper)
     controller.instance_methods.select{ |method|
       method.to_s =~ /^rc_facebook/
     }.each{ |method| controller.send(:protected, method) }
@@ -44,9 +42,11 @@ module RestCore::Facebook::RailsUtil
 
   def rc_facebook_setup options={}
     rc_facebook_options_ctl.merge!(
-      RailsUtilUtil.extract_options(Facebook.members, options, :reject))
+      RestCore::RailsUtilUtil.extract_options(
+        RestCore::Facebook.members, options, :reject))
     rc_facebook_options_new.merge!(
-      RailsUtilUtil.extract_options(Facebook.members, options, :select))
+      RestCore::RailsUtilUtil.extract_options(
+        RestCore::Facebook.members, options, :select))
 
     # we'll need to reinitialize rc_facebook with the new options,
     # otherwise if you're calling rc_facebook before rc_facebook_setup,
@@ -78,7 +78,7 @@ module RestCore::Facebook::RailsUtil
 
   # override this if you need different app_id and secret
   def rc_facebook
-    @rc_facebook ||= Facebook.new(rc_facebook_options_new)
+    @rc_facebook ||= RestCore::Facebook.new(rc_facebook_options_new)
   end
 
   def rc_facebook_on_access_token_error error=nil
@@ -151,7 +151,7 @@ module RestCore::Facebook::RailsUtil
     if rc_facebook_options_ctl.has_key?(key)
       rc_facebook_options_ctl[key]
     else
-      Facebook.send("default_#{key}")
+      RestCore::Facebook.send("default_#{key}")
     end
   end
 
