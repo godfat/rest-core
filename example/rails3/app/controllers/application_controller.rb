@@ -58,6 +58,10 @@ class ApplicationController < ActionController::Base
 
   def helper; end
 
+  def no_ns_pollution
+    render :text => Timeout::Error.name
+  end
+
   private
   def filter_common
     rc_facebook_setup(:auto_authorize => true, :canvas => '')

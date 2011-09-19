@@ -182,4 +182,10 @@ class ApplicationControllerTest < ActionController::TestCase
                  "#{RestCore::Flurry  .default_api_key}",
       @response.body.strip
   end
+
+  def test_no_ns_pollution
+    get(:no_ns_pollution)
+    assert_response :success
+    assert_equal 'Timeout::Error', @response.body.strip
+  end
 end
