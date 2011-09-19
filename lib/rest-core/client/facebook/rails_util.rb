@@ -5,16 +5,18 @@ require 'cgi'
 require 'uri'
 
 module RestCore::Facebook::DefaultAttributes
-  def default_canvas                ; ''   ; end
-  def default_iframe                ; false; end
-  def default_auto_authorize        ; false; end
-  def default_auto_authorize_options; {}   ; end
-  def default_auto_authorize_scope  ; ''   ; end
-  def default_ensure_authorized     ; false; end
-  def default_write_session         ; false; end
-  def default_write_cookies         ; false; end
-  def default_write_handler         ;   nil; end
-  def default_check_handler         ;   nil; end
+  def defalut_log_method            ; Rails.logger.method(:debug); end
+  def default_cache                 ; Rails.cache                ; end
+  def default_canvas                ; ''                         ; end
+  def default_iframe                ; false                      ; end
+  def default_auto_authorize        ; false                      ; end
+  def default_auto_authorize_options; {}                         ; end
+  def default_auto_authorize_scope  ; ''                         ; end
+  def default_ensure_authorized     ; false                      ; end
+  def default_write_session         ; false                      ; end
+  def default_write_cookies         ; false                      ; end
+  def default_write_handler         ;   nil                      ; end
+  def default_check_handler         ;   nil                      ; end
 end
 
 module RestCore::Facebook::RailsUtil
@@ -160,7 +162,7 @@ module RestCore::Facebook::RailsUtil
   end
 
   def rc_facebook_options_new
-    @rc_facebook_options_new ||= {:log_method => logger.method(:debug)}
+    @rc_facebook_options_new ||= {}
   end
   # ==================== end options utility =======================
 
