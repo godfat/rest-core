@@ -20,7 +20,8 @@ module RestCore::Client
 
         def default_#{name} app=app
           if app.respond_to?(:#{name})      # instance value
-            app.#{name}({})
+            app.#{name}({})              || # or old class default
+            default_#{name}(nil)
           elsif app.respond_to?(:wrapped)   # wrapper value
             default_#{name}(app.wrapped) || # walk into it
             default_#{name}(app.app)

@@ -50,10 +50,8 @@ class ApplicationController < ActionController::Base
   end
 
   def reinitialize
-    cache_nil = rc_facebook.cache
     rc_facebook_setup(:cache => {'a' => 'b'})
-    cache     = rc_facebook.cache
-    render :text => YAML.dump([cache_nil, cache])
+    render :text => YAML.dump(rc_facebook.cache)
   end
 
   def helper; end

@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2011-09-19"
+  s.date = "2011-09-20"
   s.description = "A modular Ruby REST client collection/infrastructure\n\nIn this era of web services and mashups, we have seen a blooming of REST\nAPIs. One might wonder, how do we use these APIs easily and elegantly?\nSince REST is very simple compared to SOAP, it is not hard to build a\ndedicated client ourselves.\n\nWe have developed [rest-core][] with composable middlewares to build a\nREST client, based on the effort from [rest-graph][]. In the cases of\ncommon APIs such as Facebook, Github, and Twitter, developers can simply\nuse the built-in dedicated clients provided by rest-core, or do it yourself\nfor any other REST APIs.\n\n[rest-core]: http://github.com/cardinalblue/rest-core\n[rest-graph]: http://github.com/cardinalblue/rest-graph"
   s.email = ["dev (XD) cardinalblue.com"]
   s.executables = ["rib-rest-core"]
