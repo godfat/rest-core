@@ -161,15 +161,15 @@ module RestCore::Client
       response
     end
   end
+
+  def build_env env={}
+    string_keys(attributes).merge(string_keys(env))
+  end
   # ------------------------ instance ---------------------
 
 
 
   protected
-  def build_env env={}
-    string_keys(attributes).merge(string_keys(env))
-  end
-
   def string_keys hash
     hash.inject({}){ |r, (k, v)|
       if v.kind_of?(Hash)
