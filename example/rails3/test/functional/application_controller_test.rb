@@ -188,4 +188,10 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal 'Timeout::Error', @response.body.strip
   end
+
+  def test_defaults
+    get(:defaults)
+    assert_response :success
+    assert_equal 'true', @response.body.strip
+  end
 end

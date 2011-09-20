@@ -60,6 +60,12 @@ class ApplicationController < ActionController::Base
     render :text => Timeout::Error.name
   end
 
+  def defaults
+    rc_facebook_setup
+    render :text => (rc_facebook.cache               == Rails.cache &&
+                     rc_facebook.log_method.receiver == Rails.logger)
+  end
+
   private
   def filter_common
     rc_facebook_setup(:auto_authorize => true, :canvas => '')
