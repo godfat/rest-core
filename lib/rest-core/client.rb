@@ -19,16 +19,15 @@ module RestCore::Client
         end
 
         def default_#{name} app=app
-          if app.respond_to?(:#{name})      # instance value
-            app.#{name}({})              || # or old class default
-            default_#{name}(nil)
-          elsif app.respond_to?(:wrapped)   # wrapper value
-            default_#{name}(app.wrapped) || # walk into it
-            default_#{name}(app.app)
-          elsif app.respond_to?(:app)       # walk into next app
-            default_#{name}(app.app)
-          elsif self.class.respond_to?("default_#{name}")
+          if self.class.respond_to?("default_#{name}")
             self.class.default_#{name}      # old class default style
+          elsif app.respond_to?(:#{name})
+            app.#{name}({})                 # middleware instance value
+          elsif app.respond_to?(:wrapped)
+            default_#{name}(app.wrapped) || # wrapper value
+            default_#{name}(app.app)        # walk into it
+          elsif app.respond_to?(:app)
+            default_#{name}(app.app)        # walk into next app
           else
             nil
           end
