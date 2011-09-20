@@ -46,6 +46,7 @@
 * [wrapped] Fixed a bug that force middlewares to implement `members` method,
   which should be optional. Thanks miaout17
 
+* [facebook][rails_util] Now default cache is `Rails.cache` instead of nil
 * [simple]   Added a Simple client, which only wraps RestClient
 * [univeral] Added an Universal client, which could be used for anything
 * [flurry]   Added a Flurry client, along with its `Flurry::RailsUtil`
