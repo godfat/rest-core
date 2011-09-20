@@ -10,6 +10,16 @@
 * [client] Now `request` method takes an env and an app to make requests,
   instead of a weird requests array.
 
+* [client] Now if you really want to disable something, for example,
+  disabling cache when the default cache is `Rails.cache`, you'll need to
+  pass `false` instead of `nil`. This is because `nil` stands for using
+  defaults in rest-core.
+
+* [client] Defaults priorities are changed to:
+  per-request > instance variable > class defaults > middleware defaults
+  See *test_client.rb* for more detailed definition. If you don't understand
+  this, don't worry, since then this won't affect you.
+
 ### Compatible changes:
 
 * [client] Introduced a new method `request_full` which is exactly the same
@@ -46,6 +56,7 @@
   in header instead of in query string.
 * [common_logger] nil object would no longer be logged
 * [json_decode] Do nothing if we are being asked for env (dry mode)
+* [cache] Now default `:expires_in` is 600 down from 3600
 * [middleware] Now not only query values would be escaped, but also keys.
 
 * [rib-rest-core] Introduced an interactive shell. You'll need [rib][] to
