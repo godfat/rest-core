@@ -1,6 +1,6 @@
 # rest-core CHANGES
 
-## rest-core 0.4.0 -- ?
+## rest-core 0.4.0 -- 2011-09-26
 
 ### Incompatible changes:
 
