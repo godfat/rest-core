@@ -2,14 +2,14 @@
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "0.4.0.pre.2"
+  s.version = "0.4.0"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2011-09-20"
-  s.description = "A modular Ruby REST client collection/infrastructure\n\nIn this era of web services and mashups, we have seen a blooming of REST\nAPIs. One might wonder, how do we use these APIs easily and elegantly?\nSince REST is very simple compared to SOAP, it is not hard to build a\ndedicated client ourselves.\n\nWe have developed [rest-core][] with composable middlewares to build a\nREST client, based on the effort from [rest-graph][]. In the cases of\ncommon APIs such as Facebook, Github, and Twitter, developers can simply\nuse the built-in dedicated clients provided by rest-core, or do it yourself\nfor any other REST APIs.\n\n[rest-core]: http://github.com/cardinalblue/rest-core\n[rest-graph]: http://github.com/cardinalblue/rest-graph"
+  s.date = "2011-09-26"
+  s.description = "Modular Ruby clients for REST APIs\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed [rest-core][], which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\nbuilt-in dedicated clients provided by rest-core.\n\n[rest-core]: http://github.com/cardinalblue/rest-core"
   s.email = ["dev (XD) cardinalblue.com"]
   s.executables = ["rib-rest-core"]
   s.files = [
@@ -138,7 +138,7 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/cardinalblue/rest-core"
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.10"
-  s.summary = "A modular Ruby REST client collection/infrastructure"
+  s.summary = "Modular Ruby clients for REST APIs"
   s.test_files = [
   "test/client/facebook/test_api.rb",
   "test/client/facebook/test_cache.rb",
