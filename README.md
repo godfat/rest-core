@@ -95,6 +95,12 @@ Which is using `RestCore::Universal` for accessing arbitrary websites.
 
 [rib]: https://github.com/godfat/rib
 
+## rest-core users:
+
+* [topcoder](https://github.com/miaout17/topcoder)
+* [s2sync](https://github.com/brucehsu/s2sync)
+* [s2sync_web](https://github.com/brucehsu/s2sync_web)
+
 ## GLOSSARY:
 
 * A _client_ is a class which can new connections to make requests.
