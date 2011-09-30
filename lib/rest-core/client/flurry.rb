@@ -31,13 +31,15 @@ module RestCore::Flurry::Client
   end
 
   # see: http://wiki.flurry.com/index.php?title=EventMetrics
-  # >> f.event_matrics(:startDate => '2011-09-14', :endDate => '2011-09-15')
-  # => {"@type"=>"Summary", "@startDate"=>"2011-09-14",
-  #     "@endDate"=>"2011-09-15", "@version"=>"1.0",
-  #     "@generatedDate"=>"9/15/117:08 AM",
-  #     "event"=>[{"@usersLastWeek"=>"164", "@usersLastMonth"=>"642", ...
-  def event_metrics query={}
-    get('eventMetrics/Summary', query)
+  # >> f.event_matrics({}, :days => 7)
+  # => {"Facebook share error"=>{"@usersLastWeek"=>"948",
+  #                              "@usersLastMonth"=>"2046",
+  #                              "@usersLastDay"=>"4",...}}
+  def event_metrics query={}, opts={}
+    get('eventMetrics/Summary', *calculate_query_and_opts(query, opts)
+      )['event'].inject({}){ |r, i|
+        r[i['@eventName']] = i.reject{ |k, _| k == '@eventName' }
+        r }
   end
 
   # see: http://wiki.flurry.com/index.php?title=AppMetrics
@@ -53,15 +55,8 @@ module RestCore::Flurry::Client
   #     ["2011-08-26", 37737], ["2011-08-25", 34392], ["2011-08-24", 33560],
   #     ["2011-08-23", 34722]]
   def metrics path, query={}, opts={}
-    if weeks = opts.delete(:weeks)
-      query[:startDate] =
-        (Time.now + 86400 - 86400*7*weeks).strftime('%Y-%m-%d')
-    end
-
-    query[:endDate] ||= Time.now.strftime('%Y-%m-%d')
-
-    get("appMetrics/#{path}", query, opts)['day'].
-      map{ |i| [i['@date'], i['@value'].to_i] }.reverse
+    get("appMetrics/#{path}", *calculate_query_and_opts(query, opts)
+      )['day'].map{ |i| [i['@date'], i['@value'].to_i] }.reverse
   end
 
   # >> f.weekly(f.metrics('ActiveUsers', {}, :weeks => 4))
@@ -88,6 +83,22 @@ module RestCore::Flurry::Client
   def query
     {'apiKey'        => api_key    ,
      'apiAccessCode' => access_code}
+  end
+
+  private
+  def calculate_query_and_opts query, opts
+    days = opts[:days] || (opts[:weeks]  && opts[:weeks] * 7)   ||
+                          (opts[:months] && opts[:months] * 30)
+
+    startDate = query[:startDate] || (Time.now + 86400 - 86400*days).
+      strftime('%Y-%m-%d')
+
+    endDate   = query[:endDate]   || Time.now.
+      strftime('%Y-%m-%d')
+
+    [query.merge(:startDate => startDate,
+                 :endDate   => endDate),
+     opts.reject{ |k| [:days, :weeks, :months].include?(k) }]
   end
 end
 
