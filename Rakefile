@@ -15,8 +15,8 @@ task 'gem:spec' do
 
     %w[rest-client].each{ |g| s.add_runtime_dependency(g) }
 
-    s.authors     = ['Cardinal Blue', 'Lin Jen-Shin (godfat)']
-    s.email       = ['dev (XD) cardinalblue.com']
+    s.authors  = ['Cardinal Blue', 'Lin Jen-Shin (godfat)']
+    s.email    = ['dev (XD) cardinalblue.com']
   end
 
   Gemgem.write
