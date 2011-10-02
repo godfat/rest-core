@@ -9,10 +9,9 @@ desc 'Generate gemspec'
 task 'gem:spec' do
   Gemgem.spec = Gemgem.create do |s|
     require 'rest-core/version'
-    s.name        = 'rest-core'
-    s.version     = RestCore::VERSION
-    s.homepage    = 'https://github.com/cardinalblue/rest-core'
-    # s.executables = [s.name]
+    s.name     = 'rest-core'
+    s.version  = RestCore::VERSION
+    s.homepage = 'https://github.com/cardinalblue/rest-core'
 
     %w[rest-client].each{ |g| s.add_runtime_dependency(g) }
 
