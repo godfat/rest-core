@@ -88,14 +88,15 @@ describe RestCore::Facebook do
     end
 
     should 'parse' do
-      rg = RestCore::Facebook.new(:secret => 'aloha')
-      rg.parse_signed_request!(setup_sr('aloha', {'ooh' => 'dir',
-                                                  'moo' => 'bar'}))
+      secret = 'aloha'
+      rg = RestCore::Facebook.new(:secret => secret)
+      rg.parse_signed_request!(setup_sr(secret, {'ooh' => 'dir',
+                                                 'moo' => 'bar'}))
       rg.data['ooh'].should.eq 'dir'
       rg.data['moo'].should.eq 'bar'
 
-      rg.parse_signed_request!(setup_sr('aloha', {'ooh' => 'dir',
-                                                  'moo' => 'bar'}, 'wrong')).
+      rg.parse_signed_request!(setup_sr(secret, {'ooh' => 'dir',
+                                                 'moo' => 'bar'}, 'wrong')).
                                                should.eq nil
       rg.data                                 .should.eq({})
     end
