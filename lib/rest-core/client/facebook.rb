@@ -131,6 +131,15 @@ module RestCore::Facebook::Client
       Vendor.parse_query(fbs.to_s.sub(/^"/, '').sub(/"$/, '')))
   end
 
+  def parse_fbsr! fbsr
+    old_data = parse_signed_request!(fbsr)
+    # beware! maybe facebook would take out the code someday
+    return self.data = old_data unless old_data && old_data['code']
+    # passing empty redirect_uri is needed!
+    authorize!(:code => old_data['code'], :redirect_uri => '')
+    self.data = old_data.merge(data)
+  end
+
   def parse_json! json
     self.data = json &&
       check_sig_and_return_data(JsonDecode.json_decode(json))

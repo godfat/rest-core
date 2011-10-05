@@ -100,6 +100,22 @@ describe RestCore::Facebook do
                                                should.eq nil
       rg.data                                 .should.eq({})
     end
+
+    should 'fbsr' do
+      secret       = 'lulala'
+      code         = 'lalalu'
+      access_token = 'lololo'
+      user_id      = 123
+      rg           = RestCore::Facebook.new(:secret => secret)
+      mock(rg).authorize!(hash_including(:code => code)){
+        rg.data = {'access_token' => access_token}
+      }
+
+      rg.parse_fbsr!(setup_sr(secret, 'code' => code, 'user_id' => user_id))
+      rg.data['code']        .should.eq code
+      rg.data['access_token'].should.eq access_token
+      rg.data['user_id']     .should.eq user_id
+    end
   end
 
   should 'fallback to ruby-hmac if Digest.new raise an runtime error' do
