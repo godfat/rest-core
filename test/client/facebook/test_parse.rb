@@ -76,24 +76,29 @@ describe RestCore::Facebook do
     rg.data.empty?.should.eq true
   end
 
-  should 'parse signed_request' do
-    secret = 'aloha'
-    json   = RestCore::JsonDecode.json_encode('ooh' => 'dir', 'moo' => 'bar')
-    encode = lambda{ |str|
+  describe 'signed_request' do
+    def encode str
       [str].pack('m').tr("\n=", '').tr('+/', '-_')
-    }
-    json_encoded = encode[json]
-    sig = OpenSSL::HMAC.digest('sha256', secret, json_encoded)
-    signed_request = "#{encode[sig]}.#{json_encoded}"
+    end
 
-    rg = RestCore::Facebook.new(:secret => secret)
-    rg.parse_signed_request!(signed_request)
-    rg.data['ooh'].should.eq 'dir'
-    rg.data['moo'].should.eq 'bar'
+    def setup_sr secret, data, sig=nil
+      json_encoded = encode(RestCore::JsonDecode.json_encode(data))
+      sig ||= OpenSSL::HMAC.digest('sha256', secret, json_encoded)
+      "#{encode(sig)}.#{json_encoded}"
+    end
 
-    signed_request = "#{encode[sig[0..-4]+'bad']}.#{json_encoded}"
-    rg.parse_signed_request!(signed_request).should.eq nil
-    rg.data                                 .should.eq({})
+    should 'parse' do
+      rg = RestCore::Facebook.new(:secret => 'aloha')
+      rg.parse_signed_request!(setup_sr('aloha', {'ooh' => 'dir',
+                                                  'moo' => 'bar'}))
+      rg.data['ooh'].should.eq 'dir'
+      rg.data['moo'].should.eq 'bar'
+
+      rg.parse_signed_request!(setup_sr('aloha', {'ooh' => 'dir',
+                                                  'moo' => 'bar'}, 'wrong')).
+                                               should.eq nil
+      rg.data                                 .should.eq({})
+    end
   end
 
   should 'fallback to ruby-hmac if Digest.new raise an runtime error' do
