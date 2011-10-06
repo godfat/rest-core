@@ -122,7 +122,11 @@ module RestCore::Facebook::Client
   end
 
   def parse_cookies! cookies
-    self.data = parse_fbs!(cookies["fbs_#{app_id}"])
+    self.data = if   fbsr = cookies["fbsr_#{app_id}"]
+                  parse_fbsr!(fbsr)
+                else fbs  = cookies["fbs_#{app_id}"]
+                  parse_fbs!(fbs)
+                end
   end
 
   def parse_fbs! fbs

@@ -101,20 +101,32 @@ describe RestCore::Facebook do
       rg.data                                 .should.eq({})
     end
 
-    should 'fbsr' do
+    should 'fbsr and cookies with fbsr' do
       secret       = 'lulala'
       code         = 'lalalu'
       access_token = 'lololo'
       user_id      = 123
-      rg           = RestCore::Facebook.new(:secret => secret)
+      app_id       = 456
+      rg           = RestCore::Facebook.new(:secret => secret,
+                                            :app_id => app_id)
       mock(rg).authorize!(hash_including(:code => code)){
         rg.data = {'access_token' => access_token}
+      }.times(2)
+
+      check = lambda{
+        rg.data['code']        .should.eq code
+        rg.data['access_token'].should.eq access_token
+        rg.data['user_id']     .should.eq user_id
       }
 
       rg.parse_fbsr!(setup_sr(secret, 'code' => code, 'user_id' => user_id))
-      rg.data['code']        .should.eq code
-      rg.data['access_token'].should.eq access_token
-      rg.data['user_id']     .should.eq user_id
+      check.call
+      rg.data = nil
+      rg.data.should.eq({})
+
+      rg.parse_cookies!("fbsr_#{app_id}" =>
+        setup_sr(secret, 'code' => code, 'user_id' => user_id))
+      check.call
     end
   end
 
