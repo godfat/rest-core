@@ -101,7 +101,7 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   def test_protected
-    assert_nil @controller.public_methods.find{ |m| m.to_s =~ /^rest_graph/ }
+    assert_nil @controller.public_methods.find{ |m| m.to_s =~ /^rc_/ }
   end
 
   def test_no_auto
