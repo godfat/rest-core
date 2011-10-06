@@ -185,12 +185,6 @@ class ApplicationControllerTest < ActionController::TestCase
       @response.body.strip
   end
 
-  def test_no_ns_pollution
-    get(:no_ns_pollution)
-    assert_response :success
-    assert_equal 'Timeout::Error', @response.body.strip
-  end
-
   def test_defaults
     get(:defaults)
     assert_response :success
@@ -212,5 +206,12 @@ class ApplicationControllerTest < ActionController::TestCase
   def test_parse_cookies_fbsr
     setup_cookies('fbsr')
     get(:parse_cookies, {}, {}, @cookies)
+  end
+
+  # regression test
+  def test_no_ns_pollution
+    get(:no_ns_pollution)
+    assert_response :success
+    assert_equal 'Timeout::Error', @response.body.strip
   end
 end

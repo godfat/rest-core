@@ -56,10 +56,6 @@ class ApplicationController < ActionController::Base
 
   def helper; end
 
-  def no_ns_pollution
-    render :text => Timeout::Error.name
-  end
-
   def defaults
     rc_facebook_setup
     render :text => (rc_facebook.cache               == Rails.cache &&
@@ -69,6 +65,11 @@ class ApplicationController < ActionController::Base
   def parse_cookies
     rc_facebook_setup
     render :text => 'dummy'
+  end
+
+  # regression test
+  def no_ns_pollution
+    render :text => Timeout::Error.name
   end
 
   private
