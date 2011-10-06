@@ -66,6 +66,11 @@ class ApplicationController < ActionController::Base
                      rc_facebook.log_method.receiver == Rails.logger)
   end
 
+  def parse_cookies
+    rc_facebook_setup
+    render :text => 'dummy'
+  end
+
   private
   def filter_common
     rc_facebook_setup(:auto_authorize => true, :canvas => '')

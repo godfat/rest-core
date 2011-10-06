@@ -1,11 +1,13 @@
 
 require 'test_helper'
 require 'webmock'
+require 'rr'
 
 WebMock.disable_net_connect!
 
 class ApplicationControllerTest < ActionController::TestCase
   include WebMock::API
+  include RR::Adapters::TestUnit
 
   def setup
     body = rand(2) == 0 ? '{"error":{"type":"OAuthException"}}' :
@@ -193,5 +195,22 @@ class ApplicationControllerTest < ActionController::TestCase
     get(:defaults)
     assert_response :success
     assert_equal 'true', @response.body.strip
+  end
+
+  def setup_cookies key
+    @cookies = {"#{key}_#{RC::Facebook.default_app_id}" => 'dummy'}
+    f = RC::Facebook.new
+    mock(f).parse_cookies!(cookies)
+    stub(@controller).rc_facebook{ f }
+  end
+
+  def test_parse_cookies_fbs
+    setup_cookies('fbs')
+    get(:parse_cookies, {}, {}, @cookies)
+  end
+
+  def test_parse_cookies_fbsr
+    setup_cookies('fbsr')
+    get(:parse_cookies, {}, {}, @cookies)
   end
 end
