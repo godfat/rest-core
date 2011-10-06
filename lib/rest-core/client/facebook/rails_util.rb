@@ -205,7 +205,8 @@ module RestCore::Facebook::RailsUtil
   # if we're not in canvas nor code passed,
   # we could check out cookies as well.
   def rc_facebook_check_cookie
-    return if rc_facebook.authorized? ||
+    return if rc_facebook.authorized?                ||
+              !cookies["fbsr_#{rc_facebook.app_id}"] ||
               !cookies["fbs_#{rc_facebook.app_id}"]
 
     rc_facebook.parse_cookies!(cookies)
