@@ -159,6 +159,7 @@ module RestCore::Facebook::Client
 
   def parse_signed_request! request
     sig_encoded, json_encoded = request.split('.')
+    return self.data = nil unless sig_encoded && json_encoded
     sig,  json = [sig_encoded, json_encoded].map{ |str|
       "#{str.tr('-_', '+/')}==".unpack('m').first
     }

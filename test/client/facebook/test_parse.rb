@@ -87,6 +87,10 @@ describe RestCore::Facebook do
       "#{encode(sig)}.#{json_encoded}"
     end
 
+    should 'parse invalid' do
+      RC::Facebook.new.parse_signed_request!('bad').should.eq nil
+    end
+
     should 'parse' do
       secret = 'aloha'
       rg = RestCore::Facebook.new(:secret => secret)
