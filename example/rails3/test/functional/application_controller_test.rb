@@ -18,6 +18,7 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   def teardown
+    RR.verify
     WebMock.reset!
   end
 
@@ -192,20 +193,21 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   def setup_cookies key
-    @cookies = {"#{key}_#{RC::Facebook.default_app_id}" => 'dummy'}
+    cookies = {"#{key}_#{RC::Facebook.default_app_id}" => 'dummy'}
+    stub(@controller).cookies{cookies}
     f = RC::Facebook.new
+    stub(@controller).rc_facebook{f}
     mock(f).parse_cookies!(cookies)
-    stub(@controller).rc_facebook{ f }
   end
 
   def test_parse_cookies_fbs
     setup_cookies('fbs')
-    get(:parse_cookies, {}, {}, @cookies)
+    get(:parse_cookies)
   end
 
   def test_parse_cookies_fbsr
     setup_cookies('fbsr')
-    get(:parse_cookies, {}, {}, @cookies)
+    get(:parse_cookies)
   end
 
   # regression test
