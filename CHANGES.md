@@ -1,9 +1,15 @@
-# rest-core CHANGES
+# CHANGES
 
 ## rest-core 0.7.0 --
 
+### IMPORTANT CHANGE!
+
 From now on, prebuilt clients such as `RC::Facebook`, `RC::Twitter` and
-others are moved to [rest-more][]
+others are moved to [rest-more][]. Please install _rest-more_ if you want
+to use them. rest-core would be depending on _rest-more_ for backward
+compatibility for a while, but in the future, the dependency would be
+removed. So please make sure you have _rest-more_ installed and have it
+in the Gemfile if you're using bundler.
 
 [rest-more]: https://github.com/cardinalblue/rest-more
 
