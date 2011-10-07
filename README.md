@@ -42,9 +42,9 @@ If you just want to use Facebook or Twitter clients, please take a look at
 
 [rest-more]: http://github.com/cardinalblue/rest-more
 
-## Built-in Clients Example:
+## rest-more example:
 
-    require 'rest-core'
+    require 'rest-more'
 
     RestCore::Twitter.new.statuses('_cardinalblue') # get user tweets
     RestCore::Github.new.get('users/cardinalblue')  # get user info
@@ -61,7 +61,7 @@ Please see [rest-more][] for more detail.
 
 [rest-more]: http://github.com/cardinalblue/rest-more
 
-## Build Your Own Clients Example:
+## Build Your Own Clients:
 
     require 'rest-core'
 
