@@ -5,11 +5,9 @@
 ### IMPORTANT CHANGE!
 
 From now on, prebuilt clients such as `RC::Facebook`, `RC::Twitter` and
-others are moved to [rest-more][]. Please install _rest-more_ if you want
-to use them. rest-core would be depending on _rest-more_ for backward
-compatibility for a while, but in the future, the dependency would be
-removed. So please make sure you have _rest-more_ installed and have it
-in the Gemfile if you're using bundler.
+others are moved to [rest-more][]. Since bundler didn't like cyclic
+dependency, so rest-core is not depending on rest-more. Please install
+_rest-more_ if you want to use them.
 
 [rest-more]: https://github.com/cardinalblue/rest-more
 

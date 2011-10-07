@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
   s.date = "2011-10-08"
-  s.description = "Modular Ruby clients for REST APIs\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed [rest-core][], which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\nbuilt-in dedicated clients provided by rest-core.\n\n[rest-core]: http://github.com/cardinalblue/rest-core"
+  s.description = "Modular Ruby clients interface for REST APIs\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed [rest-core][], which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-core]: http://github.com/cardinalblue/rest-core\n[rest-more]: http://github.com/cardinalblue/rest-more"
   s.email = ["dev (XD) cardinalblue.com"]
   s.executables = ["rib-rest-core"]
   s.files = [
@@ -75,7 +75,7 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/cardinalblue/rest-core"
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.11"
-  s.summary = "Modular Ruby clients for REST APIs"
+  s.summary = "Modular Ruby clients interface for REST APIs"
   s.test_files = [
   "test/test_builder.rb",
   "test/test_client.rb",
@@ -87,13 +87,10 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rest-client>, [">= 0"])
-      s.add_runtime_dependency(%q<rest-more>, [">= 0"])
     else
       s.add_dependency(%q<rest-client>, [">= 0"])
-      s.add_dependency(%q<rest-more>, [">= 0"])
     end
   else
     s.add_dependency(%q<rest-client>, [">= 0"])
-    s.add_dependency(%q<rest-more>, [">= 0"])
   end
 end

@@ -13,7 +13,7 @@ task 'gem:spec' do
     s.version  = RestCore::VERSION
     s.homepage = 'https://github.com/cardinalblue/rest-core'
 
-    %w[rest-client rest-more].each{ |g| s.add_runtime_dependency(g) }
+    %w[rest-client].each{ |g| s.add_runtime_dependency(g) }
 
     s.authors  = ['Cardinal Blue', 'Lin Jen-Shin (godfat)']
     s.email    = ['dev (XD) cardinalblue.com']

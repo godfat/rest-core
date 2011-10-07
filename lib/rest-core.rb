@@ -57,9 +57,3 @@ module RestCore
 end
 
 RC = RestCore unless Object.const_defined?(:RC)
-
-# for backward compatibility
-begin
-  require 'rest-more'
-rescue LoadError
-end
