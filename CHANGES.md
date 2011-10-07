@@ -1,6 +1,6 @@
 # CHANGES
 
-## rest-core 0.7.0 --
+## rest-core 0.7.0 -- 2011-10-08
 
 ### IMPORTANT CHANGE!
 

@@ -11,16 +11,17 @@ by Cardinal Blue <http://cardinalblue.com>
 
 ## DESCRIPTION:
 
-Modular Ruby clients for REST APIs
+Modular Ruby clients interface for REST APIs
 
 There has been an explosion in the number of REST APIs available today.
 To address the need for a way to access these APIs easily and elegantly,
 we have developed [rest-core][], which consists of composable middleware
 that allows you to build a REST client for any REST API. Or in the case of
 common APIs such as Facebook, Github, and Twitter, you can simply use the
-built-in dedicated clients provided by rest-core.
+dedicated clients provided by [rest-more][].
 
 [rest-core]: http://github.com/cardinalblue/rest-core
+[rest-more]: http://github.com/cardinalblue/rest-more
 
 ## REQUIREMENTS:
 
@@ -35,6 +36,11 @@ Or if you want development version, put this in Gemfile:
 
     gem 'rest-core', :git => 'git://github.com/cardinalblue/rest-core.git',
                      :submodules => true
+
+If you just want to use Facebook or Twitter clients, please take a look at
+[rest-more][] which has a lot of clients built with rest-core.
+
+[rest-more]: http://github.com/cardinalblue/rest-more
 
 ## Built-in Clients Example:
 
@@ -51,9 +57,9 @@ Or if you want development version, put this in Gemfile:
 
     RestCore::Facebook.new.get('4') # get user info
 
-See [example][] for more complex examples.
+Please see [rest-more][] for more detail.
 
-[example]: https://github.com/cardinalblue/rest-core/tree/master/example
+[rest-more]: http://github.com/cardinalblue/rest-more
 
 ## Build Your Own Clients Example:
 
