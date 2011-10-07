@@ -76,9 +76,9 @@ See [example][] for more complex examples.
     client.get('cardinalblue') # cache miss
     client.get('cardinalblue') # cache hit
 
-See [built-in clients][] for more complex examples.
+See [rest-more][] for more complex examples.
 
-[built-in clients]: https://github.com/cardinalblue/rest-core/tree/master/lib/rest-core/client
+[rest-more]: https://github.com/cardinalblue/rest-more
 
 ## A simple interactive shell with [rib][]
 

@@ -53,13 +53,7 @@ module RestCore
 
   # clients
   autoload :Simple        , 'rest-core/client/simple'
-  autoload :Github        , 'rest-core/client/github'
-  autoload :Twitter       , 'rest-core/client/twitter'
-  autoload :Linkedin      , 'rest-core/client/linkedin'
-  autoload :Facebook      , 'rest-core/client/facebook'
-  autoload :Mixi          , 'rest-core/client/mixi'
   autoload :Universal     , 'rest-core/client/universal'
-  autoload :Flurry        , 'rest-core/client/flurry'
 end
 
 RC = RestCore unless Object.const_defined?(:RC)

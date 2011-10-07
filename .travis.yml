@@ -1,10 +1,5 @@
 script: 'git submodule update --init; bundle exec rake test:travis'
 
-env:
-  - 'RESTCORE=rest-core'
-  - 'RESTCORE=rails2'
-  - 'RESTCORE=rails3'
-
 rvm:
   - 1.8.7
   - 1.9.2

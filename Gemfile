@@ -21,6 +21,3 @@ end
 platforms(:jruby) do
   gem 'jruby-openssl'
 end
-
-gem 'rails', '2.3.14' if ENV['RESTCORE'] == 'rails2'
-gem 'rails', '3.0.9'  if ENV['RESTCORE'] == 'rails3'

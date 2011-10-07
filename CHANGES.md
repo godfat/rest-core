@@ -1,5 +1,12 @@
 # rest-core CHANGES
 
+## rest-core 0.7.0 --
+
+From now on, prebuilt clients such as `RC::Facebook`, `RC::Twitter` and
+others are moved to [rest-more][]
+
+[rest-more]: https://github.com/cardinalblue/rest-more
+
 ## rest-core 0.4.0 -- 2011-09-26
 
 ### Incompatible changes:
