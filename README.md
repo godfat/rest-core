@@ -63,9 +63,12 @@ If you just want to use Facebook or Twitter clients, please take a look at
     client.get('cardinalblue') # cache miss
     client.get('cardinalblue') # cache hit
 
-See [rest-more][] for more complex examples.
+Please see [rest-more][] for more complex examples,
+and [slides][] from [rubyconf.tw/2011][rubyconf.tw] for concepts.
 
 [rest-more]: https://github.com/cardinalblue/rest-more
+[rubyconf.tw]: http://rubyconf.tw/2011/#6
+[slides]: http://www.godfat.org/slide/2011-08-27-rest-core.html
 
 ## A simple interactive shell with [rib][]:
 
