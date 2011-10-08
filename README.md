@@ -42,25 +42,6 @@ If you just want to use Facebook or Twitter clients, please take a look at
 
 [rest-more]: http://github.com/cardinalblue/rest-more
 
-## rest-more example:
-
-    require 'rest-more'
-
-    RestCore::Twitter.new.statuses('_cardinalblue') # get user tweets
-    RestCore::Github.new.get('users/cardinalblue')  # get user info
-
-    linkedin = RestCore::Linkedin.new(:consumer_key    => '...',
-                                      :consumer_secret => '...')
-    linkedin.authorize_url!   # copy and paste the URL in browser to authorize
-    linkedin.authorize!('..') # paste your code from browser
-    linkedin.me               # get current user info
-
-    RestCore::Facebook.new.get('4') # get user info
-
-Please see [rest-more][] for more detail.
-
-[rest-more]: http://github.com/cardinalblue/rest-more
-
 ## Build Your Own Clients:
 
     require 'rest-core'
@@ -86,7 +67,7 @@ See [rest-more][] for more complex examples.
 
 [rest-more]: https://github.com/cardinalblue/rest-more
 
-## A simple interactive shell with [rib][]
+## A simple interactive shell with [rib][]:
 
 You need to install [rib][] in order to try this interactive shell:
 
