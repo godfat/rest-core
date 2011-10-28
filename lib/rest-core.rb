@@ -27,7 +27,7 @@ module RestCore
 
   # misc utilities
   autoload :Hmac          , 'rest-core/util/hmac'
-  autoload :Vendor        , 'rest-core/util/vendor'
+  autoload :ParseQuery    , 'rest-core/util/parse_query'
 
   # middlewares
   autoload :Bypass        , 'rest-core/middleware/bypass'

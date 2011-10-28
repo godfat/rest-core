@@ -1,6 +1,6 @@
 
 module RestCore; end
-module RestCore::Vendor
+module RestCore::ParseQuery
   module_function
   begin
     require 'rack/utils'
