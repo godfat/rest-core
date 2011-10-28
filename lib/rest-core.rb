@@ -27,7 +27,6 @@ module RestCore
 
   # misc utilities
   autoload :Hmac          , 'rest-core/util/hmac'
-  autoload :Config        , 'rest-core/util/config'
   autoload :Vendor        , 'rest-core/util/vendor'
 
   # middlewares
