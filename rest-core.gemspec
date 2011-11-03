@@ -2,16 +2,15 @@
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "0.7.0"
+  s.version = "0.7.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2011-10-08"
+  s.date = "2011-11-03"
   s.description = "Modular Ruby clients interface for REST APIs\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed [rest-core][], which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-core]: http://github.com/cardinalblue/rest-core\n[rest-more]: http://github.com/cardinalblue/rest-more"
   s.email = ["dev (XD) cardinalblue.com"]
-  s.executables = ["rib-rest-core"]
   s.files = [
   ".gitignore",
   ".gitmodules",
@@ -24,7 +23,6 @@ Gem::Specification.new do |s|
   "README.md",
   "Rakefile",
   "TODO.md",
-  "bin/rib-rest-core",
   "example/facebook.rb",
   "example/github.rb",
   "example/linkedin.rb",
@@ -56,13 +54,10 @@ Gem::Specification.new do |s|
   "lib/rest-core/middleware/oauth2_query.rb",
   "lib/rest-core/middleware/timeout.rb",
   "lib/rest-core/test.rb",
-  "lib/rest-core/util/config.rb",
   "lib/rest-core/util/hmac.rb",
-  "lib/rest-core/util/rails_util_util.rb",
-  "lib/rest-core/util/vendor.rb",
+  "lib/rest-core/util/parse_query.rb",
   "lib/rest-core/version.rb",
   "lib/rest-core/wrapper.rb",
-  "lib/rib/app/rest-core.rb",
   "pending/test_multi.rb",
   "pending/test_test_util.rb",
   "rest-core.gemspec",
