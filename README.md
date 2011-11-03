@@ -70,21 +70,6 @@ and [slides][] from [rubyconf.tw/2011][rubyconf.tw] for concepts.
 [rubyconf.tw]: http://rubyconf.tw/2011/#6
 [slides]: http://www.godfat.org/slide/2011-08-27-rest-core.html
 
-## A simple interactive shell with [rib][]:
-
-You need to install [rib][] in order to try this interactive shell:
-
-    gem install rib
-
-Then you can try this by running `rib rest-core`:
-
-    rest-core>> self.site = 'https://api.github.com/users/'
-    rest-core>> get 'cardinalblue', {}, :json_decode => true
-
-Which is using `RestCore::Universal` for accessing arbitrary websites.
-
-[rib]: https://github.com/godfat/rib
-
 ## rest-core users:
 
 * [topcoder](https://github.com/miaout17/topcoder)
