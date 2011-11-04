@@ -1,5 +1,11 @@
 # CHANGES
 
+## rest-core 0.7.2 -- 2011-11-04
+
+* Moved rib-rest-core to [rest-more][]
+* Moved `RestCore::Config` to [rest-more][]
+* Renamed `RestCore::Vendor` to `RestCore::ParseQuery`
+
 ## rest-core 0.7.0 -- 2011-10-08
 
 ### IMPORTANT CHANGE!
