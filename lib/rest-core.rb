@@ -30,6 +30,7 @@ module RestCore
   autoload :ParseQuery    , 'rest-core/util/parse_query'
 
   # middlewares
+  autoload :AuthBasic     , 'rest-core/middleware/auth_basic'
   autoload :Bypass        , 'rest-core/middleware/bypass'
   autoload :Cache         , 'rest-core/middleware/cache'
   autoload :CommonLogger  , 'rest-core/middleware/common_logger'
