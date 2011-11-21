@@ -5,7 +5,7 @@ by Cardinal Blue <http://cardinalblue.com>
 ## LINKS:
 
 * [github](https://github.com/cardinalblue/rest-core)
-* [rubygems](http://rubygems.org/gems/rest-core)
+* [rubygems](https://rubygems.org/gems/rest-core)
 * [rdoc](http://rdoc.info/projects/cardinalblue/rest-core)
 * [mailing list](http://groups.google.com/group/rest-core/topics)
 
