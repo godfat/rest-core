@@ -45,11 +45,11 @@ module RestCore::ClientOauth1
   def oauth_token_secret= secret
     data['oauth_token_secret'] = secret if data.kind_of?(Hash)
   end
-  def callback
-    data['callback'] if data.kind_of?(Hash)
+  def oauth_callback
+    data['oauth_callback'] if data.kind_of?(Hash)
   end
-  def callback= uri
-    data['callback'] = uri if data.kind_of?(Hash)
+  def oauth_callback= uri
+    data['oauth_callback'] = uri if data.kind_of?(Hash)
   end
 
   private

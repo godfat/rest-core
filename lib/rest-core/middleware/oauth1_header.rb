@@ -9,7 +9,8 @@ class RestCore::Oauth1Header
   def self.members
     [:request_token_path, :access_token_path, :authorize_path,
      :consumer_key, :consumer_secret,
-     :callback, :verifier, :oauth_token, :oauth_token_secret, :data]
+     :oauth_callback, :oauth_verifier,
+     :oauth_token, :oauth_token_secret, :data]
   end
   include RestCore::Middleware
   def call env
@@ -35,8 +36,8 @@ class RestCore::Oauth1Header
       'oauth_timestamp'        => Time.now.to_i.to_s,
       'oauth_nonce'            => nonce,
       'oauth_version'          => '1.0',
-      'oauth_callback'         => callback(env),
-      'oauth_verifier'         => verifier(env),
+      'oauth_callback'         => oauth_callback(env),
+      'oauth_verifier'         => oauth_verifier(env),
       'oauth_token'            => oauth_token(env))
 
     "OAuth #{header.map{ |(k, v)| "#{k}=\"#{v}\"" }.join(', ')}"
