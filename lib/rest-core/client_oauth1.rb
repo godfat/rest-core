@@ -17,6 +17,10 @@ module RestCore::ClientOauth1
                                        :json_decode => false})))
   end
 
+  def authorized?
+    !!(oauth_token && oauth_token_secret)
+  end
+
   def data_json
     JsonDecode.json_encode(data.merge('sig' => calculate_sig))
   end
