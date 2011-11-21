@@ -9,7 +9,7 @@ class RestCore::Oauth1Header
   def self.members
     [:request_token_path, :access_token_path, :authorize_path,
      :consumer_key, :consumer_secret,
-     :callback, :verifier, :oauth_token, :oauth_token_secret]
+     :callback, :verifier, :oauth_token, :oauth_token_secret, :data]
   end
   include RestCore::Middleware
   def call env
