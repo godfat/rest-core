@@ -46,8 +46,7 @@ module RestCore::ClientOauth1
   end
 
   def set_token query
-    self.oauth_token        = query['oauth_token']
-    self.oauth_token_secret = query['oauth_token_secret']
+    self.data = query
   end
 
   def check_sig_and_return_data hash
