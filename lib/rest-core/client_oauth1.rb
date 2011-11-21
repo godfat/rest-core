@@ -4,21 +4,23 @@ require 'rest-core'
 module RestCore::ClientOauth1
   include RestCore
 
-  def authorize_url!
-    set_token(ParseQuery.parse_query(
-      post(request_token_path, {}, {}, {:json_decode => false})))
+  def authorize_url! opts={}
+    self.data = ParseQuery.parse_query(
+      post(request_token_path, {}, {}, {:json_decode => false}.merge(opts)))
 
     url(authorize_path, :oauth_token => oauth_token, :format => false)
   end
 
-  def authorize! verifier
-    set_token(ParseQuery.parse_query(
-      post(access_token_path, {}, {}, {:verifier => verifier,
-                                       :json_decode => false})))
+  def authorize! opts={}
+    self.data = ParseQuery.parse_query(
+      post(access_token_path, {}, {}, {:json_decode => false}.merge(opts)))
+
+    data['authorized'] = 'true'
+    data
   end
 
   def authorized?
-    !!(oauth_token && oauth_token_secret)
+    !!(oauth_token && oauth_token_secret && data['authorized'])
   end
 
   def data_json
@@ -43,14 +45,16 @@ module RestCore::ClientOauth1
   def oauth_token_secret= secret
     data['oauth_token_secret'] = secret if data.kind_of?(Hash)
   end
+  def callback
+    data['callback'] if data.kind_of?(Hash)
+  end
+  def callback= uri
+    data['callback'] = uri if data.kind_of?(Hash)
+  end
 
   private
   def default_data
     {}
-  end
-
-  def set_token query
-    self.data = query
   end
 
   def check_sig_and_return_data hash
