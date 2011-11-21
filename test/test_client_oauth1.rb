@@ -29,7 +29,7 @@ describe RC::ClientOauth1 do
     @client.data_json = data_json
     @client.data.should.eq data_sig
 
-    @client.data_json = ['bad json']
+    @client.data_json = 'bad json'
     @client.data.should.eq({})
   end
 
