@@ -24,11 +24,7 @@ class RestCore::Defaults
   def method_missing msg, *args, &block
     env = args.first
     if env.kind_of?(Hash) && (d = defaults(env)) && d.key?(msg)
-      if (value = defaults(env)[msg]).respond_to?(:call)
-        value.call
-      else
-        value
-      end
+      defaults(env)[msg]
     else
       super
     end
