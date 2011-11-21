@@ -17,10 +17,6 @@ module RestCore::ClientOauth1
                                        :json_decode => false})))
   end
 
-  def data
-    super || self.data = {}
-  end
-
   def data_json
     JsonDecode.json_encode(data.merge('sig' => calculate_sig))
   end
@@ -45,6 +41,10 @@ module RestCore::ClientOauth1
   end
 
   private
+  def default_data
+    {}
+  end
+
   def set_token query
     self.oauth_token        = query['oauth_token']
     self.oauth_token_secret = query['oauth_token_secret']

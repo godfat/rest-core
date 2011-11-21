@@ -32,4 +32,12 @@ describe RC::ClientOauth1 do
     @client.data_json = ['bad json']
     @client.data.should.eq({})
   end
+
+  should 'have correct default data' do
+    @client = client.new
+    @client.data.should.eq({})
+    @client.data = nil
+    @client.data['a'] = 'b'
+    @client.data['a'].should.eq 'b'
+  end
 end
