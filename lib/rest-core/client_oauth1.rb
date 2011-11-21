@@ -18,7 +18,7 @@ module RestCore::ClientOauth1
   end
 
   def data
-    super || {}
+    super || self.data = {}
   end
 
   def data_json
