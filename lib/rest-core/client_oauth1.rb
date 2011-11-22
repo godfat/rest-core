@@ -8,7 +8,11 @@ module RestCore::ClientOauth1
     self.data = ParseQuery.parse_query(
       post(request_token_path, {}, {}, {:json_decode => false}.merge(opts)))
 
-    url(authorize_path, :oauth_token => oauth_token, :format => false)
+    authorize_url
+  end
+
+  def authorize_url
+    url(authorize_path, :oauth_token => oauth_token)
   end
 
   def authorize! opts={}
