@@ -2,6 +2,11 @@
 require 'rest-core/test'
 
 describe RC::ClientOauth1 do
+  after do
+    WebMock.reset!
+    RR.verify
+  end
+
   client = RC::Builder.client do
     s = self.class # this is only for ruby 1.8!
     use s::Oauth1Header
@@ -39,5 +44,21 @@ describe RC::ClientOauth1 do
     @client.data = nil
     @client.data['a'] = 'b'
     @client.data['a'].should.eq 'b'
+  end
+
+  should 'authorize' do
+    stub_request(:post, 'http://localhost').
+      to_return(:body => 'oauth_token=abc')
+
+    stub_request(:post, 'http://nocalhost').
+      to_return(:body => 'user_id=123&haha=point')
+
+    @client = client.new(:request_token_path => 'http://localhost',
+                         :authorize_path     => 'http://mocalhost',
+                         :access_token_path  => 'http://nocalhost')
+
+    @client.authorize_url!.should.eq 'http://mocalhost?oauth_token=abc'
+    @client.authorize!.should.eq('user_id' => '123', 'haha' => 'point',
+                                 'authorized' => 'true')
   end
 end
