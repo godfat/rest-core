@@ -1,5 +1,64 @@
 # CHANGES
 
+## rest-core 0.8.0 -- ?
+
+Changes are mostly related to OAuth.
+
+### Incompatible changes:
+
+* [OAuth1Header] `callback` is renamed to `oauth_callback`
+* [OAuth1Header] `verifier` is renamed to `oauth_verifier`
+
+* [Oauth2Header] The first argument is changed from `access_token` to
+  `access_token_type`. Previously, the access_token_type is "OAuth" which
+  is used in Mixi. But mostly, we might want to use "Bearer" (according to
+  [OAuth 2.0 spec][]) Argument for the access_token is changed to the second
+  argument.
+
+* [Defaults] Now we're no longer call `call` for any default values.
+  That is, if you're using this: `use s::Defaults, :data => lambda{{}}`
+  that would break. Previously, this middleware would call `call` on the
+  lambda so that `data` is default to a newly created hash. Now, it would
+  merely be default to the lambda. To make it work as before, please define
+  `def default_data; {}; end` in the client directly. Please see
+  `OAuth1Client` as an example.
+
+[OAuth 2.0 spec]: http://tools.ietf.org/html/draft-ietf-oauth-v2-22
+
+### Enhancement:
+
+* [AuthBasic] Added a new middleware which could do [basic authentication][].
+
+* [OAuth1Header] Introduced `data` which is a hash and is used to store
+  tokens and other information sent from authorization servers.
+
+* [ClientOauth1] Now `authorize_url!` accepts opts which you can pass
+  `authorize_url!(:oauth_callback => 'http://localhost/callback')`.
+
+* [ClientOauth1] Introduced `authorize_url` which would not try to ask
+  for a request token, instead, it would use the current token as the
+  request token. If you don't understand what does this mean, then keep
+  using `authorize_url!`, which would call this underneath.
+
+* [ClientOauth1] Introduced `authorized?`
+* [ClientOauth1] Now it would set `data['authorized'] = 'true'` when
+  `authorize!` is called, and it is also used to check if we're authorized
+  or not in `authorized?`
+
+* [ClientOauth1] Introduced `data_json` and `data_json=` which allow you to
+  serialize and deserialize `data` with JSON along with a `sig` to check
+  if it hasn't been changed. You can put this into browser cookie. Because
+  of the `sig`, you would know if the user changed something in data without
+  using `consumer_secret` to generate a correct sig corresponded to the data.
+
+* [ClientOauth1] Introduced `oauth_token`, `oauth_token=`,
+  `oauth_token_secret`, `oauth_token_secret=`, `oauth_callback`,
+  and `oauth_callback=` which take the advantage of `data`.
+
+* [ClientOauth1] Introduced `default_data` which is a hash.
+
+[basic authentication]: http://en.wikipedia.org/wiki/Basic_access_authentication
+
 ## rest-core 0.7.2 -- 2011-11-04
 
 * Moved rib-rest-core to [rest-more][]

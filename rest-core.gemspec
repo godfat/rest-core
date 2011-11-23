@@ -2,13 +2,13 @@
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "0.7.2"
+  s.version = "0.8.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2011-11-22"
+  s.date = "2011-11-23"
   s.description = "Modular Ruby clients interface for REST APIs\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed [rest-core][], which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-core]: http://github.com/cardinalblue/rest-core\n[rest-more]: http://github.com/cardinalblue/rest-more"
   s.email = ["dev (XD) cardinalblue.com"]
   s.files = [
