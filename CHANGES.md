@@ -4,7 +4,7 @@
 
 Changes are mostly related to OAuth.
 
-### Incompatible changes:
+### Incompatible changes
 
 * [OAuth1Header] `callback` is renamed to `oauth_callback`
 * [OAuth1Header] `verifier` is renamed to `oauth_verifier`
@@ -25,7 +25,7 @@ Changes are mostly related to OAuth.
 
 [OAuth 2.0 spec]: http://tools.ietf.org/html/draft-ietf-oauth-v2-22
 
-### Enhancement:
+### Enhancement
 
 * [AuthBasic] Added a new middleware which could do [basic authentication][].
 
@@ -78,7 +78,7 @@ _rest-more_ if you want to use them.
 
 ## rest-core 0.4.0 -- 2011-09-26
 
-### Incompatible changes:
+### Incompatible changes
 
 * [dry] Now `RestCore::Ask` is renamed to `RestCore::Dry` for better
   understanding. Thanks miaout17
@@ -96,7 +96,7 @@ _rest-more_ if you want to use them.
   See *test_client.rb* for more detailed definition. If you don't understand
   this, don't worry, since then this won't affect you.
 
-### Compatible changes:
+### Compatible changes
 
 * [client] Introduced a new method `request_full` which is exactly the same
   as `request` but also returns various information from the app, including
