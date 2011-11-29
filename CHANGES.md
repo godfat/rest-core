@@ -1,6 +1,6 @@
 # CHANGES
 
-## rest-core 0.8.0 -- ?
+## rest-core 0.8.0 -- 2011-11-29
 
 Changes are mostly related to OAuth.
 
