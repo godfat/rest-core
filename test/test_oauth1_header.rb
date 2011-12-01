@@ -41,15 +41,47 @@ describe RestCore::Oauth1Header do
         'oauth_version%3D1.0'
     end
 
-    should 'have correct base_string' do
+    def check
       @auth.base_string(@env, @oauth_params).should.eq @base_string
     end
 
-    should 'not use payload in multipart request for base_string' do
-      @env = @env.merge(RestCore::REQUEST_PAYLOAD =>
-                          {'file' => File.open(__FILE__)})
+    should 'have correct base_string' do
+      check
+    end
 
-      @auth.base_string(@env, @oauth_params).should.eq @base_string
+    should 'not use payload in multipart request for base_string' do
+      @env.merge!(RC::REQUEST_PAYLOAD => {'file' => File.open(__FILE__)})
+      check
+    end
+
+    should 'not use payload if it contains binary' do
+      @env.merge!(RC::REQUEST_PAYLOAD => File.open(__FILE__))
+      check
+    end
+
+    should 'not use payload if it contains [binary]' do
+      @env.merge!(RC::REQUEST_PAYLOAD => [File.open(__FILE__)])
+      check
+    end
+
+    should 'not use payload if Content-Type is not x-www-form-urlencoded' do
+      @env.merge!(RC::REQUEST_PAYLOAD => {'pay' => 'load'},
+                  RC::REQUEST_HEADERS => {'Content-Type' => 'text/plain'})
+      check
+    end
+
+    should 'use payload if Content-Type is x-www-form-urlencoded' do
+      @base_string << '%26pay%3Dload'
+      @env.merge!(RC::REQUEST_PAYLOAD => {'pay' => 'load'},
+                  RC::REQUEST_HEADERS =>
+                    {'Content-Type' => 'application/x-www-form-urlencoded'})
+      check
+    end
+
+    should 'use payload if there is no binary data' do
+      @base_string << '%26pay%3Dload'
+      @env.merge!(RC::REQUEST_PAYLOAD => {'pay' => 'load'})
+      check
     end
   end
 end

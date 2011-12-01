@@ -56,15 +56,7 @@ class RestCore::Oauth1Header
   def base_string env, oauth_params
     method   = env[REQUEST_METHOD].to_s.upcase
     base_uri = env[REQUEST_PATH]
-    # TODO: the detection should be checking if it's
-    # application/x-www-form-urlencoded or not, instead of multipart or not.
-    # but since the Content-Type is generated in app (http client),
-    # we have no idea what it would be here. so simply guessing it...
-    payload  = if multipart?(env)
-                 {}
-               else
-                 reject_blank(env[REQUEST_PAYLOAD] || {})
-               end
+    payload  = payload_params(env)
     query    = reject_blank(env[REQUEST_QUERY] || {})
     params   = reject_blank(oauth_params.merge(query.merge(payload))).
       to_a.sort.map{ |(k, v)|
@@ -77,10 +69,39 @@ class RestCore::Oauth1Header
     [OpenSSL::Random.random_bytes(32)].pack('m').tr("+/=\n", '')
   end
 
-  def multipart? env
-    !!(env[REQUEST_PAYLOAD] &&
-       env[REQUEST_PAYLOAD].find{ |k, v| v.kind_of?(IO) ||
-                                         v.respond_to?(:read) })
+  # according to OAuth 1.0a spec, only:
+  #     Content-Type: application/x-www-form-urlencoded
+  # should take payload as a part of the base_string
+  def payload_params env
+    # if we already specified Content-Type and which is not
+    # application/x-www-form-urlencoded, then we should not
+    # take payload as a part of the base_string
+    if env[REQUEST_HEADERS].kind_of?(Hash)  &&
+       env[REQUEST_HEADERS]['Content-Type'] &&
+       env[REQUEST_HEADERS]['Content-Type'] !=
+         'application/x-www-form-urlencoded'
+      {}
+
+    # if it contains any binary data,
+    # then it shouldn't be application/x-www-form-urlencoded either
+    # the Content-Type header would be handled in our HTTP client
+    elsif contain_binary?(env[REQUEST_PAYLOAD])
+      {}
+
+    # so the Content-Type header must be application/x-www-form-urlencoded
+    else
+      reject_blank(env[REQUEST_PAYLOAD] || {})
+    end
+  end
+
+  def contain_binary? payload
+    return false unless payload
+    return true  if     payload.kind_of?(IO)    ||
+                        payload.respond_to?(:read)
+    return true  if     payload.find{ |k, v|
+      # if payload is an array, then v would be nil
+      (v || k).kind_of?(IO) || (v || k).respond_to?(:read) }
+    return false
   end
 
   def reject_blank params
