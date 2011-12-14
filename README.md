@@ -159,6 +159,21 @@ and [slides][] from [rubyconf.tw/2011][rubyconf.tw] for concepts.
   could be any objects, it's handled by `RestCore::CommonLogger` or
   any other custom _middleware_.
 
+## CONTRIBUTORS:
+
+* Andrew Liu (@eggegg)
+* andy (@coopsite)
+* Barnabas Debreczeni (@keo)
+* Bruce Chu (@bruchu)
+* Ethan Czahor (@ethanz5)
+* Florent Vaucelle (@florent)
+* Jaime Cham (@jcham)
+* John Fan (@johnfan)
+* Lin Jen-Shin (@godfat)
+* Mariusz Pruszynski (@snicky)
+* Mr. Big Cat (@miaout17)
+* Nicolas Fouché (@nfo)
+
 ## LICENSE:
 
 Apache License 2.0
