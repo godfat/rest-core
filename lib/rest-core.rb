@@ -14,6 +14,8 @@ module RestCore
   FAIL             = 'core.fail'
   LOG              = 'core.log'
 
+  ASYNC            = 'async.callback'
+
   # core utilities
   autoload :Builder       , 'rest-core/builder'
   autoload :Client        , 'rest-core/client'

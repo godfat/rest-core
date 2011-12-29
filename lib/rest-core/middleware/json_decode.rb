@@ -7,8 +7,17 @@ class RestCore::JsonDecode
 
   def call env
     return app.call(env) if env[DRY]
-    response = app.call(env)
-    if json_decode(env)
+    if env[ASYNC]
+      app.call(env.merge(ASYNC => lambda{ |response|
+        env[ASYNC].call(process(response))
+      }))
+    else
+      process(app.call(env))
+    end
+  end
+
+  def process response
+    if json_decode(response)
       response.merge(RESPONSE_BODY =>
         self.class.json_decode("[#{response[RESPONSE_BODY]}]").first)
         # [this].first is not needed for yajl-ruby
