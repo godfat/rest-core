@@ -8,11 +8,22 @@ class RestCore::CommonLogger
 
   def call env
     start_time = Time.now
-    response = app.call(flushed = flush(env))
-    flush(log(response, log_request(start_time, response)))
+    flushed = flush(env)
+    if env[ASYNC]
+      app.call(flushed.merge(ASYNC => lambda{ |response|
+        env[ASYNC].call(process(response, start_time))
+      }))
+    else
+      response = app.call(flushed)
+      process(response, start_time)
+    end
   rescue
-    flush(log(flushed, log_request(start_time, flushed)))
+    process(flushed, start_time)
     raise
+  end
+
+  def process response, start_time
+    flush(log(response, log_request(start_time, response)))
   end
 
   def flush env
