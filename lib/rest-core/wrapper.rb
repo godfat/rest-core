@@ -13,6 +13,11 @@ module RestCore::Wrapper
     end
   end
 
+  attr_writer :default_app
+  def default_app
+    @default_app ||= self.class.default_app
+  end
+
   def initialize &block
     @middles ||= []
     instance_eval(&block) if block_given?
@@ -38,7 +43,7 @@ module RestCore::Wrapper
     }.flatten
   end
 
-  def to_app init=@init || self.class.default_app
+  def to_app init=@init || default_app
     # === foldr m.new app middles
     middles.reverse.inject(init.new){ |app_, (middle, args, block)|
       begin
