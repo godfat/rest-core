@@ -152,10 +152,15 @@ module RestCore::Client
        REQUEST_PAYLOAD => {}  ,
        REQUEST_HEADERS => {}  ,
        FAIL            => []  ,
-       LOG             => []  }.merge(env)))
+       LOG             => []  ,
+       ASYNC           => if block_given?
+                            lambda{ |response| yield(response) }
+                          else
+                            nil
+                          end}.merge(env)))
 
     if block_given?
-      yield(response)
+      self
     else
       response
     end

@@ -1,16 +1,31 @@
 
 require 'rest-core/test'
 
-describe RestCore::Simple do
+describe RC::Simple do
   after do
     WebMock.reset!
     RR.verify
   end
 
   should 'do simple request' do
-    stub_request(:get, 'http://localhost/').to_return(:body => '[]')
-    RestCore::Simple.new.get('http://localhost/').should.eq '[]'
+    [:get, :post, :delete, :put].each do |method|
+      stub_request(method, 'http://localhost/').to_return(:body => '[]')
+      RC::Simple.new.send(method, 'http://localhost/').should.eq '[]'
+    end
   end
+
+  should 'call the callback' do
+    [:get, :post, :delete, :put].each do |method|
+      stub_request(method, 'http://localhost/').to_return(:body => '123')
+      (client = RC::Simple.new).send(method, 'http://localhost/'){ |res|
+        res.should.eq '123' }.should.eq client
+    end
+  end
+
+  # should 'have correct to_i' do
+  #   stub_request(:get, 'http://localhost/').to_return(:body => '123')
+  #   RC::Simple.new.get('http://localhost/').to_i.should.eq 123
+  # end
 
   should 'use defaults' do
     client = RestCore::Builder.client do

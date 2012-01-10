@@ -18,6 +18,7 @@ describe RC::JsonDecode do
   should 'decode async' do
     @app.call(RC::RESPONSE_BODY => '{}',
               RC::ASYNC => lambda{ |response|
-                             response[RC::RESPONSE_BODY].should.eq({})})
+                             response[RC::RESPONSE_BODY].should.eq({})}
+             )[RC::RESPONSE_BODY].should.eq '{}'
   end
 end

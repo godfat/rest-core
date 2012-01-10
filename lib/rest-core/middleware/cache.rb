@@ -25,13 +25,31 @@ class RestCore::Cache
     if cached = cache_get(e)
       wrapped.call(cached)
     else
-      response         = app.call(e)
-      response_wrapped = wrapped.call(response)
-      if (response_wrapped[FAIL] || []).empty?
-        cache_for(e, response).merge(response_wrapped)
+      if e[ASYNC]
+        app.call(e.merge(ASYNC => lambda{ |response|
+          process(e, response)
+        }))
       else
-        response_wrapped
+        process(e, app.call(e))
       end
+    end
+  end
+
+  def process env, response
+    if env[ASYNC]
+      wrapped.call(response.merge(ASYNC => lambda{ |response_wrapped|
+        env[ASYNC].call(process_wrapped(env, response, response_wrapped))
+      }))
+    else
+      process_wrapped(env, response, wrapped.call(response))
+    end
+  end
+
+  def process_wrapped env, response, response_wrapped
+    if (response_wrapped[FAIL] || []).empty?
+      cache_for(env, response).merge(response_wrapped)
+    else
+      response_wrapped
     end
   end
 

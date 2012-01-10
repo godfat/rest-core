@@ -14,8 +14,7 @@ class RestCore::CommonLogger
         env[ASYNC].call(process(response, start_time))
       }))
     else
-      response = app.call(flushed)
-      process(response, start_time)
+      process(app.call(flushed), start_time)
     end
   rescue
     process(flushed, start_time)

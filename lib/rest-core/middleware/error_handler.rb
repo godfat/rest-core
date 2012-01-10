@@ -6,7 +6,13 @@ class RestCore::ErrorHandler
   include RestCore::Middleware
 
   def call env
-    handle(app.call(handle(env)))
+    if env[ASYNC]
+      app.call(handle(env).merge(ASYNC => lambda{ |response|
+        env[ASYNC].call(handle(response))
+      }))
+    else
+      handle(app.call(handle(env)))
+    end
   end
 
   def handle env
