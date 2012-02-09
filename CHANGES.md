@@ -1,5 +1,12 @@
 # CHANGES
 
+## rest-core 0.8.1 -- ?
+
+### Bugs fixes
+
+* [ErrorDetectorHttp] Fixed argument error upon calling `lighten` for
+  clients using this middleware. (e.g. rest-more's Twitter client)
+
 ## rest-core 0.8.0 -- 2011-11-29
 
 Changes are mostly related to OAuth.
