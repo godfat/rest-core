@@ -1,6 +1,6 @@
 # CHANGES
 
-## rest-core 0.8.1 -- ?
+## rest-core 0.8.1 -- 2012-02-09
 
 ### Bugs fixes
 
