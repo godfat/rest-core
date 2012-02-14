@@ -1,8 +1,17 @@
 # CHANGES
 
-## rest-core 0.8.1 -- ?
+## rest-core 0.8.1 -- 2012-02-09
+
+### Enhancement
+
+* [Wrapper] Introducing `Wrapper.default_app` (also `Builder.default_app`)
+  which you can change the default app from `RestClient` to other HTTP
+  clients.
 
 ### Bugs fixes
+
+* [OAuth1Header] Correctly handle the signature when it comes to multipart
+  requests.
 
 * [ErrorDetectorHttp] Fixed argument error upon calling `lighten` for
   clients using this middleware. (e.g. rest-more's Twitter client)
