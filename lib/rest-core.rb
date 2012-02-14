@@ -36,6 +36,7 @@ module RestCore
   autoload :CommonLogger  , 'rest-core/middleware/common_logger'
   autoload :DefaultHeaders, 'rest-core/middleware/default_headers'
   autoload :DefaultQuery  , 'rest-core/middleware/default_query'
+  autoload :DefaultPayload, 'rest-core/middleware/default_payload'
   autoload :DefaultSite   , 'rest-core/middleware/default_site'
   autoload :Defaults      , 'rest-core/middleware/defaults'
   autoload :ErrorDetector , 'rest-core/middleware/error_detector'
