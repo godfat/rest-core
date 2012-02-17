@@ -54,6 +54,7 @@ module RestCore
   autoload :Dry           , 'rest-core/app/dry'
   autoload :RestClient    , 'rest-core/app/rest-client'
   autoload :Coolio        , 'rest-core/app/coolio'
+  autoload :EmHttpRequest , 'rest-core/app/em-http-request'
 
   # clients
   autoload :Simple        , 'rest-core/client/simple'
