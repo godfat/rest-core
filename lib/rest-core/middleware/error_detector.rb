@@ -7,7 +7,8 @@ class RestCore::ErrorDetector
 
   def call env
     response = app.call(env)
-    if error = error_detector(env).call(response)
+    detector = error_detector(env)
+    if error = (detector && detector.call(response))
       fail(response, error)
     else
       response
