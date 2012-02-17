@@ -56,6 +56,7 @@ module RestCore
   autoload :Coolio        , 'rest-core/app/coolio'
   autoload :CoolioFiber   , 'rest-core/app/coolio-fiber'
   autoload :EmHttpRequest , 'rest-core/app/em-http-request'
+  autoload :EmHttpRequestFiber, 'rest-core/app/em-http-request-fiber'
 
   # clients
   autoload :Simple        , 'rest-core/client/simple'
