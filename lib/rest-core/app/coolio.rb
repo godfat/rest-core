@@ -10,9 +10,11 @@ class RestCore::Coolio
                            :payload => env[REQUEST_PAYLOAD],
                            :headers => env[REQUEST_HEADERS]){ |response|
 
-      env[ASYNC].call(env.merge(RESPONSE_BODY    => response.body  ,
-                                RESPONSE_STATUS  => response.status,
-                                RESPONSE_HEADERS => response.headers))
+      if env[ASYNC]
+        env[ASYNC].call(env.merge(RESPONSE_BODY    => response.body  ,
+                                  RESPONSE_STATUS  => response.status,
+                                  RESPONSE_HEADERS => response.headers))
+      end
     }
 
     env
