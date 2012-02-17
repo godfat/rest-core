@@ -68,9 +68,9 @@ module RestCore::Client
     attributes.each{ |k, v| vv = case v;
                                    when  Hash; lighten_hash(v)
                                    when Array; lighten_array(v)
-                                   when *Unserializable; false
+                                   when *Unserializable; nil
                                    else v
-                                  end
+                                 end
                             send("#{k}=", vv)}
     initialize(o)
     @app, @dry = lighten_app(app), lighten_app(dry)
