@@ -1,7 +1,7 @@
 
 require 'rest-core/test'
 
-describe RC::AuthBasic do
+describe RC::ErrorDetectorHttp do
   should 'lighten' do
     RC::Builder.client do
       s = self.class # this is only for ruby 1.8!
