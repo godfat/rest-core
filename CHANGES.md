@@ -1,5 +1,19 @@
 # CHANGES
 
+## rest-core 0.8.2 -- 2012-02-18
+
+### Enhancement
+
+* [DefaultPayload] This middleware allows you to have default payload for
+  POST and PUT requests.
+
+* [Client] Now `lighten` would give all Unserializable to nil instead of false
+
+### Bugs fixes
+
+* [ErrorDetector] Now it would do nothing instead of crashing if there's no
+  any error_detector.
+
 ## rest-core 0.8.1 -- 2012-02-09
 
 ### Enhancement
