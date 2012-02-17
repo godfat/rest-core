@@ -53,6 +53,7 @@ module RestCore
   # apps
   autoload :Dry           , 'rest-core/app/dry'
   autoload :RestClient    , 'rest-core/app/rest-client'
+  autoload :Coolio        , 'rest-core/app/coolio'
 
   # clients
   autoload :Simple        , 'rest-core/client/simple'
