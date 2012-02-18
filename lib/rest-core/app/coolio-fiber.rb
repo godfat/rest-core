@@ -7,7 +7,8 @@ class RestCore::CoolioFiber
   include RestCore::Middleware
   def call env
     process(env,
-            ::Coolio::HttpFiber.request(:url     => request_uri(env),
+            ::Coolio::HttpFiber.request(:method  => env[REQUEST_METHOD] ,
+                                        :url     => request_uri(env)    ,
                                         :payload => env[REQUEST_PAYLOAD],
                                         :headers => env[REQUEST_HEADERS]))
   end

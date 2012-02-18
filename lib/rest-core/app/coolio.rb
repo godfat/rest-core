@@ -6,7 +6,8 @@ require 'cool.io-http'
 class RestCore::Coolio
   include RestCore::Middleware
   def call env
-    ::Coolio::Http.request(:url     => request_uri(env),
+    ::Coolio::Http.request(:method  => env[REQUEST_METHOD] ,
+                           :url     => request_uri(env)    ,
                            :payload => env[REQUEST_PAYLOAD],
                            :headers => env[REQUEST_HEADERS]){ |response|
 
