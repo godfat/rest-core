@@ -14,7 +14,7 @@ class RestCore::Timeout
 
   def monitor env
     if root_fiber?
-      if [Coolio, EmHttpRequest].include?(env[RUN])
+      if env[RUN].to_s =~ /Coolio$|EmHttpRequest$/
         yield(env.merge(TIMER => timeout_with_callback(env)))
       else
         ::Timeout.timeout(timeout(env)){ yield(env) }
@@ -33,7 +33,7 @@ class RestCore::Timeout
   end
 
   def timeout_with_callback env
-    case env[RUN].name
+    case env[RUN].to_s
     when /Coolio$/
       timer = CoolioTimer.new(timeout(env))
       timer.error = timeout_error
@@ -47,7 +47,7 @@ class RestCore::Timeout
   end
 
   def timeout_with_resume env
-    case env[RUN].name
+    case env[RUN].to_s
     when /CoolioFiber$/
       f = Fiber.current
       timer = CoolioTimer.new(timeout(env))
