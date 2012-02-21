@@ -15,6 +15,7 @@ module RestCore
   LOG              = 'core.log'
 
   ASYNC            = 'async.callback'
+  TIMER            = 'async.timer'
 
   # core utilities
   autoload :Builder       , 'rest-core/builder'
@@ -64,3 +65,11 @@ module RestCore
 end
 
 RC = RestCore unless Object.const_defined?(:RC)
+
+begin
+  require 'fiber'
+rescue LoadError
+end
+# assume we would always require 'rest-core' in root fiber
+RestCore::RootFiber = Fiber.current if Object.const_defined?(:Fiber) &&
+                                       Fiber.respond_to?(:current)

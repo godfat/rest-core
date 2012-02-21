@@ -14,9 +14,16 @@ class RestCore::CoolioFiber
   end
 
   def process env, response
+    env[TIMER].detach if env[TIMER]
+    Thread.current[:coolio_http_client].detach if
+      Thread.current[:coolio_http_client].kind_of?(::Coolio::HttpFiber)
+
+    raise response if response.kind_of?(::Exception)
+
     result = env.merge(RESPONSE_BODY    => response.body  ,
                        RESPONSE_STATUS  => response.status,
                        RESPONSE_HEADERS => response.headers)
+
     result[ASYNC].call(result) if result[ASYNC]
     result
   end

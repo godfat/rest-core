@@ -8,13 +8,18 @@ class RestCore::EmHttpRequestFiber
   include RestCore::Middleware
   def call env
     f = Fiber.current
+
     client = EventMachine::HttpRequest.new(request_uri(env)).send(
       env[REQUEST_METHOD], :body => env[REQUEST_PAYLOAD],
                            :head => env[REQUEST_HEADERS])
-    client.callback{
-      f.resume(process(env, client))
-    }
-    Fiber.yield
+
+    client.callback{ f.resume(process(env, client)) if f.alive? }
+
+    if (response = Fiber.yield).kind_of?(::Exception)
+      raise response
+    else
+      response
+    end
   end
 
   def process env, client
