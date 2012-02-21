@@ -1,6 +1,7 @@
 
 require 'rest-core/middleware'
 
+require 'rest-client'
 require 'em-http-request'
 require 'fiber'
 
@@ -9,9 +10,11 @@ class RestCore::EmHttpRequestFiber
   def call env
     f = Fiber.current
 
-    client = EventMachine::HttpRequest.new(request_uri(env)).send(
-      env[REQUEST_METHOD], :body => env[REQUEST_PAYLOAD],
-                           :head => env[REQUEST_HEADERS])
+    payload = ::RestClient::Payload.generate(env[REQUEST_PAYLOAD])
+    client  = ::EventMachine::HttpRequest.new(request_uri(env)).send(
+                 env[REQUEST_METHOD],
+                 :body => payload.read,
+                 :head => payload.headers.merge(env[REQUEST_HEADERS]))
 
     client.callback{
       env[TIMER].cancel if env[TIMER]

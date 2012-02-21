@@ -1,14 +1,18 @@
 
 require 'rest-core/middleware'
 
+require 'rest-client'
 require 'em-http-request'
 
 class RestCore::EmHttpRequest
   include RestCore::Middleware
   def call env
-    client = EventMachine::HttpRequest.new(request_uri(env)).send(
-      env[REQUEST_METHOD], :body => env[REQUEST_PAYLOAD],
-                           :head => env[REQUEST_HEADERS])
+    payload = ::RestClient::Payload.generate(env[REQUEST_PAYLOAD])
+    client  = ::EventMachine::HttpRequest.new(request_uri(env)).send(
+                 env[REQUEST_METHOD],
+                 :body => payload.read,
+                 :head => payload.headers.merge(env[REQUEST_HEADERS]))
+
     client.callback{
       env[TIMER].cancel if env[TIMER]
       env[ASYNC].call(env.merge(
