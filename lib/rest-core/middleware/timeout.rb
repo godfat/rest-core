@@ -25,7 +25,11 @@ class RestCore::Timeout
   end
 
   def root_fiber?
-    RestCore.const_defined?(:RootFiber) && RootFiber == Fiber.current
+    if RestCore.const_defined?(:RootFiber)
+      RootFiber == Fiber.current
+    else
+      true
+    end
   end
 
   def timeout_with_callback env
