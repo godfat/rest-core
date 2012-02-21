@@ -8,6 +8,7 @@ class RestCore::Timeout
   include RestCore::Middleware
 
   def call env
+    return app.call(env) if env[DRY]
     monitor(env){ |e| app.call(e) }
   end
 
