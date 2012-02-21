@@ -13,9 +13,13 @@ class RestCore::EmHttpRequestFiber
       env[REQUEST_METHOD], :body => env[REQUEST_PAYLOAD],
                            :head => env[REQUEST_HEADERS])
 
-    client.callback{ f.resume(process(env, client)) if f.alive? }
+    client.callback{
+      env[TIMER].cancel if env[TIMER]
+      f.resume(process(env, client)) if f.alive?
+    }
 
     if (response = Fiber.yield).kind_of?(::Exception)
+      client.close
       raise response
     else
       response

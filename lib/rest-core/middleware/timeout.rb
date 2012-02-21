@@ -39,6 +39,7 @@ class RestCore::Timeout
       timer.attach(::Coolio::Loop.default)
       timer
     elsif Object.const_defined?(:EventMachine)
+      EventMachineTimer.new(timeout(env), timeout_error)
     end
   end
 
@@ -52,6 +53,10 @@ class RestCore::Timeout
       timer
 
     elsif Object.const_defined?(:EventMachine)
+      f = Fiber.current
+      EventMachineTimer.new(timeout(env), error = timeout_error){
+        f.resume(error) if f.alive?
+      }
     end
   end
 
@@ -59,5 +64,8 @@ class RestCore::Timeout
     ::Timeout::Error.new('execution expired')
   end
 
-  autoload :CoolioTimer, 'rest-core/middleware/timeout/coolio_timer'
+  autoload       :CoolioTimer,
+    'rest-core/middleware/timeout/coolio_timer'
+  autoload :EventMachineTimer,
+    'rest-core/middleware/timeout/eventmachine_timer'
 end
