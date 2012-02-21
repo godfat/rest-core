@@ -153,6 +153,7 @@ module RestCore::Client
        REQUEST_HEADERS => {}  ,
        FAIL            => []  ,
        LOG             => []  ,
+       RUN             => self.class.builder.run,
        ASYNC           => if block_given?
                             lambda{ |response| yield(response) }
                           else
