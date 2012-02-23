@@ -3,6 +3,9 @@ source 'http://rubygems.org'
 
 gemspec
 
+gem 'rest-client'
+gem 'em-http-request'
+
 gem 'rake'
 gem 'bacon'
 gem 'rr'
@@ -16,6 +19,7 @@ gem 'ruby-hmac'
 
 platforms(:ruby) do
   gem 'yajl-ruby'
+  gem 'cool.io-http'
 end
 
 platforms(:jruby) do
