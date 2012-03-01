@@ -24,10 +24,10 @@ describe RC::Simple do
     end
   end
 
-  # should 'have correct to_i' do
-  #   stub_request(:get, 'http://localhost/').to_return(:body => '123')
-  #   RC::Simple.new.get('http://localhost/').to_i.should.eq 123
-  # end
+  should 'have correct to_i' do
+    stub_request(:get, 'http://localhost/').to_return(:body => '123')
+    RC::Simple.new.get('http://localhost/').to_i.should.eq 123
+  end
 
   should 'use defaults' do
     client = RestCore::Builder.client do
