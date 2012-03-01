@@ -4,7 +4,6 @@ require 'rest-core/app/em-http-request-async'
 require 'rest-core/app/em-http-request-fiber'
 
 class RestCore::EmHttpRequest < RestCore::AsyncFiber
-  def initialize
-    super(EmHttpRequestAsync.new, EmHttpRequestFiber.new)
-  end
+  def async; @async ||= EmHttpRequestAsync.new; end
+  def fiber; @fiber ||= EmHttpRequestFiber.new; end
 end
