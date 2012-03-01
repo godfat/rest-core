@@ -8,14 +8,16 @@ describe RC::Simple do
   end
 
   should 'do simple request' do
-    [:get, :post, :delete, :put].each do |method|
+    [:get, :post, :delete, :put,
+     :head, :patch, :options].each do |method|
       stub_request(method, 'http://localhost/').to_return(:body => '[]')
       RC::Simple.new.send(method, 'http://localhost/').should.eq '[]'
     end
   end
 
   should 'call the callback' do
-    [:get, :post, :delete, :put].each do |method|
+    [:get, :post, :delete, :put,
+     :head, :patch, :options].each do |method|
       stub_request(method, 'http://localhost/').to_return(:body => '123')
       (client = RC::Simple.new).send(method, 'http://localhost/'){ |res|
         res.should.eq '123' }.should.eq client

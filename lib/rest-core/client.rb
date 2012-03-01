@@ -118,6 +118,20 @@ module RestCore::Client
        REQUEST_QUERY   => query  }.merge(opts), &cb)
   end
 
+  def head path, query={}, opts={}, &cb
+    request(
+      {REQUEST_METHOD  => :head  ,
+       REQUEST_PATH    => path   ,
+       REQUEST_QUERY   => query  }.merge(opts), &cb)
+  end
+
+  def options path, query={}, opts={}, &cb
+    request(
+      {REQUEST_METHOD  => :options,
+       REQUEST_PATH    => path   ,
+       REQUEST_QUERY   => query  }.merge(opts), &cb)
+  end
+
   def post   path, payload={}, query={}, opts={}, &cb
     request(
       {REQUEST_METHOD  => :post  ,
@@ -129,6 +143,14 @@ module RestCore::Client
   def put    path, payload={}, query={}, opts={}, &cb
     request(
       {REQUEST_METHOD  => :put   ,
+       REQUEST_PATH    => path   ,
+       REQUEST_QUERY   => query  ,
+       REQUEST_PAYLOAD => payload}.merge(opts), &cb)
+  end
+
+  def patch  path, payload={}, query={}, opts={}, &cb
+    request(
+      {REQUEST_METHOD  => :patch ,
        REQUEST_PATH    => path   ,
        REQUEST_QUERY   => query  ,
        REQUEST_PAYLOAD => payload}.merge(opts), &cb)
