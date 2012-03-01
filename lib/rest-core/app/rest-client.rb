@@ -3,6 +3,8 @@ require 'rest-core/middleware'
 
 require 'restclient'
 
+require 'rest-core/patch/rest-client'
+
 class RestCore::RestClient
   include RestCore::Middleware
   def call env
