@@ -22,8 +22,8 @@ class RestCore::RestClient
   def process env, response
     result = env.merge(RESPONSE_BODY    => response.body,
                        RESPONSE_STATUS  => response.code,
-                       RESPONSE_HEADERS =>
-                          normalize_headers(response.raw_headers))
+                       RESPONSE_HEADERS => normalize_headers(
+                                             response.raw_headers))
     result[ASYNC].call(result) if result[ASYNC]
     result
   end
