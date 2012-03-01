@@ -12,7 +12,8 @@ class RestCore::RestClient
             ::RestClient::Request.execute(:method  => env[REQUEST_METHOD ],
                                           :url     => request_uri(env)    ,
                                           :payload => env[REQUEST_PAYLOAD],
-                                          :headers => env[REQUEST_HEADERS]))
+                                          :headers => env[REQUEST_HEADERS],
+                                          :max_redirects => 0))
 
   rescue ::RestClient::Exception => e
     process(env, e.response)
