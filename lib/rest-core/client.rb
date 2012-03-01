@@ -60,8 +60,8 @@ module RestCore::Client
   end
 
   def inspect
-    "#<struct #{self.class.name} #{attributes.map{ |k, v|
-      "#{k}=#{v.inspect}" }.join(', ')}>"
+    fields = attributes.map{ |k, v| "#{k}=#{v.inspect}" }.join(', ')
+    "#<struct #{self.class.name}#{if fields.empty? then '' else fields end}>"
   end
 
   def lighten! o={}
