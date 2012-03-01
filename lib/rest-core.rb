@@ -13,7 +13,6 @@ module RestCore
   DRY              = 'core.dry'
   FAIL             = 'core.fail'
   LOG              = 'core.log'
-  RUN              = 'core.run'
 
   ASYNC            = 'async.callback'
   TIMER            = 'async.timer'

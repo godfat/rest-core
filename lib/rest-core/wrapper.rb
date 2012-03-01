@@ -28,12 +28,8 @@ module RestCore::Wrapper
     middles << [middle, args, block]
   end
 
-  def run app=nil
-    if app
-      @init = app
-    else
-      @init || default_app
-    end
+  def run app
+    @init = app
   end
 
   def members

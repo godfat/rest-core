@@ -37,6 +37,13 @@ module RestCore::Middleware
   def call env     ; app.call(env)                               ; end
   def fail env, obj; env.merge(FAIL => (env[FAIL] || []) + [obj]); end
   def log  env, obj; env.merge(LOG  => (env[LOG]  || []) + [obj]); end
+  def run app=app
+    if app.respond_to?(:app) && app.app
+      run(app.app)
+    else
+      app
+    end
+  end
 
   module_function
   def request_uri env
