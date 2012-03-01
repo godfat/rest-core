@@ -13,14 +13,14 @@ class RestCore::Timeout
   end
 
   def monitor env
-    if root_fiber?
-      if run.class.to_s =~ /Coolio$|EmHttpRequest$/
+    if run.class.to_s =~ /Coolio|EmHttpRequest/
+      if root_fiber? && env[ASYNC]
         yield(env.merge(TIMER => timeout_with_callback(env)))
       else
-        ::Timeout.timeout(timeout(env)){ yield(env) }
+        yield(env.merge(TIMER => timeout_with_resume(env)))
       end
     else
-      yield(env.merge(TIMER => timeout_with_resume(env)))
+      ::Timeout.timeout(timeout(env)){ yield(env) }
     end
   end
 
@@ -34,12 +34,12 @@ class RestCore::Timeout
 
   def timeout_with_callback env
     case run.class.to_s
-    when /Coolio$/
+    when /Coolio/
       timer = CoolioTimer.new(timeout(env))
       timer.error = timeout_error
       timer.attach(::Coolio::Loop.default)
       timer
-    when /EmHttpRequest$/
+    when /EmHttpRequest/
       EventMachineTimer.new(timeout(env), timeout_error)
     else
       raise "BUG: #{run} is not supported"
@@ -48,7 +48,7 @@ class RestCore::Timeout
 
   def timeout_with_resume env
     case run.class.to_s
-    when /CoolioFiber$/
+    when /Coolio/
       f = Fiber.current
       timer = CoolioTimer.new(timeout(env))
       error = timer.error = timeout_error
@@ -56,7 +56,7 @@ class RestCore::Timeout
       timer.attach(::Coolio::Loop.default)
       timer
 
-    when /EmHttpRequestFiber$/
+    when /EmHttpRequest/
       f = Fiber.current
       EventMachineTimer.new(timeout(env), error = timeout_error){
         f.resume(error) if f.alive?
