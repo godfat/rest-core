@@ -22,8 +22,20 @@ class RestCore::RestClient
   def process env, response
     result = env.merge(RESPONSE_BODY    => response.body,
                        RESPONSE_STATUS  => response.code,
-                       RESPONSE_HEADERS => response.raw_headers)
+                       RESPONSE_HEADERS =>
+                          normalize_headers(response.raw_headers))
     result[ASYNC].call(result) if result[ASYNC]
     result
+  end
+
+  def normalize_headers raw_headers
+    raw_headers.inject({}){ |r, (k, v)|
+      r[k.to_s.upcase.tr('-', '_')] = if v.kind_of?(Array) && v.size == 1
+                                        v.first
+                                      else
+                                        v
+                                      end
+      r
+    }
   end
 end
