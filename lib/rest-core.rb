@@ -54,10 +54,10 @@ module RestCore
   # apps
   autoload :Dry           , 'rest-core/app/dry'
   autoload :RestClient    , 'rest-core/app/rest-client'
-  autoload :CoolioCallback, 'rest-core/app/coolio-callback'
+  autoload :CoolioAsync   , 'rest-core/app/coolio-async'
   autoload :CoolioFiber   , 'rest-core/app/coolio-fiber'
-  autoload :EmHttpRequestCallback, 'rest-core/app/em-http-request-callback'
-  autoload :EmHttpRequestFiber   , 'rest-core/app/em-http-request-fiber'
+  autoload :EmHttpRequestAsync, 'rest-core/app/em-http-request-async'
+  autoload :EmHttpRequestFiber, 'rest-core/app/em-http-request-fiber'
 
   # clients
   autoload :Simple        , 'rest-core/client/simple'
