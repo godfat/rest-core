@@ -3,7 +3,7 @@ require 'rest-core/middleware'
 
 require 'cool.io-http'
 
-class RestCore::Coolio
+class RestCore::CoolioCallback
   include RestCore::Middleware
   def call env
     client = ::Coolio::Http.request(:method  => env[REQUEST_METHOD] ,

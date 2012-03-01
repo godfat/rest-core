@@ -4,7 +4,7 @@ require 'rest-core/middleware'
 require 'rest-client'
 require 'em-http-request'
 
-class RestCore::EmHttpRequest
+class RestCore::EmHttpRequestCallback
   include RestCore::Middleware
   def call env
     payload = ::RestClient::Payload.generate(env[REQUEST_PAYLOAD])
