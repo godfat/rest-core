@@ -52,6 +52,7 @@ module RestCore
   autoload :Timeout       , 'rest-core/middleware/timeout'
 
   # apps
+  autoload :Auto          , 'rest-core/app/auto'
   autoload :Dry           , 'rest-core/app/dry'
   autoload :RestClient    , 'rest-core/app/rest-client'
   autoload :Coolio        , 'rest-core/app/coolio'
