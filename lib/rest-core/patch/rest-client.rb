@@ -3,7 +3,7 @@ module RestClient
   module AbstractResponse
     # begin patch
     # https://github.com/archiloque/rest-client/pull/103
-    remove_method :to_i
+    remove_method :to_i if method_defined?(:to_i)
     # end patch
 
     # Follow a redirection
