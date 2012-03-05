@@ -45,6 +45,7 @@ module RestCore
   autoload :ErrorDetector , 'rest-core/middleware/error_detector'
   autoload :ErrorDetectorHttp, 'rest-core/middleware/error_detector_http'
   autoload :ErrorHandler  , 'rest-core/middleware/error_handler'
+  autoload :FollowRedirect, 'rest-core/middleware/follow_redirect'
   autoload :JsonDecode    , 'rest-core/middleware/json_decode'
   autoload :Oauth1Header  , 'rest-core/middleware/oauth1_header'
   autoload :Oauth2Header  , 'rest-core/middleware/oauth2_header'
