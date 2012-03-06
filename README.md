@@ -1,4 +1,4 @@
-# rest-core [![Build Status](http://travis-ci.org/godfat/rest-core.png)](http://travis-ci.org/godfat/rest-core)
+# rest-core [![Build Status](https://secure.travis-ci.org/godfat/rest-core.png?branch=master)](http://travis-ci.org/godfat/rest-core)
 
 by Cardinal Blue <http://cardinalblue.com>
 
@@ -81,6 +81,10 @@ and [slides][] from [rubyconf.tw/2011][rubyconf.tw] for concepts.
 * [topcoder](https://github.com/miaout17/topcoder)
 * [s2sync](https://github.com/brucehsu/s2sync)
 * [s2sync_web](https://github.com/brucehsu/s2sync_web)
+
+## Powered sites:
+
+* [PicCollage](http://pic-collage.com/)
 
 ## GLOSSARY:
 
