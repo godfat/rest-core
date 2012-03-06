@@ -5,6 +5,8 @@ by Cardinal Blue <http://cardinalblue.com>
 Lin Jen-Shin ([godfat][]) had given a talk about rest-core on [RubyConf Taiwan 2011][talk].
 The slide is in English, but the talk is in Mandarin.
 
+You can also read some other topics at [doc](doc/ToC.md).
+
 [godfat]: https://github.com/godfat
 [talk]: http://rubyconf.tw/2011/#6
 
@@ -26,13 +28,31 @@ that allows you to build a REST client for any REST API. Or in the case of
 common APIs such as Facebook, Github, and Twitter, you can simply use the
 dedicated clients provided by [rest-more][].
 
-[rest-core]: http://github.com/cardinalblue/rest-core
-[rest-more]: http://github.com/cardinalblue/rest-more
+[rest-core]: https://github.com/cardinalblue/rest-core
+[rest-more]: https://github.com/cardinalblue/rest-more
+
+## FEATURES:
+
+* Modular interface for REST clients similar to WSGI/Rack for servers.
+* Modular middlewares to compose various clients.
+* Asynchronous/Synchronous styles with or without fibers are both supported.
 
 ## REQUIREMENTS:
 
-* Tested with MRI (official CRuby) 1.8.7, 1.9.2, 1.9.3, Rubinius and JRuby
+### Mandatory:
+
+* MRI (official CRuby) 1.8.7, 1.9.2, 1.9.3, Rubinius 1.8/1.9 and JRuby 1.8/1.9
 * gem rest-client (for now)
+
+### Optional:
+
+* Fibers only work on Ruby 1.9+ (if using EmHttpRequestFiber or CoolioFiber)
+* gem [em-http-request][] (if using eventmachine with asynchronous style)
+* gem [cool.io-http][] (if using cool.io with asynchronous style)
+* gem json or yajl-ruby (if using JsonDecode middleware)
+
+[em-http-request]: https://github.com/igrigorik/em-http-request
+[cool.io-http]: https://github.com/godfat/cool.io-http
 
 ## INSTALLATION:
 
