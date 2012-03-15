@@ -1,5 +1,5 @@
 before_install: 'git submodule update --init'
-script: 'bundle exec rake test:travis'
+script: 'bundle exec rake test'
 
 rvm:
   - 1.8.7
