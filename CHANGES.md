@@ -1,5 +1,87 @@
 # CHANGES
 
+## rest-core 1.0.0 -- 2012-03-13
+
+* [Client] Client#inspect is fixed for clients which do not have any
+  attributes.
+
+* [Client] HEAD, OPTIONS, and PATCH requests are added. For example:
+
+      client = Client.new
+      client.head('path')
+      client.options('path')
+      client.patch('path')
+
+* [Client] Now if you passed a block to either `get` or `post` or other
+  requests, the response would be returned to the block instead the caller.
+  In this case, the return value of `get` or `post` would be the client
+  itself. For example:
+
+      client = Client.new
+      client.get('path'){ |response| puts response.insepct }.
+             get('math'){ |response| puts response.insepct }
+
+* [RestClient] Now all the response headers names are converted to upper cases
+  and underscores (_). Also, if a header has only presented once, it would
+  not be wrapped inside an array. This is more consistent with
+  em-http-request, cool.io-http, and http_parser.rb
+
+* [RestClient] From now on, the default HTTP client, i.e. RestClient won't
+  follow any redirect. To follow redirect, please use FollowRedirect
+  middleware. Two reasons. One is that the underlying HTTP client should
+  be minimal. Another one is that a FollowRedirect middleware could be
+  used for all HTTP clients. This would make it more consistent across
+  all HTTP clients.
+
+* [RestClient] Added a patch to avoid `"123".to_i` returning `200`,
+  please see: https://github.com/archiloque/rest-client/pull/103
+  I would remove this once after this patch is merged.
+
+* [RestClient] Added a patch to properly returning response whenever
+  a redirect is happened. Please see:
+  https://github.com/archiloque/rest-client/pull/118
+  I would remove this once after this patch is merged.
+
+* [FollowRedirect] This middleware would follow the redirect. Pass
+  :max_redirects for the maximum redirect times. For example:
+
+      Client = RestCore::Builder.client do
+        use FollowRedirect, 2 # default :max_redirects
+      end
+      client = Client.new
+      client.get('path', {}, :max_redirects => 5)
+
+* [Middleware] Added `Middleware#run` which can return the underlying HTTP
+  client, if you need to know the underlying HTTP client can support
+  asynchronous requests or not.
+
+* [Cache] Now it's asynchrony-aware.
+* [CommonLogger] Now it's asynchrony-aware.
+* [ErrorDetector] Now it's asynchrony-aware.
+* [ErrorHandler] Now it's asynchrony-aware.
+* [JsonDecode] Now it's asynchrony-aware.
+* [Timeout] Now it's asynchrony-aware.
+
+* [Universal] FollowRedirect middleware is added.
+* [Universal] Defaults middleware is removed.
+
+* Added RestCore::ASYNC which should be the callback function which is called
+  whenever the response is available. It's similar to Rack's async.callback.
+
+* Added RestCore::TIMER which is only used in Timeout middleware. We need this
+  to disable timer whenever the response is back.
+
+* [EmHttpRequestAsync] This HTTP client accepts a block to make asynchronous
+  HTTP requests via em-http-request gem.
+* [EmHttpRequestFiber] This HTTP client would make asynchronous HTTP requests
+  with em-http-request but also wrapped inside a fiber, so that it looks
+  synchronous to the program who calls it.
+* [EmHttpRequest]
+* [CoolioAsync]
+* [CoolioFiber]
+* [Coolio]
+* [Auto]
+
 ## rest-core 0.8.2 -- 2012-02-18
 
 ### Enhancement
