@@ -10,12 +10,13 @@ AsynchronousClient = RestCore::Builder.client do
   run s::EmHttpRequest
 end
 
-client = AsynchronousClient.new(:cache => {})
+client = AsynchronousClient.new
 EM.run{
   client.get('cardinalblue'){ |response|
     p response
     EM.stop
   }
+  puts "It's not blocking..."
 }
 
 puts
@@ -25,4 +26,5 @@ EM.run{
     p client.get('cardinalblue')
     EM.stop
   }.resume
+  puts "It's not blocking..."
 }

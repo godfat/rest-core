@@ -133,12 +133,13 @@ If you're passing a block, the block is called after the response is
 available. That is the block is the callback for the request.
 
 ``` ruby
-    client = AsynchronousClient.new(:cache => {})
+    client = AsynchronousClient.new
     EM.run{
       client.get('cardinalblue'){ |response|
         p response
         EM.stop
       }
+      puts "It's not blocking..."
     }
 ```
 
@@ -154,6 +155,7 @@ If you don't understand what does this mean, you can take a look at
         p client.get('cardinalblue')
         EM.stop
       }.resume
+      puts "It's not blocking..."
     }
 ```
 
@@ -178,6 +180,7 @@ You can also make multi-requests synchronously like this:
         p Fiber.yield
         EM.stop
       }.resume
+      puts "It's not blocking..."
     }
 ```
 

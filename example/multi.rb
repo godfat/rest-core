@@ -30,4 +30,5 @@ EM.run{
     p Fiber.yield
     EM.stop
   }.resume
+  puts "It's not blocking..."
 }
