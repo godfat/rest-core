@@ -197,6 +197,10 @@ To be added.
 
 * [PicCollage](http://pic-collage.com/)
 
+## CHANGES:
+
+* [CHANGES](https://github.com/cardinalblue/rest-core/blob/master/CHANGES.md)
+
 ## GLOSSARY:
 
 * A _client_ is a class which can new connections to make requests.
