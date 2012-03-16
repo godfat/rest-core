@@ -23,6 +23,7 @@ EM.run{
       result[0] = response
       fiber.resume(result) if result.size == 2
     }
+    puts "It's not blocking..."
     client.get('cardinalblue'){ |response|
       result[1] = response
       fiber.resume(result) if result.size == 2
