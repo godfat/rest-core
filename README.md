@@ -49,14 +49,16 @@ dedicated clients provided by [rest-more][].
 * Fibers only work on Ruby 1.9+
 * gem [em-http-request][] (if using eventmachine)
 * gem [cool.io-http][] (if using cool.io)
-* gem json or yajl-ruby (if using JsonDecode middleware)
+* gem json or yajl-ruby (if using `JsonDecode` middleware)
 
 [em-http-request]: https://github.com/igrigorik/em-http-request
 [cool.io-http]: https://github.com/godfat/cool.io-http
 
 ## INSTALLATION:
 
+``` shell
     gem install rest-core
+```
 
 Or if you want development version, put this in Gemfile:
 
