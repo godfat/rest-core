@@ -188,10 +188,11 @@ Runnable example is here: [example/multi.rb][].
 
 ## Supported HTTP clients:
 
-* RestCore::RestClient (gem rest-client)
-* RestCore::EmHttpRequest (gem em-http-request)
-* RestCore::Coolio (gem cool.io)
-* RestCore::Auto (which would pick one of the above depending on the context)
+* `RestCore::RestClient` (gem rest-client)
+* `RestCore::EmHttpRequest` (gem em-http-request)
+* `RestCore::Coolio` (gem cool.io)
+* `RestCore::Auto` (which would pick one of the above depending on the
+  context)
 
 ## Build Your Own Middlewares:
 
