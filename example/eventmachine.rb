@@ -6,11 +6,11 @@ AsynchronousClient = RestCore::Builder.client do
   use s::DefaultSite , 'https://api.github.com/users/'
   use s::JsonDecode  , true
   use s::CommonLogger, method(:puts)
-  use s::Cache       , {}, 3600
+  use s::Cache       , nil, 3600
   run s::EmHttpRequest
 end
 
-client = AsynchronousClient.new
+client = AsynchronousClient.new(:cache => {})
 EM.run{
   client.get('cardinalblue'){ |response|
     p response
