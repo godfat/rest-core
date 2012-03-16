@@ -15,19 +15,23 @@ for more detail.
 
 * [Client] HEAD, OPTIONS, and PATCH requests are added. For example:
 
+  ``` ruby
       client = Client.new
       client.head('path')
       client.options('path')
       client.patch('path')
+  ```
 
 * [Client] Now if you passed a block to either `get` or `post` or other
   requests, the response would be returned to the block instead the caller.
   In this case, the return value of `get` or `post` would be the client
   itself. For example:
 
+  ``` ruby
       client = Client.new
       client.get('path'){ |response| puts response.insepct }.
              get('math'){ |response| puts response.insepct }
+  ```
 
 * [RestClient] Now all the response headers names are converted to upper cases
   and underscores (_). Also, if a header has only presented once, it would
@@ -53,11 +57,13 @@ for more detail.
 * [FollowRedirect] This middleware would follow the redirect. Pass
   :max_redirects for the maximum redirect times. For example:
 
+  ``` ruby
       Client = RestCore::Builder.client do
         use FollowRedirect, 2 # default :max_redirects
       end
       client = Client.new
       client.get('path', {}, :max_redirects => 5)
+  ```
 
 * [Middleware] Added `Middleware#run` which can return the underlying HTTP
   client, if you need to know the underlying HTTP client can support

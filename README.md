@@ -72,6 +72,7 @@ If you just want to use Facebook or Twitter clients, please take a look at
 
 You can use `RestCore::Builder` to build your own dedicated client:
 
+``` ruby
     require 'rest-core'
 
     YourClient = RestCore::Builder.client do
@@ -82,10 +83,12 @@ You can use `RestCore::Builder` to build your own dedicated client:
       use s::Cache       , nil, 3600
       run s::RestClient # the simplest and easier HTTP client
     end
+```
 
 And use it with per-instance basis (clients could have different
 configuration, e.g. different cache time or timeout time):
 
+``` ruby
     client = YourClient.new(:cache => {})
     client.get('cardinalblue') # cache miss
     client.get('cardinalblue') # cache hit
@@ -93,6 +96,7 @@ configuration, e.g. different cache time or timeout time):
     client.site = 'http://github.com/api/v2/json/user/show/'
     client.get('cardinalblue') # cache miss
     client.get('cardinalblue') # cache hit
+```
 
 Runnable example is here: [example/rest-client.rb][]. Please see [rest-more][]
 for more complex examples, and [slides][] from [rubyconf.tw/2011][rubyconf.tw]
@@ -110,6 +114,7 @@ i.e. event loop, you should take the advantage of that to make HTTP requests
 non-blocking the whole process/thread. For now, we support eventmachine and
 cool.io. Below is an example for eventmachine:
 
+``` ruby
     require 'rest-core'
 
     AsynchronousClient = RestCore::Builder.client do
@@ -120,10 +125,12 @@ cool.io. Below is an example for eventmachine:
       use s::Cache       , nil, 3600
       run s::EmHttpRequest
     end
+```
 
 If you're passing a block, the block is called after the response is
 available. That is the block is the callback for the request.
 
+``` ruby
     client = AsynchronousClient.new(:cache => {})
     EM.run{
       client.get('cardinalblue'){ |response|
@@ -131,6 +138,7 @@ available. That is the block is the callback for the request.
         EM.stop
       }
     }
+```
 
 Otherwise, if you don't pass a block as the callback, EmHttpRequest (i.e.
 the HTTP client for eventmachine) would call `Fiber.yield` to yield to the
@@ -138,18 +146,21 @@ original fiber, making asynchronous HTTP requests look like synchronous.
 If you don't understand what does this mean, you can take a look at
 [em-synchrony][]. It's basically the same idea.
 
+``` ruby
     EM.run{
       Fiber.new{
         p client.get('cardinalblue')
         EM.stop
       }.resume
     }
+```
 
 [em-synchrony]: https://github.com/igrigorik/em-synchrony
 
 Runnable example is here: [example/eventmachine.rb][].
 You can also make multi-requests synchronously like this:
 
+``` ruby
     EM.run{
       Fiber.new{
         fiber = Fiber.current
@@ -166,6 +177,7 @@ You can also make multi-requests synchronously like this:
         EM.stop
       }.resume
     }
+```
 
 Runnable example is here: [example/multi.rb][].
 
