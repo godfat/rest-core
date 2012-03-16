@@ -34,7 +34,6 @@ dedicated clients provided by [rest-more][].
 ## FEATURES:
 
 * Modular interface for REST clients similar to WSGI/Rack for servers.
-* Modular middlewares to compose various clients.
 * Asynchronous/Synchronous styles with or without fibers are both supported.
 
 ## REQUIREMENTS:
@@ -42,13 +41,13 @@ dedicated clients provided by [rest-more][].
 ### Mandatory:
 
 * MRI (official CRuby) 1.8.7, 1.9.2, 1.9.3, Rubinius 1.8/1.9 and JRuby 1.8/1.9
-* gem rest-client (for now)
+* gem rest-client
 
 ### Optional:
 
-* Fibers only work on Ruby 1.9+ (if using EmHttpRequestFiber or CoolioFiber)
-* gem [em-http-request][] (if using eventmachine with asynchronous style)
-* gem [cool.io-http][] (if using cool.io with asynchronous style)
+* Fibers only work on Ruby 1.9+
+* gem [em-http-request][] (if using eventmachine)
+* gem [cool.io-http][] (if using cool.io)
 * gem json or yajl-ruby (if using JsonDecode middleware)
 
 [em-http-request]: https://github.com/igrigorik/em-http-request
@@ -70,6 +69,8 @@ If you just want to use Facebook or Twitter clients, please take a look at
 
 ## Build Your Own Clients:
 
+You can use `RestCore::Builder` to build your own dedicated client:
+
     require 'rest-core'
 
     YourClient = RestCore::Builder.client do
@@ -77,11 +78,14 @@ If you just want to use Facebook or Twitter clients, please take a look at
       use s::DefaultSite , 'https://api.github.com/users/'
       use s::JsonDecode  , true
       use s::CommonLogger, method(:puts)
-      use s::Cache       , {}, 3600
-      run s::RestClient
+      use s::Cache       , nil, 3600
+      run s::RestClient # the simplest and easier HTTP client
     end
 
-    client = YourClient.new
+And use it with per-instance basis (clients could have different
+configuration, e.g. different cache time or timeout time):
+
+    client = YourClient.new(:cache => {})
     client.get('cardinalblue') # cache miss
     client.get('cardinalblue') # cache hit
 
@@ -89,12 +93,98 @@ If you just want to use Facebook or Twitter clients, please take a look at
     client.get('cardinalblue') # cache miss
     client.get('cardinalblue') # cache hit
 
-Please see [rest-more][] for more complex examples,
-and [slides][] from [rubyconf.tw/2011][rubyconf.tw] for concepts.
+Runnable example is here: [example/rest-client.rb][]. Please see [rest-more][]
+for more complex examples, and [slides][] from [rubyconf.tw/2011][rubyconf.tw]
+for concepts.
 
+[example/rest-client.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/rest-client.rb
 [rest-more]: https://github.com/cardinalblue/rest-more
 [rubyconf.tw]: http://rubyconf.tw/2011/#6
 [slides]: http://www.godfat.org/slide/2011-08-27-rest-core.html
+
+## Asynchronous HTTP Requests:
+
+I/O bound operations shouldn't be blocking the CPU! If you have a reactor,
+i.e. event loop, you should take the advantage of that to make HTTP requests
+non-blocking the whole process/thread. For now, we support eventmachine and
+cool.io. Below is an example for eventmachine:
+
+    require 'rest-core'
+
+    AsynchronousClient = RestCore::Builder.client do
+      s = self.class # this is only for ruby 1.8!
+      use s::DefaultSite , 'https://api.github.com/users/'
+      use s::JsonDecode  , true
+      use s::CommonLogger, method(:puts)
+      use s::Cache       , nil, 3600
+      run s::EmHttpRequest
+    end
+
+If you're passing a block, the block is called after the response is
+available. That is the block is the callback for the request.
+
+    client = AsynchronousClient.new(:cache => {})
+    EM.run{
+      client.get('cardinalblue'){ |response|
+        p response
+        EM.stop
+      }
+    }
+
+Otherwise, if you don't pass a block as the callback, EmHttpRequest (i.e.
+the HTTP client for eventmachine) would call `Fiber.yield` to yield to the
+original fiber, making asynchronous HTTP requests look like synchronous.
+If you don't understand what does this mean, you can take a look at
+[em-synchrony][]. It's basically the same idea.
+
+    EM.run{
+      Fiber.new{
+        p client.get('cardinalblue')
+        EM.stop
+      }.resume
+    }
+
+[em-synchrony]: https://github.com/igrigorik/em-synchrony
+
+Runnable example is here: [example/eventmachine.rb][].
+You can also make multi-requests synchronously like this:
+
+    EM.run{
+      Fiber.new{
+        fiber = Fiber.current
+        result = {}
+        client.get('cardinalblue'){ |response|
+          result[0] = response
+          fiber.resume(result) if result.size == 2
+        }
+        client.get('cardinalblue'){ |response|
+          result[1] = response
+          fiber.resume(result) if result.size == 2
+        }
+        p Fiber.yield
+        EM.stop
+      }.resume
+    }
+
+Runnable example is here: [example/multi.rb][].
+
+[example/eventmachine.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/eventmachine.rb
+[example/multi.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/multi.rb
+
+## Supported HTTP clients:
+
+* RestCore::RestClient (gem rest-client)
+* RestCore::EmHttpRequest (gem em-http-request)
+* RestCore::Coolio (gem cool.io)
+* RestCore::Auto (which would pick one of the above depending on the context)
+
+## Build Your Own Middlewares:
+
+To be added.
+
+## Build Your Own HTTP clients:
+
+To be added.
 
 ## rest-core users:
 
