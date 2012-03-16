@@ -6,7 +6,7 @@ Lin Jen-Shin ([godfat][]) had given a talk about rest-core on
 [RubyConf Taiwan 2011][talk]. The slide is in English, but the
 talk is in Mandarin.
 
-You can also read some other topics at [doc](doc/ToC.md).
+You can also read some other topics at [doc](https://github.com/cardinalblue/rest-core/blob/master/doc/ToC.md).
 
 [godfat]: https://github.com/godfat
 [talk]: http://rubyconf.tw/2011/#6
