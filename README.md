@@ -106,8 +106,8 @@ for concepts.
 
 [example/rest-client.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/rest-client.rb
 [rest-more]: https://github.com/cardinalblue/rest-more
-[rubyconf.tw]: http://rubyconf.tw/2011/#6
 [slides]: http://www.godfat.org/slide/2011-08-27-rest-core.html
+[rubyconf.tw]: http://rubyconf.tw/2011/#6
 
 ## Asynchronous HTTP Requests:
 
