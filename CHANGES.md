@@ -2,6 +2,14 @@
 
 ## rest-core 1.0.0 -- 2012-03-17
 
+This is a very significant release. The most important change is now we
+support asynchronous requests, by either passing a callback block or using
+fibers in Ruby 1.9 to make the whole program still look synchronous.
+
+Please read [README.md](https://github.com/cardinalblue/rest-core/blob/master/README.md)
+or [example](https://github.com/cardinalblue/rest-core/blob/master/example)
+for more detail.
+
 * [Client] Client#inspect is fixed for clients which do not have any
   attributes.
 
