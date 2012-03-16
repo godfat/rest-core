@@ -2,8 +2,9 @@
 
 by Cardinal Blue <http://cardinalblue.com>
 
-Lin Jen-Shin ([godfat][]) had given a talk about rest-core on [RubyConf Taiwan 2011][talk].
-The slide is in English, but the talk is in Mandarin.
+Lin Jen-Shin ([godfat][]) had given a talk about rest-core on
+[RubyConf Taiwan 2011][talk]. The slide is in English, but the
+talk is in Mandarin.
 
 You can also read some other topics at [doc](doc/ToC.md).
 
