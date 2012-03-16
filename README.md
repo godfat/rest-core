@@ -113,7 +113,7 @@ for concepts.
 
 I/O bound operations shouldn't be blocking the CPU! If you have a reactor,
 i.e. event loop, you should take the advantage of that to make HTTP requests
-non-blocking the whole process/thread. For now, we support eventmachine and
+not block the whole process/thread. For now, we support eventmachine and
 cool.io. Below is an example for eventmachine:
 
 ``` ruby
