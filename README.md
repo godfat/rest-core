@@ -60,8 +60,10 @@ dedicated clients provided by [rest-more][].
 
 Or if you want development version, put this in Gemfile:
 
+``` ruby
     gem 'rest-core', :git => 'git://github.com/cardinalblue/rest-core.git',
                      :submodules => true
+```
 
 If you just want to use Facebook or Twitter clients, please take a look at
 [rest-more][] which has a lot of clients built with rest-core.
