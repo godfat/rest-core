@@ -1,6 +1,6 @@
 # CHANGES
 
-## rest-core 1.0.0 -- 2012-03-13
+## rest-core 1.0.0 -- 2012-03-17
 
 * [Client] Client#inspect is fixed for clients which do not have any
   attributes.
@@ -73,14 +73,26 @@
 
 * [EmHttpRequestAsync] This HTTP client accepts a block to make asynchronous
   HTTP requests via em-http-request gem.
+
 * [EmHttpRequestFiber] This HTTP client would make asynchronous HTTP requests
   with em-http-request but also wrapped inside a fiber, so that it looks
   synchronous to the program who calls it.
-* [EmHttpRequest]
-* [CoolioAsync]
-* [CoolioFiber]
-* [Coolio]
-* [Auto]
+
+* [EmHttpRequest] This HTTP client would would use EmHttpRequestAsync if
+  a block (RestCore::ASYNC) is passed, otherwise use EmHttpRequestFiber.
+
+* [CoolioAsync] This HTTP client is basically the same as EmHttpRequestAsync,
+  but using cool.io-http instead of em-http-request.
+
+* [CoolioFiber] This HTTP client is basically the same as EmHttpRequestFiber,
+  but using cool.io-http instead of em-http-request.
+
+* [Coolio] This HTTP client is basically the same as EmHttpRequest,
+    but using cool.io-http instead of em-http-request.
+
+* [Auto] This HTTP client would auto-select a suitable client. Under
+  eventmachine, it would use EmHttpRequest. Under cool.io, it would use
+  Coolio. Otherwise, it would use RestClient.
 
 ## rest-core 0.8.2 -- 2012-02-18
 
