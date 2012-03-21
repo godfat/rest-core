@@ -21,7 +21,7 @@ class RestCore::Timeout
                  end
 
     case class_name
-    when /Coolio|EmHttpRequest/
+    when /EmHttpRequest|Coolio/
       if root_fiber? && env[ASYNC]
         yield(env.merge(TIMER => timeout_with_callback(env, class_name)))
       else
@@ -42,13 +42,13 @@ class RestCore::Timeout
 
   def timeout_with_callback env, class_name
     case class_name
+    when /EmHttpRequest/
+      EventMachineTimer.new(timeout(env), timeout_error)
     when /Coolio/
       timer = CoolioTimer.new(timeout(env))
       timer.error = timeout_error
       timer.attach(::Coolio::Loop.default)
       timer
-    when /EmHttpRequest/
-      EventMachineTimer.new(timeout(env), timeout_error)
     else
       raise "BUG: #{run} is not supported"
     end
@@ -56,6 +56,12 @@ class RestCore::Timeout
 
   def timeout_with_resume env, class_name
     case class_name
+    when /EmHttpRequest/
+      f = Fiber.current
+      EventMachineTimer.new(timeout(env), error = timeout_error){
+        f.resume(error) if f.alive?
+      }
+
     when /Coolio/
       f = Fiber.current
       timer = CoolioTimer.new(timeout(env))
@@ -64,11 +70,6 @@ class RestCore::Timeout
       timer.attach(::Coolio::Loop.default)
       timer
 
-    when /EmHttpRequest/
-      f = Fiber.current
-      EventMachineTimer.new(timeout(env), error = timeout_error){
-        f.resume(error) if f.alive?
-      }
     else
       raise "BUG: #{run} is not supported"
     end
@@ -78,8 +79,8 @@ class RestCore::Timeout
     ::Timeout::Error.new('execution expired')
   end
 
-  autoload       :CoolioTimer,
-    'rest-core/middleware/timeout/coolio_timer'
   autoload :EventMachineTimer,
     'rest-core/middleware/timeout/eventmachine_timer'
+  autoload       :CoolioTimer,
+    'rest-core/middleware/timeout/coolio_timer'
 end
