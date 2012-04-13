@@ -5,7 +5,7 @@ class RestCore::DefaultQuery
   def self.members; [:query]; end
   include RestCore::Middleware
 
-  def initialize(*args)
+  def initialize *args
     super
     @query ||= {}
   end
