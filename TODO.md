@@ -16,3 +16,6 @@
 * how to pass a arbitrary payload generator?
 * RC::JsonRequest
 * RC::FakeGetWithPayload
+
+* ResponseThunk and EmHttpRequestThunk
+* options for apps
