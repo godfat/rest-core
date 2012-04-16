@@ -12,3 +12,7 @@
 # FEATURE
 
 * middleware composer
+* RC::Payload which can handle Content-Type: application/json
+* how to pass a arbitrary payload generator?
+* RC::JsonRequest
+* RC::FakeGetWithPayload
