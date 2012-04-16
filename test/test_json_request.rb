@@ -40,4 +40,9 @@ describe RC::JsonRequest do
       RC::REQUEST_PAYLOAD => MultiJson.dump(@request_params),
       RC::REQUEST_QUERY   => nil)
   end
+
+  should 'do nothing if json_request is false' do
+    @app = RC::JsonRequest.new(RC::Dry.new, false)
+    @app.call(@env).should.eq(@env)
+  end
 end

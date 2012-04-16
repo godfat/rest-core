@@ -13,6 +13,7 @@ class RestCore::JsonRequest
   JSON_REQUEST_HEADER = {'Content-Type' => 'application/json'}.freeze
 
   def call env
+    return app.call(env) unless json_request(env)
     payload = env[REQUEST_METHOD] == :get ?
               env[REQUEST_QUERY]          :
               env[REQUEST_PAYLOAD]
