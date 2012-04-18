@@ -13,13 +13,8 @@ class RestCore::EmHttpRequestAsync
                  :body => payload.read,
                  :head => payload.headers.merge(env[REQUEST_HEADERS]))
 
-    client.callback{
-      env[TIMER].cancel if env[TIMER]
-      env[ASYNC].call(env.merge(
-        RESPONSE_BODY    => client.response,
-        RESPONSE_STATUS  => client.response_header.status,
-        RESPONSE_HEADERS => client.response_header)) if env[ASYNC]
-    }
+    client.callback{ respond(env, client) }
+    client. errback{ respond(env, client) }
 
     env[TIMER].on_timeout{
       client.close
@@ -30,5 +25,13 @@ class RestCore::EmHttpRequestAsync
     } if env[TIMER]
 
     env
+  end
+
+  def respond env, client
+    env[TIMER].cancel if env[TIMER]
+    env[ASYNC].call(env.merge(
+      RESPONSE_BODY    => client.response,
+      RESPONSE_STATUS  => client.response_header.status,
+      RESPONSE_HEADERS => client.response_header)) if env[ASYNC]
   end
 end

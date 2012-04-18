@@ -8,6 +8,7 @@
 # BUG
 
 * inheritance should work; assign builder?
+* no error handling in cool.io
 
 # FEATURE
 

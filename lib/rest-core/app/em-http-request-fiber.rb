@@ -16,10 +16,8 @@ class RestCore::EmHttpRequestFiber
                  :body => payload.read,
                  :head => payload.headers.merge(env[REQUEST_HEADERS]))
 
-    client.callback{
-      env[TIMER].cancel if env[TIMER]
-      f.resume(process(env, client)) if f.alive?
-    }
+    client.callback{ respond(f, env, client) }
+    client. errback{ respond(f, env, client) }
 
     if (response = Fiber.yield).kind_of?(::Exception)
       client.close
@@ -27,6 +25,11 @@ class RestCore::EmHttpRequestFiber
     else
       response
     end
+  end
+
+  def respond f, env, client
+    env[TIMER].cancel if env[TIMER]
+    f.resume(process(env, client)) if f.alive?
   end
 
   def process env, client
