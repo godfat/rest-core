@@ -23,6 +23,7 @@ class RestCore::Cache
         end
 
     if cached = cache_get(e)
+      env[TIMER].cancel if env[TIMER]
       wrapped.call(cached)
     else
       if e[ASYNC]
