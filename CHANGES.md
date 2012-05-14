@@ -1,5 +1,11 @@
 # CHANGES
 
+## rest-core 1.0.1 -- 2012-05-14
+
+* [`Auto`] Check for eventmachine first instead of cool.io
+* [`EmHttpRequestFiber`] Also pass callback for errback
+* [`DefaultQuery`] Make default query to {} instead of nil
+
 ## rest-core 1.0.0 -- 2012-03-17
 
 This is a very significant release. The most important change is now we
