@@ -32,10 +32,10 @@ describe RC::Cache do
   end
 
   should 'cancel timeout for fiber' do
-    path = 'http://example.com/'
     any_instance_of(RC::Timeout::EventMachineTimer) do |timer|
       proxy.mock(timer).cancel.times(2)
     end
+    path = 'http://example.com/'
     stub_request(:get, path).to_return(:body => 'response')
     c = RC::Builder.client do
       use RC::Timeout, 10
