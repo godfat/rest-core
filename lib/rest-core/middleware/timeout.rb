@@ -25,7 +25,9 @@ class RestCore::Timeout
       if root_fiber? && env[ASYNC]
         yield(env.merge(TIMER => timeout_with_callback(env, class_name)))
       else
-        yield(env.merge(TIMER => timeout_with_resume(  env, class_name)))
+        timer = timeout_with_resume(env, class_name)
+        yield(env.merge(TIMER => timer))
+        timer.cancel unless timer.canceled?
       end
     else
       ::Timeout.timeout(timeout(env)){ yield(env) }

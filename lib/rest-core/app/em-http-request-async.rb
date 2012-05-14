@@ -28,7 +28,7 @@ class RestCore::EmHttpRequestAsync
   end
 
   def respond env, client
-    env[TIMER].cancel if env[TIMER]
+    env[TIMER].cancel if env[TIMER] && !env[TIMER].canceled?
     env[ASYNC].call(env.merge(
       RESPONSE_BODY    => client.response,
       RESPONSE_STATUS  => client.response_header.status,

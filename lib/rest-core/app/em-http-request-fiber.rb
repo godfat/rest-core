@@ -28,7 +28,6 @@ class RestCore::EmHttpRequestFiber
   end
 
   def respond f, env, client
-    env[TIMER].cancel if env[TIMER]
     f.resume(process(env, client)) if f.alive?
   end
 
