@@ -31,7 +31,7 @@ describe RC::Cache do
     c.app.app.tick.should.eq 2
   end
 
-  should 'cancel timeout' do
+  should 'cancel timeout for fiber' do
     path = 'http://example.com/'
     any_instance_of(RC::Timeout::EventMachineTimer) do |timer|
       mock(timer).cancel.times(2)
@@ -46,6 +46,24 @@ describe RC::Cache do
       c.request_full(RC::REQUEST_PATH => path)
       c.request_full(RC::REQUEST_PATH => path)
       EM.stop }.resume }
+    c.cache.size.should.eq 1
+  end if defined?(Fiber)
+
+  should 'cancel timeout for async' do
+    path = 'http://example.com/'
+    any_instance_of(RC::Timeout::EventMachineTimer) do |timer|
+      mock(timer).cancel.times(2)
+    end
+    stub_request(:get, path).to_return(:body => 'response')
+    c = RC::Builder.client do
+      use RC::Timeout, 10
+      use RC::Cache, {}, 3600
+      run RC::EmHttpRequestAsync
+    end.new
+    EM.run{
+      c.request_full(RC::REQUEST_PATH => path){
+        c.request_full(RC::REQUEST_PATH => path){
+          EM.stop }}}
     c.cache.size.should.eq 1
   end
 end
