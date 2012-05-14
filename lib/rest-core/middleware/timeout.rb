@@ -26,8 +26,9 @@ class RestCore::Timeout
         yield(env.merge(TIMER => timeout_with_callback(env, class_name)))
       else
         timer = timeout_with_resume(env, class_name)
-        yield(env.merge(TIMER => timer))
+        response = yield(env.merge(TIMER => timer))
         timer.cancel unless timer.canceled?
+        response
       end
     else
       ::Timeout.timeout(timeout(env)){ yield(env) }

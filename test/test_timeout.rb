@@ -6,6 +6,10 @@ describe RC::Timeout do
     @app = RC::Timeout.new(RC::Dry.new, 0)
   end
 
+  after do
+    WebMock.reset!
+  end
+
   should 'bypass timeout if timeout is 0' do
     mock(@app).monitor.times(0)
     @app.call({}).should.eq({})
@@ -15,5 +19,16 @@ describe RC::Timeout do
     env = {'timeout' => 2}
     mock.proxy(@app).monitor(env).times(1)
     @app.call(env).should.eq(env)
+  end
+
+  should 'return correct result under fibers' do
+    path = 'http://example.com/'
+    stub_request(:get, path).to_return(:body => 'response')
+
+    c = RC::Builder.client do
+      use RC::Timeout, 10
+      run RC::EmHttpRequestFiber
+    end.new
+    EM.run{Fiber.new{c.get(path).should.eq('response');EM.stop}.resume}
   end
 end
