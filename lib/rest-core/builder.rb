@@ -6,9 +6,6 @@ class RestCore::Builder
   include RestCore
   include Wrapper
 
-  class << self
-    attr_writer :default_app
-  end
   def self.default_app
     @default_app ||= RestClient
   end

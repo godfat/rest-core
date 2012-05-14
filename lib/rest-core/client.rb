@@ -176,7 +176,7 @@ module RestCore::Client
        FAIL            => []  ,
        LOG             => []  ,
        ASYNC           => if block_given?
-                            lambda{ |response| yield(response) }
+                            lambda{ |res| yield(res) }
                           else
                             nil
                           end}.merge(env)))
