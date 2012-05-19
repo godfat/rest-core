@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2012-05-14"
+  s.date = "2012-05-19"
   s.description = "Modular Ruby clients interface for REST APIs\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed [rest-core][], which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-core]: https://github.com/cardinalblue/rest-core\n[rest-more]: https://github.com/cardinalblue/rest-more"
   s.email = ["dev (XD) cardinalblue.com"]
   s.files = [
@@ -78,10 +78,9 @@ Gem::Specification.new do |s|
   "pending/test_multi.rb",
   "pending/test_test_util.rb",
   "rest-core.gemspec",
-  "task/.gitignore",
-  "task/gemgem.rb",
   "test/test_auth_basic.rb",
   "test/test_builder.rb",
+  "test/test_cache.rb",
   "test/test_client.rb",
   "test/test_client_oauth1.rb",
   "test/test_default_query.rb",
@@ -101,6 +100,7 @@ Gem::Specification.new do |s|
   s.test_files = [
   "test/test_auth_basic.rb",
   "test/test_builder.rb",
+  "test/test_cache.rb",
   "test/test_client.rb",
   "test/test_client_oauth1.rb",
   "test/test_default_query.rb",
