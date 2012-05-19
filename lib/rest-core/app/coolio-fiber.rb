@@ -11,6 +11,7 @@ class RestCore::CoolioFiber
                                         :url     => request_uri(env)    ,
                                         :payload => env[REQUEST_PAYLOAD],
                                         :headers => env[REQUEST_HEADERS]))
+  rescue FiberError
   end
 
   def process env, response

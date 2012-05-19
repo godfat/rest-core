@@ -63,6 +63,9 @@ class RestCore::Timeout
       f = Fiber.current
       EventMachineTimer.new(timeout(env), error = timeout_error){
         f.resume(error) if f.alive?
+        # no need to check if the fiber is already resumed or not,
+        # because monitor should have already handled this in the
+        # case of fibers
       }
 
     when /Coolio/

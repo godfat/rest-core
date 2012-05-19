@@ -29,6 +29,10 @@ class RestCore::EmHttpRequestFiber
 
   def respond f, env, client
     f.resume(process(env, client)) if f.alive?
+  rescue FiberError
+    # whenever timeout, client.close would be called,
+    # and then errback would be called. in this case,
+    # the fiber is already resumed by the timer
   end
 
   def process env, client
