@@ -30,5 +30,5 @@ describe RC::Timeout do
       run RC::EmHttpRequestFiber
     end.new
     EM.run{Fiber.new{c.get(path).should.eq('response');EM.stop}.resume}
-  end
+  end if defined?(Fiber)
 end
