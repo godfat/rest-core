@@ -1,5 +1,15 @@
 # CHANGES
 
+## rest-core 1.0.2 -- 2012-06-05
+
+### Enhancement
+
+* Some internal refactoring.
+
+### Bugs fixes
+
+* Properly handle asynchronous timers for eventmachine and cool.io.
+
 ## rest-core 1.0.1 -- 2012-05-14
 
 * [`Auto`] Check for eventmachine first instead of cool.io
