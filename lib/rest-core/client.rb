@@ -160,13 +160,13 @@ module RestCore::Client
        REQUEST_HEADERS => {}  ,
        FAIL            => []  ,
        LOG             => []  ,
-       ASYNC           => if block_given?
-                            lambda{ |res| yield(res) }
+       ASYNC           => if true#block_given?
+                            lambda{ |res| res }
                           else
                             nil
                           end}.merge(env)))
 
-    if block_given?
+    if false#block_given?
       self
     else
       response

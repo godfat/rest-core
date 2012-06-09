@@ -62,6 +62,7 @@ module RestCore
   autoload :EmHttpRequest     , 'rest-core/app/em-http-request'
   autoload :EmHttpRequestAsync, 'rest-core/app/em-http-request-async'
   autoload :EmHttpRequestFiber, 'rest-core/app/em-http-request-fiber'
+  autoload :EmHttpRequestThunk, 'rest-core/app/em-http-request-thunk'
 
   # clients
   autoload :Simple        , 'rest-core/client/simple'
