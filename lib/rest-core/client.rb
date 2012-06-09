@@ -180,7 +180,7 @@ module RestCore::Client
 
 
 
-  protected
+  private
   def string_keys hash
     hash.inject({}){ |r, (k, v)|
       if v.kind_of?(Hash)
