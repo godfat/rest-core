@@ -27,7 +27,10 @@ class RestCore::ResponseThunk
 
   def yield
     Fiber.yield until status # it might be resumed by some other thunks!
-    self.response ||= async_call
+    self.response ||= env[ASYNC].call(
+      env.merge(RESPONSE_BODY    => body  ,
+                RESPONSE_STATUS  => status,
+                RESPONSE_HEADERS => headers))
   end
 
   def on_load body, status, headers
@@ -41,10 +44,4 @@ class RestCore::ResponseThunk
 
   protected
   attr_accessor :env, :fiber, :response, :body, :status, :headers
-
-  def async_call
-    env[ASYNC].call(env.merge(RESPONSE_BODY    => body  ,
-                              RESPONSE_STATUS  => status,
-                              RESPONSE_HEADERS => headers))
-  end
 end
