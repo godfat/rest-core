@@ -1,7 +1,7 @@
 
 require 'rest-core/middleware'
 
-require 'rest-client'
+require 'restclient/payload'
 require 'em-http-request'
 require 'fiber'
 
