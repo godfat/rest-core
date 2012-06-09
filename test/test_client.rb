@@ -31,8 +31,7 @@ describe RC::Simple do
 
   should 'use defaults' do
     client = RestCore::Builder.client do
-      s = self.class # this is only for ruby 1.8!
-      use s::Timeout, 4
+      use RC::Timeout, 4
     end
     c = client.new
     c.timeout.should.eq 4 # default goes to middleware

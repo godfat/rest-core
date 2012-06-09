@@ -4,7 +4,7 @@ require 'eventmachine'
 require 'cool.io'
 
 YourClient = RestCore::Builder.client do
-  s = self.class # this is only for ruby 1.8!
+  s = RestCore
   use s::DefaultSite , 'https://api.github.com/users/'
   use s::JsonDecode  , true
   use s::CommonLogger, method(:puts)

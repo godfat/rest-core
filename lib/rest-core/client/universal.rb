@@ -1,6 +1,6 @@
 
 RestCore::Universal = RestCore::Builder.client do
-  s = self.class # this is only for ruby 1.8!
+  s = RestCore
   use s::Timeout       , 0
 
   use s::DefaultSite   , nil

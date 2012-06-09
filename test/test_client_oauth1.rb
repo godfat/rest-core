@@ -8,8 +8,7 @@ describe RC::ClientOauth1 do
   end
 
   client = RC::Builder.client do
-    s = self.class # this is only for ruby 1.8!
-    use s::Oauth1Header
+    use RC::Oauth1Header
   end
 
   client.send(:include, RC::ClientOauth1)
