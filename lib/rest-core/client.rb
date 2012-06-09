@@ -89,21 +89,6 @@ module RestCore::Client
         DRY           => true}.merge(opts))))
   end
 
-  # extra options:
-  #   json_decode: Bool # decode with json or not in this API request
-  #                     # default: json_decode in rest-graph instance
-  #       timeout: Int  # the timeout for this API request
-  #                     # default: timeout in rest-graph instance
-  #        secret: Bool # use secret_acccess_token or not
-  #                     # default: false
-  #         cache: Bool # use cache or not; if it's false, update cache, too
-  #                     # default: true
-  #    expires_in: Int  # control when would the cache be expired
-  #                     # default: nil
-  #         async: Bool # use eventmachine for http client or not
-  #                     # default: false, but true in aget family
-  #       headers: Hash # additional hash you want to pass
-  #                     # default: {}
   def get    path, query={}, opts={}, &cb
     request(
       {REQUEST_METHOD  => :get   ,
