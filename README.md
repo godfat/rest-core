@@ -80,7 +80,7 @@ You can use `RestCore::Builder` to build your own dedicated client:
     require 'rest-core'
 
     YourClient = RestCore::Builder.client do
-      s = self.class # this is only for ruby 1.8!
+      s = RestCore
       use s::DefaultSite , 'https://api.github.com/users/'
       use s::JsonDecode  , true
       use s::CommonLogger, method(:puts)
@@ -122,7 +122,7 @@ cool.io. Below is an example for eventmachine:
     require 'rest-core'
 
     AsynchronousClient = RestCore::Builder.client do
-      s = self.class # this is only for ruby 1.8!
+      s = RestCore
       use s::DefaultSite , 'https://api.github.com/users/'
       use s::JsonDecode  , true
       use s::CommonLogger, method(:puts)
