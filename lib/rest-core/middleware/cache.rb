@@ -75,6 +75,7 @@ class RestCore::Cache
     value = response[RESPONSE_BODY]
 
     if expires_in(env).kind_of?(Fixnum) &&
+       cache(env).respond_to?(:store)   &&
        cache(env).method(:store).arity == -3
       cache(env).store(cache_key(env), value,
                        :expires_in => expires_in(env))
