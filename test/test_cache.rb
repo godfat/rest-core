@@ -66,4 +66,22 @@ describe RC::Cache do
           EM.stop }}}
     c.cache.size.should.eq 1
   end
+
+  should 'only [] and []= should be implemented' do
+    cache = Class.new do
+      def initialize    ; @h = {}            ; end
+      def []  key       ; @h[key]            ; end
+      def []= key, value; @h[key] = value * 2; end
+    end.new
+    c = RC::Builder.client do
+      use RC::Cache, cache, 0
+      run Class.new{
+        def call env
+          env.merge(RC::RESPONSE_BODY => env[RC::REQUEST_PATH])
+        end
+      }
+    end.new
+    c.get('4')
+    c.get('4').should.eq '44'
+  end
 end
