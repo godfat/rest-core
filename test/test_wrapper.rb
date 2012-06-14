@@ -12,7 +12,7 @@ describe RestCore::Wrapper do
       run RestCore::Dry
     end
 
-    client.new.app.call({1=>2}).should.eq({1=>2})
+    client.new.app.call(1=>2){ |res| res.should.eq(1=>2) }
   end
 
   should 'default app is RestCore::Dry' do

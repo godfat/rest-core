@@ -9,16 +9,16 @@ class RestCore::AuthBasic
     if username(env)
       if password(env)
         app.call(env.merge(REQUEST_HEADERS =>
-          auth_basic_header(env).merge(env[REQUEST_HEADERS] || {})))
+          auth_basic_header(env).merge(env[REQUEST_HEADERS] || {})), &id)
       else
         app.call(log(env, "AuthBasic: username provided: #{username(env)}," \
-                          " but password is missing."))
+                          " but password is missing."), &id)
       end
     elsif password(env)
       app.call(log(env, "AuthBasic: password provided: #{password(env)}," \
-                        " but username is missing."))
+                        " but username is missing."), &id)
     else
-      app.call(env)
+      app.call(env, &id)
     end
   end
 

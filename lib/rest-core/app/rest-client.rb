@@ -7,25 +7,24 @@ require 'rest-core/patch/rest-client'
 
 class RestCore::RestClient
   include RestCore::Middleware
-  def call env
+  def call env, &k
     process(env,
             ::RestClient::Request.execute(:method  => env[REQUEST_METHOD ],
                                           :url     => request_uri(env)    ,
                                           :payload => env[REQUEST_PAYLOAD],
                                           :headers => env[REQUEST_HEADERS],
-                                          :max_redirects => 0))
+                                          :max_redirects => 0), k)
 
   rescue ::RestClient::Exception => e
-    process(env, e.response)
+    process(env, e.response, k)
   end
 
-  def process env, response
+  def process env, response, k
     result = env.merge(RESPONSE_BODY    => response.body,
                        RESPONSE_STATUS  => response.code,
                        RESPONSE_HEADERS => normalize_headers(
                                              response.raw_headers))
-    result[ASYNC].call(result) if result[ASYNC]
-    result
+    k.call(result)
   end
 
   def normalize_headers raw_headers

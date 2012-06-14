@@ -8,6 +8,6 @@ class RestCore::Bypass
   end
 
   def call env
-    @app.call(env)
+    @app.call(env){ |response| yield(response) }
   end
 end

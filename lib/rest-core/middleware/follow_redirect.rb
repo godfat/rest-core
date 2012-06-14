@@ -10,13 +10,10 @@ class RestCore::FollowRedirect
                     env['follow_redirect.max_redirects'] ||
                     max_redirects(env))
 
-    return app.call(e) if e[DRY]
-    if e[ASYNC]
-      app.call(e.merge(ASYNC => lambda{ |response|
-        e[ASYNC].call(process(response))
-      }))
+    if e[DRY]
+      app.call(e, &id)
     else
-      process(app.call(e))
+      app.call(e){ |response| yield(process(response)) }
     end
   end
 

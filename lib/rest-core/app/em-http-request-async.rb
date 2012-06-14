@@ -6,32 +6,30 @@ require 'em-http-request'
 
 class RestCore::EmHttpRequestAsync
   include RestCore::Middleware
-  def call env
+  def call env, &k
     payload = ::RestClient::Payload.generate(env[REQUEST_PAYLOAD])
     client  = ::EventMachine::HttpRequest.new(request_uri(env)).send(
                  env[REQUEST_METHOD],
                  :body => payload.read,
                  :head => payload.headers.merge(env[REQUEST_HEADERS]))
 
-    client.callback{ respond(env, client) }
-    client. errback{ respond(env, client) }
+    client.callback{ process(env, client, k) }
+    client. errback{ process(env, client, k) }
 
     env[TIMER].on_timeout{
       client.close
-      env[ASYNC].call(env.merge(RESPONSE_BODY    => env[TIMER].error,
-                                RESPONSE_STATUS  => 0               ,
-                                RESPONSE_HEADERS => {}             )) if
-         env[ASYNC]
+      yield(env.merge(RESPONSE_BODY    => env[TIMER].error,
+                      RESPONSE_STATUS  => 0               ,
+                      RESPONSE_HEADERS => {}             ))
     } if env[TIMER]
 
     env
   end
 
-  def respond env, client
+  def process env, client, k
     env[TIMER].cancel if env[TIMER] && !env[TIMER].canceled?
-    env[ASYNC].call(env.merge(
-      RESPONSE_BODY    => client.response,
-      RESPONSE_STATUS  => client.response_header.status,
-      RESPONSE_HEADERS => client.response_header)) if env[ASYNC]
+    k.call(env.merge(RESPONSE_BODY    => client.response,
+                     RESPONSE_STATUS  => client.response_header.status,
+                     RESPONSE_HEADERS => client.response_header))
   end
 end

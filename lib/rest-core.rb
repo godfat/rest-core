@@ -14,7 +14,6 @@ module RestCore
   FAIL             = 'core.fail'
   LOG              = 'core.log'
 
-  ASYNC            = 'async.callback'
   TIMER            = 'async.timer'
 
   # core utilities

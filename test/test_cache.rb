@@ -17,7 +17,7 @@ describe RC::Cache do
         end
         def call env
           self.tick +=1
-          env.merge(RC::RESPONSE_BODY => 'response')
+          yield(env.merge(RC::RESPONSE_BODY => 'response'))
         end
       }
     end.new
@@ -43,8 +43,8 @@ describe RC::Cache do
       run RC::EmHttpRequestFiber
     end.new
     EM.run{ Fiber.new{
-      c.request_full(RC::REQUEST_PATH => path)
-      c.request_full(RC::REQUEST_PATH => path)
+      c.request(RC::REQUEST_PATH => path).should.eq 'response'
+      c.request(RC::REQUEST_PATH => path).should.eq 'response'
       EM.stop }.resume }
     c.cache.size.should.eq 1
   end if defined?(Fiber)
@@ -77,7 +77,7 @@ describe RC::Cache do
       use RC::Cache, cache, 0
       run Class.new{
         def call env
-          env.merge(RC::RESPONSE_BODY => env[RC::REQUEST_PATH])
+          yield(env.merge(RC::RESPONSE_BODY => env[RC::REQUEST_PATH]))
         end
       }
     end.new

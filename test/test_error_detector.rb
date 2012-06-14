@@ -9,6 +9,5 @@ describe RC::ErrorDetector do
     end.new.lighten
 
     client.attributes.should.key?(:error_detector)
-    client.app.call({}).should.eq({})
   end
 end

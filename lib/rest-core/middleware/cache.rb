@@ -15,7 +15,7 @@ class RestCore::Cache
     @app, @cache, @expires_in = app, cache, expires_in
   end
 
-  def call env
+  def call env, &k
     e = if env['cache.update'] && env[REQUEST_METHOD] == :get
           cache_assign(env, nil)
         else
@@ -24,26 +24,16 @@ class RestCore::Cache
 
     if cached = cache_get(e)
       env[TIMER].cancel if env[TIMER] && !env[TIMER].canceled?
-      wrapped.call(cached)
+      wrapped.call(cached, &k)
     else
-      if e[ASYNC]
-        app.call(e.merge(ASYNC => lambda{ |response|
-          process(e, response)
-        }))
-      else
-        process(e, app.call(e))
-      end
+      app.call(e){ |response| process(e, response, k) }
     end
   end
 
-  def process env, response
-    if env[ASYNC]
-      wrapped.call(response.merge(ASYNC => lambda{ |response_wrapped|
-        env[ASYNC].call(process_wrapped(env, response, response_wrapped))
-      }))
-    else
-      process_wrapped(env, response, wrapped.call(response))
-    end
+  def process env, response, k
+    wrapped.call(response){ |response_wrapped|
+      k.call(process_wrapped(env, response_wrapped, response_wrapped))
+    }
   end
 
   def process_wrapped env, response, response_wrapped

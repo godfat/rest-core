@@ -27,7 +27,7 @@ describe RC::FollowRedirect do
       mock(dry).call(anything){ |env|
         env.merge(RC::RESPONSE_STATUS => status,
                   RC::RESPONSE_HEADERS => {'LOCATION' => 'location'})
-      }.times(2)
+      }
       app.call(RC::REQUEST_METHOD => :get)[RC::RESPONSE_HEADERS]['LOCATION'].
                                                        should.eq 'location'
     end

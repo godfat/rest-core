@@ -8,8 +8,8 @@ class RestCore::Timeout
   include RestCore::Middleware
 
   def call env
-    return app.call(env) if env[DRY] || timeout(env) == 0
-    monitor(env){ |e| app.call(e) }
+    return app.call(env, &id) if env[DRY] || timeout(env) == 0
+    monitor(env){ |e| app.call(e, &id) }
   end
 
   def monitor env
@@ -22,7 +22,7 @@ class RestCore::Timeout
 
     case class_name
     when /EmHttpRequest|Coolio/
-      if root_fiber? && env[ASYNC]
+      if root_fiber?
         yield(env.merge(TIMER => timeout_with_callback(env, class_name)))
       else
         timer = timeout_with_resume(env, class_name)

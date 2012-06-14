@@ -10,12 +10,21 @@ class RestCore::ResponseThunk
     end
 
     def method_missing msg, *args, &block
-      @thunk.yield[@target].__send__(msg, *args, &block)
+      load.__send__(msg, *args, &block)
+    end
+
+    def load
+      @thunk.yield[@target]
+    end
+
+    def loaded?
+      !!@thunk.status
     end
   end
 
-  def initialize env
+  def initialize env, k
     self.env      = env
+    self.k        = k
     self.fiber    = Fiber.current
     self.response = nil
     self.body, self.status, self.headers = nil, nil, nil
@@ -27,7 +36,7 @@ class RestCore::ResponseThunk
 
   def yield
     Fiber.yield until status # it might be resumed by some other thunks!
-    self.response ||= env[ASYNC].call(
+    self.response ||= k.call(
       env.merge(RESPONSE_BODY    => body  ,
                 RESPONSE_STATUS  => status,
                 RESPONSE_HEADERS => headers))
@@ -43,5 +52,5 @@ class RestCore::ResponseThunk
   end
 
   protected
-  attr_accessor :env, :fiber, :response, :body, :status, :headers
+  attr_accessor :env, :k, :fiber, :response, :body, :status, :headers
 end

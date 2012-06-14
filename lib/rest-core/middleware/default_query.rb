@@ -12,6 +12,6 @@ class RestCore::DefaultQuery
 
   def call env
     app.call(env.merge(REQUEST_QUERY =>
-      @query.merge(query(env)).merge(env[REQUEST_QUERY] || {})))
+      @query.merge(query(env)).merge(env[REQUEST_QUERY] || {})), &id)
   end
 end

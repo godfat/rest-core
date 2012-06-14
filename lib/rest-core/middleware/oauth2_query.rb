@@ -14,6 +14,6 @@ class RestCore::Oauth2Query
               env
             end
 
-    app.call(local)
+    app.call(local, &id)
   end
 end

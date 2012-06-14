@@ -7,7 +7,7 @@ require 'fiber'
 
 class RestCore::EmHttpRequestFiber
   include RestCore::Middleware
-  def call env
+  def call env, &k
     f = Fiber.current
 
     payload = ::RestClient::Payload.generate(env[REQUEST_PAYLOAD])
@@ -16,30 +16,24 @@ class RestCore::EmHttpRequestFiber
                  :body => payload.read,
                  :head => payload.headers.merge(env[REQUEST_HEADERS]))
 
-    client.callback{ respond(f, env, client) }
-    client. errback{ respond(f, env, client) }
+    client.callback{ process(f, env, client) }
+    client. errback{ process(f, env, client) }
 
-    if (response = Fiber.yield).kind_of?(::Exception)
+    if (exception = Fiber.yield).kind_of?(::Exception)
       client.close
-      raise response
+      raise exception
     else
-      response
+      yield(env.merge(RESPONSE_BODY    => client.response,
+                      RESPONSE_STATUS  => client.response_header.status,
+                      RESPONSE_HEADERS => client.response_header))
     end
   end
 
-  def respond f, env, client
-    f.resume(process(env, client)) if f.alive?
+  def process f, env, client
+    f.resume if f.alive?
   rescue FiberError
     # whenever timeout, client.close would be called,
     # and then errback would be called. in this case,
     # the fiber is already resumed by the timer
-  end
-
-  def process env, client
-    result = env.merge(RESPONSE_BODY    => client.response,
-                       RESPONSE_STATUS  => client.response_header.status,
-                       RESPONSE_HEADERS => client.response_header)
-    result[ASYNC].call(result) if result[ASYNC]
-    result
   end
 end
