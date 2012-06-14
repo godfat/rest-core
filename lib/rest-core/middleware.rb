@@ -6,6 +6,11 @@ require 'cgi'
 module RestCore::Middleware
   include RestCore
 
+  # identity function
+  def self.id
+    @id ||= lambda{ |a| a }
+  end
+
   def self.included mod
     mod.send(:include, RestCore)
     mod.send(:attr_reader, :app)
@@ -34,9 +39,10 @@ module RestCore::Middleware
     mod.send(:include, accessor)
   end
 
-  def call env     ; app.call(env)                               ; end
+  def call env     ; app.call(env, &id)                          ; end
   def fail env, obj; env.merge(FAIL => (env[FAIL] || []) + [obj]); end
   def log  env, obj; env.merge(LOG  => (env[LOG]  || []) + [obj]); end
+  def id           ; Middleware.id                               ; end
   def run app=app
     if app.respond_to?(:app) && app.app
       run(app.app)

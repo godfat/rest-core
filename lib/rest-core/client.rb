@@ -151,25 +151,21 @@ module RestCore::Client
     end
   end
 
-  def request_full env, app=app
-    response = app.call(build_env(
+  def request_full env, app=app, &k
+    thunk = app.call(build_env(
       {REQUEST_METHOD  => :get,
        REQUEST_PATH    => '/' ,
        REQUEST_QUERY   => {}  ,
        REQUEST_PAYLOAD => {}  ,
        REQUEST_HEADERS => {}  ,
        FAIL            => []  ,
-       LOG             => []  ,
-       ASYNC           => if true#block_given?
-                            lambda{ |res| res }
-                          else
-                            nil
-                          end}.merge(env)))
+       LOG             => []  }.merge(env)),
+       &(k || Middleware.id))
 
-    if false#block_given?
+    if block_given?
       self
     else
-      response
+      thunk
     end
   end
 

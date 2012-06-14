@@ -6,14 +6,10 @@ class RestCore::JsonDecode
   include RestCore::Middleware
 
   def call env
-    return app.call(env) if env[DRY]
-    if env[ASYNC]
-      app.call(env.merge(ASYNC => lambda{ |response|
-        env[ASYNC].call(process(response))
-      }))
-    else
-      process(app.call(env))
-    end
+    return app.call(env, &id) if env[DRY]
+    app.call(env){ |response|
+      yield(process(response))
+    }
   end
 
   def process response
