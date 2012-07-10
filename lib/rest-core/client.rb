@@ -107,7 +107,7 @@ module RestCore::Client
     request(
       {REQUEST_METHOD  => :head  ,
        REQUEST_PATH    => path   ,
-       REQUEST_QUERY   => query  }.merge(opts), &cb)
+       REQUEST_QUERY   => query  }.merge(opts), RESPONSE_HEADERS, &cb)
   end
 
   def options path, query={}, opts={}, &cb
@@ -141,13 +141,13 @@ module RestCore::Client
        REQUEST_PAYLOAD => payload}.merge(opts), &cb)
   end
 
-  def request env, app=app
+  def request env, key=RESPONSE_BODY, app=app
     if block_given?
       request_full(env, app){ |response|
-        yield(response[RESPONSE_BODY])
+        yield(response[key])
       }
     else
-      request_full(env, app)[RESPONSE_BODY]
+      request_full(env, app)[key]
     end
   end
 
