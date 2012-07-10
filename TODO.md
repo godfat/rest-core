@@ -1,8 +1,9 @@
 # TODO
 
-* HTTP method in Requested log
 * middleware revisit (how to initialize?)
+* streaming?
 * test utility
+* connection pool?
 
 # BUG
 
@@ -16,5 +17,10 @@
 * RC::JsonRequest
 * RC::FakeGetWithPayload
 
-* ResponseThunk and EmHttpRequestThunk
-* options for apps
+# rest-core 2.0
+
+* multi_json
+* cache for headers
+* HTTP method in Requested log
+
+# rest-request
