@@ -13,15 +13,15 @@ class RestCore::FollowRedirect
     if e[DRY]
       app.call(e, &k)
     else
-      app.call(e){ |response| yield(process(response, k)) }
+      app.call(e){ |response| process(response, k) }
     end
   end
 
   def process res, k
-    return res if res['follow_redirect.max_redirects'] <= 0
-    return res if ![301,302,303,307].include?(res[RESPONSE_STATUS])
-    return res if  [301,302    ,307].include?(res[RESPONSE_STATUS]) &&
-                  ![:get, :head    ].include?(res[REQUEST_METHOD])
+    return k.call(res) if res['follow_redirect.max_redirects'] <= 0
+    return k.call(res) if ![301,302,303,307].include?(res[RESPONSE_STATUS])
+    return k.call(res) if  [301,302    ,307].include?(res[RESPONSE_STATUS]) &&
+                          ![:get, :head    ].include?(res[REQUEST_METHOD])
 
     location = [res[RESPONSE_HEADERS]['LOCATION']].flatten.first
     meth     = if res[RESPONSE_STATUS] == 303
