@@ -12,20 +12,19 @@ describe RC::DefaultQuery do
     end
 
     should 'do nothing' do
-      app.call({})[RC::REQUEST_QUERY].should.eq({})
+      app.call({}){ |r| r[RC::REQUEST_QUERY].should.eq({}) }
     end
 
     should 'merge query' do
       app.instance_eval{@query = {'q' => 'uery'}}
 
-      app.call({}).should.eq({RC::REQUEST_QUERY =>
-        {'q' => 'uery'}})
+      app.call({}){ |r| r.should.eq({RC::REQUEST_QUERY => {'q' => 'uery'}}) }
 
       format = {'format' => 'json'}
       env    = {RC::REQUEST_QUERY => format}
 
-      app.call(env).should.eq({RC::REQUEST_QUERY =>
-        {'q' => 'uery'}.merge(format)})
+      app.call(env){ |r|
+        r.should.eq({RC::REQUEST_QUERY => {'q' => 'uery'}.merge(format)}) }
     end
   end
 
@@ -39,7 +38,7 @@ describe RC::DefaultQuery do
     end
 
     should 'merge query with {}' do
-      app.call({}).should.eq({RC::REQUEST_QUERY => {}})
+      app.call({}){ |r| r.should.eq({RC::REQUEST_QUERY => {}}) }
     end
   end
 end

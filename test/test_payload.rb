@@ -11,19 +11,19 @@ describe RC::DefaultPayload do
   end
 
   should 'do nothing' do
-    app.call({})[RC::REQUEST_PAYLOAD].should.eq({})
+    app.call({}){ |r| r[RC::REQUEST_PAYLOAD].should.eq({}) }
   end
 
   should 'merge payload' do
     app.instance_eval{@payload = {'pay' => 'load'}}
 
-    app.call({}).should.eq({RC::REQUEST_PAYLOAD =>
-      {'pay' => 'load'}})
+    app.call({}){ |r| r.should.eq({RC::REQUEST_PAYLOAD =>
+      {'pay' => 'load'}}) }
 
     format = {'format' => 'json'}
     env    = {RC::REQUEST_PAYLOAD => format}
 
-    app.call(env).should.eq({RC::REQUEST_PAYLOAD =>
-      {'pay' => 'load'}.merge(format)})
+    app.call(env){ |r| r.should.eq({RC::REQUEST_PAYLOAD =>
+      {'pay' => 'load'}.merge(format)})}
   end
 end
