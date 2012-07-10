@@ -7,7 +7,7 @@ class RestCore::Bypass
     @app = app
   end
 
-  def call env
-    @app.call(env){ |response| yield(response) }
+  def call env, &k
+    @app.call(env, &k)
   end
 end
