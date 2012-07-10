@@ -7,9 +7,9 @@ class RestCore::Timeout
   def self.members; [:timeout]; end
   include RestCore::Middleware
 
-  def call env
-    return app.call(env, &id) if env[DRY] || timeout(env) == 0
-    monitor(env){ |e| app.call(e, &id) }
+  def call env, &k
+    return app.call(env, &k) if env[DRY] || timeout(env) == 0
+    monitor(env){ |e| app.call(e, &k) }
   end
 
   def monitor env

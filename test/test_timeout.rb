@@ -12,13 +12,13 @@ describe RC::Timeout do
 
   should 'bypass timeout if timeout is 0' do
     mock(@app).monitor.times(0)
-    @app.call({}).should.eq({})
+    @app.call({}){ |e| e.should.eq({}) }
   end
 
   should 'run the monitor to setup timeout' do
     env = {'timeout' => 2}
     mock.proxy(@app).monitor(env).times(1)
-    @app.call(env).should.eq(env)
+    @app.call(env){ |e| e.should.eq(env) }
   end
 
   should 'return correct result under fibers' do
