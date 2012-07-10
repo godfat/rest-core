@@ -5,7 +5,7 @@ class RestCore::Oauth2Query
   def self.members; [:access_token]; end
   include RestCore::Middleware
 
-  def call env
+  def call env, &k
     local = if access_token(env)
               env.merge(REQUEST_QUERY =>
                           {'access_token' => access_token(env)}.
@@ -14,6 +14,6 @@ class RestCore::Oauth2Query
               env
             end
 
-    app.call(local, &id)
+    app.call(local, &k)
   end
 end

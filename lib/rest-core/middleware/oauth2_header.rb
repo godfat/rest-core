@@ -5,7 +5,7 @@ class RestCore::Oauth2Header
   def self.members; [:access_token_type, :access_token]; end
   include RestCore::Middleware
 
-  def call env
+  def call env, &k
     start_time = Time.now
     headers = {'Authorization' =>
                  "#{access_token_type(env)} #{access_token(env)}"}.
@@ -16,7 +16,7 @@ class RestCore::Oauth2Header
 
     app.call(
       log(cache_key(env.merge(
-        REQUEST_HEADERS => headers || env[REQUEST_HEADERS])), event), &id)
+        REQUEST_HEADERS => headers || env[REQUEST_HEADERS])), event), &k)
   end
 
   def cache_key env

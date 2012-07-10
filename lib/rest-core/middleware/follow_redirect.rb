@@ -11,7 +11,7 @@ class RestCore::FollowRedirect
                     max_redirects(env))
 
     if e[DRY]
-      app.call(e, &id)
+      app.call(e, &k)
     else
       app.call(e){ |response| yield(process(response, k)) }
     end

@@ -82,11 +82,10 @@ module RestCore::Client
   end
 
   def url path, query={}, opts={}
-    Middleware.request_uri(
-      dry.call(build_env({
-        REQUEST_PATH  => path,
-        REQUEST_QUERY => query,
-        DRY           => true}.merge(opts))))
+    dry.call(build_env({
+      REQUEST_PATH  => path,
+      REQUEST_QUERY => query,
+      DRY           => true}.merge(opts)), &Middleware.method(:request_uri))
   end
 
   def get    path, query={}, opts={}, &cb

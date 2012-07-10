@@ -13,7 +13,7 @@ class RestCore::Oauth1Header
      :oauth_token, :oauth_token_secret, :data]
   end
   include RestCore::Middleware
-  def call env
+  def call env, &k
     start_time = Time.now
     headers = {'Authorization' => oauth_header(env)}.
                 merge(env[REQUEST_HEADERS] || {})
@@ -22,7 +22,7 @@ class RestCore::Oauth1Header
               "Authorization: #{headers['Authorization']}")
 
     app.call(
-      log(cache_key(env.merge(REQUEST_HEADERS => headers)), event), &id)
+      log(cache_key(env.merge(REQUEST_HEADERS => headers)), event), &k)
   end
 
   def cache_key env
