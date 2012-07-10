@@ -5,7 +5,7 @@ class RestCore::FollowRedirect
   def self.members; [:max_redirects]; end
   include RestCore::Middleware
 
-  def call env, &cb
+  def call env, &k
     e = env.merge('follow_redirect.max_redirects' =>
                     env['follow_redirect.max_redirects'] ||
                     max_redirects(env))
@@ -13,11 +13,11 @@ class RestCore::FollowRedirect
     if e[DRY]
       app.call(e, &id)
     else
-      app.call(e){ |response| yield(process(response, cb)) }
+      app.call(e){ |response| yield(process(response, k)) }
     end
   end
 
-  def process res, cb
+  def process res, k
     return res if res['follow_redirect.max_redirects'] <= 0
     return res if ![301,302,303,307].include?(res[RESPONSE_STATUS])
     return res if  [301,302    ,307].include?(res[RESPONSE_STATUS]) &&
@@ -34,6 +34,6 @@ class RestCore::FollowRedirect
                    REQUEST_METHOD  => meth    ,
                    REQUEST_PAYLOAD => nil     ,
                    'follow_redirect.max_redirects' =>
-                     res['follow_redirect.max_redirects'] - 1), &cb)
+                     res['follow_redirect.max_redirects'] - 1), &k)
   end
 end
