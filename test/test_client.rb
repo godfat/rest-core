@@ -8,20 +8,28 @@ describe RC::Simple do
   end
 
   should 'do simple request' do
-    [:get, :post, :delete, :put,
-     :head, :patch, :options].each do |method|
-      stub_request(method, 'http://localhost/').to_return(:body => '[]')
-      RC::Simple.new.send(method, 'http://localhost/').should.eq '[]'
+    url = 'http://localhost/'
+    [:get, :post, :delete, :put, :patch, :options].each do |method|
+      stub_request(method, url).to_return(:body => '[]')
+      RC::Simple.new.send(method, url).should.eq '[]'
     end
+
+    stub_request(:head, url).to_return(:headers => {'A' => 'B'})
+    RC::Simple.new.head(url).should.eq({'A' => 'B'})
   end
 
   should 'call the callback' do
-    [:get, :post, :delete, :put,
-     :head, :patch, :options].each do |method|
-      stub_request(method, 'http://localhost/').to_return(:body => '123')
-      (client = RC::Simple.new).send(method, 'http://localhost/'){ |res|
+    url = 'http://localhost/'
+    [:get, :post, :delete, :put, :patch, :options].each do |method|
+      stub_request(method, url).to_return(:body => '123')
+      (client = RC::Simple.new).send(method, url){ |res|
         res.should.eq '123' }.should.eq client
     end
+
+    stub_request(:head, url).to_return(:headers => {'A' => 'B'})
+    (client = RC::Simple.new).head(url){ |res|
+      res.should.eq({'A' => 'B'})
+    }.should.eq client
   end
 
   should 'have correct to_i' do
