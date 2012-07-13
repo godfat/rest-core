@@ -17,18 +17,8 @@ end
 client = YourClient.new
 EM.run{
   Fiber.new{
-    fiber = Fiber.current
-    result = {}
-    client.get('cardinalblue'){ |response|
-      result[0] = response
-      fiber.resume(result) if result.size == 2
-    }
-    puts "It's not blocking..."
-    client.get('cardinalblue'){ |response|
-      result[1] = response
-      fiber.resume(result) if result.size == 2
-    }
-    p Fiber.yield
+    p [client.get('cardinalblue'), client.get('godfat')]
+    puts "But blocks here and do concurrent requests..."
     EM.stop
   }.resume
   puts "It's not blocking..."

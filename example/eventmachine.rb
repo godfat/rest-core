@@ -24,6 +24,7 @@ puts
 EM.run{
   Fiber.new{
     p client.get('cardinalblue')
+    puts "But blocks here..."
     EM.stop
   }.resume
   puts "It's not blocking..."
