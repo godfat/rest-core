@@ -84,4 +84,15 @@ describe RC::Cache do
     c.get('4')
     c.get('4').should.eq '44'
   end
+
+  should 'cache the original response' do
+    c = RC::Builder.client do
+      use RC::Cache, {}, 3600 do
+        use RC::JsonDecode, true
+      end
+    end.new
+    stub_request(:get, 'me').to_return(:body => '[]')
+    c.get('me').should.eq []
+    c.cache.values.first.should.eq '[]'
+  end
 end
