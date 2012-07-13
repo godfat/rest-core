@@ -1,9 +1,9 @@
 
 require 'rest-core/test'
 
-describe RestCore::AuthBasic do
+describe RC::AuthBasic do
   before do
-    @auth = RestCore::AuthBasic.new(RestCore::Dry.new, nil, nil)
+    @auth = RC::AuthBasic.new(RC::Dry.new, nil, nil)
   end
 
   should 'do nothing' do
@@ -15,26 +15,26 @@ describe RestCore::AuthBasic do
     @auth.instance_eval{@password = 'open sesame'}
 
     @auth.call({}){ |res|
-      res.should.eq({RestCore::REQUEST_HEADERS =>
+      res.should.eq({RC::REQUEST_HEADERS =>
         {'Authorization' => 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=='}})
     }
 
     acc = {'Accept' => 'text/plain'}
-    env = {RestCore::REQUEST_HEADERS => acc}
+    env = {RC::REQUEST_HEADERS => acc}
 
     @auth.call(env){ |res|
-      res.should.eq({RestCore::REQUEST_HEADERS =>
+      res.should.eq({RC::REQUEST_HEADERS =>
         {'Authorization' => 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=='}.merge(acc)})
     }
   end
 
   should 'leave a log if username are not both provided' do
     @auth.instance_eval{@username = 'Aladdin'}
-    @auth.call({}){ |res| res[RestCore::LOG].size.should.eq 1 }
+    @auth.call({}){ |res| res[RC::LOG].size.should.eq 1 }
   end
 
   should 'leave a log if password are not both provided' do
     @auth.instance_eval{@password = 'open sesame'}
-    @auth.call({}){ |res| res[RestCore::LOG].size.should.eq 1 }
+    @auth.call({}){ |res| res[RC::LOG].size.should.eq 1 }
   end
 end

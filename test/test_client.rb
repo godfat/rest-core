@@ -38,7 +38,7 @@ describe RC::Simple do
   end
 
   should 'use defaults' do
-    client = RestCore::Builder.client do
+    client = RC::Builder.client do
       use RC::Timeout, 4
     end
     c = client.new

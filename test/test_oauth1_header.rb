@@ -1,10 +1,10 @@
 
 require 'rest-core/test'
 
-describe RestCore::Oauth1Header do
+describe RC::Oauth1Header do
   before do
-    @env = {RestCore::REQUEST_METHOD => :post,
-            RestCore::REQUEST_PATH   =>
+    @env = {RC::REQUEST_METHOD => :post,
+            RC::REQUEST_PATH   =>
               'https://api.twitter.com/oauth/request_token'}
 
     callback =
@@ -18,7 +18,7 @@ describe RestCore::Oauth1Header do
        'oauth_version'      => '1.0'                                        ,
        'oauth_signature_method' => 'HMAC-SHA1'}
 
-    @auth = RestCore::Oauth1Header.new(RestCore::Dry.new,
+    @auth = RC::Oauth1Header.new(RC::Dry.new,
       nil, nil, nil,
       'GDdmIQH6jhtmLUypg82g',
       'MCD8BKwGdgPHvAuvgvz4EQpqDAtx89grbuNMRd7Eh98')
