@@ -58,11 +58,13 @@ Gem::Specification.new do |s|
   "lib/rest-core/middleware/error_handler.rb",
   "lib/rest-core/middleware/follow_redirect.rb",
   "lib/rest-core/middleware/json_decode.rb",
+  "lib/rest-core/middleware/json_request.rb",
   "lib/rest-core/middleware/oauth1_header.rb",
   "lib/rest-core/middleware/oauth2_header.rb",
   "lib/rest-core/middleware/oauth2_query.rb",
   "lib/rest-core/middleware/timeout.rb",
   "lib/rest-core/middleware/timeout/eventmachine_timer.rb",
+  "lib/rest-core/patch/multi_json.rb",
   "lib/rest-core/patch/rest-client.rb",
   "lib/rest-core/test.rb",
   "lib/rest-core/util/hmac.rb",
@@ -82,6 +84,7 @@ Gem::Specification.new do |s|
   "test/test_error_detector_http.rb",
   "test/test_follow_redirect.rb",
   "test/test_json_decode.rb",
+  "test/test_json_request.rb",
   "test/test_oauth1_header.rb",
   "test/test_payload.rb",
   "test/test_timeout.rb",
@@ -102,6 +105,7 @@ Gem::Specification.new do |s|
   "test/test_error_detector_http.rb",
   "test/test_follow_redirect.rb",
   "test/test_json_decode.rb",
+  "test/test_json_request.rb",
   "test/test_oauth1_header.rb",
   "test/test_payload.rb",
   "test/test_timeout.rb",
@@ -113,8 +117,10 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rest-client>, [">= 0"])
+      s.add_runtime_dependency(%q<multi_json>, [">= 0"])
     else
       s.add_dependency(%q<rest-client>, [">= 0"])
+      s.add_dependency(%q<multi_json>, [">= 0"])
     end
   else
     s.add_dependency(%q<rest-client>, [">= 0"])
