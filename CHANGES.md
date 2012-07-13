@@ -1,5 +1,80 @@
 # CHANGES
 
+## rest-core 2.0.0
+
+This is a major release which introduces some incompatible changes.
+This is intended to cleanup some internal implementation and introduce
+a new mechanism to handle multiple requests concurrently, avoiding needless
+block.
+
+Before we go into detail, here's who can upgrade without changing anything,
+and who should make a few adjustments in their code:
+
+* If you're only using rest-more, e.g. `RC::Facebook` or `RC::Twitter`, etc.,
+  you don't have to change anything. This won't affect rest-more users.
+
+* If you're only using rest-core's built in middlewares to build your own
+  clients, you don't have to change anything as well. All the hard works are
+  done by me.
+
+* If you're building your own middlewares, then you are the ones who need to
+  make changes. `RC::ASYNC` is changed to a flag to mean whether the callback
+  should be called directly, or only after resuming from the fiber.
+  And now you have always to get the response from `yield`, that is,
+  you're forced to pass a callback to `call`.
+
+  This might be a bit user unfriendly at first glimpse, but it would much
+  simplify the internal structure of rest-core, because in the middlewares,
+  you don't have to worry if the user would pass a callback or not, branching
+  everywhere to make it work both synchronously and asynchronously.
+
+  Also, the old fiber based asynchronous HTTP client is removed, in favor
+  of the new _future_ based approach. The new one is more like a superset
+  of the old one, which have anything the old one can provide. Yet internally
+  it works a lot differently. They are both synchronous for the outside,
+  but while the old one is also synchronous inside, the new one is
+  asynchronous inside, just like the purely asynchronous HTTP client.
+
+  That is, internally, it's always asynchronously, and fiber/async didn't
+  make much difference here now. This is also the reason why I removed
+  the old fiber one. This would make the middleware implementation much
+  easier, considering much fewer possible cases.
+
+  If you don't really understand what does above mean, then just remember,
+  now we ask all middlewares work asynchronously. You have always to work
+  with callbacks which passed along in `app.call(env){ |response| }`
+  That's it.
+
+It's a bit outdated, but you can also checkout my blog post.
+[rest-core 2.0 roadmap, thunk based response][post]
+(p.s. now thunk is renamed to future)
+
+[post]: http://blogger.godfat.org/2012/06/rest-core-20-roadmap-thunk-based.html
+
+### Incompatible changes
+
+* [EmHttpRequestFiber] is removed in favor of `EmHttpRequest`
+* cool.io support is removed.
+* You must provide a block to `app.call(env){ ... }`
+
+### Enhancement
+
+* The default app is changed from `RestClient` to `Auto`, which would
+  be using `EmHttpRequest` under the context of a event loop, while
+  use `RestClient` in other context as before.
+
+* [Client] `client.head` now returns the headers instead of response body.
+  It doesn't make sense to return the response body, because there's no
+  such things in a HEAD request.
+
+* [JsonDecode] Now we prefer multi_json first, yajl-ruby second, lastly json.
+
+### Bugs fixes
+
+* [Cache] The cache object you passed in would only need to respond to
+  `[]` and `[]=`. If the cache object accepts an `:expires_in` option,
+  then it must also respond to `store`, too.
+
 ## rest-core 1.0.2 -- 2012-06-05
 
 ### Enhancement
