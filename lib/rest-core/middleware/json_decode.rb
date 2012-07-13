@@ -5,8 +5,8 @@ class RestCore::JsonDecode
   def self.members; [:json_decode]; end
   include RestCore::Middleware
 
-  def call env
-    return app.call(env, &id) if env[DRY]
+  def call env, &k
+    return app.call(env, &k) if env[DRY]
     app.call(env){ |response|
       yield(process(response))
     }
