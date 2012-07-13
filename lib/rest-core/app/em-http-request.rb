@@ -1,4 +1,6 @@
 
+require 'em-http-request'
+
 require 'rest-core/app/abstract/response_future'
 require 'rest-core/middleware'
 
