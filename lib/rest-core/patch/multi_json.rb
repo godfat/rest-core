@@ -1,3 +1,4 @@
+
 # encode and decode will be remove in multi_json 2.0
 module MultiJson
   class << self

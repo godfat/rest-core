@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2012-07-13"
+  s.date = "2012-07-14"
   s.description = "Modular Ruby clients interface for REST APIs\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed [rest-core][], which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-core]: https://github.com/cardinalblue/rest-core\n[rest-more]: https://github.com/cardinalblue/rest-more"
   s.email = ["dev (XD) cardinalblue.com"]
   s.files = [
@@ -58,7 +58,6 @@ Gem::Specification.new do |s|
   "lib/rest-core/middleware/error_handler.rb",
   "lib/rest-core/middleware/follow_redirect.rb",
   "lib/rest-core/middleware/json_decode.rb",
-  "lib/rest-core/middleware/json_request.rb",
   "lib/rest-core/middleware/oauth1_header.rb",
   "lib/rest-core/middleware/oauth2_header.rb",
   "lib/rest-core/middleware/oauth2_query.rb",
@@ -84,7 +83,6 @@ Gem::Specification.new do |s|
   "test/test_error_detector_http.rb",
   "test/test_follow_redirect.rb",
   "test/test_json_decode.rb",
-  "test/test_json_request.rb",
   "test/test_oauth1_header.rb",
   "test/test_payload.rb",
   "test/test_timeout.rb",
@@ -105,7 +103,6 @@ Gem::Specification.new do |s|
   "test/test_error_detector_http.rb",
   "test/test_follow_redirect.rb",
   "test/test_json_decode.rb",
-  "test/test_json_request.rb",
   "test/test_oauth1_header.rb",
   "test/test_payload.rb",
   "test/test_timeout.rb",
@@ -117,10 +114,8 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rest-client>, [">= 0"])
-      s.add_runtime_dependency(%q<multi_json>, [">= 0"])
     else
       s.add_dependency(%q<rest-client>, [">= 0"])
-      s.add_dependency(%q<multi_json>, [">= 0"])
     end
   else
     s.add_dependency(%q<rest-client>, [">= 0"])
