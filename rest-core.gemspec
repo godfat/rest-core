@@ -2,13 +2,13 @@
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "1.0.2"
+  s.version = "2.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2012-06-05"
+  s.date = "2012-07-13"
   s.description = "Modular Ruby clients interface for REST APIs\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed [rest-core][], which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-core]: https://github.com/cardinalblue/rest-core\n[rest-more]: https://github.com/cardinalblue/rest-more"
   s.email = ["dev (XD) cardinalblue.com"]
   s.files = [
@@ -26,19 +26,14 @@ Gem::Specification.new do |s|
   "doc/dependency.md",
   "doc/design.md",
   "example/auto.rb",
-  "example/coolio.rb",
   "example/eventmachine.rb",
+  "example/future.rb",
   "example/multi.rb",
   "example/rest-client.rb",
   "lib/rest-core.rb",
-  "lib/rest-core/app/abstract/async_fiber.rb",
+  "lib/rest-core/app/abstract/response_future.rb",
   "lib/rest-core/app/auto.rb",
-  "lib/rest-core/app/coolio-async.rb",
-  "lib/rest-core/app/coolio-fiber.rb",
-  "lib/rest-core/app/coolio.rb",
   "lib/rest-core/app/dry.rb",
-  "lib/rest-core/app/em-http-request-async.rb",
-  "lib/rest-core/app/em-http-request-fiber.rb",
   "lib/rest-core/app/em-http-request.rb",
   "lib/rest-core/app/rest-client.rb",
   "lib/rest-core/builder.rb",
@@ -67,7 +62,6 @@ Gem::Specification.new do |s|
   "lib/rest-core/middleware/oauth2_header.rb",
   "lib/rest-core/middleware/oauth2_query.rb",
   "lib/rest-core/middleware/timeout.rb",
-  "lib/rest-core/middleware/timeout/coolio_timer.rb",
   "lib/rest-core/middleware/timeout/eventmachine_timer.rb",
   "lib/rest-core/patch/rest-client.rb",
   "lib/rest-core/test.rb",
