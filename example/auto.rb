@@ -35,17 +35,3 @@ EM.run{
     EM.stop
   }.resume
 }
-
-puts
-
-client = YourClient.new(:cache => {})
-Coolio::TimerWatcher.new(1).attach(Coolio::Loop.default).on_timer{detach}
-client.get('cardinalblue'){ |response|
-  p response
-}
-Coolio::Loop.default.run
-
-puts
-Coolio::TimerWatcher.new(1).attach(Coolio::Loop.default).on_timer{detach}
-Fiber.new{ p client.get('cardinalblue') }.resume
-Coolio::Loop.default.run

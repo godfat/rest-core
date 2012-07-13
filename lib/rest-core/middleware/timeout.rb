@@ -21,7 +21,7 @@ class RestCore::Timeout
                  end
 
     case class_name
-    when /EmHttpRequest|Coolio/
+    when /EmHttpRequest/
       if root_fiber?
         yield(env.merge(TIMER => timeout_with_callback(env, class_name)))
       else
@@ -47,11 +47,6 @@ class RestCore::Timeout
     case class_name
     when /EmHttpRequest/
       EventMachineTimer.new(timeout(env), timeout_error)
-    when /Coolio/
-      timer = CoolioTimer.new(timeout(env))
-      timer.error = timeout_error
-      timer.attach(::Coolio::Loop.default)
-      timer
     else
       raise "BUG: #{run} is not supported"
     end
@@ -68,14 +63,6 @@ class RestCore::Timeout
         # case of fibers
       }
 
-    when /Coolio/
-      f = Fiber.current
-      timer = CoolioTimer.new(timeout(env))
-      error = timer.error = timeout_error
-      timer.on_timer{ f.resume(error) if f.alive? }
-      timer.attach(::Coolio::Loop.default)
-      timer
-
     else
       raise "BUG: #{run} is not supported"
     end
@@ -87,6 +74,4 @@ class RestCore::Timeout
 
   autoload :EventMachineTimer,
     'rest-core/middleware/timeout/eventmachine_timer'
-  autoload       :CoolioTimer,
-    'rest-core/middleware/timeout/coolio_timer'
 end

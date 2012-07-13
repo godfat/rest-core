@@ -12,10 +12,6 @@ class RestCore::Auto
     if Object.const_defined?(:EventMachine) && ::EventMachine.reactor_running?
       @emhttprequest ||= RestCore::EmHttpRequest.new
 
-    elsif Object.const_defined?(:Coolio) && ::Coolio::Loop.default.
-                                              has_active_watchers?
-      @coolio        ||= RestCore::Coolio.new
-
     else
       @restclient    ||= RestCore::RestClient.new
     end
