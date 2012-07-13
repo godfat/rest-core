@@ -22,13 +22,10 @@ class RestCore::Timeout
 
     case class_name
     when /EmHttpRequest/
-      if root_fiber?
+      if env[ASYNC]
         yield(env.merge(TIMER => timeout_with_callback(env, class_name)))
       else
-        timer = timeout_with_resume(env, class_name)
-        response = yield(env.merge(TIMER => timer))
-        timer.cancel unless timer.canceled?
-        response
+        yield(env.merge(TIMER => timeout_with_resume(  env, class_name)))
       end
     else
       ::Timeout.timeout(timeout(env)){ yield(env) }

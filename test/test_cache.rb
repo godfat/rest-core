@@ -40,14 +40,14 @@ describe RC::Cache do
     c = RC::Builder.client do
       use RC::Timeout, 10
       use RC::Cache, {}, 3600
-      run RC::EmHttpRequestFiber
+      run RC::EmHttpRequest
     end.new
     EM.run{ Fiber.new{
       c.request(RC::REQUEST_PATH => path).should.eq 'response'
       c.request(RC::REQUEST_PATH => path).should.eq 'response'
       EM.stop }.resume }
     c.cache.size.should.eq 1
-  end if defined?(Fiber)
+  end
 
   should 'cancel timeout for async' do
     path = 'http://example.com/'
@@ -58,7 +58,7 @@ describe RC::Cache do
     c = RC::Builder.client do
       use RC::Timeout, 10
       use RC::Cache, {}, 3600
-      run RC::EmHttpRequestAsync
+      run RC::EmHttpRequest
     end.new
     EM.run{
       c.request_full(RC::REQUEST_PATH => path){

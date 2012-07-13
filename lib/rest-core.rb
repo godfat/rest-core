@@ -14,6 +14,7 @@ module RestCore
   FAIL             = 'core.fail'
   LOG              = 'core.log'
 
+  ASYNC            = 'async.callback'
   TIMER            = 'async.timer'
 
   # core utilities
@@ -55,10 +56,7 @@ module RestCore
   autoload :Auto          , 'rest-core/app/auto'
   autoload :Dry           , 'rest-core/app/dry'
   autoload :RestClient    , 'rest-core/app/rest-client'
-  autoload :EmHttpRequest     , 'rest-core/app/em-http-request'
-  autoload :EmHttpRequestAsync, 'rest-core/app/em-http-request-async'
-  autoload :EmHttpRequestFiber, 'rest-core/app/em-http-request-fiber'
-  autoload :EmHttpRequestThunk, 'rest-core/app/em-http-request-thunk'
+  autoload :EmHttpRequest , 'rest-core/app/em-http-request'
 
   # clients
   autoload :Simple        , 'rest-core/client/simple'

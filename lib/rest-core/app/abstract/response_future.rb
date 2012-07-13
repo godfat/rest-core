@@ -1,12 +1,12 @@
 
 require 'rest-core'
 
-class RestCore::ResponseThunk
+class RestCore::ResponseFuture
   include RestCore
 
   class Proxy < BasicObject
-    def initialize thunk, target
-      @thunk, @target = thunk, target
+    def initialize future, target
+      @future, @target = future, target
     end
 
     def method_missing msg, *args, &block
@@ -14,20 +14,21 @@ class RestCore::ResponseThunk
     end
 
     def load
-      @thunk.yield[@target]
+      @future.yield[@target]
     end
 
     def loaded?
-      !!@thunk.status
+      !!@future.status
     end
   end
 
-  def initialize env, k
-    self.env      = env
-    self.k        = k
-    self.fiber    = Fiber.current
-    self.response = nil
+  def initialize env, k, immediate
+    self.env       = env
+    self.k         = k
+    self.fiber     = Fiber.current
+    self.response  = nil
     self.body, self.status, self.headers = nil, nil, nil
+    self.immediate = immediate
   end
 
   def proxy_body   ; Proxy.new(self, RESPONSE_BODY   ); end
@@ -35,7 +36,11 @@ class RestCore::ResponseThunk
   def proxy_headers; Proxy.new(self, RESPONSE_HEADERS); end
 
   def yield
-    Fiber.yield until status # it might be resumed by some other thunks!
+    Fiber.yield until status # it might be resumed by some other futures!
+    callback
+  end
+
+  def callback
     self.response ||= k.call(
       env.merge(RESPONSE_BODY    => body  ,
                 RESPONSE_STATUS  => status,
@@ -45,12 +50,17 @@ class RestCore::ResponseThunk
   def on_load body, status, headers
     env[TIMER].cancel if env[TIMER]
     self.body, self.status, self.headers = body, status, headers
-    fiber.resume if fiber.alive?
+    if immediate # no fibers are required in this case
+      callback
+    elsif fiber.alive?
+      fiber.resume
+    end
   rescue FiberError
     # whenever timeout, it would be already resumed,
     # and we have no way to tell if it's already resumed or not!
   end
 
   protected
-  attr_accessor :env, :k, :fiber, :response, :body, :status, :headers
+  attr_accessor :env, :k, :fiber, :response, :body, :status, :headers,
+                :immediate
 end

@@ -21,14 +21,14 @@ describe RC::Timeout do
     @app.call(env){ |e| e.should.eq(env) }
   end
 
-  should 'return correct result under fibers' do
+  should 'return correct result for futures' do
     path = 'http://example.com/'
     stub_request(:get, path).to_return(:body => 'response')
 
     c = RC::Builder.client do
       use RC::Timeout, 10
-      run RC::EmHttpRequestFiber
+      run RC::EmHttpRequest
     end.new
     EM.run{Fiber.new{c.get(path).should.eq('response');EM.stop}.resume}
-  end if defined?(Fiber)
+  end
 end

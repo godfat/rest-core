@@ -151,20 +151,21 @@ module RestCore::Client
   end
 
   def request_full env, app=app, &k
-    thunk = app.call(build_env(
+    future = app.call(build_env(
       {REQUEST_METHOD  => :get,
        REQUEST_PATH    => '/' ,
        REQUEST_QUERY   => {}  ,
        REQUEST_PAYLOAD => {}  ,
        REQUEST_HEADERS => {}  ,
        FAIL            => []  ,
-       LOG             => []  }.merge(env)),
+       LOG             => []  ,
+       ASYNC           => !!k }.merge(env)),
        &(k || Middleware.id))
 
     if block_given?
       self
     else
-      thunk
+      future
     end
   end
 

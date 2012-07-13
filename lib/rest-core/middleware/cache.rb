@@ -23,7 +23,7 @@ class RestCore::Cache
         end
 
     if cached = cache_get(e)
-      env[TIMER].cancel if env[TIMER] && !env[TIMER].canceled?
+      env[TIMER].cancel if env[TIMER]
       wrapped.call(cached, &k)
     else
       app.call(e){ |response| process(e, response, k) }
