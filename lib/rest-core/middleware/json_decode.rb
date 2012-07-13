@@ -24,6 +24,18 @@ class RestCore::JsonDecode
     fail(response, error)
   end
 
+  module MultiJson
+    def self.extended mod
+      mod.const_set(:ParseError, ::MultiJson::DecodeError)
+    end
+    def json_encode hash
+      ::MultiJson.dump(hash)
+    end
+    def json_decode json
+      ::MultiJson.load(json)
+    end
+  end
+
   module YajlRuby
     def self.extended mod
       mod.const_set(:ParseError, Yajl::ParseError)
@@ -48,34 +60,19 @@ class RestCore::JsonDecode
     end
   end
 
-  module Gsub
-    class ParseError < RuntimeError; end
-    def self.extended mod
-      mod.const_set(:ParseError, Gsub::ParseError)
-    end
-    # only works for flat hash
-    def json_encode hash
-      middle = hash.inject([]){ |r, (k, v)|
-                 r << "\"#{k}\":\"#{v.gsub('"','\\"')}\""
-               }.join(',')
-      "{#{middle}}"
-    end
-    def json_decode json
-      raise NotImplementedError.new(
-        'You need to install either yajl-ruby, json, or json_pure gem')
-    end
-  end
-
   def self.select_json! mod, picked=false
-    if    Object.const_defined?(:Yajl)
+    if    Object.const_defined?(:MultiJson)
+      mod.send(:extend, MultiJson)
+    elsif Object.const_defined?(:Yajl)
       mod.send(:extend, YajlRuby)
     elsif Object.const_defined?(:JSON)
       mod.send(:extend, Json)
     elsif picked
-      mod.send(:extend, Gsub)
+      raise LoadError.new(
+        'No JSON library found. Tried: multi_json, yajl-ruby, json.')
     else
       # pick a json gem if available
-      %w[yajl json].each{ |json|
+      %w[multi_json yajl json].each{ |json|
         begin
           require json
           break
