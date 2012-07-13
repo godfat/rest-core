@@ -26,6 +26,7 @@ class RestCore::JsonDecode
 
   module MultiJson
     def self.extended mod
+      require 'rest-core/patch/multi_json'
       mod.const_set(:ParseError, ::MultiJson::DecodeError)
     end
     def json_encode hash
