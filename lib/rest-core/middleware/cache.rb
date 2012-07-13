@@ -32,7 +32,7 @@ class RestCore::Cache
 
   def process env, response, k
     wrapped.call(response){ |response_wrapped|
-      k.call(process_wrapped(env, response_wrapped, response_wrapped))
+      k.call(process_wrapped(env, response, response_wrapped))
     }
   end
 
