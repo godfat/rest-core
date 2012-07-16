@@ -33,6 +33,7 @@ describe RC::Cache do
     c.cache.clear
     c.get('/')
     c.app.app.tick.should.eq 2
+    c.head('/').should.eq({'A' => 'B'})
   end
 
   should 'cancel timeout for fiber' do
