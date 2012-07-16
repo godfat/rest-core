@@ -44,7 +44,7 @@ class RestCore::Cache
     end
   end
 
-  protected
+  private
   def cache_key env
     Digest::MD5.hexdigest(env['cache.key'] || request_uri(env))
   end
