@@ -17,12 +17,16 @@ describe RC::Cache do
         end
         def call env
           self.tick +=1
-          yield(env.merge(RC::RESPONSE_BODY => 'response'))
+          yield(env.merge(RC::RESPONSE_BODY    => 'response',
+                          RC::RESPONSE_HEADERS => {'A' => 'B'}))
         end
       }
     end.new
     c.get('/')
-    c.cache.should.eq({Digest::MD5.hexdigest('/') => 'response'})
+    key = Digest::MD5.hexdigest('/')
+    c.cache.should.eq({key => 'response',
+                       "#{RC::RESPONSE_HEADERS}::#{key}" => 'A: B',
+                       "#{RC::RESPONSE_STATUS}::#{key}"  => ''})
     c.app.app.tick.should.eq 1
     c.get('/')
     c.app.app.tick.should.eq 1
@@ -46,7 +50,7 @@ describe RC::Cache do
       c.request(RC::REQUEST_PATH => path).should.eq 'response'
       c.request(RC::REQUEST_PATH => path).should.eq 'response'
       EM.stop }.resume }
-    c.cache.size.should.eq 1
+    c.cache.size.should.eq 3
   end
 
   should 'cancel timeout for async' do
@@ -64,7 +68,7 @@ describe RC::Cache do
       c.request_full(RC::REQUEST_PATH => path){
         c.request_full(RC::REQUEST_PATH => path){
           EM.stop }}}
-    c.cache.size.should.eq 1
+    c.cache.size.should.eq 3
   end
 
   should 'only [] and []= should be implemented' do

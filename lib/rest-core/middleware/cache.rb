@@ -17,7 +17,7 @@ class RestCore::Cache
 
   def call env, &k
     e = if env['cache.update'] && cache_for?(env)
-          cache_assign(env, nil)
+          cache_assign(env, :[]=)
         else
           env
         end
@@ -30,6 +30,7 @@ class RestCore::Cache
     end
   end
 
+  private
   def process env, response, k
     wrapped.call(response){ |response_wrapped|
       k.call(process_wrapped(env, response, response_wrapped))
@@ -44,50 +45,77 @@ class RestCore::Cache
     end
   end
 
-  private
   def cache_key env
     Digest::MD5.hexdigest(env['cache.key'] || request_uri(env))
+  end
+
+  def cache_key_headers env
+    "#{RESPONSE_HEADERS}::#{cache_key(env)}"
+  end
+
+  def cache_key_status env
+    "#{RESPONSE_STATUS}::#{cache_key(env)}"
   end
 
   def cache_get env
     return unless cache(env)
     start_time = Time.now
-    return unless value = cache(env)[cache_key(env)]
+    return unless body = cache_body(env)
     log(env, Event::CacheHit.new(Time.now - start_time, request_uri(env))).
-      merge(RESPONSE_BODY => value)
+      merge(RESPONSE_BODY    => body,
+            RESPONSE_HEADERS => cache_headers(env),
+            RESPONSE_STATUS  => cache_status( env))
   end
 
   def cache_for env, response
     return response unless cache(env)
     return response unless cache_for?(env)
 
-    value = response[RESPONSE_BODY]
-
     if expires_in(env).kind_of?(Fixnum) &&
        cache(env).respond_to?(:store)   &&
        cache(env).method(:store).arity == -3
-      cache(env).store(cache_key(env), value,
-                       :expires_in => expires_in(env))
-      response
+
+      cache_assign(response, :store, :expires_in => expires_in(env))
     else
-      cache_assign(response, value)
+      cache_assign(response, :[]=)
     end
   end
 
-  def cache_assign env, value
+  def cache_assign env, msg, *args
     return env unless cache(env)
 
     start_time = Time.now
-    cache(env)[cache_key(env)] = value
-    if value.nil?
+    body = env[RESPONSE_BODY]
+    headers, status = if body
+      [(env[RESPONSE_HEADERS]||{}).map{|k,v|"#{k}: #{v}"}.join("\n"),
+        env[RESPONSE_STATUS].to_s]
+    end
+
+    cache(env).send(msg, cache_key(        env), body   , *args)
+    cache(env).send(msg, cache_key_headers(env), headers, *args)
+    cache(env).send(msg, cache_key_status( env), status , *args)
+
+    if body
+      env
+    else
       log(env,
         Event::CacheCleared.new(Time.now - start_time, request_uri(env)))
-    else
-      env
     end
   end
 
   def cache_for? env
     [:get, :head, :otpions].include?(env[REQUEST_METHOD])
+  end
+
+  def cache_body env
+    cache(env)[cache_key(env)]
+  end
+
+  def cache_headers env
+    Hash[cache(env)[cache_key_headers(env)].scan(/([^:]+): ([^\n]+)\n?/)]
+  end
+
+  def cache_status env
+    cache(env)[cache_key_status(env)].to_i
   end
 end
