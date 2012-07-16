@@ -16,7 +16,7 @@ class RestCore::Cache
   end
 
   def call env, &k
-    e = if env['cache.update'] && env[REQUEST_METHOD] == :get
+    e = if env['cache.update'] && cache_for?(env)
           cache_assign(env, nil)
         else
           env
@@ -59,8 +59,7 @@ class RestCore::Cache
 
   def cache_for env, response
     return response unless cache(env)
-    # fake post (env['cache.post'] => true) is considered get and need cache
-    return response if env[REQUEST_METHOD] != :get unless env['cache.post']
+    return response unless cache_for?(env)
 
     value = response[RESPONSE_BODY]
 
@@ -86,5 +85,9 @@ class RestCore::Cache
     else
       env
     end
+  end
+
+  def cache_for? env
+    [:get, :head, :otpions].include?(env[REQUEST_METHOD])
   end
 end
