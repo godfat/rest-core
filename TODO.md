@@ -19,7 +19,6 @@
 
 # rest-core 2.0
 
-* multi_json
 * cache for headers
 * HTTP method in Requested log
 
