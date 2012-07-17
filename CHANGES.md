@@ -54,6 +54,9 @@ It's a bit outdated, but you can also checkout my blog post.
 ### Incompatible changes
 
 * [EmHttpRequestFiber] is removed in favor of `EmHttpRequest`
+* [Cache] Support for "cache.post" is removed.
+* [Cache] The cache key is changed accordingly to support cache for headers
+  and HTTP status. If you don't have persistent cache, this doesn't matter.
 * cool.io support is removed.
 * You must provide a block to `app.call(env){ ... }`
 
@@ -68,12 +71,15 @@ It's a bit outdated, but you can also checkout my blog post.
   such things in a HEAD request.
 
 * [JsonDecode] Now we prefer multi_json first, yajl-ruby second, lastly json.
+* [Cache] Now response headers and HTTP status are also cached.
+* [Cache] Not only GET requests are cached, HEAD and OPTIONS are cached too.
 
 ### Bugs fixes
 
 * [Cache] The cache object you passed in would only need to respond to
   `[]` and `[]=`. If the cache object accepts an `:expires_in` option,
   then it must also respond to `store`, too.
+* [ParseQuery] The fallback function for the absence of Rack is fixed.
 
 ## rest-core 1.0.2 -- 2012-06-05
 
