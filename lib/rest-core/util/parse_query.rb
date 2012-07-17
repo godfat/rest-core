@@ -12,8 +12,8 @@ module RestCore::ParseQuery
     def parse_query(qs, d = nil)
       params = {}
 
-      (qs || '').split(d ? /[#{d}] */n : DEFAULT_SEP).each do |p|
-        k, v = p.split('=', 2).map { |x| unescape(x) }
+      (qs || '').split(d ? /[#{d}] */n : /[&;] */n).each do |p|
+        k, v = p.split('=', 2).map { |x| URI.decode_www_form_component(x) }
         if cur = params[k]
           if cur.class == Array
             params[k] << v
