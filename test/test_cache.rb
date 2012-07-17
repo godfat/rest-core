@@ -18,22 +18,36 @@ describe RC::Cache do
         def call env
           self.tick +=1
           yield(env.merge(RC::RESPONSE_BODY    => 'response',
-                          RC::RESPONSE_HEADERS => {'A' => 'B'}))
+                          RC::RESPONSE_HEADERS => {'A' => 'B'},
+                          RC::RESPONSE_STATUS  => 200))
         end
       }
     end.new
     c.get('/')
     key = Digest::MD5.hexdigest('/')
-    c.cache.should.eq({key => 'response',
-                       "#{RC::RESPONSE_HEADERS}::#{key}" => 'A: B',
-                       "#{RC::RESPONSE_STATUS}::#{key}"  => ''})
+    c.cache.should.eq("get:#{RC::RESPONSE_BODY}:#{key}"    => 'response',
+                      "get:#{RC::RESPONSE_HEADERS}:#{key}" => 'A: B',
+                      "get:#{RC::RESPONSE_STATUS}:#{key}"  => '200')
     c.app.app.tick.should.eq 1
     c.get('/')
     c.app.app.tick.should.eq 1
     c.cache.clear
     c.get('/')
     c.app.app.tick.should.eq 2
-    c.head('/').should.eq({'A' => 'B'})
+    c.head('/').should.eq('A' => 'B')
+    c.get('/').should.eq 'response'
+    c.request({RC::REQUEST_PATH => '/'}, RC::RESPONSE_STATUS).should.eq 200
+  end
+
+  should 'head then get' do
+    c = RC::Builder.client do
+      use RC::Cache, {}, nil
+    end.new
+    path = 'http://example.com'
+    stub_request(:head, path).to_return(:headers => {'A' => 'B'})
+    c.head(path).should.eq('A' => 'B')
+    stub_request(:get , path).to_return(:body => 'body')
+    c.get(path).should.eq('body')
   end
 
   should 'cancel timeout for fiber' do
@@ -82,7 +96,8 @@ describe RC::Cache do
       use RC::Cache, cache, 0
       run Class.new{
         def call env
-          yield(env.merge(RC::RESPONSE_BODY => env[RC::REQUEST_PATH]))
+          yield(env.merge(RC::RESPONSE_BODY   => env[RC::REQUEST_PATH],
+                          RC::RESPONSE_STATUS => 200))
         end
       }
     end.new

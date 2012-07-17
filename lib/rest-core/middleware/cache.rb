@@ -30,6 +30,32 @@ class RestCore::Cache
     end
   end
 
+  def cache_key env
+    Digest::MD5.hexdigest(env['cache.key'] || request_uri(env))
+  end
+
+  def cache_key_body env
+    "#{env[REQUEST_METHOD]}:#{RESPONSE_BODY}:#{cache_key(env)}"
+  end
+
+  def cache_key_headers env
+    "#{env[REQUEST_METHOD]}:#{RESPONSE_HEADERS}:#{cache_key(env)}"
+  end
+
+  def cache_key_status env
+    "#{env[REQUEST_METHOD]}:#{RESPONSE_STATUS}:#{cache_key(env)}"
+  end
+
+  def cache_get env
+    return unless cache(env)
+    start_time = Time.now
+    return unless body = cache_body(env)
+    log(env, Event::CacheHit.new(Time.now - start_time, request_uri(env))).
+      merge(RESPONSE_BODY    => body,
+            RESPONSE_HEADERS => cache_headers(env),
+            RESPONSE_STATUS  => cache_status(env))
+  end
+
   private
   def process env, response, k
     wrapped.call(response){ |response_wrapped|
@@ -43,28 +69,6 @@ class RestCore::Cache
     else
       response_wrapped
     end
-  end
-
-  def cache_key env
-    Digest::MD5.hexdigest(env['cache.key'] || request_uri(env))
-  end
-
-  def cache_key_headers env
-    "#{RESPONSE_HEADERS}::#{cache_key(env)}"
-  end
-
-  def cache_key_status env
-    "#{RESPONSE_STATUS}::#{cache_key(env)}"
-  end
-
-  def cache_get env
-    return unless cache(env)
-    start_time = Time.now
-    return unless body = cache_body(env)
-    log(env, Event::CacheHit.new(Time.now - start_time, request_uri(env))).
-      merge(RESPONSE_BODY    => body,
-            RESPONSE_HEADERS => cache_headers(env),
-            RESPONSE_STATUS  => cache_status( env))
   end
 
   def cache_for env, response
@@ -85,13 +89,13 @@ class RestCore::Cache
     return env unless cache(env)
 
     start_time = Time.now
-    body = env[RESPONSE_BODY]
-    headers, status = if body
-      [(env[RESPONSE_HEADERS]||{}).map{|k,v|"#{k}: #{v}"}.join("\n"),
+    body, headers, status = if env[RESPONSE_STATUS]
+      [ env[RESPONSE_BODY],
+       (env[RESPONSE_HEADERS]||{}).map{|k,v|"#{k}: #{v}"}.join("\n"),
         env[RESPONSE_STATUS].to_s]
     end
 
-    cache(env).send(msg, cache_key(        env), body   , *args)
+    cache(env).send(msg, cache_key_body(   env), body   , *args)
     cache(env).send(msg, cache_key_headers(env), headers, *args)
     cache(env).send(msg, cache_key_status( env), status , *args)
 
@@ -108,7 +112,7 @@ class RestCore::Cache
   end
 
   def cache_body env
-    cache(env)[cache_key(env)]
+    cache(env)[cache_key_body(env)]
   end
 
   def cache_headers env
