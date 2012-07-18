@@ -13,7 +13,7 @@ class RestCore::FollowRedirect
     if e[DRY]
       app.call(e, &k)
     else
-      app.call(e){ |response| process(response, k) }
+      app.call(e){ |res| process(res, k) }
     end
   end
 

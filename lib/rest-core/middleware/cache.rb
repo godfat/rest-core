@@ -57,31 +57,31 @@ class RestCore::Cache
   end
 
   private
-  def process env, response, k
-    wrapped.call(response){ |response_wrapped|
-      k.call(process_wrapped(env, response, response_wrapped))
+  def process res, k
+    wrapped.call(res){ |res_wrapped|
+      k.call(process_wrapped(res, res_wrapped))
     }
   end
 
-  def process_wrapped env, response, response_wrapped
-    if (response_wrapped[FAIL] || []).empty?
-      cache_for(env, response).merge(response_wrapped)
+  def process_wrapped res, res_wrapped
+    if (res_wrapped[FAIL] || []).empty?
+      cache_for(res).merge(res_wrapped)
     else
-      response_wrapped
+      res_wrapped
     end
   end
 
-  def cache_for env, response
-    return response unless cache(env)
-    return response unless cache_for?(env)
+  def cache_for res
+    return response unless cache(res)
+    return response unless cache_for?(res)
 
-    if expires_in(env).kind_of?(Fixnum) &&
-       cache(env).respond_to?(:store)   &&
-       cache(env).method(:store).arity == -3
+    if expires_in(res).kind_of?(Fixnum) &&
+       cache(res).respond_to?(:store)   &&
+       cache(res).method(:store).arity == -3
 
-      cache_assign(response, :store, :expires_in => expires_in(env))
+      cache_assign(res, :store, :expires_in => expires_in(res))
     else
-      cache_assign(response, :[]=)
+      cache_assign(res, :[]=)
     end
   end
 
