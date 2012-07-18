@@ -115,4 +115,18 @@ describe RC::Cache do
     c.get('me').should.eq []
     c.cache.values.first.should.eq '[]'
   end
+
+  should "follow redirect with cache.update correctly" do
+    c = RC::Builder.client do
+      use RC::FollowRedirect, 10
+      use RC::Cache, {}, nil
+    end.new
+    x, y, z = 'http://X', 'http://Y', 'http://Z'
+    stub_request(:get, x).to_return(:headers => {'Location' => y},
+                                    :status  => 301)
+    stub_request(:get, y).to_return(:headers => {'Location' => z},
+                                    :status  => 302)
+    stub_request(:get, z).to_return(:body => 'OK')
+    c.get(x, {}, 'cache.update' => true).should.eq 'OK'
+  end
 end

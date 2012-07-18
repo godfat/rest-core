@@ -79,32 +79,31 @@ class RestCore::Cache
        cache(res).respond_to?(:store)   &&
        cache(res).method(:store).arity == -3
 
-      cache_assign(res, :store, :expires_in => expires_in(res))
+      cache_store(res, :store, :expires_in => expires_in(res))
     else
-      cache_assign(res, :[]=)
+      cache_store(res, :[]=)
     end
   end
 
-  def cache_assign env, msg, *args
-    return env unless cache(env)
-
+  def cache_assign env, msg, body=nil, headers=nil, status=nil, *args
     start_time = Time.now
-    body, headers, status = if env[RESPONSE_STATUS]
-      [ env[RESPONSE_BODY],
-       (env[RESPONSE_HEADERS]||{}).map{|k,v|"#{k}: #{v}"}.join("\n"),
-        env[RESPONSE_STATUS].to_s]
-    end
-
     cache(env).send(msg, cache_key_body(   env), body   , *args)
     cache(env).send(msg, cache_key_headers(env), headers, *args)
     cache(env).send(msg, cache_key_status( env), status , *args)
-
     if body
       env
     else
       log(env,
         Event::CacheCleared.new(Time.now - start_time, request_uri(env)))
     end
+  end
+
+  def cache_store env, msg, *args
+    return env unless cache(env)
+    return env unless env[RESPONSE_STATUS]
+    cache_assign(env, msg, env[RESPONSE_BODY],
+      (env[RESPONSE_HEADERS]||{}).map{|k,v|"#{k}: #{v}"}.join("\n"),
+       env[RESPONSE_STATUS].to_s, *args)
   end
 
   def cache_for? env
