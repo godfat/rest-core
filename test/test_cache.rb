@@ -39,6 +39,19 @@ describe RC::Cache do
     c.request({RC::REQUEST_PATH => '/'}, RC::RESPONSE_STATUS).should.eq 200
   end
 
+  should 'no cache' do
+    path = 'http://a'
+    stub_request(:get , path).to_return(:body => 'OK')
+    stub_request(:post, path).to_return(:body => 'OK')
+    c = RC::Builder.client do
+      use RC::Cache, nil, nil
+    end
+
+    c.new              . get(path)    .should.eq('OK')
+    c.new(:cache => (h={})).post(path).should.eq('OK')
+    h.should.eq({})
+  end
+
   should 'head then get' do
     c = RC::Builder.client do
       use RC::Cache, {}, nil

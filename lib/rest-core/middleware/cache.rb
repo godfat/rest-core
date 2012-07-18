@@ -72,8 +72,8 @@ class RestCore::Cache
   end
 
   def cache_for res
-    return response unless cache(res)
-    return response unless cache_for?(res)
+    return res unless cache(res)
+    return res unless cache_for?(res)
 
     if expires_in(res).kind_of?(Fixnum) &&
        cache(res).respond_to?(:store)   &&
