@@ -7,7 +7,7 @@ describe RC::Cache do
     RR.verify
   end
 
-  should 'basic' do
+  should 'basic 0' do
     c = RC::Builder.client do
       use RC::Cache, {}, 3600
       run Class.new{
@@ -39,7 +39,7 @@ describe RC::Cache do
     c.request({RC::REQUEST_PATH => '/'}, RC::RESPONSE_STATUS).should.eq 200
   end
 
-  should 'no cache' do
+  should 'basic 1' do
     path = 'http://a'
     stub_request(:get , path).to_return(:body => 'OK')
     stub_request(:post, path).to_return(:body => 'OK')
@@ -47,9 +47,15 @@ describe RC::Cache do
       use RC::Cache, nil, nil
     end
 
-    c.new              . get(path)    .should.eq('OK')
+    c.new                  . get(path).should.eq('OK')
     c.new(:cache => (h={})).post(path).should.eq('OK')
     h.should.eq({})
+    c.new(:cache => (h={})). get(path).should.eq('OK')
+    h.size.should.eq 3
+    c.new(:cache => (h={})). get(path, {}, :cache => false).should.eq('OK')
+    h.should.eq({})
+    c.new                  . get(path, {}, 'cache.update' => true).
+                                                            should.eq('OK')
   end
 
   should 'head then get' do

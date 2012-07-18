@@ -86,6 +86,7 @@ class RestCore::Cache
   end
 
   def cache_assign env, msg, body=nil, headers=nil, status=nil, *args
+    return env unless cache(env)
     start_time = Time.now
     cache(env).send(msg, cache_key_body(   env), body   , *args)
     cache(env).send(msg, cache_key_headers(env), headers, *args)
