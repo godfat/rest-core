@@ -46,7 +46,7 @@ module RestCore::Wrapper
       else
         middle.members
       end if middle.respond_to?(:members)
-    }.flatten
+    }.flatten.compact
   end
 
   def to_app app=init || default_app

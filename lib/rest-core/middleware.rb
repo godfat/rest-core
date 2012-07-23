@@ -14,8 +14,8 @@ module RestCore::Middleware
   def self.included mod
     mod.send(:include, RestCore)
     mod.send(:attr_reader, :app)
-    return unless mod.respond_to?(:members)
-    src = mod.members.map{ |member| <<-RUBY }
+    mem = if mod.respond_to?(:members) then mod.members else [] end
+    src = mem.map{ |member| <<-RUBY }
       def #{member} env
         if    env.key?('#{member}')
           env['#{member}']
@@ -24,7 +24,7 @@ module RestCore::Middleware
         end
       end
     RUBY
-    args      = [:app] + mod.members
+    args      = [:app] + mem
     para_list = args.map{ |a| "#{a}=nil"}.join(', ')
     args_list = args                     .join(', ')
     ivar_list = args.map{ |a| "@#{a}"   }.join(', ')

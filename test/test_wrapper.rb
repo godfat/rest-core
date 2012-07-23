@@ -27,4 +27,10 @@ describe RC::Wrapper do
     wrapper.default_app = RC::RestClient
     wrapper.new.wrapped.class.should.eq RC::RestClient
   end
+
+  should 'accept middlewares without a member' do
+    Class.new.send(:include, RC::Wrapper).new{
+      use Class.new.send(:include, RC::Middleware)
+    }.members.should.eq []
+  end
 end
