@@ -32,14 +32,6 @@ class RestCore::Timeout
     end
   end
 
-  def root_fiber?
-    if RestCore.const_defined?(:RootFiber)
-      RootFiber == Fiber.current
-    else
-      true
-    end
-  end
-
   def timeout_with_callback env, class_name
     case class_name
     when /EmHttpRequest/
