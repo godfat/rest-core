@@ -22,38 +22,10 @@ class RestCore::Timeout
 
     case class_name
     when /EmHttpRequest/
-      if env[ASYNC]
-        yield(env.merge(TIMER => timeout_with_callback(env, class_name)))
-      else
-        yield(env.merge(TIMER => timeout_with_resume(  env, class_name)))
-      end
+      yield(env.merge(TIMER =>
+        EventMachineTimer.new(timeout(env), timeout_error)))
     else
       ::Timeout.timeout(timeout(env)){ yield(env) }
-    end
-  end
-
-  def timeout_with_callback env, class_name
-    case class_name
-    when /EmHttpRequest/
-      EventMachineTimer.new(timeout(env), timeout_error)
-    else
-      raise "BUG: #{run} is not supported"
-    end
-  end
-
-  def timeout_with_resume env, class_name
-    case class_name
-    when /EmHttpRequest/
-      f = Fiber.current
-      EventMachineTimer.new(timeout(env), error = timeout_error){
-        f.resume(error) if f.alive?
-        # no need to check if the fiber is already resumed or not,
-        # because monitor should have already handled this in the
-        # case of fibers
-      }
-
-    else
-      raise "BUG: #{run} is not supported"
     end
   end
 

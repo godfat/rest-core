@@ -21,6 +21,14 @@ class RestCore::EmHttpRequest
     client.callback{ process(future, client) }
     client. errback{ process(future, client) }
 
+    f = Fiber.current
+    env[TIMER].on_timeout{
+      (client.instance_variable_get(:@callbacks)||[]).clear
+      (client.instance_variable_get(:@errbacks )||[]).clear
+      client.close
+      future.on_load(env[TIMER].error, 0, {})
+    }
+
     env.merge(RESPONSE_BODY    => future.proxy_body,
               RESPONSE_STATUS  => future.proxy_status,
               RESPONSE_HEADERS => future.proxy_headers)
