@@ -24,10 +24,8 @@ describe RC::Cache do
       }
     end.new
     c.get('/')
-    key = Digest::MD5.hexdigest('/')
-    c.cache.should.eq("get:#{RC::RESPONSE_BODY}:#{key}"    => 'response',
-                      "get:#{RC::RESPONSE_HEADERS}:#{key}" => 'A: B',
-                      "get:#{RC::RESPONSE_STATUS}:#{key}"  => '200')
+    key = Digest::MD5.hexdigest('get:/:')
+    c.cache.should.eq("rest-core:cache:#{key}" => "200\nA: B\n\nresponse")
     c.app.app.tick.should.eq 1
     c.get('/')
     c.app.app.tick.should.eq 1
@@ -51,11 +49,21 @@ describe RC::Cache do
     c.new(:cache => (h={})).post(path).should.eq('OK')
     h.should.eq({})
     c.new(:cache => (h={})). get(path).should.eq('OK')
-    h.size.should.eq 3
+    h.size.should.eq 1
     c.new(:cache => (h={})). get(path, {}, :cache => false).should.eq('OK')
     h.should.eq({})
     c.new                  . get(path, {}, 'cache.update' => true).
                                                             should.eq('OK')
+  end
+
+  should 'not raise error if headers is nil' do
+    path = 'http://a'
+    stub_request(:get , path).to_return(:body => 'OK', :headers => nil)
+    c = RC::Builder.client do
+      use RC::Cache, {}, nil
+    end.new
+    c.get(path).should.eq 'OK'
+    c.get(path).should.eq 'OK'
   end
 
   should 'head then get' do
@@ -84,7 +92,7 @@ describe RC::Cache do
       c.request(RC::REQUEST_PATH => path).should.eq 'response'
       c.request(RC::REQUEST_PATH => path).should.eq 'response'
       EM.stop }.resume }
-    c.cache.size.should.eq 3
+    c.cache.size.should.eq 1
   end
 
   should 'cancel timeout for async' do
@@ -102,14 +110,14 @@ describe RC::Cache do
       c.request_full(RC::REQUEST_PATH => path){
         c.request_full(RC::REQUEST_PATH => path){
           EM.stop }}}
-    c.cache.size.should.eq 3
+    c.cache.size.should.eq 1
   end
 
   should 'only [] and []= should be implemented' do
     cache = Class.new do
-      def initialize    ; @h = {}            ; end
-      def []  key       ; @h[key]            ; end
-      def []= key, value; @h[key] = value * 2; end
+      def initialize    ; @h = {}                      ; end
+      def []  key       ; @h[key]                      ; end
+      def []= key, value; @h[key] = value.sub('4', '5'); end
     end.new
     c = RC::Builder.client do
       use RC::Cache, cache, 0
@@ -121,7 +129,7 @@ describe RC::Cache do
       }
     end.new
     c.get('4')
-    c.get('4').should.eq '44'
+    c.get('4').should.eq '5'
   end
 
   should 'cache the original response' do
@@ -130,9 +138,9 @@ describe RC::Cache do
         use RC::JsonDecode, true
       end
     end.new
-    stub_request(:get, 'me').to_return(:body => '[]')
-    c.get('me').should.eq []
-    c.cache.values.first.should.eq '[]'
+    stub_request(:get, 'me').to_return(:body => body = '{"a":"b"}')
+    c.get('me').should.eq 'a' => 'b'
+    c.cache.values.first.should.eq "200\n\n\n#{body}"
   end
 
   should "follow redirect with cache.update correctly" do
@@ -147,5 +155,60 @@ describe RC::Cache do
                                     :status  => 302)
     stub_request(:get, z).to_return(:body => 'OK')
     c.get(x, {}, 'cache.update' => true).should.eq 'OK'
+  end
+
+  should 'not cache post/put/delete' do
+    [:put, :post, :delete].each{ |meth|
+      url, body = "https://cache", 'ok'
+      stub_request(meth, url).to_return(:body => body).times(3)
+
+      cache = {}
+      c = RC::Builder.client{use RC::Cache, cache, nil}.new
+      3.times{
+        if meth == :delete
+          c.send(meth, url).should.eq(body)
+        else
+          c.send(meth, url, 'payload').should.eq(body)
+        end
+      }
+      cache.should.eq({})
+    }
+  end
+
+  should 'update cache if there is cache option set to false' do
+    url, body = "https://cache", 'ok'
+    stub_request(:get, url).to_return(:body => body)
+    c = RC::Builder.client{use RC::Cache, {}, nil}.new
+
+    c.get(url)                            .should.eq body
+    stub_request(:get, url).to_return(:body => body.reverse).times(2)
+    c.get(url)                            .should.eq body
+    c.get(url, {}, 'cache.update' => true).should.eq body.reverse
+    c.get(url)                            .should.eq body.reverse
+    c.cache = nil
+    c.get(url, {}, 'cache.update' => true).should.eq body.reverse
+  end
+
+  describe 'expires_in' do
+    before do
+      @url, @body = "https://cache", 'ok'
+      stub_request(:get, @url).to_return(:body => @body)
+      @cache = {}
+      mock(@cache).method(:store){ mock!.arity{ -3 } }
+      mock(@cache).store(is_a(String), is_a(String), :expires_in => 3)
+      @cache
+    end
+
+    should 'respect in options' do
+      cache = @cache # we need closure
+      c = RC::Builder.client{use RC::Cache, cache, nil}.new
+      c.get(@url, {}, :expires_in => 3).should.eq @body
+    end
+
+    should 'respect in middleware' do
+      cache = @cache # we need closure
+      c = RC::Builder.client{use RC::Cache, cache,   3}.new
+      c.get(@url).should.eq @body
+    end
   end
 end

@@ -16,8 +16,8 @@ class RestCore::Cache
   end
 
   def call env, &k
-    e = if env['cache.update'] && cache_for?(env)
-          cache_assign(env, :[]=)
+    e = if env['cache.update']
+          cache_clear(env)
         else
           env
         end
@@ -26,49 +26,41 @@ class RestCore::Cache
       e[TIMER].cancel if e[TIMER]
       wrapped.call(cached, &k)
     else
-      app.call(e){ |res| process(res, k) }
+      app.call(e){ |res|
+        wrapped.call(res){ |res_wrapped|
+          k.call(if (res_wrapped[FAIL] || []).empty?
+                   cache_for(res).merge(res_wrapped)
+                 else
+                   res_wrapped
+                 end)}}
     end
   end
 
   def cache_key env
-    Digest::MD5.hexdigest(env['cache.key'] || request_uri(env))
-  end
-
-  def cache_key_body env
-    "#{env[REQUEST_METHOD]}:#{RESPONSE_BODY}:#{cache_key(env)}"
-  end
-
-  def cache_key_headers env
-    "#{env[REQUEST_METHOD]}:#{RESPONSE_HEADERS}:#{cache_key(env)}"
-  end
-
-  def cache_key_status env
-    "#{env[REQUEST_METHOD]}:#{RESPONSE_STATUS}:#{cache_key(env)}"
+    "rest-core:cache:#{Digest::MD5.hexdigest(env['cache.key'] ||
+                                             cache_key_raw(env))}"
   end
 
   def cache_get env
     return unless cache(env)
+    return unless cache_for?(env)
+
     start_time = Time.now
-    return unless body = cache_body(env)
+    return unless data = cache(env)[cache_key(env)]
     log(env, Event::CacheHit.new(Time.now - start_time, request_uri(env))).
-      merge(RESPONSE_BODY    => body,
-            RESPONSE_HEADERS => cache_headers(env),
-            RESPONSE_STATUS  => cache_status(env))
+      merge(data_extract(data))
   end
 
   private
-  def process res, k
-    wrapped.call(res){ |res_wrapped|
-      k.call(process_wrapped(res, res_wrapped))
-    }
+  def cache_key_raw env
+    "#{env[REQUEST_METHOD]}:#{request_uri(env)}:#{header_cache_key(env)}"
   end
 
-  def process_wrapped res, res_wrapped
-    if (res_wrapped[FAIL] || []).empty?
-      cache_for(res).merge(res_wrapped)
-    else
-      res_wrapped
-    end
+  def cache_clear env
+    return env unless cache(env)
+    return env unless cache_for?(env)
+
+    cache_store(env, :[]=, nil)
   end
 
   def cache_for res
@@ -79,47 +71,43 @@ class RestCore::Cache
        cache(res).respond_to?(:store)   &&
        cache(res).method(:store).arity == -3
 
-      cache_store(res, :store, :expires_in => expires_in(res))
+      cache_store(res, :store, data_construct(res),
+                                 :expires_in => expires_in(res))
     else
-      cache_store(res, :[]=)
+      cache_store(res, :[]=  , data_construct(res))
     end
   end
 
-  def cache_assign env, msg, body=nil, headers=nil, status=nil, *args
-    return env unless cache(env)
+  def cache_store res, msg, value, *args
     start_time = Time.now
-    cache(env).send(msg, cache_key_body(   env), body   , *args)
-    cache(env).send(msg, cache_key_headers(env), headers, *args)
-    cache(env).send(msg, cache_key_status( env), status , *args)
-    if body
-      env
+    cache(res).send(msg, cache_key(res), value, *args)
+
+    if value
+      res
     else
-      log(env,
-        Event::CacheCleared.new(Time.now - start_time, request_uri(env)))
+      log(res,
+        Event::CacheCleared.new(Time.now - start_time, request_uri(res)))
     end
   end
 
-  def cache_store env, msg, *args
-    return env unless cache(env)
-    return env unless env[RESPONSE_STATUS]
-    cache_assign(env, msg, env[RESPONSE_BODY],
-      (env[RESPONSE_HEADERS]||{}).map{|k,v|"#{k}: #{v}"}.join("\n"),
-       env[RESPONSE_STATUS].to_s, *args)
+  def data_construct res
+    "#{ res[RESPONSE_STATUS]}\n" \
+    "#{(res[RESPONSE_HEADERS]||{}).map{|k,v|"#{k}: #{v}"}.join("\n")}\n\n" \
+    "#{ res[RESPONSE_BODY]}"
+  end
+
+  def data_extract data
+    _ ,status, headers, body = data.match(/\A(.*)\n(.*)\n\n(.*)\Z/m).to_a
+    {RESPONSE_BODY    => body,
+     RESPONSE_HEADERS => Hash[(headers||'').scan(/([^:]+): ([^\n]+)\n?/)],
+     RESPONSE_STATUS  => status.to_i}
   end
 
   def cache_for? env
     [:get, :head, :otpions].include?(env[REQUEST_METHOD])
   end
 
-  def cache_body env
-    cache(env)[cache_key_body(env)]
-  end
-
-  def cache_headers env
-    Hash[cache(env)[cache_key_headers(env)].scan(/([^:]+): ([^\n]+)\n?/)]
-  end
-
-  def cache_status env
-    cache(env)[cache_key_status(env)].to_i
+  def header_cache_key env
+    (env[REQUEST_HEADERS]||{}).sort.map{|(k,v)|"#{k}=#{v}"}.join('&')
   end
 end

@@ -21,13 +21,7 @@ class RestCore::Oauth1Header
     event = Event::WithHeader.new(Time.now - start_time,
               "Authorization: #{headers['Authorization']}")
 
-    app.call(
-      log(cache_key(env.merge(REQUEST_HEADERS => headers)), event), &k)
-  end
-
-  def cache_key env
-    env.merge('cache.key' =>
-      "#{request_uri(env)}&#{oauth_token(env)}&#{oauth_token_secret(env)}")
+    app.call(log(env.merge(REQUEST_HEADERS => headers), event), &k)
   end
 
   def oauth_header env
