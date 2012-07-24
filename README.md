@@ -41,18 +41,15 @@ dedicated clients provided by [rest-more][].
 
 ### Mandatory:
 
-* MRI (official CRuby) 1.8.7, 1.9.2, 1.9.3, Rubinius 1.8/1.9 and JRuby 1.8/1.9
+* MRI (official CRuby) 1.9.2, 1.9.3, Rubinius 1.9 and JRuby 1.9
 * gem rest-client
 
 ### Optional:
 
-* Fibers only work on Ruby 1.9+
 * gem [em-http-request][] (if using eventmachine)
-* gem [cool.io-http][] (if using cool.io)
-* gem json or yajl-ruby (if using `JsonDecode` middleware)
+* gem json or yajl-ruby, or multi_json (if using `JsonDecode` middleware)
 
 [em-http-request]: https://github.com/igrigorik/em-http-request
-[cool.io-http]: https://github.com/godfat/cool.io-http
 
 ## INSTALLATION:
 
