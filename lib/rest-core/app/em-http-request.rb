@@ -1,10 +1,11 @@
 
+require 'fiber'
+
 require 'em-http-request'
+require 'restclient/payload'
 
 require 'rest-core/app/abstract/response_future'
 require 'rest-core/middleware'
-
-require 'restclient/payload'
 
 class RestCore::EmHttpRequest
   include RestCore::Middleware
