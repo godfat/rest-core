@@ -54,9 +54,11 @@ It's a bit outdated, but you can also checkout my blog post.
 ### Incompatible changes
 
 * [EmHttpRequestFiber] is removed in favor of `EmHttpRequest`
+
 * [Cache] Support for "cache.post" is removed.
 * [Cache] The cache key is changed accordingly to support cache for headers
   and HTTP status. If you don't have persistent cache, this doesn't matter.
+
 * cool.io support is removed.
 * You must provide a block to `app.call(env){ ... }`
 
@@ -71,11 +73,18 @@ It's a bit outdated, but you can also checkout my blog post.
   such things in a HEAD request.
 
 * [JsonDecode] Now we prefer multi_json first, yajl-ruby second, lastly json.
+* [CommonLogger] Now we log the request method as well.
+
 * [Cache] Now response headers and HTTP status are also cached.
 * [Cache] Not only GET requests are cached, HEAD and OPTIONS are cached too.
+* [Cache] The cache key is also respecting the request headers too. Suppose
+  you're making a request with different Accept header.
 
 ### Bugs fixes
 
+* [Middleware] Sort the query before generating the request URI, making
+  sure the order is always the same.
+* [Middleware] The middleware could have no members at all.
 * [Cache] The cache object you passed in would only need to respond to
   `[]` and `[]=`. If the cache object accepts an `:expires_in` option,
   then it must also respond to `store`, too.
