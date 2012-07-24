@@ -1,17 +1,12 @@
 
 require 'rest-core'
 require 'eventmachine'
-RestCore::EmHttpRequest # there might be a autoload bug?
-                        # omitting this line would cause
-                        # stack level too deep (SystemStackError)
 
-YourClient = RestCore::Builder.client do
-  s = RestCore
-  use s::DefaultSite , 'https://api.github.com/users/'
-  use s::JsonDecode  , true
-  use s::CommonLogger, method(:puts)
-  use s::Cache       , nil, 3600
-  run s::Auto
+YourClient = RC::Builder.client do
+  use RC::DefaultSite , 'https://api.github.com/users/'
+  use RC::JsonDecode  , true
+  use RC::CommonLogger, method(:puts)
+  use RC::Cache       , nil, 3600
 end
 
 client = YourClient.new

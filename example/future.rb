@@ -2,11 +2,10 @@
 require 'rest-core'
 require 'eventmachine'
 
-client = RestCore::Builder.client{
+client = RC::Builder.client{
   use RC::DefaultSite, 'https://graph.facebook.com/'
   use RC::CommonLogger, method(:puts)
   use RC::JsonDecode, true
-  run RC::EmHttpRequest
 }.new
 
 EM.run{
