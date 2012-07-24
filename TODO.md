@@ -17,9 +17,4 @@
 * RC::JsonRequest
 * RC::FakeGetWithPayload
 
-# rest-core 2.0
-
-* cache for headers
-* HTTP method in Requested log
-
 # rest-request

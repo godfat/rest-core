@@ -29,6 +29,7 @@ class RestCore::CommonLogger
   end
 
   def log_request start_time, response
-    Event::Requested.new(Time.now - start_time, request_uri(response))
+    Event::Requested.new(Time.now - start_time,
+      "#{response[RC::REQUEST_METHOD].to_s.upcase} #{request_uri(response)}")
   end
 end
