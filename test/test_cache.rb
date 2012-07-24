@@ -200,14 +200,12 @@ describe RC::Cache do
     end
 
     should 'respect in options' do
-      cache = @cache # we need closure
-      c = RC::Builder.client{use RC::Cache, cache, nil}.new
-      c.get(@url, {}, :expires_in => 3).should.eq @body
+      c = RC::Builder.client{use RC::Cache, nil, nil}.new
+      c.get(@url, {}, :cache => @cache, :expires_in => 3).should.eq @body
     end
 
     should 'respect in middleware' do
-      cache = @cache # we need closure
-      c = RC::Builder.client{use RC::Cache, cache,   3}.new
+      c = RC::Builder.client{use RC::Cache, nil,   3}.new(:cache => @cache)
       c.get(@url).should.eq @body
     end
   end
