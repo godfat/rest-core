@@ -53,20 +53,10 @@ module RestCore::Wrapper
     # === foldr m.new app middles
     middles.reverse.inject(app.new){ |app_, (middle, args, block)|
       begin
-        middle.new(app_, *partial_deep_copy(args), &block)
+        middle.new(app_, *args, &block)
       rescue ArgumentError => e
         raise ArgumentError.new("#{middle}: #{e}")
       end
     }
-  end
-
-  module_function
-  def partial_deep_copy obj
-    case obj
-      when Array; obj.map{ |o| partial_deep_copy(o) }
-      when Hash ; obj.inject({}){ |r, (k, v)| r[k] = partial_deep_copy(v); r }
-      when Numeric, Symbol, TrueClass, FalseClass, NilClass; obj
-      else begin obj.dup; rescue TypeError; obj; end
-    end
   end
 end
