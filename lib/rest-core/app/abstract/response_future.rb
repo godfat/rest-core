@@ -44,7 +44,8 @@ class RestCore::ResponseFuture
     self.response ||= k.call(
       env.merge(RESPONSE_BODY    => body  ,
                 RESPONSE_STATUS  => status,
-                RESPONSE_HEADERS => headers))
+                RESPONSE_HEADERS => headers,
+                FAIL             => [env[FAIL], error].flatten.compact))
   end
 
   def on_load body, status, headers
@@ -60,7 +61,12 @@ class RestCore::ResponseFuture
     # and we have no way to tell if it's already resumed or not!
   end
 
+  def on_error error
+    self.error = error
+    on_load('', 0, {})
+  end
+
   protected
-  attr_accessor :env, :k, :fiber, :response, :body, :status, :headers,
-                :immediate
+  attr_accessor :env, :k, :immediate,
+                :fiber, :response, :body, :status, :headers, :error
 end

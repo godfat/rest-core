@@ -10,7 +10,7 @@ require 'yaml'
 
 include RR::Adapters::RRMethods
 include WebMock::API
-WebMock.disable_net_connect!
+WebMock.disable_net_connect!(:allow_localhost => true)
 Bacon.summary_on_exit
 
 module TestHelper
