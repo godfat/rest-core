@@ -7,23 +7,33 @@ class RestCore::ErrorHandler
 
   def call env
     app.call(env){ |res|
-      yield(if res[FAIL] && res[FAIL].empty? # no errors at all
+      yield(if (res[FAIL] || []).empty? # no errors at all
               res
             else
-              error = if error_handler(res)
-                        error_handler(res).call(res)
-                      else
-                        nil
-                      end
-              if res[ASYNC] # in async mode, we report all errors
-                err = [res[FAIL], error].flatten.compact
-                res.merge(RESPONSE_BODY => err, FAIL => err)
-              # if user provides an exception,
-              elsif error.kind_of?(Exception)
-                raise error # raise it
-              else          # otherwise return it
-                error
+              # if there's an exception, hand it over
+              if err = res[FAIL].find{ |e| e.kind_of?(Exception) }
+                process(res, err)
+
+              elsif h = error_handler(res)
+                # if the user provides an exception, hand it over
+                if (err = h.call(res)).kind_of?(Exception)
+                  process(res, err)
+
+                else # otherwise we report all of them
+                  res.merge(FAIL => [res[FAIL], err].flatten.compact)
+
+                end
+              else # no exceptions at all, then do nothing
+                res
               end
             end)}
+  end
+
+  def process res, err
+    if res[ASYNC]
+      res.merge(RESPONSE_BODY => err)
+    else
+      raise err
+    end
   end
 end

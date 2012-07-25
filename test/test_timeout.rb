@@ -85,7 +85,7 @@ describe RC::Timeout do
         EM.start_server '127.0.0.1', port, Module.new{
           def receive_data data; end
         }
-        c.get(path){ |e| e.first.should.kind_of ::Timeout::Error; EM.stop }
+        c.get(path){ |e| e.should.kind_of ::Timeout::Error; EM.stop }
       }
     end
   end
