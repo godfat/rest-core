@@ -77,13 +77,7 @@ describe RC::Timeout do
 
       c = RC::Builder.client do
         use RC::Timeout, 0.00001
-        use RC::ErrorHandler, lambda{ |env|
-          if env[RC::ASYNC] && !env[RC::FAIL].empty?
-            env.merge(RC::RESPONSE_BODY => env[RC::FAIL])
-          else
-            env
-          end
-        }
+        use RC::ErrorAsyncPass
         run RC::EmHttpRequest
       end.new
 
