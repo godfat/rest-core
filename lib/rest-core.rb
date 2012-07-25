@@ -42,7 +42,6 @@ module RestCore
   autoload :DefaultPayload, 'rest-core/middleware/default_payload'
   autoload :DefaultSite   , 'rest-core/middleware/default_site'
   autoload :Defaults      , 'rest-core/middleware/defaults'
-  autoload :ErrorAsyncPass, 'rest-core/middleware/error_async_pass'
   autoload :ErrorDetector , 'rest-core/middleware/error_detector'
   autoload :ErrorDetectorHttp, 'rest-core/middleware/error_detector_http'
   autoload :ErrorHandler  , 'rest-core/middleware/error_handler'

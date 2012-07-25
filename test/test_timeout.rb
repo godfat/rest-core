@@ -77,7 +77,7 @@ describe RC::Timeout do
 
       c = RC::Builder.client do
         use RC::Timeout, 0.00001
-        use RC::ErrorAsyncPass
+        use RC::ErrorHandler
         run RC::EmHttpRequest
       end.new
 
