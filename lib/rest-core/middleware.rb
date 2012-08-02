@@ -64,4 +64,20 @@ module RestCore::Middleware
     end
   end
   public :request_uri
+
+  def string_keys hash
+    hash.inject({}){ |r, (k, v)|
+      if v.kind_of?(Hash)
+        r[k.to_s] = case k.to_s
+                      when REQUEST_QUERY, REQUEST_PAYLOAD, REQUEST_HEADERS
+                        string_keys(v)
+                      else;         v
+                    end
+      else
+        r[k.to_s] = v
+      end
+      r
+    }
+  end
+  public :string_keys
 end

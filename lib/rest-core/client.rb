@@ -170,28 +170,13 @@ module RestCore::Client
   end
 
   def build_env env={}
-    string_keys(attributes).merge(string_keys(env))
+    Middleware.string_keys(attributes).merge(Middleware.string_keys(env))
   end
   # ------------------------ instance ---------------------
 
 
 
   private
-  def string_keys hash
-    hash.inject({}){ |r, (k, v)|
-      if v.kind_of?(Hash)
-        r[k.to_s] = case k.to_s
-                      when REQUEST_QUERY, REQUEST_PAYLOAD, REQUEST_HEADERS
-                        string_keys(v)
-                      else;         v
-                    end
-      else
-        r[k.to_s] = v
-      end
-      r
-    }
-  end
-
   def lighten_hash hash
     Hash[hash.map{ |(key, value)|
       case value
