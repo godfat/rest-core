@@ -22,6 +22,13 @@ describe RC::DefaultQuery do
       @app.call(env){ |r|
         r.should.eq({RC::REQUEST_QUERY => {'q' => 'uery'}.merge(format)}) }
     end
+
+    should 'string_keys in query' do
+      env = {'query' => {:symbol => 'value'}}
+      @app.call(env){ |r|
+        r.should.eq({RC::REQUEST_QUERY => {'symbol' => 'value'}}.merge(env))
+      }
+    end
   end
 
   describe 'when not given query' do
