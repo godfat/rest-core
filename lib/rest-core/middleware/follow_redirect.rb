@@ -32,7 +32,7 @@ class RestCore::FollowRedirect
 
     call(res.merge(REQUEST_PATH    => location,
                    REQUEST_METHOD  => meth    ,
-                   REQUEST_PAYLOAD => nil     ,
+                   REQUEST_PAYLOAD => {}      ,
                    'follow_redirect.max_redirects' =>
                      res['follow_redirect.max_redirects'] - 1), &k)
   end

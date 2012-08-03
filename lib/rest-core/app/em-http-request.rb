@@ -13,8 +13,9 @@ class RestCore::EmHttpRequest
     payload = ::RestClient::Payload.generate(env[REQUEST_PAYLOAD])
     client  = ::EventMachine::HttpRequest.new(request_uri(env)).send(
                  env[REQUEST_METHOD],
-                 :body => payload.read,
-                 :head => payload.headers.merge(env[REQUEST_HEADERS]))
+                 :body => payload && payload.read,
+                 :head => payload && payload.headers.
+                                               merge(env[REQUEST_HEADERS]))
 
     future = ResponseFuture.new(env, k, env[ASYNC])
 
