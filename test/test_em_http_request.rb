@@ -10,4 +10,11 @@ describe RC::EmHttpRequest do
       EM.stop
     }.resume}
   end
+
+  should 'never crash EM!' do
+    EM.error_handler{ |e| e.should.kind_of?(NoMethodError); EM.stop}
+    EM.run{Fiber.new{
+      RC::Simple.new.get('http://localhost:1').no_such_method
+    }.resume}
+  end
 end

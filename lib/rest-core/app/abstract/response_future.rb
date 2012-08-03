@@ -54,7 +54,7 @@ class RestCore::ResponseFuture
     if immediate # no fibers are required in this case
       callback
     elsif fiber.alive?
-      fiber.resume
+      EM.next_tick{ fiber.resume }
     end
   rescue FiberError
     # whenever timeout, it would be already resumed,
