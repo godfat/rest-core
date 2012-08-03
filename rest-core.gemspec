@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2012-07-26"
+  s.date = "2012-08-04"
   s.description = "Modular Ruby clients interface for REST APIs\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed [rest-core][], which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-core]: https://github.com/cardinalblue/rest-core\n[rest-more]: https://github.com/cardinalblue/rest-more"
   s.email = ["dev (XD) cardinalblue.com"]
   s.files = [
@@ -78,12 +78,15 @@ Gem::Specification.new do |s|
   "test/test_client.rb",
   "test/test_client_oauth1.rb",
   "test/test_default_query.rb",
+  "test/test_em_http_request.rb",
   "test/test_error_detector.rb",
   "test/test_error_detector_http.rb",
+  "test/test_error_handler.rb",
   "test/test_follow_redirect.rb",
   "test/test_json_decode.rb",
   "test/test_oauth1_header.rb",
   "test/test_payload.rb",
+  "test/test_simple.rb",
   "test/test_timeout.rb",
   "test/test_universal.rb",
   "test/test_wrapper.rb"]
@@ -98,12 +101,15 @@ Gem::Specification.new do |s|
   "test/test_client.rb",
   "test/test_client_oauth1.rb",
   "test/test_default_query.rb",
+  "test/test_em_http_request.rb",
   "test/test_error_detector.rb",
   "test/test_error_detector_http.rb",
+  "test/test_error_handler.rb",
   "test/test_follow_redirect.rb",
   "test/test_json_decode.rb",
   "test/test_oauth1_header.rb",
   "test/test_payload.rb",
+  "test/test_simple.rb",
   "test/test_timeout.rb",
   "test/test_universal.rb",
   "test/test_wrapper.rb"]
