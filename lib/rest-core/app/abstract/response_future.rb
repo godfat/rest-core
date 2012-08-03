@@ -65,7 +65,7 @@ class RestCore::ResponseFuture
     self.error = if error.kind_of?(Exception)
                    error
                  else
-                   RuntimeError.new(error)
+                   Error.new(error)
                  end
     on_load('', 0, {})
   end
