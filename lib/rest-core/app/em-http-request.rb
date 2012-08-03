@@ -26,7 +26,7 @@ class RestCore::EmHttpRequest
       (client.instance_variable_get(:@errbacks )||[]).clear
       client.close
       future.on_error(env[TIMER].error)
-    }
+    } if env[TIMER]
 
     env.merge(RESPONSE_BODY    => future.proxy_body,
               RESPONSE_STATUS  => future.proxy_status,
