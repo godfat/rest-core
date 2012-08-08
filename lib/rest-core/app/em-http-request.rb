@@ -8,14 +8,13 @@ require 'rest-core/middleware'
 class RestCore::EmHttpRequest
   include RestCore::Middleware
   def call env, &k
+    future  = Future.create(env, k, env[ASYNC])
     payload = ::RestClient::Payload.generate(env[REQUEST_PAYLOAD])
     client  = ::EventMachine::HttpRequest.new(request_uri(env)).send(
                  env[REQUEST_METHOD],
                  :body => payload && payload.read,
                  :head => payload && payload.headers.
                                                merge(env[REQUEST_HEADERS]))
-
-    future = Future.create(env, k, env[ASYNC])
 
     client.callback{
       future.on_load(client.response,
@@ -33,6 +32,7 @@ class RestCore::EmHttpRequest
 
     env.merge(RESPONSE_BODY    => future.proxy_body,
               RESPONSE_STATUS  => future.proxy_status,
-              RESPONSE_HEADERS => future.proxy_headers)
+              RESPONSE_HEADERS => future.proxy_headers,
+              FUTURE           => future)
   end
 end

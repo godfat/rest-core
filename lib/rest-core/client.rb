@@ -52,6 +52,7 @@ module RestCore::Client
   def initialize o={}
     @app ||= self.class.builder.to_app
     @dry ||= self.class.builder.to_app(Dry)
+    @futures = []
     o.each{ |key, value| send("#{key}=", value) if respond_to?("#{key}=") }
   end
 
@@ -79,6 +80,12 @@ module RestCore::Client
 
   def lighten o={}
     dup.lighten!(o)
+  end
+
+  def wait
+    @futures.reject(&:loaded?).each(&:wait)
+    @futures = []
+    self
   end
 
   def url path, query={}, opts={}
@@ -161,6 +168,12 @@ module RestCore::Client
        LOG             => []  ,
        ASYNC           => !!k }.merge(env)),
        &(k || Middleware.id))
+
+    # under ASYNC callback, response might not be a response hash
+    if response.kind_of?(Hash) && RestCore.const_defined?(:Future) &&
+       response[FUTURE].kind_of?(Future)
+      @futures << response[FUTURE]
+    end
 
     if block_given?
       self

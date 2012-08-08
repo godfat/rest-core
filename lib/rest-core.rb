@@ -16,6 +16,7 @@ module RestCore
 
   ASYNC            = 'async.callback'
   TIMER            = 'async.timer'
+  FUTURE           = 'async.future'
 
   # core utilities
   autoload :Builder       , 'rest-core/builder'

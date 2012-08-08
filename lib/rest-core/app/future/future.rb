@@ -58,11 +58,8 @@ class RestCore::Future
   def on_load body, status, headers
     env[TIMER].cancel if env[TIMER]
     self.body, self.status, self.headers = body, status, headers
-    if immediate # no fibers are required in this case
-      callback
-    else
-      resume
-    end
+    resume # client or response might be waiting
+    callback if immediate # under ASYNC callback, should call immediate
   end
 
   def on_error error
