@@ -6,6 +6,7 @@ RestCore::Universal = RestCore::Builder.client do
   use s::DefaultSite   , nil
   use s::DefaultHeaders, {}
   use s::DefaultQuery  , {}
+  use s::DefaultPayload, {}
   use s::AuthBasic     , nil, nil
 
   use s::FollowRedirect, 10
