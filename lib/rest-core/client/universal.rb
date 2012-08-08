@@ -7,6 +7,7 @@ module RestCore
     use DefaultHeaders, {}
     use DefaultQuery  , {}
     use DefaultPayload, {}
+    use JsonRequest   , false
     use AuthBasic     , nil, nil
 
     use FollowRedirect, 10
