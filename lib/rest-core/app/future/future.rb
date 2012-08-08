@@ -16,9 +16,9 @@ class RestCore::Future
 
   def self.create *args, &block
     if Thread.current == Thread.main
-      FutureFiber.new(*args, &block)
+      FutureFiber .new(*args, &block)
     else
-      FutureQueue.new(*args, &block)
+      FutureThread.new(*args, &block)
     end
   end
 
@@ -80,4 +80,4 @@ class RestCore::Future
 end
 
 require 'rest-core/app/future/future_fiber'
-require 'rest-core/app/future/future_queue'
+require 'rest-core/app/future/future_thread'
