@@ -28,12 +28,12 @@ module RestCore::ClientOauth1
   end
 
   def data_json
-    JsonDecode.json_encode(data.merge('sig' => calculate_sig))
+    Json.encode(data.merge('sig' => calculate_sig))
   end
 
   def data_json= json
-    self.data = check_sig_and_return_data(JsonDecode.json_decode(json))
-  rescue JsonDecode.const_get(:ParseError)
+    self.data = check_sig_and_return_data(Json.decode(json))
+  rescue Json.const_get(:ParseError)
     self.data = nil
   end
 
