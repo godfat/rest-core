@@ -1,34 +1,39 @@
 
-require 'rest-core/middleware'
-
 require 'restclient'
-
 require 'rest-core/patch/rest-client'
+
+require 'rest-core/app/future/future'
+require 'rest-core/middleware'
 
 class RestCore::RestClient
   include RestCore::Middleware
   def call env, &k
-    res = ::RestClient::Request.execute(:method  => env[REQUEST_METHOD ],
-                                        :url     => request_uri(env)    ,
-                                        :payload => env[REQUEST_PAYLOAD],
-                                        :headers => env[REQUEST_HEADERS],
-                                        :max_redirects => 0)
+    future  = FutureThread.new(env, k, env[ASYNC])
 
-    process(env, res.body, res.code, normalize_headers(res.raw_headers), k)
+    Thread.new{
+      begin
+        res = ::RestClient::Request.execute(:method  => env[REQUEST_METHOD ],
+                                            :url     => request_uri(env)    ,
+                                            :payload => env[REQUEST_PAYLOAD],
+                                            :headers => env[REQUEST_HEADERS],
+                                            :max_redirects => 0)
+        future.on_load(res.body, res.code, normalize_headers(res.raw_headers))
 
-  rescue ::RestClient::Exception => e
-    if res = e.response
-      # we don't want to raise an exception for 404 requests
-      process(env, res.body, res.code, normalize_headers(res.raw_headers), k)
-    else
-      process(env.merge(FAIL => env[FAIL] + [e]), '', 0, {}, k)
-    end
-  end
+      rescue ::RestClient::Exception => e
+        if res = e.response
+          # we don't want to raise an exception for 404 requests
+          future.on_load(res.body, res.code,
+            normalize_headers(res.raw_headers))
+        else
+          future.on_error(e)
+        end
+      end
+    }
 
-  def process env, body, status, headers, k
-    k.call(env.merge(RESPONSE_BODY    => body  ,
-                     RESPONSE_STATUS  => status,
-                     RESPONSE_HEADERS => headers))
+    env.merge(RESPONSE_BODY    => future.proxy_body,
+              RESPONSE_STATUS  => future.proxy_status,
+              RESPONSE_HEADERS => future.proxy_headers,
+              FUTURE           => future)
   end
 
   def normalize_headers raw_headers
