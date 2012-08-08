@@ -45,7 +45,7 @@ class RestCore::ResponseFuture
       env.merge(RESPONSE_BODY    => body  ,
                 RESPONSE_STATUS  => status,
                 RESPONSE_HEADERS => headers,
-                FAIL             => [env[FAIL], error].flatten.compact))
+                FAIL             => ((env[FAIL]||[]) + [error]).compact))
   end
 
   def on_load body, status, headers
