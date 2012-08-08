@@ -8,23 +8,27 @@ require 'rest-core/patch/rest-client'
 class RestCore::RestClient
   include RestCore::Middleware
   def call env, &k
-    process(env,
-            ::RestClient::Request.execute(:method  => env[REQUEST_METHOD ],
-                                          :url     => request_uri(env)    ,
-                                          :payload => env[REQUEST_PAYLOAD],
-                                          :headers => env[REQUEST_HEADERS],
-                                          :max_redirects => 0), k)
+    res = ::RestClient::Request.execute(:method  => env[REQUEST_METHOD ],
+                                        :url     => request_uri(env)    ,
+                                        :payload => env[REQUEST_PAYLOAD],
+                                        :headers => env[REQUEST_HEADERS],
+                                        :max_redirects => 0)
+
+    process(env, res.body, res.code, normalize_headers(res.raw_headers), k)
 
   rescue ::RestClient::Exception => e
-    process(env, e.response, k)
+    if res = e.response
+      # we don't want to raise an exception for 404 requests
+      process(env, res.body, res.code, normalize_headers(res.raw_headers), k)
+    else
+      process(env.merge(FAIL => env[FAIL] + [e]), '', 0, {}, k)
+    end
   end
 
-  def process env, response, k
-    result = env.merge(RESPONSE_BODY    => response.body,
-                       RESPONSE_STATUS  => response.code,
-                       RESPONSE_HEADERS => normalize_headers(
-                                             response.raw_headers))
-    k.call(result)
+  def process env, body, status, headers, k
+    k.call(env.merge(RESPONSE_BODY    => body  ,
+                     RESPONSE_STATUS  => status,
+                     RESPONSE_HEADERS => headers))
   end
 
   def normalize_headers raw_headers
