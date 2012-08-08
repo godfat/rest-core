@@ -1,6 +1,8 @@
 
 require 'rest-core'
 
+require 'weakref'
+
 module RestCore::Client
   include RestCore
 
@@ -83,7 +85,12 @@ module RestCore::Client
   end
 
   def wait
-    futures.reject(&:loaded?).each(&:wait)
+    futures.each{ |f|
+      begin
+        f.wait unless f.loaded?
+      rescue WeakRef::RefError
+      end if f.weakref_alive?
+    }
     @futures = []
     self
   end
@@ -172,7 +179,7 @@ module RestCore::Client
     # under ASYNC callback, response might not be a response hash
     if response.kind_of?(Hash) && RestCore.const_defined?(:Future) &&
        response[FUTURE].kind_of?(Future)
-      futures << response[FUTURE]
+      futures << WeakRef.new(response[FUTURE])
     end
 
     if block_given?
