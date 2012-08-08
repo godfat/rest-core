@@ -1,6 +1,4 @@
 
-require 'fiber'
-
 require 'em-http-request'
 require 'restclient/payload'
 
