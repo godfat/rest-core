@@ -36,6 +36,10 @@ class RestCore::Future
   def wait  ; raise NotImplementedError; end
   def resume; raise NotImplementedError; end
 
+  def loaded?
+    !!status
+  end
+
   def yield
     wait
     callback
