@@ -12,16 +12,15 @@ class RestCore::FutureFiber < RestCore::Future
   end
 
   def resume
-    if fiber.alive?
-      EM.next_tick{
-        begin
-          fiber.resume
-        rescue FiberError
-          # whenever timeout, it would be already resumed,
-          # and we have no way to tell if it's already resumed or not!
-        end
-      }
-    end
+    return unless fiber.alive?
+    EM.next_tick{
+      begin
+        fiber.resume
+      rescue FiberError
+        # whenever timeout, it would be already resumed,
+        # and we have no way to tell if it's already resumed or not!
+      end
+    }
   end
 
   protected
