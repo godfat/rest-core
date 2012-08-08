@@ -2,7 +2,7 @@
 require 'em-http-request'
 require 'restclient/payload'
 
-require 'rest-core/app/abstract/response_future'
+require 'rest-core/app/future/future'
 require 'rest-core/middleware'
 
 class RestCore::EmHttpRequest
@@ -15,7 +15,7 @@ class RestCore::EmHttpRequest
                  :head => payload && payload.headers.
                                                merge(env[REQUEST_HEADERS]))
 
-    future = ResponseFuture.new(env, k, env[ASYNC])
+    future = Future.new(env, k, env[ASYNC])
 
     client.callback{
       future.on_load(client.response,

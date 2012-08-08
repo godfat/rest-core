@@ -4,7 +4,7 @@ require 'thread'
 
 require 'rest-core'
 
-class RestCore::ResponseFuture
+class RestCore::Future
   include RestCore
 
   class Proxy < BasicObject
