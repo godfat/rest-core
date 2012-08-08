@@ -48,7 +48,7 @@ module RestCore::Client
     mod.send(:include, accessor)
   end
 
-  attr_reader :app, :dry
+  attr_reader :app, :dry, :futures
   def initialize o={}
     @app ||= self.class.builder.to_app
     @dry ||= self.class.builder.to_app(Dry)
@@ -83,7 +83,7 @@ module RestCore::Client
   end
 
   def wait
-    @futures.reject(&:loaded?).each(&:wait)
+    futures.reject(&:loaded?).each(&:wait)
     @futures = []
     self
   end
@@ -172,7 +172,7 @@ module RestCore::Client
     # under ASYNC callback, response might not be a response hash
     if response.kind_of?(Hash) && RestCore.const_defined?(:Future) &&
        response[FUTURE].kind_of?(Future)
-      @futures << response[FUTURE]
+      futures << response[FUTURE]
     end
 
     if block_given?
