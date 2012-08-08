@@ -8,7 +8,7 @@ class RestCore::FutureQueue < RestCore::Future
   end
 
   def wait
-    queue.pop
+    queue.pop unless status
   end
 
   def resume
