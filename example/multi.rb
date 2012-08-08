@@ -4,7 +4,7 @@ require 'eventmachine'
 
 YourClient = RC::Builder.client do
   use RC::DefaultSite , 'https://api.github.com/users/'
-  use RC::JsonDecode  , true
+  use RC::JsonResponse, true
   use RC::CommonLogger, method(:puts)
   use RC::Cache       , nil, 3600
 end

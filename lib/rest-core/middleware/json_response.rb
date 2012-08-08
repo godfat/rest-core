@@ -2,8 +2,8 @@
 require 'rest-core/middleware'
 require 'rest-core/util/json'
 
-class RestCore::JsonDecode
-  def self.members; [:json_decode]; end
+class RestCore::JsonResponse
+  def self.members; [:json_response]; end
   include RestCore::Middleware
 
   def call env, &k
@@ -14,7 +14,7 @@ class RestCore::JsonDecode
   end
 
   def process response
-    if json_decode(response)
+    if json_response(response)
       response.merge(RESPONSE_BODY =>
         Json.decode("[#{response[RESPONSE_BODY]}]").first)
         # [this].first is not needed for yajl-ruby

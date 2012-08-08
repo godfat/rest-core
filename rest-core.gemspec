@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2012-08-04"
+  s.date = "2012-08-09"
   s.description = "Modular Ruby clients interface for REST APIs\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed [rest-core][], which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-core]: https://github.com/cardinalblue/rest-core\n[rest-more]: https://github.com/cardinalblue/rest-more"
   s.email = ["dev (XD) cardinalblue.com"]
   s.files = [
@@ -56,7 +56,7 @@ Gem::Specification.new do |s|
   "lib/rest-core/middleware/error_detector_http.rb",
   "lib/rest-core/middleware/error_handler.rb",
   "lib/rest-core/middleware/follow_redirect.rb",
-  "lib/rest-core/middleware/json_decode.rb",
+  "lib/rest-core/middleware/json_response.rb",
   "lib/rest-core/middleware/oauth1_header.rb",
   "lib/rest-core/middleware/oauth2_header.rb",
   "lib/rest-core/middleware/oauth2_query.rb",
@@ -66,6 +66,7 @@ Gem::Specification.new do |s|
   "lib/rest-core/patch/rest-client.rb",
   "lib/rest-core/test.rb",
   "lib/rest-core/util/hmac.rb",
+  "lib/rest-core/util/json.rb",
   "lib/rest-core/util/parse_query.rb",
   "lib/rest-core/version.rb",
   "lib/rest-core/wrapper.rb",
@@ -83,7 +84,7 @@ Gem::Specification.new do |s|
   "test/test_error_detector_http.rb",
   "test/test_error_handler.rb",
   "test/test_follow_redirect.rb",
-  "test/test_json_decode.rb",
+  "test/test_json_response.rb",
   "test/test_oauth1_header.rb",
   "test/test_payload.rb",
   "test/test_simple.rb",
@@ -106,7 +107,7 @@ Gem::Specification.new do |s|
   "test/test_error_detector_http.rb",
   "test/test_error_handler.rb",
   "test/test_follow_redirect.rb",
-  "test/test_json_decode.rb",
+  "test/test_json_response.rb",
   "test/test_oauth1_header.rb",
   "test/test_payload.rb",
   "test/test_simple.rb",

@@ -6,7 +6,7 @@ module RestCore::ClientOauth1
 
   def authorize_url! opts={}
     self.data = ParseQuery.parse_query(
-      post(request_token_path, {}, {}, {:json_decode => false}.merge(opts)))
+      post(request_token_path, {}, {}, {:json_response => false}.merge(opts)))
 
     authorize_url
   end
@@ -17,7 +17,7 @@ module RestCore::ClientOauth1
 
   def authorize! opts={}
     self.data = ParseQuery.parse_query(
-      post(access_token_path, {}, {}, {:json_decode => false}.merge(opts)))
+      post(access_token_path, {}, {}, {:json_response => false}.merge(opts)))
 
     data['authorized'] = 'true'
     data

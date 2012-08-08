@@ -47,7 +47,7 @@ dedicated clients provided by [rest-more][].
 ### Optional:
 
 * gem [em-http-request][] (if using eventmachine)
-* gem json or yajl-ruby, or multi_json (if using `JsonDecode` middleware)
+* gem json or yajl-ruby, or multi_json (if using `JsonResponse` middleware)
 
 [em-http-request]: https://github.com/igrigorik/em-http-request
 
@@ -79,7 +79,7 @@ You can use `RestCore::Builder` to build your own dedicated client:
     YourClient = RestCore::Builder.client do
       s = RestCore
       use s::DefaultSite , 'https://api.github.com/users/'
-      use s::JsonDecode  , true
+      use s::JsonResponse, true
       use s::CommonLogger, method(:puts)
       use s::Cache       , nil, 3600
       run s::RestClient # the simplest and easier HTTP client
@@ -121,7 +121,7 @@ cool.io. Below is an example for eventmachine:
     AsynchronousClient = RestCore::Builder.client do
       s = RestCore
       use s::DefaultSite , 'https://api.github.com/users/'
-      use s::JsonDecode  , true
+      use s::JsonResponse, true
       use s::CommonLogger, method(:puts)
       use s::Cache       , nil, 3600
       run s::EmHttpRequest

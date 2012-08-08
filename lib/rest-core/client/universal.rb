@@ -14,6 +14,6 @@ RestCore::Universal = RestCore::Builder.client do
   use s::Cache         ,  {}, 600 do
     use s::ErrorHandler, nil
     use s::ErrorDetectorHttp
-    use s::JsonDecode  , false
+    use s::JsonResponse, false
   end
 end

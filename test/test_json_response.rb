@@ -1,10 +1,10 @@
 
 require 'rest-core/test'
 
-describe RC::JsonDecode do
+describe RC::JsonResponse do
   describe 'app' do
     def app
-      @app ||= RC::JsonDecode.new(RC::Dry.new, true)
+      @app ||= RC::JsonResponse.new(RC::Dry.new, true)
     end
 
     should 'do nothing' do
@@ -23,7 +23,7 @@ describe RC::JsonDecode do
   describe 'client' do
     def client
       @client ||= RC::Builder.client do
-        use RC::JsonDecode, true
+        use RC::JsonResponse, true
         run Class.new{
           def call env
             yield(env.merge(RC::RESPONSE_BODY => '{}'))
@@ -34,7 +34,7 @@ describe RC::JsonDecode do
 
     should 'do nothing' do
       expected = '{}'
-      client.new(:json_decode => false).get(''){ |response|
+      client.new(:json_response => false).get(''){ |response|
         response.should.eq(expected)
       }.get('').should.eq(expected)
     end

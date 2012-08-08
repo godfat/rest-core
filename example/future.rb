@@ -5,7 +5,7 @@ require 'eventmachine'
 client = RC::Builder.client{
   use RC::DefaultSite, 'https://graph.facebook.com/'
   use RC::CommonLogger, method(:puts)
-  use RC::JsonDecode, true
+  use RC::JsonResponse, true
 }.new
 
 EM.run{

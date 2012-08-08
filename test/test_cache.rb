@@ -135,7 +135,7 @@ describe RC::Cache do
   should 'cache the original response' do
     c = RC::Builder.client do
       use RC::Cache, {}, 3600 do
-        use RC::JsonDecode, true
+        use RC::JsonResponse, true
       end
     end.new
     stub_request(:get, 'me').to_return(:body => body = '{"a":"b"}')
