@@ -11,7 +11,9 @@ class RestCore::DefaultPayload
   end
 
   def call env, &k
+    defaults = string_keys(@payload).merge(string_keys(payload(env)))
+
     app.call(env.merge(REQUEST_PAYLOAD =>
-      @payload.merge(payload(env)).merge(env[REQUEST_PAYLOAD] || {})), &k)
+      defaults.merge(env[REQUEST_PAYLOAD] || {})), &k)
   end
 end
