@@ -10,15 +10,7 @@ class RestCore::Future
     end
 
     def method_missing msg, *args, &block
-      load.__send__(msg, *args, &block)
-    end
-
-    def load
-      @future.yield[@target]
-    end
-
-    def loaded?
-      !!@future.status
+      @future.yield[@target].__send__(msg, *args, &block)
     end
   end
 
