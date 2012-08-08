@@ -151,7 +151,7 @@ module RestCore::Client
   end
 
   def request_full env, app=app, &k
-    future = app.call(build_env(
+    response = app.call(build_env(
       {REQUEST_METHOD  => :get,
        REQUEST_PATH    => '/' ,
        REQUEST_QUERY   => {}  ,
@@ -165,7 +165,7 @@ module RestCore::Client
     if block_given?
       self
     else
-      future
+      response
     end
   end
 
