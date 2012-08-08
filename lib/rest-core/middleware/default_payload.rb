@@ -11,9 +11,25 @@ class RestCore::DefaultPayload
   end
 
   def call env, &k
-    defaults = string_keys(@payload).merge(string_keys(payload(env)))
+    defaults = merge(@payload, payload(env))
 
     app.call(env.merge(REQUEST_PAYLOAD =>
-      defaults.merge(env[REQUEST_PAYLOAD] || {})), &k)
+      merge(defaults, env[REQUEST_PAYLOAD] || {})), &k)
+  end
+
+  # this method is intended to merge payloads if they are non-empty hashes,
+  # but prefer the right most one if they are not hashes.
+  def merge lhs, rhs
+    if rhs.respond_to?(:empty?) && rhs.empty?
+      lhs
+    elsif lhs.respond_to?(:merge)
+      if rhs.respond_to?(:merge)
+        string_keys(lhs).merge(string_keys(rhs))
+      else
+        rhs
+      end
+    else
+      rhs
+    end
   end
 end

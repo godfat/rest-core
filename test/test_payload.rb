@@ -2,13 +2,7 @@
 require 'rest-core/test'
 
 describe RC::DefaultPayload do
-  before do
-    @app = RC::DefaultPayload.new(RC::Dry.new, {})
-  end
-
-  def app
-    @app
-  end
+  app = RC::DefaultPayload.new(RC::Dry.new, {})
 
   should 'do nothing' do
     app.call({}){ |r| r[RC::REQUEST_PAYLOAD].should.eq({}) }
@@ -25,5 +19,19 @@ describe RC::DefaultPayload do
 
     app.call(env){ |r| r.should.eq({RC::REQUEST_PAYLOAD =>
       {'pay' => 'load'}.merge(format)})}
+  end
+
+  should 'accept non-hash payload' do
+    u = RC::Universal.new(:log_method => false)
+    env = {RC::REQUEST_PAYLOAD => 'payload'}
+    u.request_full(env, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
+
+    u.payload = 'default'
+    u.request_full(env, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
+    u.request_full({} , u.dry)[RC::REQUEST_PAYLOAD].should.eq('default')
+
+    u = RC::Builder.client{use RC::DefaultPayload, 'maylord'}.new
+    u.request_full({} , u.dry)[RC::REQUEST_PAYLOAD].should.eq('maylord')
+    u.request_full(env, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
   end
 end
