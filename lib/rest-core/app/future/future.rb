@@ -1,7 +1,4 @@
 
-require 'fiber'
-require 'thread'
-
 require 'rest-core'
 
 class RestCore::Future
@@ -25,31 +22,30 @@ class RestCore::Future
     end
   end
 
+  def self.create *args, &block
+    if Thread.current == Thread.main
+      FutureFiber.new(*args, &block)
+    else
+      FutureQueue.new(*args, &block)
+    end
+  end
+
   def initialize env, k, immediate
     self.env       = env
     self.k         = k
     self.immediate = immediate
     self.response, self.body, self.status, self.headers, self.error = nil
-
-    if Thread.current == Thread.main
-      self.fiber = Fiber.current
-      self.model = 'Fiber'
-    else
-      self.queue = Queue.new
-      self.model = 'Thread'
-    end
   end
 
   def proxy_body   ; Proxy.new(self, RESPONSE_BODY   ); end
   def proxy_status ; Proxy.new(self, RESPONSE_STATUS ); end
   def proxy_headers; Proxy.new(self, RESPONSE_HEADERS); end
 
+  def wait  ; raise NotImplementedError; end
+  def resume; raise NotImplementedError; end
+
   def yield
-    if fiber
-      Fiber.yield until status # it might be resumed by some other futures!
-    else
-      queue.pop
-    end
+    wait
     callback
   end
 
@@ -60,7 +56,7 @@ class RestCore::Future
                 RESPONSE_HEADERS => headers,
                 FAIL             => ((env[FAIL]||[]) + [error]).compact,
                 LOG              =>  (env[LOG] ||[]) +
-                                      ["Future picked: #{model}"]))
+                                      ["Future picked: #{self.class}"]))
   end
 
   def on_load body, status, headers
@@ -68,17 +64,8 @@ class RestCore::Future
     self.body, self.status, self.headers = body, status, headers
     if immediate # no fibers are required in this case
       callback
-    elsif fiber && fiber.alive?
-      EM.next_tick{
-        begin
-          fiber.resume
-        rescue FiberError
-          # whenever timeout, it would be already resumed,
-          # and we have no way to tell if it's already resumed or not!
-        end
-      }
-    elsif queue
-      queue << "\0" # signal
+    else
+      resume
     end
   end
 
@@ -93,6 +80,8 @@ class RestCore::Future
 
   protected
   attr_accessor :env, :k, :immediate,
-                :response, :body, :status, :headers, :error,
-                :fiber, :queue, :model
+                :response, :body, :status, :headers, :error
 end
+
+require 'rest-core/app/future/future_fiber'
+require 'rest-core/app/future/future_queue'

@@ -15,7 +15,7 @@ class RestCore::EmHttpRequest
                  :head => payload && payload.headers.
                                                merge(env[REQUEST_HEADERS]))
 
-    future = Future.new(env, k, env[ASYNC])
+    future = Future.create(env, k, env[ASYNC])
 
     client.callback{
       future.on_load(client.response,
