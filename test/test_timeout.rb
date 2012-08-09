@@ -20,7 +20,7 @@ describe RC::Timeout do
     app = setup_app
     env = {'timeout' => 2}
     mock.proxy(app).monitor(env).times(1)
-    app.call(env){ |e| e.should.eq(env) }
+    app.call(env){|e| e[RC::TIMER].should.kind_of?(RC::Timeout::TimerThread)}
   end
 
   should 'return correct result for futures' do

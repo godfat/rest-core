@@ -10,7 +10,7 @@ class RestCore::RestClient
   def call env, &k
     future  = Future::FutureThread.new(env, k, env[ASYNC])
 
-    Thread.new{
+    t = Thread.new{
       begin
         res = ::RestClient::Request.execute(:method  => env[REQUEST_METHOD ],
                                             :url     => request_uri(env)    ,
@@ -29,6 +29,11 @@ class RestCore::RestClient
         end
       end
     }
+
+    env[TIMER].on_timeout{
+      t.kill; t.join
+      future.on_error(env[TIMER].error)
+    } if env[TIMER]
 
     env.merge(RESPONSE_BODY    => future.proxy_body,
               RESPONSE_STATUS  => future.proxy_status,

@@ -29,17 +29,20 @@ class RestCore::Timeout
                    name
                  end
 
-    case class_name
-    when /EmHttpRequest/
-      yield(env.merge(TIMER => TimerEm.new(timeout(env), timeout_error)))
-    else
-      ::Timeout.timeout(timeout(env)){ yield(env) }
-    end
+    timer = case class_name
+            when /EmHttpRequest/
+              TimerEm
+            else
+              TimerThread
+            end.new(timeout(env), timeout_error)
+
+    yield(env.merge(TIMER => timer))
   end
 
   def timeout_error
     ::Timeout::Error.new('execution expired')
   end
 
-  autoload :TimerEm, 'rest-core/middleware/timeout/timer_em'
+  autoload :TimerEm    , 'rest-core/middleware/timeout/timer_em'
+  autoload :TimerThread, 'rest-core/middleware/timeout/timer_thread'
 end
