@@ -66,7 +66,7 @@ class RestCore::Future
     self.error = if error.kind_of?(Exception)
                    error
                  else
-                   Error.new(error)
+                   Error.new(error || 'unknown')
                  end
     on_load('', 0, {})
   end
