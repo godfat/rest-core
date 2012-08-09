@@ -2,7 +2,7 @@
 require 'restclient'
 require 'rest-core/patch/rest-client'
 
-require 'rest-core/app/future/future'
+require 'rest-core/engine/future/future'
 require 'rest-core/middleware'
 
 class RestCore::RestClient

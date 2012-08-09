@@ -78,6 +78,6 @@ class RestCore::Future
   private
   def synchronize; yield; end
 
-  autoload :FutureFiber , 'rest-core/app/future/future_fiber'
-  autoload :FutureThread, 'rest-core/app/future/future_thread'
+  autoload :FutureFiber , 'rest-core/engine/future/future_fiber'
+  autoload :FutureThread, 'rest-core/engine/future/future_thread'
 end

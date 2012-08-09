@@ -54,11 +54,11 @@ module RestCore
   autoload :Oauth2Query   , 'rest-core/middleware/oauth2_query'
   autoload :Timeout       , 'rest-core/middleware/timeout'
 
-  # apps
-  autoload :Auto          , 'rest-core/app/auto'
-  autoload :Dry           , 'rest-core/app/dry'
-  autoload :RestClient    , 'rest-core/app/rest-client'
-  autoload :EmHttpRequest , 'rest-core/app/em-http-request'
+  # engines
+  autoload :Auto          , 'rest-core/engine/auto'
+  autoload :Dry           , 'rest-core/engine/dry'
+  autoload :RestClient    , 'rest-core/engine/rest-client'
+  autoload :EmHttpRequest , 'rest-core/engine/em-http-request'
 
   # clients
   autoload :Simple        , 'rest-core/client/simple'
