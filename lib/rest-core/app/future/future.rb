@@ -57,7 +57,7 @@ class RestCore::Future
 
   def on_load body, status, headers
     env[TIMER].cancel if env[TIMER]
-    self.body, self.status, self.headers = body, status, headers
+    synchronize{self.body, self.status, self.headers = body, status, headers}
     resume # client or response might be waiting
     callback if immediate # under ASYNC callback, should call immediate
   end
@@ -74,6 +74,9 @@ class RestCore::Future
   protected
   attr_accessor :env, :k, :immediate,
                 :response, :body, :status, :headers, :error
+
+  private
+  def synchronize; yield; end
 end
 
 require 'rest-core/app/future/future_fiber'

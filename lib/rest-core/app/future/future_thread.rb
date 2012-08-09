@@ -5,17 +5,23 @@ class RestCore::FutureThread < RestCore::Future
   def initialize *args
     super
     self.thread = Thread.current
+    self.mutex  = Mutex.new
   end
 
   def wait
-    sleep until status # it might be awaken by some other futures!
+    # it might be awaken by some other futures!
+    synchronize{ mutex.sleep until status }
   end
 
   def resume
     return unless thread.alive? && thread.stop?
     thread.wakeup
+  rescue ThreadError
   end
 
   protected
-  attr_accessor :thread
+  attr_accessor :thread, :mutex
+
+  private
+  def synchronize; mutex.synchronize{ yield }; end
 end
