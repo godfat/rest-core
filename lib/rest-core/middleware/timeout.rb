@@ -31,8 +31,7 @@ class RestCore::Timeout
 
     case class_name
     when /EmHttpRequest/
-      yield(env.merge(TIMER =>
-        TimerEm.new(timeout(env), timeout_error)))
+      yield(env.merge(TIMER => TimerEm.new(timeout(env), timeout_error)))
     else
       ::Timeout.timeout(timeout(env)){ yield(env) }
     end
