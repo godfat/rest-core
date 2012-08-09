@@ -16,8 +16,6 @@ class RestCore::Timeout::TimerThread
   end
 
   def cancel
-    thread.kill
-    thread.join
     @canceled = true
   end
 
@@ -29,7 +27,7 @@ class RestCore::Timeout::TimerThread
     return if timeout.nil? || timeout.zero?
     self.thread = Thread.new{
       sleep(timeout)
-      block.call
+      block.call unless canceled?
     }
   end
 
