@@ -52,9 +52,9 @@ module RestCore::Client
 
   attr_reader :app, :dry, :futures
   def initialize o={}
-    @app ||= self.class.builder.to_app
+    @app ||= self.class.builder.to_app # lighten! would reinitialize anyway
     @dry ||= self.class.builder.to_app(Dry)
-    @futures = []
+    @futures = [] # don't record any futures in lighten!
     o.each{ |key, value| send("#{key}=", value) if respond_to?("#{key}=") }
   end
 
