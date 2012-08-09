@@ -1,7 +1,7 @@
 
 require 'thread'
 
-class RestCore::FutureThread < RestCore::Future
+class RestCore::Future::FutureThread < RestCore::Future
   def initialize *args
     super
     self.thread = Thread.current

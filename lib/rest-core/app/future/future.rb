@@ -77,7 +77,7 @@ class RestCore::Future
 
   private
   def synchronize; yield; end
-end
 
-require 'rest-core/app/future/future_fiber'
-require 'rest-core/app/future/future_thread'
+  autoload :FutureFiber , 'rest-core/app/future/future_fiber'
+  autoload :FutureThread, 'rest-core/app/future/future_thread'
+end

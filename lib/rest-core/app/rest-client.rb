@@ -8,7 +8,7 @@ require 'rest-core/middleware'
 class RestCore::RestClient
   include RestCore::Middleware
   def call env, &k
-    future  = FutureThread.new(env, k, env[ASYNC])
+    future  = Future::FutureThread.new(env, k, env[ASYNC])
 
     Thread.new{
       begin

@@ -1,7 +1,7 @@
 
 require 'fiber'
 
-class RestCore::FutureFiber < RestCore::Future
+class RestCore::Future::FutureFiber < RestCore::Future
   def initialize *args
     super
     self.fiber = Fiber.current
