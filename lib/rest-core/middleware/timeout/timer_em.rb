@@ -1,5 +1,5 @@
 
-class RestCore::Timeout::EventMachineTimer < ::EventMachine::Timer
+class RestCore::Timeout::TimerEm < ::EventMachine::Timer
   attr_accessor :timeout, :error
 
   def initialize timeout, error, &block

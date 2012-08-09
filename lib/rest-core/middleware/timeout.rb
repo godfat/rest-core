@@ -32,7 +32,7 @@ class RestCore::Timeout
     case class_name
     when /EmHttpRequest/
       yield(env.merge(TIMER =>
-        EventMachineTimer.new(timeout(env), timeout_error)))
+        TimerEm.new(timeout(env), timeout_error)))
     else
       ::Timeout.timeout(timeout(env)){ yield(env) }
     end
@@ -42,6 +42,5 @@ class RestCore::Timeout
     ::Timeout::Error.new('execution expired')
   end
 
-  autoload :EventMachineTimer,
-    'rest-core/middleware/timeout/eventmachine_timer'
+  autoload :TimerEm, 'rest-core/middleware/timeout/timer_em'
 end
