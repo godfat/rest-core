@@ -31,7 +31,7 @@ class RestCore::RestClient
     }
 
     env[TIMER].on_timeout{
-      t.kill; t.join
+      t.kill
       future.on_error(env[TIMER].error)
     } if env[TIMER]
 
