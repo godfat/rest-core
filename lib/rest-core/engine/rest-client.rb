@@ -27,6 +27,8 @@ class RestCore::RestClient
         else
           future.on_error(e)
         end
+      rescue Exception => e
+        future.on_error(e)
       end
     }
 
