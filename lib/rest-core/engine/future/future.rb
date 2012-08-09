@@ -57,8 +57,10 @@ class RestCore::Future
 
   def on_load body, status, headers
     env[TIMER].cancel if env[TIMER]
-    synchronize{self.body, self.status, self.headers = body, status, headers}
-    resume # client or response might be waiting
+    synchronize{
+      self.body, self.status, self.headers = body, status, headers
+      resume # client or response might be waiting
+    }
     callback if immediate # under ASYNC callback, should call immediate
   end
 
