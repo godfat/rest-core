@@ -66,7 +66,7 @@ class RestCore::Future
         # so we just log the error
         logger = method(:warn) # TODO: add error_log_method
         logger.call "RestCore: ERROR: #{e}\n" \
-                      "  from #{e.backtrace.inspect}"
+                    "  from #{e.backtrace.inspect}"
       end
     }
     resume # client or response might be waiting
