@@ -59,9 +59,17 @@ class RestCore::Future
     env[TIMER].cancel if env[TIMER]
     synchronize{
       self.body, self.status, self.headers = body, status, headers
-      callback if immediate # under ASYNC callback, should call immediate
-      resume # client or response might be waiting
+      begin
+        callback if immediate # under ASYNC callback, should call immediate
+      rescue Exception => e
+        # nothing we can do here for an asynchronous exception,
+        # so we just log the error
+        logger = method(:warn) # TODO: add error_log_method
+        logger.call "RestCore: ERROR: #{e}\n" \
+                      "  from #{e.backtrace.inspect}"
+      end
     }
+    resume # client or response might be waiting
   end
 
   def on_error error
