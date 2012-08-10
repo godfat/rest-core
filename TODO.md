@@ -2,7 +2,6 @@
 
 * middleware revisit (how to initialize?)
 * streaming?
-* test utility
 * connection pool?
 
 # BUG
