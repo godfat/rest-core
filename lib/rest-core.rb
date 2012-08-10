@@ -63,6 +63,22 @@ module RestCore
   # clients
   autoload :Simple        , 'rest-core/client/simple'
   autoload :Universal     , 'rest-core/client/universal'
+
+  # You might want to call this before launching your application in a
+  # threaded environment to avoid thread-safety issue in autoload.
+  def self.eagerload const=self, loaded={}
+    return if loaded[const.name]
+    loaded[const.name] = true
+    const.constants.each{ |n|
+      begin
+        c = const.const_get(n)
+      rescue LoadError => e
+        warn "RestCore: WARN: #{e} for #{const}\n" \
+             "  from #{e.backtrace.grep(/top.+required/).first}"
+      end
+      eagerload(c, loaded) if c.respond_to?(:constants) && !loaded[n]
+    }
+  end
 end
 
 RC = RestCore unless Object.const_defined?(:RC)
