@@ -8,7 +8,7 @@ class RestCore::Future::FutureFiber < RestCore::Future
   end
 
   def wait
-    Fiber.yield until status # it might be resumed by some other futures!
+    Fiber.yield until loaded? # it might be resumed by some other futures!
   end
 
   def resume
