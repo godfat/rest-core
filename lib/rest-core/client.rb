@@ -87,7 +87,7 @@ module RestCore::Client
   def wait
     futures.each{ |f|
       begin
-        f.wait unless f.loaded?
+        f.wait
       rescue WeakRef::RefError
       end if f.weakref_alive?
     }
