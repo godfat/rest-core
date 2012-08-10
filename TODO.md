@@ -8,7 +8,6 @@
 # BUG
 
 * inheritance should work; assign builder?
-* handle timeout for concurrent rest-client
 
 # FEATURE
 
