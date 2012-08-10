@@ -59,9 +59,9 @@ class RestCore::Future
     env[TIMER].cancel if env[TIMER]
     synchronize{
       self.body, self.status, self.headers = body, status, headers
+      callback if immediate # under ASYNC callback, should call immediate
       resume # client or response might be waiting
     }
-    callback if immediate # under ASYNC callback, should call immediate
   end
 
   def on_error error
