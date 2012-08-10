@@ -24,12 +24,14 @@ describe RC::Simple do
       stub_request(method, url).to_return(:body => '123')
       (client = RC::Simple.new).send(method, url){ |res|
         res.should.eq '123' }.should.eq client
+      client.wait
     end
 
     stub_request(:head, url).to_return(:headers => {'A' => 'B'})
     (client = RC::Simple.new).head(url){ |res|
       res.should.eq({'A' => 'B'})
     }.should.eq client
+    client.wait
   end
 
   should 'have correct to_i' do
