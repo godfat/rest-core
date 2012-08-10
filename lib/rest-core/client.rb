@@ -54,8 +54,8 @@ module RestCore::Client
   def initialize o={}
     @app ||= self.class.builder.to_app # lighten! would reinitialize anyway
     @dry ||= self.class.builder.to_app(Dry)
-    @futures = []        # don't record any futures in lighten!
-    @mutex   = Mutex.new # for locking futures
+    @futures = []  # don't record any futures in lighten!
+    @mutex   = nil # for locking futures, lazily initialized for serialization
     o.each{ |key, value| send("#{key}=", value) if respond_to?("#{key}=") }
   end
 
@@ -86,11 +86,11 @@ module RestCore::Client
   end
 
   def wait
-    return self if @futures.empty?
+    return self if futures.empty?
     current_futures = nil
-    @mutex.synchronize{
-      current_futures = @futures.dup
-      @futures.clear
+    mutex.synchronize{
+      current_futures = futures.dup
+      futures.clear
     }
     current_futures.each{ |f|
       begin
@@ -187,7 +187,7 @@ module RestCore::Client
     # won't work because we have no way to track the future.
     if response.kind_of?(Hash) && RestCore.const_defined?(:Future) &&
        response[FUTURE].kind_of?(Future)
-      @mutex.synchronize{ futures << WeakRef.new(response[FUTURE]) }
+      mutex.synchronize{ futures << WeakRef.new(response[FUTURE]) }
     end
 
     if block_given?
@@ -205,6 +205,10 @@ module RestCore::Client
 
 
   private
+  def mutex
+    @mutex ||= Mutex.new
+  end
+
   def lighten_hash hash
     Hash[hash.map{ |(key, value)|
       case value
