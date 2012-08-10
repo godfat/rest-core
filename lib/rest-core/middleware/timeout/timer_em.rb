@@ -1,4 +1,6 @@
 
+require 'eventmachine'
+
 class RestCore::Timeout::TimerEm < ::EventMachine::Timer
   attr_accessor :timeout, :error
 
