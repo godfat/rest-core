@@ -54,7 +54,8 @@ module RestCore::Client
   def initialize o={}
     @app ||= self.class.builder.to_app # lighten! would reinitialize anyway
     @dry ||= self.class.builder.to_app(Dry)
-    @futures = [] # don't record any futures in lighten!
+    @futures = []        # don't record any futures in lighten!
+    @mutex   = Mutex.new # for locking futures
     o.each{ |key, value| send("#{key}=", value) if respond_to?("#{key}=") }
   end
 
@@ -85,14 +86,19 @@ module RestCore::Client
   end
 
   def wait
-    futures.each{ |f|
+    return self if @futures.empty?
+    current_futures = nil
+    @mutex.synchronize{
+      current_futures = @futures.dup
+      @futures.clear
+    }
+    current_futures.each{ |f|
       begin
         f.wait
-      rescue WeakRef::RefError
+      rescue WeakRef::RefError # it's gc'ed after we think it's alive
       end if f.weakref_alive?
     }
-    @futures = []
-    self
+    wait
   end
 
   def url path, query={}, opts={}
@@ -177,9 +183,11 @@ module RestCore::Client
        &(k || Middleware.id))
 
     # under ASYNC callback, response might not be a response hash
+    # in that case (maybe in a user created engine), Client#wait
+    # won't work because we have no way to track the future.
     if response.kind_of?(Hash) && RestCore.const_defined?(:Future) &&
        response[FUTURE].kind_of?(Future)
-      futures << WeakRef.new(response[FUTURE])
+      @mutex.synchronize{ futures << WeakRef.new(response[FUTURE]) }
     end
 
     if block_given?
