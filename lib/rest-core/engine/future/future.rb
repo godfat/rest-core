@@ -46,13 +46,15 @@ class RestCore::Future
   end
 
   def callback
-    self.response ||= k.call(
-      env.merge(RESPONSE_BODY    => body  ,
-                RESPONSE_STATUS  => status,
-                RESPONSE_HEADERS => headers,
-                FAIL             => ((env[FAIL]||[]) + [error]).compact,
-                LOG              =>  (env[LOG] ||[]) +
-                                      ["Future picked: #{self.class}"]))
+    Fiber.new{
+      self.response ||= k.call(
+        env.merge(RESPONSE_BODY    => body  ,
+                  RESPONSE_STATUS  => status,
+                  RESPONSE_HEADERS => headers,
+                  FAIL             => ((env[FAIL]||[]) + [error]).compact,
+                  LOG              =>  (env[LOG] ||[]) +
+                                        ["Future picked: #{self.class}"]))
+    }.resume
   end
 
   def on_load body, status, headers
