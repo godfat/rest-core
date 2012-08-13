@@ -8,6 +8,10 @@ class RestCore::Future::FutureThread < RestCore::Future
     self.mutex = Mutex.new
   end
 
+  def wrap
+    Thread.new{ yield }
+  end
+
   def wait
     # it might be awaken by some other futures!
     synchronize{ condv.wait(mutex) until loaded? }

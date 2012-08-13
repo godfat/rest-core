@@ -10,7 +10,7 @@ class RestCore::RestClient
   def call env, &k
     future  = Future::FutureThread.new(env, k, env[ASYNC])
 
-    t = Thread.new{
+    t = future.wrap{
       begin
         res = ::RestClient::Request.execute(:method  => env[REQUEST_METHOD ],
                                             :url     => request_uri(env)    ,

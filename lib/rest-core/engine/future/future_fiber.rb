@@ -7,6 +7,10 @@ class RestCore::Future::FutureFiber < RestCore::Future
     self.fibers = []
   end
 
+  def wrap
+    Fiber.new{ yield }.resume
+  end
+
   def wait
     fibers << Fiber.current
     Fiber.yield until loaded? # it might be resumed by some other futures!

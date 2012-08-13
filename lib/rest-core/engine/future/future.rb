@@ -33,6 +33,7 @@ class RestCore::Future
   def proxy_status ; Proxy.new(self, RESPONSE_STATUS ); end
   def proxy_headers; Proxy.new(self, RESPONSE_HEADERS); end
 
+  def wrap  ; raise NotImplementedError; end
   def wait  ; raise NotImplementedError; end
   def resume; raise NotImplementedError; end
 
@@ -46,15 +47,13 @@ class RestCore::Future
   end
 
   def callback
-    Fiber.new{
-      self.response ||= k.call(
-        env.merge(RESPONSE_BODY    => body  ,
-                  RESPONSE_STATUS  => status,
-                  RESPONSE_HEADERS => headers,
-                  FAIL             => ((env[FAIL]||[]) + [error]).compact,
-                  LOG              =>  (env[LOG] ||[]) +
-                                        ["Future picked: #{self.class}"]))
-    }.resume
+    self.response ||= k.call(
+      env.merge(RESPONSE_BODY    => body  ,
+                RESPONSE_STATUS  => status,
+                RESPONSE_HEADERS => headers,
+                FAIL             => ((env[FAIL]||[]) + [error]).compact,
+                LOG              =>  (env[LOG] ||[]) +
+                                      ["Future picked: #{self.class}"]))
   end
 
   def on_load body, status, headers
