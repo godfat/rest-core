@@ -17,7 +17,7 @@ class RestCore::EmHttpRequest
                                                merge(env[REQUEST_HEADERS]))
 
     client.callback{
-      future.wrap{
+      future.wrap{ # callbacks are run in main thread, so we need to wrap it
         future.on_load(client.response,
                        client.response_header.status,
                        client.response_header)}}
