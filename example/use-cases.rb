@@ -130,20 +130,32 @@ end
 
 # ----------------------------------------------------------------------
 
-pure_ruby_single_request
-pure_ruby_concurrent_requests
-pure_ruby_cache_requests
-pure_ruby_callback_requests
-pure_ruby_nested_concurrent_requests
+def_use_case 'pure_ruby' do
+  pure_ruby_single_request
+  pure_ruby_concurrent_requests
+  pure_ruby_cache_requests
+  pure_ruby_callback_requests
+  pure_ruby_nested_concurrent_requests
+end
 
-eventmachine_fiber_single_request
-eventmachine_fiber_concurrent_requests
-eventmachine_fiber_cache_requests
-eventmachine_fiber_callback_requests
-# eventmachine_fiber_nested_concurrent_requests
+def_use_case 'eventmachine_fiber' do
+  eventmachine_fiber_single_request
+  eventmachine_fiber_concurrent_requests
+  eventmachine_fiber_cache_requests
+  eventmachine_fiber_callback_requests
+  eventmachine_fiber_nested_concurrent_requests
+end
 
-eventmachine_thread_single_request
-eventmachine_thread_concurrent_requests
-eventmachine_thread_cache_requests
-eventmachine_thread_callback_requests
-# eventmachine_thread_nested_concurrent_requests
+def_use_case 'eventmachine_thread' do
+  eventmachine_thread_single_request
+  eventmachine_thread_concurrent_requests
+  eventmachine_thread_cache_requests
+  eventmachine_thread_callback_requests
+  eventmachine_thread_nested_concurrent_requests
+end
+
+# ----------------------------------------------------------------------
+
+pure_ruby
+eventmachine_fiber
+eventmachine_thread
