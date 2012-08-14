@@ -1,5 +1,22 @@
 # CHANGES
 
+## rest-core 1.0.3 -- 2012-08-15
+
+### Enhancement
+
+* [Client] `client.head` now returns the headers instead of response body.
+  It doesn't make sense to return the response body, because there's no
+  such things in a HEAD request.
+
+### Bugs fixes
+
+* [Cache] The cache object you passed in would only need to respond to
+  `[]` and `[]=`. If the cache object accepts an `:expires_in` option,
+  then it must also respond to `store`, too.
+
+* [Oauth1Header] Fixed a long standing bug that tilde (~) shouldn't be
+  escaped. Many thanks to @brucehsu for discovering this!
+
 ## rest-core 1.0.2 -- 2012-06-05
 
 ### Enhancement
