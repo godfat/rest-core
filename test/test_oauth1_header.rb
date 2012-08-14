@@ -83,5 +83,11 @@ describe RC::Oauth1Header do
       @env.merge!(RC::REQUEST_PAYLOAD => {'pay' => 'load'})
       check
     end
+
+    should 'not escape ~' do
+      @base_string << '%26tilde%3D~'
+      @env.merge!(RC::REQUEST_PAYLOAD => {'tilde' => '~'})
+      check
+    end
   end
 end
