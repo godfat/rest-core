@@ -68,10 +68,6 @@ It's a bit outdated, but you can also checkout my blog post.
   be using `EmHttpRequest` under the context of a event loop, while
   use `RestClient` in other context as before.
 
-* [Client] `client.head` now returns the headers instead of response body.
-  It doesn't make sense to return the response body, because there's no
-  such things in a HEAD request.
-
 * [JsonDecode] Now we prefer multi_json first, yajl-ruby second, lastly json.
 * [CommonLogger] Now we log the request method as well.
 
@@ -85,10 +81,24 @@ It's a bit outdated, but you can also checkout my blog post.
 * [Middleware] Sort the query before generating the request URI, making
   sure the order is always the same.
 * [Middleware] The middleware could have no members at all.
+* [ParseQuery] The fallback function for the absence of Rack is fixed.
+
+## rest-core 1.0.3 -- 2012-08-15
+
+### Enhancement
+
+* [Client] `client.head` now returns the headers instead of response body.
+  It doesn't make sense to return the response body, because there's no
+  such things in a HEAD request.
+
+### Bugs fixes
+
 * [Cache] The cache object you passed in would only need to respond to
   `[]` and `[]=`. If the cache object accepts an `:expires_in` option,
   then it must also respond to `store`, too.
-* [ParseQuery] The fallback function for the absence of Rack is fixed.
+
+* [Oauth1Header] Fixed a long standing bug that tilde (~) shouldn't be
+  escaped. Many thanks to @brucehsu for discovering this!
 
 ## rest-core 1.0.2 -- 2012-06-05
 

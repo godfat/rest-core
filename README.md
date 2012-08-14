@@ -315,6 +315,7 @@ To be added.
 * Mariusz Pruszynski (@snicky)
 * Mr. Big Cat (@miaout17)
 * Nicolas Fouché (@nfo)
+* Szu-Kai Hsu (@brucehsu)
 
 ## LICENSE:
 
