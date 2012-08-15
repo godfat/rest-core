@@ -4,7 +4,7 @@ source 'http://rubygems.org'
 gemspec
 
 gem 'rest-client'
-gem 'em-http-request', '1.0.2'
+gem 'em-http-request'
 
 gem 'rake'
 gem 'bacon'
