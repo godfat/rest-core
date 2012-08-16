@@ -12,16 +12,19 @@ and who should make a few adjustments in their code:
 
 * If you're only using rest-more, e.g. `RC::Facebook` or `RC::Twitter`, etc.,
   you don't have to change anything. This won't affect rest-more users.
+  (except that JsonDecode is renamed to JsonResponse, and json_decode is
+  renamed to json_response.)
 
 * If you're only using rest-core's built in middlewares to build your own
   clients, you don't have to change anything as well. All the hard works are
-  done by me.
+  done in rest-core. (except that ErrorHandler works a bit differently now.
+  We'll talk about detail later.)
 
 * If you're building your own middlewares, then you are the ones who need to
   make changes. `RC::ASYNC` is changed to a flag to mean whether the callback
-  should be called directly, or only after resuming from the fiber.
-  And now you have always to get the response from `yield`, that is,
-  you're forced to pass a callback to `call`.
+  should be called directly, or only after resuming from the future (fiber
+  or thread). And now you have always to get the response from `yield`, that
+  is, you're forced to pass a callback to `call`.
 
   This might be a bit user unfriendly at first glimpse, but it would much
   simplify the internal structure of rest-core, because in the middlewares,
@@ -31,7 +34,7 @@ and who should make a few adjustments in their code:
   Also, the old fiber based asynchronous HTTP client is removed, in favor
   of the new _future_ based approach. The new one is more like a superset
   of the old one, which have anything the old one can provide. Yet internally
-  it works a lot differently. They are both synchronous for the outside,
+  it works a lot differently. They are both synchronous to the outsides,
   but while the old one is also synchronous inside, the new one is
   asynchronous inside, just like the purely asynchronous HTTP client.
 
@@ -40,41 +43,87 @@ and who should make a few adjustments in their code:
   the old fiber one. This would make the middleware implementation much
   easier, considering much fewer possible cases.
 
-  If you don't really understand what does above mean, then just remember,
+  If you don't really understand what above does mean, then just remember,
   now we ask all middlewares work asynchronously. You have always to work
   with callbacks which passed along in `app.call(env){ |response| }`
   That's it.
+
+So what's the most important improvement? From now on, we have only two
+modes. One is callback mode, in which case `env[ASYNC]` would be set, and
+the callback would be called. No exception would be raised in this case.
+If there's an exception, then it would be passed to the block instead.
+
+The other mode, which is synchronous, is achieved by the futures. We have
+two different kinds of futures for now, one is thread based, and the other
+is fiber based. For RestClient, thread based future would be used. For
+EventMachine, depending on the context, if the future is created on the
+main thread, then it would assume it's also wrapped inside a fiber. Since,
+we can never block the event loop! If you're not calling it in a thread,
+you must call it in a fiber. But if you're calling it in a thread, then
+the thread based future would be picked. This is because otherwise it won't
+work well exchanging information around threads and fibers.
+
+In short, rest-core would run concurrently in all contexts, archived by
+either threads or fibers depending on the context, and it would pick the
+right strategy for you.
+
+You can see [use-cases.rb][] for all possible use cases.
 
 It's a bit outdated, but you can also checkout my blog post.
 [rest-core 2.0 roadmap, thunk based response][post]
 (p.s. now thunk is renamed to future)
 
+[use-cases.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/use-cases.rb
 [post]: http://blogger.godfat.org/2012/06/rest-core-20-roadmap-thunk-based.html
 
 ### Incompatible changes
 
-* [EmHttpRequestFiber] is removed in favor of `EmHttpRequest`
-
+* [JsonDecode] is renamed to JsonResponse, and json_decode is also renamed
+  to json_response.
+* [Json] Now you can use `Json.decode` and `Json.encode` to parse and
+  generate JSONs, instead of `JsonDecode.json_decode`.
 * [Cache] Support for "cache.post" is removed.
 * [Cache] The cache key is changed accordingly to support cache for headers
   and HTTP status. If you don't have persistent cache, this doesn't matter.
 
+* [EmHttpRequestFiber] is removed in favor of `EmHttpRequest`
 * cool.io support is removed.
-* You must provide a block to `app.call(env){ ... }`
+* You must provide a block to `app.call(env){ ... }`.
 
 ### Enhancement
 
-* The default app is changed from `RestClient` to `Auto`, which would
+* The default engine is changed from `RestClient` to `Auto`, which would
   be using `EmHttpRequest` under the context of a event loop, while
   use `RestClient` in other context as before.
 
-* [JsonDecode] Now we prefer multi_json first, yajl-ruby second, lastly json.
+* `RestCore.eagerload` is introduced to load all constants eagerly. You can
+  use this before loading the application to avoid thread-safety issue in
+  autoload. For the lazies.
+
+* [JsonResponse] This is originally JsonDecode, and now we prefer multi_json
+  first, yajl-ruby second, lastly json.
+* [JsonRequest] This middleware would encode your payload into a JSON.
 * [CommonLogger] Now we log the request method as well.
+* [DefaultPayload] Accept arbitrary payload.
+* [DefaultQuery] Now before merging queries, converting every single key into
+  a string. This allows you to use :symbols for default query.
+
+* [ErrorHandler] So now ErrorHandler is working differently. It would first
+  try to see if `env[FAIL]` has any exception in it. If there is, then raise
+  it. Otherwise it would call error_handler and expect it to generate an
+  error object. If the error object is an exception, then raise it. If it's
+  not, then it would merge it into `env[FAIL]`. On the other hand, in the
+  case of using callbacks instead of futures, it would pass the exception
+  as the `env[RESPONSE_BODY]` instead. The reason is that you can't raise
+  an exception asynchronously and handle it safely.
 
 * [Cache] Now response headers and HTTP status are also cached.
 * [Cache] Not only GET requests are cached, HEAD and OPTIONS are cached too.
 * [Cache] The cache key is also respecting the request headers too. Suppose
   you're making a request with different Accept header.
+
+* [Client] Add Client#wait which would block until all requests for this
+  particular client are done.
 
 ### Bugs fixes
 
