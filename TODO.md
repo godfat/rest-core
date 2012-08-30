@@ -3,6 +3,7 @@
 * middleware revisit (how to initialize?)
 * streaming?
 * connection pool?
+* X-Method-Override
 
 # BUG
 
