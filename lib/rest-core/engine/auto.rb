@@ -9,7 +9,10 @@ class RestCore::Auto
   end
 
   def http_client
-    if Object.const_defined?(:EventMachine) && ::EventMachine.reactor_running?
+    if         Object.const_defined?(:EventMachine) &&
+       ::EventMachine.const_defined?(:HttpRequest)  &&
+       ::EventMachine.reactor_running?
+
       @emhttprequest ||= RestCore::EmHttpRequest.new
 
     else
