@@ -13,7 +13,7 @@ class RestCore::JsonRequest
     return app.call(env, &k) unless env[REQUEST_PAYLOAD]
 
     app.call(env.merge(
-      REQUEST_HEADERS => JSON_REQUEST_HEADER.merge(env[REQUEST_HEADERS]),
+      REQUEST_HEADERS => JSON_REQUEST_HEADER.merge(env[REQUEST_HEADERS]||{}),
       REQUEST_PAYLOAD => Json.encode(env[REQUEST_PAYLOAD])              ), &k)
   end
 end

@@ -8,12 +8,14 @@ describe RC::JsonResponse do
     end
 
     should 'do nothing' do
-      expected = {RC::RESPONSE_BODY => nil}
+      expected = {RC::RESPONSE_BODY => nil,
+                  RC::REQUEST_HEADERS => {'Accept' => 'application/json'}}
       app.call({}){ |response| response.should.eq(expected) }
     end
 
     should 'decode' do
-      expected = {RC::RESPONSE_BODY => {}}
+      expected = {RC::RESPONSE_BODY => {},
+                  RC::REQUEST_HEADERS => {'Accept' => 'application/json'}}
       app.call(RC::RESPONSE_BODY => '{}'){ |response|
         response.should.eq(expected)
       }
