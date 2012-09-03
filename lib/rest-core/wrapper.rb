@@ -4,38 +4,38 @@ require 'rest-core'
 module RestCore::Wrapper
   include RestCore
 
-  module DefaultApp
-    def default_app
-      @default_app ||= RestCore::Dry
+  module DefaultEngine
+    def default_engine
+      @default_engine ||= RestCore::Dry
     end
   end
 
   def self.included mod
-    mod.send(:extend, DefaultApp)
+    mod.send(:extend, DefaultEngine)
     class << mod
-      attr_writer :default_app
+      attr_writer :default_engine
     end
   end
 
-  attr_reader :init, :middles, :wrapped
-  attr_writer :default_app
-  def default_app
-    @default_app ||= self.class.default_app
+  attr_reader :middles, :wrapped
+  attr_writer :default_engine
+  def default_engine
+    @default_engine ||= self.class.default_engine
   end
 
   def initialize &block
     @middles ||= []
     instance_eval(&block) if block_given?
     @wrapped ||= to_app
-    @init      = nil
+    @engine    = nil
   end
 
   def use middle, *args, &block
     middles << [middle, args, block]
   end
 
-  def run app
-    @init = app
+  def run engine
+    @engine = engine
   end
 
   def members
@@ -49,11 +49,11 @@ module RestCore::Wrapper
     }.flatten.compact
   end
 
-  def to_app app=init || default_app
+  def to_app engine=@engine || default_engine
     # === foldr m.new app middles
-    middles.reverse.inject(app.new){ |app_, (middle, args, block)|
+    middles.reverse.inject(engine.new){ |app, (middle, args, block)|
       begin
-        middle.new(app_, *partial_deep_copy(args), &block)
+        middle.new(app, *partial_deep_copy(args), &block)
       rescue ArgumentError => e
         raise ArgumentError.new("#{middle}: #{e}")
       end

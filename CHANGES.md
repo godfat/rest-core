@@ -89,6 +89,7 @@ It's a bit outdated, but you can also checkout my blog post.
 * [EmHttpRequestFiber] is removed in favor of `EmHttpRequest`
 * cool.io support is removed.
 * You must provide a block to `app.call(env){ ... }`.
+* Rename Wrapper#default_app to Wrapper#default_engine
 
 ### Enhancement
 

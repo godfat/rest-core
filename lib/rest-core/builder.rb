@@ -6,8 +6,8 @@ class RestCore::Builder
   include RestCore
   include Wrapper
 
-  def self.default_app
-    @default_app ||= RestCore::Auto
+  def self.default_engine
+    @default_engine ||= RestCore::Auto
   end
 
   def self.client *attrs, &block

@@ -21,10 +21,10 @@ describe RC::Wrapper do
     wrapper.new.wrapped.class.should.eq RC::Dry
   end
 
-  should 'switch default_app to RestCore::RestClient' do
+  should 'switch default_engine to RestCore::RestClient' do
     wrapper = Class.new
     wrapper.send(:include, RC::Wrapper)
-    wrapper.default_app = RC::RestClient
+    wrapper.default_engine = RC::RestClient
     wrapper.new.wrapped.class.should.eq RC::RestClient
   end
 
