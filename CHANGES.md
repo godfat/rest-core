@@ -102,6 +102,8 @@ It's a bit outdated, but you can also checkout my blog post.
 
 * [JsonResponse] This is originally JsonDecode, and now we prefer multi_json
   first, yajl-ruby second, lastly json.
+* [JsonResponse] give JsonResponse a default header Accept: application/json,
+  thanks @ayamomiji
 * [JsonRequest] This middleware would encode your payload into a JSON.
 * [CommonLogger] Now we log the request method as well.
 * [DefaultPayload] Accept arbitrary payload.
@@ -131,6 +133,8 @@ It's a bit outdated, but you can also checkout my blog post.
   sure the order is always the same.
 * [Middleware] The middleware could have no members at all.
 * [ParseQuery] The fallback function for the absence of Rack is fixed.
+* [Auto] Only use EmHttpRequest if em-http-request is loaded,
+  thanks @ayamomiji
 
 ## rest-core 1.0.3 -- 2012-08-15
 
