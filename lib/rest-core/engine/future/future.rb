@@ -15,7 +15,9 @@ class RestCore::Future
   end
 
   def self.create *args, &block
-    if Thread.current == Thread.main
+    if Fiber.respond_to?(:current) && RootFiber != Fiber.current &&
+       # because under a thread, Fiber.current won't return the root fiber
+       Thread.main == Thread.current
       FutureFiber .new(*args, &block)
     else
       FutureThread.new(*args, &block)

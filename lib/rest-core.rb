@@ -18,6 +18,8 @@ module RestCore
   TIMER            = 'async.timer'
   FUTURE           = 'async.future'
 
+  RootFiber        = Fiber.respond_to?(:current) && Fiber.current
+
   # core utilities
   autoload :Builder       , 'rest-core/builder'
   autoload :Client        , 'rest-core/client'
