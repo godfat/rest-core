@@ -130,6 +130,28 @@ end
 
 # ----------------------------------------------------------------------
 
+def_use_case 'eventmachine_single_request'             do
+  EM.run{             pure_ruby_single_request_            ; EM.stop   }
+end
+
+def_use_case 'eventmachine_concurrent_requests'        do
+  EM.run{             pure_ruby_concurrent_requests_       ; EM.stop   }
+end
+
+def_use_case 'eventmachine_cache_requests'             do
+  EM.run{             pure_ruby_cache_requests_            ; EM.stop   }
+end
+
+def_use_case 'eventmachine_callback_requests'          do
+  EM.run{             pure_ruby_callback_requests_         ; EM.stop   }
+end
+
+def_use_case 'eventmachine_nested_concurrent_requests' do
+  EM.run{             pure_ruby_nested_concurrent_requests_; EM.stop   }
+end
+
+# ----------------------------------------------------------------------
+
 def_use_case 'pure_ruby' do
   pure_ruby_single_request
   pure_ruby_concurrent_requests
@@ -154,8 +176,17 @@ def_use_case 'eventmachine_thread' do
   eventmachine_thread_nested_concurrent_requests
 end
 
+def_use_case 'eventmachine_rest_client' do
+  eventmachine_single_request
+  eventmachine_concurrent_requests
+  eventmachine_cache_requests
+  eventmachine_callback_requests
+  eventmachine_nested_concurrent_requests
+end
+
 # ----------------------------------------------------------------------
 
 pure_ruby
 eventmachine_fiber
 eventmachine_thread
+eventmachine_rest_client
