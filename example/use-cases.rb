@@ -87,23 +87,23 @@ end
 # ----------------------------------------------------------------------
 
 def_use_case 'eventmachine_fiber_single_request'             do
-  EM.run{ Fiber.new{ pure_ruby_single_request_            ; EM.stop }.resume }
+  EM.run{  Fiber.new{ pure_ruby_single_request_            ; EM.stop }.resume}
 end
 
 def_use_case 'eventmachine_fiber_concurrent_requests'        do
-  EM.run{ Fiber.new{ pure_ruby_concurrent_requests_       ; EM.stop }.resume }
+  EM.run{  Fiber.new{ pure_ruby_concurrent_requests_       ; EM.stop }.resume}
 end
 
 def_use_case 'eventmachine_fiber_cache_requests'             do
-  EM.run{ Fiber.new{ pure_ruby_cache_requests_            ; EM.stop }.resume }
+  EM.run{  Fiber.new{ pure_ruby_cache_requests_            ; EM.stop }.resume}
 end
 
 def_use_case 'eventmachine_fiber_callback_requests'          do
-  EM.run{ Fiber.new{ pure_ruby_callback_requests_         ; EM.stop }.resume }
+  EM.run{  Fiber.new{ pure_ruby_callback_requests_         ; EM.stop }.resume}
 end
 
 def_use_case 'eventmachine_fiber_nested_concurrent_requests' do
-  EM.run{ Fiber.new{ pure_ruby_nested_concurrent_requests_; EM.stop }.resume }
+  EM.run{  Fiber.new{ pure_ruby_nested_concurrent_requests_; EM.stop }.resume}
 end
 
 # ----------------------------------------------------------------------
