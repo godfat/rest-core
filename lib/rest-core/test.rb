@@ -1,4 +1,6 @@
 
+require 'fiber'
+require 'em-http-request'
 require 'rest-core'
 
 require 'rr'
