@@ -22,7 +22,7 @@ class RestCore::Future::FutureFiber < RestCore::Future
     fibers.clear
     current_fibers.each{ |f|
       next unless f.alive?
-      EM.next_tick{
+      next_tick{
         begin
           f.resume
         rescue FiberError

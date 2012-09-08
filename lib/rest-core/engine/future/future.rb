@@ -61,7 +61,8 @@ class RestCore::Future
     synchronize{
       self.body, self.status, self.headers = body, status, headers
       begin
-        callback if immediate # under ASYNC callback, should call immediate
+        # under ASYNC callback, should call immediate
+        next_tick{ callback } if immediate
       rescue Exception => e
         # nothing we can do here for an asynchronous exception,
         # so we just log the error
@@ -88,6 +89,15 @@ class RestCore::Future
 
   private
   def synchronize; yield; end
+  # next_tick is used for telling the reactor that there's something else
+  # should be done, don't sleep and don't stop at the moment
+  def next_tick
+    if Object.const_defined?(:EventMachine) && EventMachine.reactor_running?
+      EventMachine.next_tick{ yield }
+    else
+      yield
+    end
+  end
 
   autoload :FutureFiber , 'rest-core/engine/future/future_fiber'
   autoload :FutureThread, 'rest-core/engine/future/future_thread'
