@@ -14,7 +14,7 @@ class RestCore::Future::FutureThread < RestCore::Future
 
   def wait
     # it might be awaken by some other futures!
-    synchronize{ condv.wait(mutex) until loaded? }
+    synchronize{ condv.wait(mutex) until loaded? } unless loaded?
   end
 
   def resume
