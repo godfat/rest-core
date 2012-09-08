@@ -132,23 +132,23 @@ end
 
 # ----------------------------------------------------------------------
 
-def_use_case 'eventmachine_single_request'             do
+def_use_case 'eventmachine_rest_client_single_request'        do
   EM.run{             pure_ruby_single_request_            ; EM.stop   }
 end
 
-def_use_case 'eventmachine_concurrent_requests'        do
+def_use_case 'eventmachine_rest_client_concurrent_requests'   do
   EM.run{             pure_ruby_concurrent_requests_       ; EM.stop   }
 end
 
-def_use_case 'eventmachine_cache_requests'             do
+def_use_case 'eventmachine_rest_client_cache_requests'        do
   EM.run{             pure_ruby_cache_requests_            ; EM.stop   }
 end
 
-def_use_case 'eventmachine_callback_requests'          do
+def_use_case 'eventmachine_rest_client_callback_requests'     do
   EM.run{             pure_ruby_callback_requests_         ; EM.stop   }
 end
 
-def_use_case 'eventmachine_nested_concurrent_requests' do
+def_use_case 'eventmachine_rest_client_nested_concurrent_requests' do
   EM.run{             pure_ruby_nested_concurrent_requests_; EM.stop   }
 end
 
@@ -179,11 +179,11 @@ def_use_case 'eventmachine_thread' do
 end
 
 def_use_case 'eventmachine_rest_client' do
-  eventmachine_single_request
-  eventmachine_concurrent_requests
-  eventmachine_cache_requests
-  eventmachine_callback_requests
-  eventmachine_nested_concurrent_requests
+  eventmachine_rest_client_single_request
+  eventmachine_rest_client_concurrent_requests
+  eventmachine_rest_client_cache_requests
+  eventmachine_rest_client_callback_requests
+  eventmachine_rest_client_nested_concurrent_requests
 end
 
 # ----------------------------------------------------------------------
