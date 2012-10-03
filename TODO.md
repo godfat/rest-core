@@ -12,5 +12,6 @@
 # FEATURE
 
 * middleware composer
+* headers and payload logs for CommonLogger
 
 # rest-request
