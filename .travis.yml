@@ -5,7 +5,6 @@ env:
   - 'RBXOPT=-X19'
 
 rvm:
-  - 1.9.2
   - 1.9.3
   - rbx-head
   - jruby-head
