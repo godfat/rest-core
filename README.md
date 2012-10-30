@@ -24,44 +24,45 @@ Modular Ruby clients interface for REST APIs
 
 There has been an explosion in the number of REST APIs available today.
 To address the need for a way to access these APIs easily and elegantly,
-we have developed [rest-core][], which consists of composable middleware
+we have developed rest-core, which consists of composable middleware
 that allows you to build a REST client for any REST API. Or in the case of
 common APIs such as Facebook, Github, and Twitter, you can simply use the
 dedicated clients provided by [rest-more][].
 
-[rest-core]: https://github.com/cardinalblue/rest-core
 [rest-more]: https://github.com/cardinalblue/rest-more
 
 ## FEATURES:
 
 * Modular interface for REST clients similar to WSGI/Rack for servers.
-* Asynchronous/Synchronous styles with or without fibers are both supported.
+* Concurrent requests with synchronous or asynchronous interfaces with
+  fibers or threads are both supported.
 
 ## REQUIREMENTS:
 
 ### Mandatory:
 
-* MRI (official CRuby) 1.9.2, 1.9.3, Rubinius 1.9 and JRuby 1.9
+* MRI (official CRuby) 1.9.3, Rubinius 1.9 and JRuby 1.9
 * gem rest-client
 
 ### Optional:
 
 * gem [em-http-request][] (if using eventmachine)
-* gem json or yajl-ruby, or multi_json (if using `JsonResponse` middleware)
+* gem json or yajl-ruby, or multi_json (if `JsonResponse` or
+  `JsonRequest` middlewares are used)
 
 [em-http-request]: https://github.com/igrigorik/em-http-request
 
 ## INSTALLATION:
 
 ``` shell
-    gem install rest-core
+gem install rest-core
 ```
 
 Or if you want development version, put this in Gemfile:
 
 ``` ruby
-    gem 'rest-core', :git => 'git://github.com/cardinalblue/rest-core.git',
-                     :submodules => true
+gem 'rest-core', :git => 'git://github.com/cardinalblue/rest-core.git',
+                 :submodules => true
 ```
 
 If you just want to use Facebook or Twitter clients, please take a look at
@@ -71,138 +72,212 @@ If you just want to use Facebook or Twitter clients, please take a look at
 
 ## Build Your Own Clients:
 
-You can use `RestCore::Builder` to build your own dedicated client:
+You can use `RestCore::Builder` to build your own dedicated clients.
+Note that `RC` is an alias of `RestCore`
 
 ``` ruby
-    require 'rest-core'
-
-    YourClient = RestCore::Builder.client do
-      s = RestCore
-      use s::DefaultSite , 'https://api.github.com/users/'
-      use s::JsonResponse, true
-      use s::CommonLogger, method(:puts)
-      use s::Cache       , nil, 3600
-      run s::RestClient # the simplest and easier HTTP client
-    end
+require 'rest-core'
+YourClient = RC::Builder.client do
+  use RC::DefaultSite , 'https://api.github.com/users/'
+  use RC::JsonResponse, true
+  use RC::CommonLogger, method(:puts)
+  use RC::Cache       , nil, 3600
+end
 ```
 
 And use it with per-instance basis (clients could have different
 configuration, e.g. different cache time or timeout time):
 
 ``` ruby
-    client = YourClient.new(:cache => {})
-    client.get('cardinalblue') # cache miss
-    client.get('cardinalblue') # cache hit
+client = YourClient.new(:cache => {})
+client.get('cardinalblue') # cache miss
+client.get('cardinalblue') # cache hit
 
-    client.site = 'http://github.com/api/v2/json/user/show/'
-    client.get('cardinalblue') # cache miss
-    client.get('cardinalblue') # cache hit
+client.site = 'http://github.com/api/v2/json/user/show/'
+client.get('cardinalblue') # cache miss
+client.get('cardinalblue') # cache hit
 ```
 
-Runnable example is here: [example/rest-client.rb][]. Please see [rest-more][]
-for more complex examples, and [slides][] from [rubyconf.tw/2011][rubyconf.tw]
-for concepts.
+You can also make concurrent requests easily:
+(see "Advanced Concurrent HTTP Requests -- Embrace the Future" for detail)
 
-[example/rest-client.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/rest-client.rb
+``` ruby
+a = [client.get('cardinalblue')['name'], client.get('godfat')['name']]
+puts "It's not blocking... but doing concurrent requests underneath"
+p a # here we want the values, so it blocks here
+puts "DONE"
+```
+
+Callback mode also available:
+
+``` ruby
+client.get('cardinalblue'){ |v| p v }
+puts "It's not blocking... but doing concurrent requests underneath"
+client.wait # we block here to wait for the request done
+puts "DONE"
+```
+
+Runnable example is at: [example/simple.rb][]. Please see [rest-more][]
+for more complex examples to build clients, and [slides][] from
+[rubyconf.tw/2011][rubyconf.tw] for concepts.
+
+[example/simple.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/simple.rb
 [rest-more]: https://github.com/cardinalblue/rest-more
 [slides]: http://www.godfat.org/slide/2011-08-27-rest-core.html
 [rubyconf.tw]: http://rubyconf.tw/2011/#6
 
-## Asynchronous HTTP Requests:
+## List of built-in Middlewares:
 
-I/O bound operations shouldn't be blocking the CPU! If you have a reactor,
-i.e. event loop, you should take the advantage of that to make HTTP requests
-not block the whole process/thread. For now, we support eventmachine and
-cool.io. Below is an example for eventmachine:
-
-``` ruby
-    require 'rest-core'
-
-    AsynchronousClient = RestCore::Builder.client do
-      s = RestCore
-      use s::DefaultSite , 'https://api.github.com/users/'
-      use s::JsonResponse, true
-      use s::CommonLogger, method(:puts)
-      use s::Cache       , nil, 3600
-      run s::EmHttpRequest
-    end
-```
-
-If you're passing a block, the block is called after the response is
-available. That is the block is the callback for the request.
-
-``` ruby
-    client = AsynchronousClient.new
-    EM.run{
-      client.get('cardinalblue'){ |response|
-        p response
-        EM.stop
-      }
-      puts "It's not blocking..."
-    }
-```
-
-Otherwise, if you don't pass a block as the callback, EmHttpRequest (i.e.
-the HTTP client for eventmachine) would call `Fiber.yield` to yield to the
-original fiber, making asynchronous HTTP requests look like synchronous.
-If you don't understand what does this mean, you can take a look at
-[em-synchrony][]. It's basically the same idea.
-
-``` ruby
-    EM.run{
-      Fiber.new{
-        p client.get('cardinalblue')
-        EM.stop
-      }.resume
-      puts "It's not blocking..."
-    }
-```
-
-[em-synchrony]: https://github.com/igrigorik/em-synchrony
-
-Runnable example is here: [example/eventmachine.rb][].
-You can also make multi-requests synchronously like this:
-
-``` ruby
-    EM.run{
-      Fiber.new{
-        fiber = Fiber.current
-        result = {}
-        client.get('cardinalblue'){ |response|
-          result[0] = response
-          fiber.resume(result) if result.size == 2
-        }
-        client.get('cardinalblue'){ |response|
-          result[1] = response
-          fiber.resume(result) if result.size == 2
-        }
-        p Fiber.yield
-        EM.stop
-      }.resume
-      puts "It's not blocking..."
-    }
-```
-
-Runnable example is here: [example/multi.rb][].
-
-[example/eventmachine.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/eventmachine.rb
-[example/multi.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/multi.rb
-
-## Supported HTTP clients:
-
-* `RestCore::RestClient` (gem rest-client)
-* `RestCore::EmHttpRequest` (gem em-http-request)
-* `RestCore::Coolio` (gem cool.io)
-* `RestCore::Auto` (which would pick one of the above depending on the
-  context)
+* `RC::AuthBasic`
+* `RC::Bypass`
+* `RC::Cache`
+* `RC::CommonLogger`
+* `RC::DefaultHeaders`
+* `RC::DefaultPayload`
+* `RC::DefaultQuery`
+* `RC::DefaultSite`
+* `RC::Defaults`
+* `RC::ErrorDetector`
+* `RC::ErrorDetectorHttp`
+* `RC::ErrorHandler`
+* `RC::FollowRedirect`
+* `RC::JsonRequest`
+* `RC::JsonResponse`
+* `RC::Oauth1Header`
+* `RC::Oauth2Header`
+* `RC::Oauth2Query`
+* `RC::Timeout`
 
 ## Build Your Own Middlewares:
 
 To be added.
 
-## Build Your Own HTTP clients:
+## Advanced Concurrent HTTP Requests -- Embrace the Future
 
-To be added.
+### The Interface
+
+There are a number of different ways to make concurrent requests in
+rest-core. They could be roughly categorized to two different forms.
+One is using the well known callbacks, while the other one is using
+through a technique called [future][]. Basically, it means it would
+return you a promise, which would eventually become the real value
+(response here) you were asking for whenever you really want it.
+Otherwise, the program keeps running until the value is evaluated,
+and blocks there if the computation (response) hasn't been done yet.
+If the computation is already done, then it would simply return you
+the result.
+
+Here's a very simple example for using futures:
+
+``` ruby
+require 'rest-core'
+YourClient = RC::Builder.client do
+  use RC::DefaultSite , 'https://api.github.com/users/'
+  use RC::JsonResponse, true
+  use RC::CommonLogger, method(:puts)
+end
+client = YourClient.new
+puts "rest-client with threads doing concurrent requests"
+a = [client.get('cardinalblue')['name'], client.get('godfat')['name']]
+puts "It's not blocking..."
+p a
+puts "DONE"
+```
+
+And here's a corresponded version for using callbacks:
+
+``` ruby
+require 'rest-core'
+YourClient = RC::Builder.client do
+  use RC::DefaultSite , 'https://api.github.com/users/'
+  use RC::JsonResponse, true
+  use RC::CommonLogger, method(:puts)
+end
+client = YourClient.new
+puts "rest-client with threads doing concurrent requests"
+client.get('cardinalblue'){ |v|
+         p v['name']
+       }.
+       get('godfat'){ |v|
+         p v['name']
+       }
+puts "It's not blocking..."
+client.wait # until all requests are done
+puts "DONE"
+```
+
+You can pick whatever works for you.
+
+[future]: http://en.wikipedia.org/wiki/Futures_and_promises
+
+### What Concurrency Model to Choose?
+
+In the above example, we're using rest-client with threads, which works
+for most of cases. But you might also want to use em-http-request with
+EventMachine, which is using a faster HTTP parser. In theory, it should
+be much more efficient than rest-client and threads.
+
+To pick em-http-request, you must run the requests inside the EventMachine's
+event loop, and also wrap your request with either a thread or a fiber,
+because we can't block the event loop and want em-http-request finish its
+job making requests.
+
+Here's an example of using em-http-request with threads:
+
+``` ruby
+require 'em-http-request'
+require 'rest-core'
+YourClient = RC::Builder.client do
+  use RC::DefaultSite , 'https://api.github.com/users/'
+  use RC::JsonResponse, true
+  use RC::CommonLogger, method(:puts)
+end
+client = YourClient.new
+puts "eventmachine with threads doing concurrent requests"
+EM.run{
+  Thread.new{
+    p [client.get('cardinalblue')['name'], client.get('godfat')['name']]
+    puts "DONE"
+    EM.stop
+  }
+  puts "It's not blocking..."
+}
+```
+
+And here's an example of using em-http-request with fibers:
+
+``` ruby
+require 'fiber'
+require 'em-http-request'
+require 'rest-core'
+YourClient = RC::Builder.client do
+  use RC::DefaultSite , 'https://api.github.com/users/'
+  use RC::JsonResponse, true
+  use RC::CommonLogger, method(:puts)
+end
+client = YourClient.new
+puts "eventmachine with fibers doing concurrent requests"
+EM.run{
+  Fiber.new{
+    p [client.get('cardinalblue')['name'], client.get('godfat')['name']]
+    puts "DONE"
+    EM.stop
+  }
+  puts "It's not blocking..."
+}
+```
+
+As you can see, both of them are quite similar to each other, because the
+idea behind the scene is the same. If you don't know what concurrency model
+to pick, start with rest-client since it's the easiest one to setup.
+
+A full runnable example is here: [example/multi.rb][]. If you want to know
+all the possible use cases, you can also see: [example/use-cases.rb][]. It's
+also served as a test for each possible combinations, so it's quite complex.
+
+[example/multi.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/multi.rb
+
+[example/use-cases.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/use-cases.rb
 
 ## rest-core users:
 
@@ -217,89 +292,6 @@ To be added.
 ## CHANGES:
 
 * [CHANGES](https://github.com/cardinalblue/rest-core/blob/master/CHANGES.md)
-
-## GLOSSARY:
-
-* A _client_ is a class which can new connections to make requests.
-  For instance, `RestCore::Facebook.new.get('4')`
-
-* An _app_ is an HTTP client which would do the underneath HTTP requests.
-  For instance, `RestCore::RestClient` is an HTTP client which uses
-  rest-client gem (`::RestClient`) to make HTTP requests.
-
-* A _middleware_ is a component for a rest-core stack.
-  For instance, `RestCore::DefaultSite` is a middleware which would add
-  default site URL in front of the request URI if it is not started with
-  http://, thus you can do this: `RestCore::Facebook.get('4')` without
-  specifying where the site (Facebook) it is.
-
-* `RestCore::Wrapper` is a utility which could help you wrap a number of
-  middlewares into another middleware. Currently, it's used in
-  `RestCore::Buidler` and `RestCore::Cache`.
-
-* `RestCore::Builder` is a utility which could help you build a _client_
-  with a collection of _middlewares_ and an _app_. i.e. a rest-core stack.
-
-* `RestCore::Middleware` is a utility which could help you build a non-trivial
-  middleware. More explanation to come...
-
-* `RestCore::Client` is a module which would be included in a generated
-  _client_ by `RestCore::Builder`. It contains a number of convenient
-  functions which is generally useful.
-
-* `RestCore::ClientOAuth1` is a module which should be included in a OAuth1.0
-  client. It contains a number of convenient functions which is useful for an
-  OAuth 1.0 client.
-
-* An `env` is a hash which contains all the information for both request and
-  response. It's mostly seen in `@app.call(env)` See other explanation
-  such as `env[RestCore::REQUEST_METHOD]` for more detail.
-
-* `env[RestCore::REQUEST_METHOD]` is a symbol representing which HTTP method
-  would be used in the subsequent HTTP request. The possible values are
-  either: `:get`, `:post`, `:put` or `:delete`.
-
-* `env[RestCore::REQUEST_PATH]` is a string representing which HTTP path
-  would be used in the subsequent HTTP request. This path could also include
-  the protocol, not only the path. e.g. `"http://graph.facebook.com/4"` or
-  simply `"4"`. In the case of built-in Facebook client, the
-  `RestCore::DefaultSite` middleware would take care of the site.
-
-* `env[RestCore::REQUEST_QUERY]` is a hash which keys are query keys and
-  values are query values. Both keys and values' type should be String, not
-  Symbol. Values with nil or false would be ignored. Both keys and values
-  would be escaped automatically.
-
-* `env[RestCore::REQUEST_PAYLOAD]` is a hash which keys are payload keys and
-  values are payload values. Both keys and values' type should be String,
-  not Symbol. Values with nil or false would be ignored. Both keys and values
-  would be escaped automatically.
-
-* `env[RestCore::REQUEST_HEADERS]` is a hash which keys are header names and
-  values are header values. Both keys and values' type should be String,
-  not Symbol. Values with nil or false would be ignored.
-
-* `env[RestCore::RESPONSE_BODY]` is a string which is returned by the server.
-  Might be nil if there's no response or not yet making HTTP request.
-
-* `env[RestCore::RESPONSE_STATUS]` is a number which is returned by the
-  server for the HTTP status. Might be nil if there's no response or not
-  yet making HTTP request.
-
-* `env[RestCore::RESPONSE_HEADERS]` is a hash which is returned by the server
-  for the response headers. Both keys and values' type should be String.
-
-* `env[RestCore::DRY]` is a boolean (either `true` or `false` or `nil`) which
-  indicates that if we're only asking for modified `env`, instead of making
-  real requests. It's used to ask for the real request URI, etc.
-
-* `env[RestCore::FAIL]` is an array which contains failing events. Events
-  could be any objects, it's handled by `RestCore::ErrorDetector` or any
-  other custom _middleware_.
-
-* `env[RestCore::LOG]` is an array which contains logging events. Events
-  could be any objects, it's handled by `RestCore::CommonLogger` or
-  any other custom _middleware_.
 
 ## CONTRIBUTORS:
 
