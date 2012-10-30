@@ -1,6 +1,7 @@
 
+require 'fiber'
+require 'em-http-request'
 require 'rest-core'
-require 'eventmachine'
 
 YourClient = RC::Builder.client do
   use RC::DefaultSite , 'https://api.github.com/users/'
@@ -10,28 +11,32 @@ YourClient = RC::Builder.client do
 end
 
 client = YourClient.new
+puts "rest-client with threads doing concurrent requests"
+a = [client.get('cardinalblue')['name'], client.get('godfat')['name']]
+puts "It's not blocking..."
+p a
+puts "DONE"
+
+puts; puts
+
+puts "eventmachine with threads doing concurrent requests"
 EM.run{
-  Fiber.new{
+  Thread.new{
     p [client.get('cardinalblue')['name'], client.get('godfat')['name']]
-    puts "But blocks here and do concurrent requests..."
+    puts "DONE"
     EM.stop
-  }.resume
+  }
   puts "It's not blocking..."
 }
 
 puts; puts
 
+puts "eventmachine with fibers doing concurrent requests"
 EM.run{
-  Thread.new{
+  Fiber.new{
     p [client.get('cardinalblue')['name'], client.get('godfat')['name']]
-    puts "But blocks here and do concurrent requests..."
+    puts "DONE"
     EM.stop
-  }
-  puts "Thread also works..."
+  }.resume
+  puts "It's not blocking..."
 }
-
-puts; puts
-
-puts "Without EventMachine also works..."
-p [client.get('cardinalblue')['name'], client.get('godfat')['name']]
-puts "But blocks here and do concurrent requests..."
