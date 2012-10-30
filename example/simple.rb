@@ -12,3 +12,12 @@ client = YourClient.new(:cache => {})
 p client.get('cardinalblue') # cache miss
 puts
 p client.get('cardinalblue') # cache hit
+
+puts "callback"
+client.get('cardinalblue'){ |v| p v }.wait
+
+puts "future"
+v = client.get('cardinalblue', {}, :cache => false)
+puts "non-blocking"
+p v # block here since we're asking the value of it
+puts "done"
