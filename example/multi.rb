@@ -13,8 +13,8 @@ end
 client = YourClient.new
 puts "rest-client with threads doing concurrent requests"
 a = [client.get('cardinalblue')['name'], client.get('godfat')['name']]
-puts "It's not blocking..."
-p a
+puts "It's not blocking... but doing concurrent requests underneath"
+p a # here we want the values, so it blocks here
 puts "DONE"
 
 puts; puts
@@ -26,7 +26,7 @@ EM.run{
     puts "DONE"
     EM.stop
   }
-  puts "It's not blocking..."
+  puts "It's not blocking... but doing concurrent requests underneath"
 }
 
 puts; puts
@@ -38,5 +38,5 @@ EM.run{
     puts "DONE"
     EM.stop
   }.resume
-  puts "It's not blocking..."
+  puts "It's not blocking... but doing concurrent requests underneath"
 }

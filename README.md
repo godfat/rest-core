@@ -174,11 +174,12 @@ YourClient = RC::Builder.client do
   use RC::JsonResponse, true
   use RC::CommonLogger, method(:puts)
 end
+
 client = YourClient.new
 puts "rest-client with threads doing concurrent requests"
 a = [client.get('cardinalblue')['name'], client.get('godfat')['name']]
-puts "It's not blocking..."
-p a
+puts "It's not blocking... but doing concurrent requests underneath"
+p a # here we want the values, so it blocks here
 puts "DONE"
 ```
 
@@ -191,6 +192,7 @@ YourClient = RC::Builder.client do
   use RC::JsonResponse, true
   use RC::CommonLogger, method(:puts)
 end
+
 client = YourClient.new
 puts "rest-client with threads doing concurrent requests"
 client.get('cardinalblue'){ |v|
@@ -199,7 +201,7 @@ client.get('cardinalblue'){ |v|
        get('godfat'){ |v|
          p v['name']
        }
-puts "It's not blocking..."
+puts "It's not blocking... but doing concurrent requests underneath"
 client.wait # until all requests are done
 puts "DONE"
 ```
@@ -217,8 +219,8 @@ be much more efficient than rest-client and threads.
 
 To pick em-http-request, you must run the requests inside the EventMachine's
 event loop, and also wrap your request with either a thread or a fiber,
-because we can't block the event loop and want em-http-request finish its
-job making requests.
+because we can't block the event loop and ask em-http-request to finish
+its job making requests.
 
 Here's an example of using em-http-request with threads:
 
@@ -230,6 +232,7 @@ YourClient = RC::Builder.client do
   use RC::JsonResponse, true
   use RC::CommonLogger, method(:puts)
 end
+
 client = YourClient.new
 puts "eventmachine with threads doing concurrent requests"
 EM.run{
@@ -238,21 +241,22 @@ EM.run{
     puts "DONE"
     EM.stop
   }
-  puts "It's not blocking..."
+  puts "It's not blocking... but doing concurrent requests underneath"
 }
 ```
 
 And here's an example of using em-http-request with fibers:
 
 ``` ruby
-require 'fiber'
-require 'em-http-request'
+require 'fiber'           # remember to require fiber first,
+require 'em-http-request' # or rest-core won't pick fibers
 require 'rest-core'
 YourClient = RC::Builder.client do
   use RC::DefaultSite , 'https://api.github.com/users/'
   use RC::JsonResponse, true
   use RC::CommonLogger, method(:puts)
 end
+
 client = YourClient.new
 puts "eventmachine with fibers doing concurrent requests"
 EM.run{
@@ -261,7 +265,7 @@ EM.run{
     puts "DONE"
     EM.stop
   }
-  puts "It's not blocking..."
+  puts "It's not blocking... but doing concurrent requests underneath"
 }
 ```
 
@@ -269,9 +273,10 @@ As you can see, both of them are quite similar to each other, because the
 idea behind the scene is the same. If you don't know what concurrency model
 to pick, start with rest-client since it's the easiest one to setup.
 
-A full runnable example is here: [example/multi.rb][]. If you want to know
+A full runnable example is at: [example/multi.rb][]. If you want to know
 all the possible use cases, you can also see: [example/use-cases.rb][]. It's
-also served as a test for each possible combinations, so it's quite complex.
+also served as a test for each possible combinations, so it's quite complex
+and complete.
 
 [example/multi.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/multi.rb
 
