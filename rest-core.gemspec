@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2012-08-15"
-  s.description = "Modular Ruby clients interface for REST APIs\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed [rest-core][], which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-core]: https://github.com/cardinalblue/rest-core\n[rest-more]: https://github.com/cardinalblue/rest-more"
+  s.date = "2012-10-31"
+  s.description = "Modular Ruby clients interface for REST APIs\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/cardinalblue/rest-more"
   s.email = ["dev (XD) cardinalblue.com"]
   s.files = [
   ".gitignore",
@@ -22,13 +22,8 @@ Gem::Specification.new do |s|
   "README.md",
   "Rakefile",
   "TODO.md",
-  "doc/ToC.md",
-  "doc/dependency.md",
-  "doc/design.md",
-  "example/auto.rb",
-  "example/future.rb",
   "example/multi.rb",
-  "example/rest-client.rb",
+  "example/simple.rb",
   "example/use-cases.rb",
   "lib/rest-core.rb",
   "lib/rest-core/builder.rb",
