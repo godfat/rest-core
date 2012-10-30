@@ -12,9 +12,9 @@ end
 
 client = YourClient.new
 puts "rest-client with threads doing concurrent requests"
-a = [client.get('cardinalblue')['name'], client.get('godfat')['name']]
+a = [client.get('cardinalblue'), client.get('godfat')]
 puts "It's not blocking... but doing concurrent requests underneath"
-p a # here we want the values, so it blocks here
+p a.map{ |r| r['name'] } # here we want the values, so it blocks here
 puts "DONE"
 
 puts; puts
@@ -22,7 +22,8 @@ puts; puts
 puts "eventmachine with threads doing concurrent requests"
 EM.run{
   Thread.new{
-    p [client.get('cardinalblue')['name'], client.get('godfat')['name']]
+    a = [client.get('cardinalblue'), client.get('godfat')]
+    p a.map{ |r| r['name'] } # here we want the values, so it blocks here
     puts "DONE"
     EM.stop
   }
@@ -34,7 +35,8 @@ puts; puts
 puts "eventmachine with fibers doing concurrent requests"
 EM.run{
   Fiber.new{
-    p [client.get('cardinalblue')['name'], client.get('godfat')['name']]
+    a = [client.get('cardinalblue'), client.get('godfat')]
+    p a.map{ |r| r['name'] } # here we want the values, so it blocks here
     puts "DONE"
     EM.stop
   }.resume
