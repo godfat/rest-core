@@ -71,6 +71,8 @@ Gem::Specification.new do |s|
   "lib/rest-core/version.rb",
   "lib/rest-core/wrapper.rb",
   "rest-core.gemspec",
+  "task/.gitignore",
+  "task/gemgem.rb",
   "test/test_auth_basic.rb",
   "test/test_builder.rb",
   "test/test_cache.rb",
