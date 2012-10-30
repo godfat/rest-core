@@ -1,6 +1,6 @@
 # CHANGES
 
-## rest-core 2.0.0
+## rest-core 2.0.0 -- 2012-10-31
 
 This is a major release which introduces some incompatible changes.
 This is intended to cleanup some internal implementation and introduce
