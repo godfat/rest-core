@@ -147,6 +147,74 @@ for more complex examples to build clients, and [slides][] from
 [slides]: http://www.godfat.org/slide/2011-08-27-rest-core.html
 [rubyconf.tw]: http://rubyconf.tw/2011/#6
 
+## Playing Around:
+
+You can also play around with `RC::Universal` client, which has installed
+_all_ reasonable middlewares built-in rest-core. So the above example could
+also be achieved by:
+
+``` ruby
+require 'rest-core'
+client = RC::Universal.new(:site          => 'https://api.github.com/users/',
+                           :json_response => true,
+                           :log_method    => method(:puts))
+client.get('cardinalblue')
+```
+
+`RC::Universal` is defined as:
+
+``` ruby
+module RestCore
+  Universal = Builder.client do
+    use Timeout       , 0
+
+    use DefaultSite   , nil
+    use DefaultHeaders, {}
+    use DefaultQuery  , {}
+    use DefaultPayload, {}
+    use JsonRequest   , false
+    use AuthBasic     , nil, nil
+
+    use FollowRedirect, 10
+    use CommonLogger  , method(:puts)
+    use Cache         ,  {}, 600 do
+      use ErrorHandler, nil
+      use ErrorDetectorHttp
+      use JsonResponse, false
+    end
+  end
+end
+```
+
+If you have both [rib][] and [rest-more][] installed, you can also play
+around with an interactive shell, like this:
+
+``` shell
+rib rest-core
+```
+
+And you will be entering a rib shell, which `self` is an instance of
+`RC::Universal` you can play:
+
+    rest-core>> get 'https://api.github.com/users/cardinalblue'
+
+will print out the response from Github. You can also do this to make
+calling Github easier:
+
+    rest-core>> self.site = 'https://api.github.com/users/'
+    rest-core>> self.json_response = true
+
+Then it would do exactly like the original example:
+
+    rest-core>> get 'cardinalblue' # you get a nice parsed hash
+
+This is mostly for fun and experimenting, so it's only included in
+[rest-more][] and [rib][]. Please make sure you have both of them
+installed before trying this.
+
+[rib]: https://github.com/godfat/rib
+[rest-more]: https://github.com/cardinalblue/rest-more
+
 ## List of built-in Middlewares:
 
 * `RC::AuthBasic`
