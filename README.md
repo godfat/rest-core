@@ -115,6 +115,29 @@ client.wait # we block here to wait for the request done
 puts "DONE"
 ```
 
+You can also use `request_full` to retrieve everything including response
+status, response headers, and also other rest-core options. But since using
+this interface is like using Rack directly, you have to build the env
+manually. To help you build the env manually, everything has a default,
+including the path.
+
+``` ruby
+client.request_full({})[RC::RESPONSE_BODY] # {"message"=>"Not Found"}
+# This would print something like this:
+# RestCore: Auto   picked: RestCore::RestClient
+# RestCore: Future picked: RestCore::Future::FutureThread
+# RestCore: spent 1.135713 Requested GET https://api.github.com/users//
+
+client.request_full(RC::REQUEST_PATH => 'cardinalblue')[RC::RESPONSE_STATUS]
+client.request_full(RC::REQUEST_PATH => 'cardinalblue')[RC::RESPONSE_HEADERS]
+# Headers are normalized with all upper cases and
+# dashes are replaced by underscores.
+
+# To make POST (or any other request methods) request:
+client.request_full(RC::REQUEST_PATH   => 'cardinalblue',
+                    RC::REQUEST_METHOD => :post)[RC::RESPONSE_STATUS] # 404
+```
+
 Runnable example is at: [example/simple.rb][]. Please see [rest-more][]
 for more complex examples to build clients, and [slides][] from
 [rubyconf.tw/2011][rubyconf.tw] for concepts.
