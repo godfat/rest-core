@@ -83,6 +83,8 @@ YourClient = RC::Builder.client do
 end
 ```
 
+### Basic Usage:
+
 And use it with per-instance basis (clients could have different
 configuration, e.g. different cache time or timeout time):
 
@@ -96,6 +98,8 @@ client.get('cardinalblue') # cache miss
 client.get('cardinalblue') # cache hit
 ```
 
+### Concurrent Requests with Futures:
+
 You can also make concurrent requests easily:
 (see "Advanced Concurrent HTTP Requests -- Embrace the Future" for detail)
 
@@ -105,6 +109,8 @@ puts "It's not blocking... but doing concurrent requests underneath"
 p a.map{ |r| r['name'] } # here we want the values, so it blocks here
 puts "DONE"
 ```
+
+### Exception Handling for Futures:
 
 Note that since the API call would only block whenever you're looking at
 the response, it won't raise any exception at the time the API was called.
@@ -154,6 +160,8 @@ end
 The point is simply making a method call to force it load, whatever method
 should work.
 
+### Concurrent Requests with Callbacks:
+
 On the other hand, callback mode also available:
 
 ``` ruby
@@ -162,6 +170,8 @@ puts "It's not blocking... but doing concurrent requests underneath"
 client.wait # we block here to wait for the request done
 puts "DONE"
 ```
+
+### Exception Handling for Callbacks:
 
 What about exception handling in callback mode? You know that we cannot
 raise any exception in the case of using a callback. So rest-core would
@@ -180,6 +190,8 @@ puts "It's not blocking... but doing concurrent requests underneath"
 client.wait # we block here to wait for the request done
 puts "DONE"
 ```
+
+### More Control with `request_full`:
 
 You can also use `request_full` to retrieve everything including response
 status, response headers, and also other rest-core options. But since using
@@ -203,6 +215,8 @@ client.request_full(RC::REQUEST_PATH => 'cardinalblue')[RC::RESPONSE_HEADERS]
 client.request_full(RC::REQUEST_PATH   => 'cardinalblue',
                     RC::REQUEST_METHOD => :post)[RC::RESPONSE_STATUS] # 404
 ```
+
+### Examples:
 
 Runnable example is at: [example/simple.rb][]. Please see [rest-more][]
 for more complex examples to build clients, and [slides][] from
