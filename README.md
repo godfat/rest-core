@@ -106,10 +106,76 @@ p a.map{ |r| r['name'] } # here we want the values, so it blocks here
 puts "DONE"
 ```
 
-Callback mode also available:
+Note that since the API call would only block whenever you're looking at
+the response, it won't raise any exception at the time the API was called.
+So if you want to block and handle the exception at the time API was called,
+you would do something like this:
+
+``` ruby
+begin
+  response = client.get('bad-user').tap{} # .tap{} is the point
+  do_the_work(response)
+rescue => e
+  puts "Got an exception: #{e}"
+end
+```
+
+The trick here is forcing the future immediately give you the exact response,
+so that rest-core could see the response and raise the exception. You can
+call whatever methods on the future to force this behaviour, but since `tap{}`
+is a method from `Kernel` (which is included in `Object`), it's always
+available and would return the original value, so it is the easiest method
+to be remembered and used.
+
+If you know the response must be a string, then you can also use `to_s`.
+Like this:
+
+``` ruby
+begin
+  response = client.get('bad-user').to_s
+  do_the_work(response)
+rescue => e
+  puts "Got an exception: #{e}"
+end
+```
+
+Or you can also do this:
+
+``` ruby
+begin
+  response = client.get('bad-user')
+  response.class # simply force it to load
+  do_the_work(response)
+rescue => e
+  puts "Got an exception: #{e}"
+end
+```
+
+The point is simply making a method call to force it load, whatever method
+should work.
+
+On the other hand, callback mode also available:
 
 ``` ruby
 client.get('cardinalblue'){ |v| p v }
+puts "It's not blocking... but doing concurrent requests underneath"
+client.wait # we block here to wait for the request done
+puts "DONE"
+```
+
+What about exception handling in callback mode? You know that we cannot
+raise any exception in the case of using a callback. So rest-core would
+pass the exception object into your callback. You can handle the exception
+like this:
+
+``` ruby
+client.get('bad-user') do |response|
+  if response.kind_of?(Exception)
+    puts "Got an exception: #{response}"
+  else
+    do_the_work(response)
+  end
+end
 puts "It's not blocking... but doing concurrent requests underneath"
 client.wait # we block here to wait for the request done
 puts "DONE"
