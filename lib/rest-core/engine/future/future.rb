@@ -58,21 +58,22 @@ class RestCore::Future
                                       ["Future picked: #{self.class}"]))
   end
 
+  def callback_in_async
+    callback
+  rescue Exception => e
+    # nothing we can do here for an asynchronous exception,
+    # so we just log the error
+    logger = method(:warn) # TODO: add error_log_method
+    logger.call "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
+  end
+
   def on_load body, status, headers
     env[TIMER].cancel if env[TIMER]
     synchronize{
       self.body, self.status, self.headers = body, status, headers
-      begin
-        # under ASYNC callback, should call immediate
-        next_tick{ callback } if immediate
-      rescue Exception => e
-        # nothing we can do here for an asynchronous exception,
-        # so we just log the error
-        logger = method(:warn) # TODO: add error_log_method
-        logger.call "RestCore: ERROR: #{e}\n" \
-                    "  from #{e.backtrace.inspect}"
-      end
     }
+    # under ASYNC callback, should call immediately
+    next_tick{ callback_in_async } if immediate
     resume # client or response might be waiting
   end
 

@@ -17,18 +17,17 @@ class RestCore::EmHttpRequest
                                                merge(env[REQUEST_HEADERS]))
 
     client.callback{
-      future.wrap{ # callbacks are run in main thread, so we need to wrap it
-        future.on_load(client.response,
-                       client.response_header.status,
-                       client.response_header)}}
+      future.on_load(client.response,
+                     client.response_header.status,
+                     client.response_header)}
 
-    client.errback{future.wrap{ future.on_error(client.error) }}
+    client.errback{future.on_error(client.error) }
 
     env[TIMER].on_timeout{
       (client.instance_variable_get(:@callbacks)||[]).clear
       (client.instance_variable_get(:@errbacks )||[]).clear
       client.close
-      future.wrap{ future.on_error(env[TIMER].error) }
+      future.on_error(env[TIMER].error)
     } if env[TIMER]
 
     env.merge(RESPONSE_BODY    => future.proxy_body,

@@ -22,14 +22,7 @@ class RestCore::Future::FutureFiber < RestCore::Future
     fibers.clear
     current_fibers.each{ |f|
       next unless f.alive?
-      next_tick{
-        begin
-          f.resume
-        rescue FiberError
-          # whenever timeout, it would be already resumed,
-          # and we have no way to tell if it's already resumed or not!
-        end
-      }
+      next_tick{ f.resume }
     }
     resume
   end
