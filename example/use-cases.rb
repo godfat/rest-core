@@ -66,11 +66,15 @@ def_use_case 'pure_ruby_nested_concurrent_requests' do
   %w[rubytaiwan godfat].each{ |user|
     c.get("/users/#{user}/repos", :per_page => 100){ |repos|
       rs = repos.reject{ |r| r['fork'] }
+      rs = [{}] if rs.size == 1 # out of API limit :(
       most_watched = rs.max_by{ |r| r['watchers'] }['name']
       most_size    = rs.max_by{ |r| r['size']     }['name']
 
       watch_contri = c.get("/repos/#{user}/#{most_watched}/contributors")
        size_contri = c.get("/repos/#{user}/#{most_size}/contributors")
+
+      watch_contri = [{}] if watch_contri.size == 1 # out of API limit :(
+       size_contri = [{}] if  size_contri.size == 1 # out of API limit :(
 
       most_watched_most_contri = watch_contri.max_by{ |c| c['contributions'] }
       most_size_most_contri    =  size_contri.max_by{ |c| c['contributions'] }
