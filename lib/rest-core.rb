@@ -71,7 +71,7 @@ module RestCore
   def self.eagerload const=self, loaded={}
     return if loaded[const.name]
     loaded[const.name] = true
-    const.constants.each{ |n|
+    const.constants(false).each{ |n|
       begin
         c = const.const_get(n)
       rescue LoadError => e
