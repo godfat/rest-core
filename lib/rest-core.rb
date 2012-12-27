@@ -74,7 +74,7 @@ module RestCore
     const.constants(false).each{ |n|
       begin
         c = const.const_get(n)
-      rescue LoadError => e
+      rescue LoadError, NameError => e
         warn "RestCore: WARN: #{e} for #{const}\n" \
              "  from #{e.backtrace.grep(/top.+required/).first}"
       end
