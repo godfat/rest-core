@@ -1,5 +1,18 @@
 # CHANGES
 
+## rest-core 2.0.1 -- 2013-01-08
+
+### Bugs fixes
+
+* Don't walk into parent's constants in `RC.eagerload`.
+* Also rescue `NameError` in `RC.eagerload`.
+
+### Enhancement
+
+* Remove unnecessary `future.wrap` in `EmHttpRequest`.
+* Introduce Future#callback_in_async.
+* We would never double resume the fiber, so no need to rescue `FiberError`.
+
 ## rest-core 2.0.0 -- 2012-10-31
 
 This is a major release which introduces some incompatible changes.
