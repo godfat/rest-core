@@ -92,14 +92,16 @@ class RestCore::Cache
 
   def data_construct res
     "#{ res[RESPONSE_STATUS]}\n" \
-    "#{(res[RESPONSE_HEADERS]||{}).map{|k,v|"#{k}: #{v}"}.join("\n")}\n\n" \
+    "#{(res[RESPONSE_HEADERS]||{}).map{|k,v|"#{k}: #{v}\n"}.join}\n\n" \
     "#{ res[RESPONSE_BODY]}"
   end
 
   def data_extract data
-    _, status, headers, body = data.match(/\A(\d+)\n(.*)\n\n(.*)\Z/m).to_a
+    _, status, headers, body =
+      data.match(/\A(\d+)\n([^\n]+\n)*\n\n(.*)\Z/m).to_a
+
     {RESPONSE_BODY    => body,
-     RESPONSE_HEADERS => Hash[(headers||'').scan(/([^:]+): ([^\n]+)\n?/)],
+     RESPONSE_HEADERS => Hash[(headers||'').scan(/([^:]+): ([^\n]+)\n/)],
      RESPONSE_STATUS  => status.to_i}
   end
 

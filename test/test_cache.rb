@@ -25,7 +25,7 @@ describe RC::Cache do
     end.new
     c.get('/')
     key = Digest::MD5.hexdigest('get:/:')
-    c.cache.should.eq("rest-core:cache:#{key}" => "200\nA: B\n\nresponse")
+    c.cache.should.eq("rest-core:cache:#{key}" => "200\nA: B\n\n\nresponse")
     c.app.app.tick.should.eq 1
     c.get('/')
     c.app.app.tick.should.eq 1
@@ -105,6 +105,16 @@ describe RC::Cache do
     stub_request(:get, 'me').to_return(:body => body = '{"a":"b"}')
     c.get('me').should.eq 'a' => 'b'
     c.cache.values.first.should.eq "200\n\n\n#{body}"
+  end
+
+  should 'multiline response' do
+    c = RC::Builder.client do
+      use RC::Cache, {}, 3600
+    end.new
+    stub_request(:get, 'html').to_return(:body => body = "a\n\nb")
+    c.get('html').should.eq body
+    c.cache.values.first.should.eq "200\n\n\n#{body}"
+    c.get('html')       .should.eq body
   end
 
   should "follow redirect with cache.update correctly" do
