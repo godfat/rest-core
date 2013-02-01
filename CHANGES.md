@@ -1,5 +1,12 @@
 # CHANGES
 
+## rest-core 2.0.2 -- 2013-02-01
+
+### Bugs fixes
+
+* [`Cache`] Fix cache with multiline response body. This might invalidate
+  your existing cache.
+
 ## rest-core 2.0.1 -- 2013-01-08
 
 ### Bugs fixes
