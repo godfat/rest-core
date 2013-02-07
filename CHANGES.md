@@ -1,6 +1,6 @@
 # CHANGES
 
-## rest-core 2.0.2 -- 2013-02-01
+## rest-core 2.0.2 -- 2013-02-07
 
 ### Bugs fixes
 
