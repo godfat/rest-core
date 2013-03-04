@@ -6,8 +6,6 @@ require 'uri'
 require 'openssl'
 
 class RestCore::Oauth1Header
-  UNRESERVED = /[^a-zA-Z0-9\-\.\_\~]/
-
   def self.members
     [:request_token_path, :access_token_path, :authorize_path,
      :consumer_key, :consumer_secret,
@@ -106,9 +104,5 @@ class RestCore::Oauth1Header
                                     (v.respond_to?(:strip) &&
                                      v.respond_to?(:empty) &&
                                      v.strip.empty? == true) }
-  end
-
-  def escape string
-    URI.escape(string, UNRESERVED)
   end
 end

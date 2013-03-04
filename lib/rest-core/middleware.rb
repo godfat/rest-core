@@ -1,7 +1,7 @@
 
 require 'rest-core'
 
-require 'cgi'
+require 'uri'
 
 module RestCore::Middleware
   include RestCore
@@ -60,10 +60,16 @@ module RestCore::Middleware
       q = if env[REQUEST_PATH] =~ /\?/ then '&' else '?' end
       "#{env[REQUEST_PATH]}#{q}" \
       "#{query.sort.map{ |(k, v)|
-        "#{CGI.escape(k.to_s)}=#{CGI.escape(v.to_s)}" }.join('&')}"
+        "#{escape(k.to_s)}=#{escape(v.to_s)}" }.join('&')}"
     end
   end
   public :request_uri
+
+  UNRESERVED = /[^a-zA-Z0-9\-\.\_\~]/
+  def escape string
+    URI.escape(string, UNRESERVED)
+  end
+  public :escape
 
   def string_keys hash
     hash.inject({}){ |r, (k, v)|

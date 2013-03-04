@@ -68,12 +68,8 @@ module RestCore::ClientOauth1
 
   def calculate_sig hash=data
     base = hash.reject{ |(k, _)| k == 'sig' }.sort.map{ |(k, v)|
-      "#{escape(k.to_s)}=#{escape(v.to_s)}"
+      "#{Middleware.escape(k.to_s)}=#{Middleware.escape(v.to_s)}"
     }.join('&')
-    Digest::MD5.hexdigest("#{escape(consumer_secret)}&#{base}")
-  end
-
-  def escape string
-    CGI.escape(string).gsub('+', '%20')
+    Digest::MD5.hexdigest("#{Middleware.escape(consumer_secret)}&#{base}")
   end
 end
