@@ -6,5 +6,6 @@ env:
 
 rvm:
   - 1.9.3
+  - 2.0.0
   - rbx-head
   - jruby-head
