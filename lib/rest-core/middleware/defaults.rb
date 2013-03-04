@@ -30,7 +30,7 @@ class RestCore::Defaults
     end
   end
 
-  def respond_to? msg
+  def respond_to_missing? msg, include_private=false
     # since psych would call respond_to? before setting up
     # instance variables when restoring ruby objects, we might
     # be accessing undefined ivars in that case even all ivars are
