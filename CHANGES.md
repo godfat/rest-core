@@ -1,5 +1,12 @@
 # CHANGES
 
+## rest-core 2.0.3 -- 2013-04-01
+
+* Use `URI.escape(string, UNRESERVED)` for URI escaping instead of
+  `CGI.escape`
+
+* [`Defaults`] Use `respond_to_missing?` instead of `respond_to?`
+
 ## rest-core 2.0.2 -- 2013-02-07
 
 ### Bugs fixes
