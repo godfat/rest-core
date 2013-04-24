@@ -21,12 +21,12 @@ class RestCore::EmHttpRequest
                      client.response_header.status,
                      client.response_header)}
 
-    client.errback{future.on_error(client.error) }
+    client.errback{
+      close(client)
+      future.on_error(client.error)}
 
     env[TIMER].on_timeout{
-      (client.instance_variable_get(:@callbacks)||[]).clear
-      (client.instance_variable_get(:@errbacks )||[]).clear
-      client.close
+      close(client)
       future.on_error(env[TIMER].error)
     } if env[TIMER]
 
@@ -34,5 +34,11 @@ class RestCore::EmHttpRequest
               RESPONSE_STATUS  => future.proxy_status,
               RESPONSE_HEADERS => future.proxy_headers,
               FUTURE           => future)
+  end
+
+  def close client
+    (client.instance_variable_get(:@callbacks)||[]).clear
+    (client.instance_variable_get(:@errbacks )||[]).clear
+    client.close
   end
 end
