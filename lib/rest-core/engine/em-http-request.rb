@@ -8,7 +8,25 @@ require 'rest-core/middleware'
 class RestCore::EmHttpRequest
   include RestCore::Middleware
   def call env, &k
-    future  = Future.create(env, k, env[ASYNC])
+    future = Future.create(env, k, env[ASYNC])
+
+    # eventmachine is not thread-safe, so...
+    # https://github.com/igrigorik/em-http-request/issues/190#issuecomment-16995528
+    ::EventMachine.schedule{ request(future, env) }
+
+    env.merge(RESPONSE_BODY    => future.proxy_body,
+              RESPONSE_STATUS  => future.proxy_status,
+              RESPONSE_HEADERS => future.proxy_headers,
+              FUTURE           => future)
+  end
+
+  def close client
+    (client.instance_variable_get(:@callbacks)||[]).clear
+    (client.instance_variable_get(:@errbacks )||[]).clear
+    client.close
+  end
+
+  def request future, env
     payload = ::RestClient::Payload.generate(env[REQUEST_PAYLOAD])
     client  = ::EventMachine::HttpRequest.new(request_uri(env)).send(
                  env[REQUEST_METHOD],
@@ -29,16 +47,5 @@ class RestCore::EmHttpRequest
       close(client)
       future.on_error(env[TIMER].error)
     } if env[TIMER]
-
-    env.merge(RESPONSE_BODY    => future.proxy_body,
-              RESPONSE_STATUS  => future.proxy_status,
-              RESPONSE_HEADERS => future.proxy_headers,
-              FUTURE           => future)
-  end
-
-  def close client
-    (client.instance_variable_get(:@callbacks)||[]).clear
-    (client.instance_variable_get(:@errbacks )||[]).clear
-    client.close
   end
 end
