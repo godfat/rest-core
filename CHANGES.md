@@ -1,5 +1,9 @@
 # CHANGES
 
+## rest-core 2.0.4 -- 2013-04-30
+
+* [`EmHttpRequest`] Use `EM.schedule` to fix thread-safety issue.
+
 ## rest-core 2.0.3 -- 2013-04-01
 
 * Use `URI.escape(string, UNRESERVED)` for URI escaping instead of
