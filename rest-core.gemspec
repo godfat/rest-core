@@ -128,4 +128,8 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<rest-client>, [">= 0"])
   end
+
+  if File.exists?('UPGRADING')
+    s.post_install_message = File.read('UPGRADING')
+  end
 end
