@@ -68,6 +68,7 @@ Gem::Specification.new do |s|
   "lib/rest-core/util/hmac.rb",
   "lib/rest-core/util/json.rb",
   "lib/rest-core/util/parse_query.rb",
+  "lib/rest-core/util/payload.rb",
   "lib/rest-core/version.rb",
   "lib/rest-core/wrapper.rb",
   "rest-core.gemspec",
@@ -78,6 +79,7 @@ Gem::Specification.new do |s|
   "test/test_cache.rb",
   "test/test_client.rb",
   "test/test_client_oauth1.rb",
+  "test/test_default_payload.rb",
   "test/test_default_query.rb",
   "test/test_em_http_request.rb",
   "test/test_error_detector.rb",
@@ -93,6 +95,8 @@ Gem::Specification.new do |s|
   "test/test_universal.rb",
   "test/test_wrapper.rb"]
   s.homepage = "https://github.com/cardinalblue/rest-core"
+  s.licenses = ["Apache License 2.0"]
+  s.post_install_message = "# [rest-core] Breaking changes for POST requests:\n\n* We no longer support Rails-like POST payload, like translating\n  `{:foo => [1, 2]}` to `'foo[]=1&foo[]=2'`. It would now be translated to\n  `'foo=1&foo=2'`. If you like `'foo[]'` as the key, simply pass it as\n  `{'foo[]' => [1, 2]}`.\n\n* This also applies to nested hashes like `{:foo => {:bar => 1}`. If you\n  want that behaviour, just pass `{'foo[bar]' => 1}` which would then be\n  translated to `'foo[bar]=1'`.\n"
   s.require_paths = ["lib"]
   s.rubygems_version = "2.0.3"
   s.summary = "Modular Ruby clients interface for REST APIs."
@@ -102,6 +106,7 @@ Gem::Specification.new do |s|
   "test/test_cache.rb",
   "test/test_client.rb",
   "test/test_client_oauth1.rb",
+  "test/test_default_payload.rb",
   "test/test_default_query.rb",
   "test/test_em_http_request.rb",
   "test/test_error_detector.rb",
@@ -127,9 +132,5 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<rest-client>, [">= 0"])
-  end
-
-  if File.exists?('UPGRADING')
-    s.post_install_message = File.read('UPGRADING')
   end
 end
