@@ -58,12 +58,21 @@ module RestCore::Middleware
       env[REQUEST_PATH].to_s
     else
       q = if env[REQUEST_PATH] =~ /\?/ then '&' else '?' end
-      "#{env[REQUEST_PATH]}#{q}" \
-      "#{query.sort.map{ |(k, v)|
-        "#{escape(k.to_s)}=#{escape(v.to_s)}" }.join('&')}"
+      "#{env[REQUEST_PATH]}#{q}#{percent_encode(query)}"
     end
   end
   public :request_uri
+
+  def percent_encode query
+    query.sort.map{ |(k, v)|
+      if v.kind_of?(Array)
+        v.map{ |vv| "#{escape(k.to_s)}=#{escape(vv.to_s)}" }.join('&')
+      else
+        "#{escape(k.to_s)}=#{escape(v.to_s)}"
+      end
+    }.join('&')
+  end
+  public :percent_encode
 
   UNRESERVED = /[^a-zA-Z0-9\-\.\_\~]/
   def escape string
