@@ -12,7 +12,7 @@ class RestCore::RestClient
 
     t = future.wrap{ # we can implement thread pool in the future
       begin
-        payload = RC::Payload.generate(env[REQUEST_PAYLOAD])
+        payload = Payload.generate(env[REQUEST_PAYLOAD])
         headers = env[REQUEST_HEADERS].merge(payload.headers)
         res = ::RestClient::Request.execute(:method  => env[REQUEST_METHOD],
                                             :url     => request_uri(env)   ,

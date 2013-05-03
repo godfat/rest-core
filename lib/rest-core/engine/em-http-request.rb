@@ -27,7 +27,7 @@ class RestCore::EmHttpRequest
   end
 
   def request future, env
-    payload = ::RestClient::Payload.generate(env[REQUEST_PAYLOAD])
+    payload = Payload.generate(env[REQUEST_PAYLOAD])
     client  = ::EventMachine::HttpRequest.new(request_uri(env)).send(
                  env[REQUEST_METHOD],
                  :body => payload && payload.read,
