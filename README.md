@@ -18,7 +18,7 @@ talk is in Mandarin.
 
 ## DESCRIPTION:
 
-Modular Ruby clients interface for REST APIs
+Modular Ruby clients interface for REST APIs.
 
 There has been an explosion in the number of REST APIs available today.
 To address the need for a way to access these APIs easily and elegantly,
