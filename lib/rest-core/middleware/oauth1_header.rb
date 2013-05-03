@@ -89,16 +89,6 @@ class RestCore::Oauth1Header
     end
   end
 
-  def contain_binary? payload
-    return false unless payload
-    return true  if     payload.kind_of?(IO)    ||
-                        payload.respond_to?(:read)
-    return true  if     payload.find{ |k, v|
-      # if payload is an array, then v would be nil
-      (v || k).kind_of?(IO) || (v || k).respond_to?(:read) }
-    return false
-  end
-
   def reject_blank params
     params.reject{ |k, v| v.nil? || v == false ||
                                     (v.respond_to?(:strip) &&

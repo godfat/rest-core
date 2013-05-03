@@ -80,6 +80,18 @@ module RestCore::Middleware
   end
   public :escape
 
+  def contain_binary? payload
+    return false unless payload
+    return true  if     payload.respond_to?(:read)
+    return true  if     payload.find{ |k, v|
+      # if payload is an array, then v would be nil
+      (v || k).respond_to?(:read) ||
+      # if v is an array, it could contain binary data
+      (v.kind_of?(Array) && v.any?{ |vv| vv.respond_to?(:read) }) }
+    return false
+  end
+  public :contain_binary?
+
   def string_keys hash
     hash.inject({}){ |r, (k, v)|
       if v.kind_of?(Hash)
