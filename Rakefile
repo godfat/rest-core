@@ -24,7 +24,7 @@ task 'gem:spec' do
     s.email    = ['dev (XD) cardinalblue.com']
 
     s.post_install_message = <<-MARKDOWN
-# [rest-core] Breaking changes for POST requests:
+# [rest-core] Incompatible changes for POST requests:
 
 * We no longer support Rails-like POST payload, like translating
   `{:foo => [1, 2]}` to `'foo[]=1&foo[]=2'`. It would now be translated to

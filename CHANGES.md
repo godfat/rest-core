@@ -1,5 +1,38 @@
 # CHANGES
 
+## rest-core 2.1.0 -- ?
+
+### Incompatible changes
+
+* We no longer support Rails-like POST payload, like translating
+  `{:foo => [1, 2]}` to `'foo[]=1&foo[]=2'`. It would now be translated to
+  `'foo=1&foo=2'`. If you like `'foo[]'` as the key, simply pass it as
+  `{'foo[]' => [1, 2]}`.
+
+* This also applies to nested hashes like `{:foo => {:bar => 1}`. If you
+  want that behaviour, just pass `{'foo[bar]' => 1}` which would then be
+  translated to `'foo[bar]=1'`.
+
+### Bugs fixes
+
+* [`Payload`] Now we could correctly support payload with "foo=1&foo=2".
+* [`Client`] Fix inspect spacing.
+
+### Enhancement
+
+* [`Payload`] With this class introduced, replacing rest-client's own
+  payload implementation, we could pass StringIO or other sockets as the
+  payload body. This would also fix the issue that using the same key for
+  different values as allowed in the spec.
+* [`EmHttpRequest`] Send payload as a file directly if it's a file. Buffer
+  the payload into a tempfile if it's from a socket or a large StringIO.
+  This should greatly reduce the memory usage as we don't build large
+  Ruby strings in the memory. Streaming is not yet supported though.
+* [`Client`] Make inspect shorter.
+* [`Client`] Introduce Client#default_env
+* [`Middleware`] Introduce Middleware.percent_encode.
+* [`Middleware`] Introduce Middleware.contain_binary?.
+
 ## rest-core 2.0.4 -- 2013-04-30
 
 * [`EmHttpRequest`] Use `EM.schedule` to fix thread-safety issue.
