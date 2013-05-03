@@ -30,9 +30,8 @@ class RestCore::EmHttpRequest
     payload = Payload.generate(env[REQUEST_PAYLOAD])
     client  = ::EventMachine::HttpRequest.new(request_uri(env)).send(
                  env[REQUEST_METHOD],
-                 :body => payload && payload.read,
-                 :head => payload && payload.headers.
-                                               merge(env[REQUEST_HEADERS]))
+                 :body => payload.read,
+                 :head => payload.headers.merge(env[REQUEST_HEADERS]))
 
     client.callback{
       future.on_load(client.response,
