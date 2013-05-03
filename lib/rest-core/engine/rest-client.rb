@@ -12,10 +12,12 @@ class RestCore::RestClient
 
     t = future.wrap{ # we can implement thread pool in the future
       begin
-        res = ::RestClient::Request.execute(:method  => env[REQUEST_METHOD ],
-                                            :url     => request_uri(env)    ,
-                                            :payload => env[REQUEST_PAYLOAD],
-                                            :headers => env[REQUEST_HEADERS],
+        payload = RC::Payload.generate(env[REQUEST_PAYLOAD])
+        headers = env[REQUEST_HEADERS].merge(payload.headers)
+        res = ::RestClient::Request.execute(:method  => env[REQUEST_METHOD],
+                                            :url     => request_uri(env)   ,
+                                            :payload => payload            ,
+                                            :headers => headers            ,
                                             :max_redirects => 0)
         future.on_load(res.body, res.code, normalize_headers(res.raw_headers))
 

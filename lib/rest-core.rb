@@ -35,6 +35,7 @@ module RestCore
   autoload :Hmac          , 'rest-core/util/hmac'
   autoload :Json          , 'rest-core/util/json'
   autoload :ParseQuery    , 'rest-core/util/parse_query'
+  autoload :Payload       , 'rest-core/util/payload'
 
   # middlewares
   autoload :AuthBasic     , 'rest-core/middleware/auth_basic'

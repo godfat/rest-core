@@ -23,4 +23,14 @@ module Kernel
   def lt? rhs
     self < rhs
   end
+
+  def with_img
+    f = Tempfile.new(['img', '.jpg'])
+    n = File.basename(f.path)
+    f.write('a'*10)
+    f.rewind
+    yield(f, n)
+  ensure
+    f.close!
+  end
 end
