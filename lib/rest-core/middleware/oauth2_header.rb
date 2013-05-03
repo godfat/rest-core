@@ -9,7 +9,7 @@ class RestCore::Oauth2Header
     start_time = Time.now
     headers = {'Authorization' =>
                  "#{access_token_type(env)} #{access_token(env)}"}.
-                merge(env[REQUEST_HEADERS] || {}) if access_token(env)
+                merge(env[REQUEST_HEADERS]) if access_token(env)
 
     event = Event::WithHeader.new(Time.now - start_time,
               "Authorization: #{headers['Authorization']}") if headers

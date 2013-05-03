@@ -177,16 +177,8 @@ module RestCore::Client
   end
 
   def request_full env, app=app, &k
-    response = app.call(build_env(
-      {REQUEST_METHOD  => :get,
-       REQUEST_PATH    => '/' ,
-       REQUEST_QUERY   => {}  ,
-       REQUEST_PAYLOAD => {}  ,
-       REQUEST_HEADERS => {}  ,
-       FAIL            => []  ,
-       LOG             => []  ,
-       ASYNC           => !!k }.merge(env)),
-       &(k || Middleware.id))
+    response = app.call(build_env({ASYNC => !!k}.merge(env)),
+                        &(k || Middleware.id))
 
     # under ASYNC callback, response might not be a response hash
     # in that case (maybe in a user created engine), Client#wait
@@ -204,7 +196,18 @@ module RestCore::Client
   end
 
   def build_env env={}
-    Middleware.string_keys(attributes).merge(Middleware.string_keys(env))
+    default_env.merge(
+      Middleware.string_keys(attributes).merge(Middleware.string_keys(env)))
+  end
+
+  def default_env
+    {REQUEST_METHOD  => :get,
+     REQUEST_PATH    => '/' ,
+     REQUEST_QUERY   => {}  ,
+     REQUEST_PAYLOAD => {}  ,
+     REQUEST_HEADERS => {}  ,
+     FAIL            => []  ,
+     LOG             => []  }
   end
   # ------------------------ instance ---------------------
 

@@ -14,7 +14,7 @@ class RestCore::DefaultPayload
     defaults = merge(@payload, payload(env))
 
     app.call(env.merge(REQUEST_PAYLOAD =>
-      merge(defaults, env[REQUEST_PAYLOAD] || {})), &k)
+      merge(defaults, env[REQUEST_PAYLOAD])), &k)
   end
 
   # this method is intended to merge payloads if they are non-empty hashes,

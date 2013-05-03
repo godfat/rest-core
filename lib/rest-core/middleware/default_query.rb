@@ -14,6 +14,6 @@ class RestCore::DefaultQuery
     defaults = string_keys(@query).merge(string_keys(query(env)))
 
     app.call(env.merge(REQUEST_QUERY =>
-      defaults.merge(env[REQUEST_QUERY] || {})), &k)
+      defaults.merge(env[REQUEST_QUERY])), &k)
   end
 end

@@ -16,7 +16,7 @@ class RestCore::Oauth1Header
   def call env, &k
     start_time = Time.now
     headers = {'Authorization' => oauth_header(env)}.
-                merge(env[REQUEST_HEADERS] || {})
+                merge(env[REQUEST_HEADERS])
 
     event = Event::WithHeader.new(Time.now - start_time,
               "Authorization: #{headers['Authorization']}")
@@ -52,7 +52,7 @@ class RestCore::Oauth1Header
     method   = env[REQUEST_METHOD].to_s.upcase
     base_uri = env[REQUEST_PATH]
     payload  = payload_params(env)
-    query    = reject_blank(env[REQUEST_QUERY] || {})
+    query    = reject_blank(env[REQUEST_QUERY])
     params   = reject_blank(oauth_params.merge(query.merge(payload))).
       to_a.sort.map{ |(k, v)|
         "#{escape(k.to_s)}=#{escape(v.to_s)}"}.join('&')
@@ -85,7 +85,7 @@ class RestCore::Oauth1Header
 
     # so the Content-Type header must be application/x-www-form-urlencoded
     else
-      reject_blank(env[REQUEST_PAYLOAD] || {})
+      reject_blank(env[REQUEST_PAYLOAD])
     end
   end
 
