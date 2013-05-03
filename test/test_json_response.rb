@@ -3,9 +3,7 @@ require 'rest-core/test'
 
 describe RC::JsonResponse do
   describe 'app' do
-    def app
-      @app ||= RC::JsonResponse.new(RC::Dry.new, true)
-    end
+    app = RC::JsonResponse.new(RC::Dry.new, true)
 
     should 'do nothing' do
       expected = {RC::RESPONSE_BODY => nil,
@@ -23,15 +21,13 @@ describe RC::JsonResponse do
   end
 
   describe 'client' do
-    def client
-      @client ||= RC::Builder.client do
-        use RC::JsonResponse, true
-        run Class.new{
-          def call env
-            yield(env.merge(RC::RESPONSE_BODY => '{}'))
-          end
-        }
-      end
+    client = RC::Builder.client do
+      use RC::JsonResponse, true
+      run Class.new{
+        def call env
+          yield(env.merge(RC::RESPONSE_BODY => '{}'))
+        end
+      }
     end
 
     should 'do nothing' do

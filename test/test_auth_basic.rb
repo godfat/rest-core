@@ -6,6 +6,8 @@ describe RC::AuthBasic do
     @auth = RC::AuthBasic.new(RC::Dry.new, nil, nil)
   end
 
+  env = {RC::REQUEST_HEADERS => {}}
+
   should 'do nothing' do
     @auth.call({}){ |res| res.should.eq({}) }
   end
@@ -14,9 +16,9 @@ describe RC::AuthBasic do
     @auth.instance_eval{@username = 'Aladdin'}
     @auth.instance_eval{@password = 'open sesame'}
 
-    @auth.call({}){ |res|
-      res.should.eq({RC::REQUEST_HEADERS =>
-        {'Authorization' => 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=='}})
+    @auth.call(env){ |res|
+      res.should.eq(RC::REQUEST_HEADERS =>
+        {'Authorization' => 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=='})
     }
 
     acc = {'Accept' => 'text/plain'}
@@ -30,11 +32,11 @@ describe RC::AuthBasic do
 
   should 'leave a log if username are not both provided' do
     @auth.instance_eval{@username = 'Aladdin'}
-    @auth.call({}){ |res| res[RC::LOG].size.should.eq 1 }
+    @auth.call(env){ |res| res[RC::LOG].size.should.eq 1 }
   end
 
   should 'leave a log if password are not both provided' do
     @auth.instance_eval{@password = 'open sesame'}
-    @auth.call({}){ |res| res[RC::LOG].size.should.eq 1 }
+    @auth.call(env){ |res| res[RC::LOG].size.should.eq 1 }
   end
 end

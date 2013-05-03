@@ -6,34 +6,36 @@ describe RC::DefaultQuery do
     @app = RC::DefaultQuery.new(RC::Dry.new, {})
   end
 
+  env = {RC::REQUEST_QUERY => {}}
+
   describe 'when given query' do
     should 'do nothing' do
-      @app.call({}){ |r| r[RC::REQUEST_QUERY].should.eq({}) }
+      @app.call(env){ |r| r[RC::REQUEST_QUERY].should.eq({}) }
     end
 
     should 'merge query' do
       @app.instance_eval{@query = {'q' => 'uery'}}
 
-      @app.call({}){ |r| r.should.eq({RC::REQUEST_QUERY => {'q' => 'uery'}}) }
+      @app.call(env){ |r| r.should.eq({RC::REQUEST_QUERY => {'q' => 'uery'}}) }
 
       format = {'format' => 'json'}
-      env    = {RC::REQUEST_QUERY => format}
+      e      = {RC::REQUEST_QUERY => format}
 
-      @app.call(env){ |r|
+      @app.call(e){ |r|
         r.should.eq({RC::REQUEST_QUERY => {'q' => 'uery'}.merge(format)}) }
     end
 
     should 'string_keys in query' do
-      env = {'query' => {:symbol => 'value'}}
-      @app.call(env){ |r|
-        r.should.eq({RC::REQUEST_QUERY => {'symbol' => 'value'}}.merge(env))
+      e = {'query' => {:symbol => 'value'}}
+      @app.call(env.merge(e)){ |r|
+        r.should.eq({RC::REQUEST_QUERY => {'symbol' => 'value'}}.merge(e))
       }
     end
   end
 
   describe 'when not given query' do
     should 'merge query with {}' do
-      @app.call({}){ |r| r.should.eq({RC::REQUEST_QUERY => {}}) }
+      @app.call(env){ |r| r.should.eq(RC::REQUEST_QUERY => {}) }
     end
   end
 end
