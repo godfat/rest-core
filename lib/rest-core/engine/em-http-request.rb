@@ -20,31 +20,57 @@ class RestCore::EmHttpRequest
               FUTURE           => future)
   end
 
-  def close client
+  def close client, tmpfile
     (client.instance_variable_get(:@callbacks)||[]).clear
     (client.instance_variable_get(:@errbacks )||[]).clear
     client.close
+    tmpfile.close!
   end
 
   def request future, env
     payload = Payload.generate(env[REQUEST_PAYLOAD])
+    tmpfile = payload2file(payload)
+    args    = if tmpfile.respond_to?(:path)
+                {:file => tmpfile.path}
+              else
+                {:body => tmpfile}
+              end
     client  = ::EventMachine::HttpRequest.new(request_uri(env)).send(
-                 env[REQUEST_METHOD],
-                 :body => payload.read,
-                 :head => payload.headers.merge(env[REQUEST_HEADERS]))
+                 env[REQUEST_METHOD], args.merge(
+                   :head => payload.headers.merge(env[REQUEST_HEADERS])))
 
     client.callback{
+      close(client, tmpfile)
       future.on_load(client.response,
                      client.response_header.status,
                      client.response_header)}
 
     client.errback{
-      close(client)
+      close(client, tmpfile)
       future.on_error(client.error)}
 
     env[TIMER].on_timeout{
-      close(client)
+      close(client, tmpfile)
       future.on_error(env[TIMER].error)
     } if env[TIMER]
+  end
+
+  def payload2file payload
+    if payload.io.respond_to?(:path) # already a file
+      payload.io
+
+    elsif payload.size == 0 ||       # probably a socket, buffer to disc
+          payload.size >= 81920      # probably too large, buffer to disc
+      create_tmpfile(payload.io)
+
+    else                             # probably not worth buffering to disc
+      payload.read
+    end
+  end
+
+  def create_tmpfile io
+    tempfile = Tempfile.new("rest-core.em-http-request.#{rand(1_000_000)}")
+    IO.copy_stream(io, tempfile)
+    tempfile
   end
 end
