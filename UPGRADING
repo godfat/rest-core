@@ -1,0 +1,8 @@
+# Breaking changes:
+
+* We no longer support rails-like request params, like transforming
+foo => [1, 2] to foo[]=1&foo[]=2, it would now be transformed to
+foo=1&foo=2. if you like foo[], simply pass it as foo[] => [1, 2]
+
+* This also applies to nested hash like foo => {bar => 1}. if you
+want that behaviour, just pass foo[bar] => 1.
