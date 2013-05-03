@@ -64,8 +64,14 @@ module RestCore::Client
   end
 
   def inspect
-    fields = attributes.map{ |k, v| "#{k}=#{v.inspect}" }.join(', ')
-    "#<struct #{self.class.name}#{if fields.empty? then '' else fields end}>"
+    fields = if size > 0
+               ' ' + attributes.map{ |k, v|
+                 "#{k}=#{v.inspect.sub(/(?<=.{12}).{4,}/, '...')}"
+               }.join(', ')
+             else
+               ''
+             end
+    "#<struct #{self.class.name}#{fields}>"
   end
 
   def lighten! o={}
