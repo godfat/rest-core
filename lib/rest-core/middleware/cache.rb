@@ -110,6 +110,6 @@ class RestCore::Cache
   end
 
   def header_cache_key env
-    (env[REQUEST_HEADERS]||{}).sort.map{|(k,v)|"#{k}=#{v}"}.join('&')
+    env[REQUEST_HEADERS].sort.map{|(k,v)|"#{k}=#{v}"}.join('&')
   end
 end
