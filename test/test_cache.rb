@@ -149,6 +149,12 @@ describe RC::Cache do
     }
   end
 
+  should 'not cache dry run' do
+    c = RC::Builder.client{use RC::Cache, {}, nil}.new
+    c.url('test')
+    c.cache.should.eq({})
+  end
+
   should 'update cache if there is cache option set to false' do
     url, body = "https://cache", 'ok'
     stub_request(:get, url).to_return(:body => body)

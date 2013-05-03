@@ -106,7 +106,7 @@ class RestCore::Cache
   end
 
   def cache_for? env
-    [:get, :head, :otpions].include?(env[REQUEST_METHOD])
+    [:get, :head, :otpions].include?(env[REQUEST_METHOD]) && !env[DRY]
   end
 
   def header_cache_key env
