@@ -24,7 +24,11 @@ class RestCore::EmHttpRequest
     (client.instance_variable_get(:@callbacks)||[]).clear
     (client.instance_variable_get(:@errbacks )||[]).clear
     client.close
-    tmpfile.close!
+    if tmpfile.respond_to?(:close!)   # tempfile
+      tmpfile.close!
+    elsif tmpfile.respond_to?(:close) # regular IO
+      tmpfile.close
+    end
   end
 
   def request future, env
