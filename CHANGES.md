@@ -1,6 +1,6 @@
 # CHANGES
 
-## rest-core 2.1.0 -- ?
+## rest-core 2.1.0 -- 2013-05-08
 
 ### Incompatible changes
 
