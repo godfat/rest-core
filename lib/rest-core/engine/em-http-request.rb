@@ -21,18 +21,21 @@ class RestCore::EmHttpRequest
   end
 
   def request future, env
-    payload = Payload.generate(env[REQUEST_PAYLOAD])
-    tmpfile = payload2file(payload)
-    args    = if tmpfile.nil?
-                {}
-              elsif tmpfile.respond_to?(:path)
-                {:file => tmpfile.path}
-              else
-                {:body => tmpfile}
-              end
-    client  = ::EventMachine::HttpRequest.new(request_uri(env)).send(
-                 env[REQUEST_METHOD], args.merge(
-                   :head => env[REQUEST_HEADERS].merge(payload.headers)))
+    payload, headers = Payload.generate_with_headers(env[REQUEST_PAYLOAD],
+                                                     env[REQUEST_HEADERS])
+    args = if payload.nil?
+             {}
+           else
+             tmpfile = payload2file(payload)
+             if tmpfile.respond_to?(:path)
+               {:file => tmpfile.path}
+             else
+               {:body => tmpfile}
+             end
+           end.merge(:head => headers)
+
+    client  = ::EventMachine::HttpRequest.new(request_uri(env)).
+                send(env[REQUEST_METHOD], args)
 
     client.callback{
       close_tmpfile(tmpfile)
@@ -53,10 +56,7 @@ class RestCore::EmHttpRequest
   end
 
   def payload2file payload
-    if payload.io.nil?                  # no payload
-      nil
-
-    elsif payload.io.respond_to?(:path) # already a file
+    if payload.io.respond_to?(:path) # already a file
       payload.io
 
     elsif payload.size == 0 ||       # probably a socket, buffer to disc

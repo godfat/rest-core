@@ -12,6 +12,15 @@ module RestCore; end
 class RestCore::Payload
   include RestCore
 
+  def self.generate_with_headers payload, headers
+    h = if p = generate(payload)
+          p.headers.merge(headers)
+        else
+          headers
+        end
+    [p, h]
+  end
+
   def self.generate payload
     if payload.respond_to?(:read)
       Streamed.new(payload)
@@ -21,7 +30,7 @@ class RestCore::Payload
 
     elsif payload.kind_of?(Hash)
       if payload.empty?
-        new
+        nil
 
       elsif Middleware.contain_binary?(payload)
         Multipart.new(payload)
@@ -40,13 +49,11 @@ class RestCore::Payload
   attr_reader  :io
   alias_method :to_io, :io
 
-  def initialize payload=nil
-    @io = payload
-  end
-
-  def read bytes=nil
-    io.read(bytes) if io.respond_to?(:read)
-  end
+  def initialize payload; @io = payload          ; end
+  def read     bytes=nil; io.read(bytes)         ; end
+  def close             ; io.close unless closed?; end
+  def closed?           ; io.closed?             ; end
+  def headers           ; {}                     ; end
 
   def size
     if io.respond_to?(:size)
@@ -56,13 +63,6 @@ class RestCore::Payload
     else
       0
     end
-  end
-
-  def close  ; if io.respond_to?(:close) && !closed? then io.close;  end; end
-  def closed?; if io.respond_to?(:close?) then io.closed? else true; end; end
-
-  def headers
-    {}
   end
 
   class Streamed < Payload
