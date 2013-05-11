@@ -34,7 +34,9 @@ class RestCore::EmHttpRequest
   def request future, env
     payload = Payload.generate(env[REQUEST_PAYLOAD])
     tmpfile = payload2file(payload)
-    args    = if tmpfile.respond_to?(:path)
+    args    = if tmpfile.nil?
+                {}
+              elsif tmpfile.respond_to?(:path)
                 {:file => tmpfile.path}
               else
                 {:body => tmpfile}
@@ -60,7 +62,10 @@ class RestCore::EmHttpRequest
   end
 
   def payload2file payload
-    if payload.io.respond_to?(:path) # already a file
+    if payload.io.nil?                  # no payload
+      nil
+
+    elsif payload.io.respond_to?(:path) # already a file
       payload.io
 
     elsif payload.size == 0 ||       # probably a socket, buffer to disc

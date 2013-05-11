@@ -9,11 +9,10 @@ require 'stringio'
 require 'tempfile'
 
 module RestCore; end
-module RestCore::Payload
+class RestCore::Payload
   include RestCore
-  module_function
 
-  def generate payload
+  def self.generate payload
     if payload.respond_to?(:read)
       Streamed.new(payload)
 
@@ -21,7 +20,10 @@ module RestCore::Payload
       StreamedString.new(payload)
 
     elsif payload.kind_of?(Hash)
-      if Middleware.contain_binary?(payload)
+      if payload.empty?
+        new
+
+      elsif Middleware.contain_binary?(payload)
         Multipart.new(payload)
 
       else
@@ -34,34 +36,39 @@ module RestCore::Payload
     end
   end
 
-  class Streamed
-    def initialize payload
-      @io = payload
+  # Payload API
+  attr_reader  :io
+  alias_method :to_io, :io
+
+  def initialize payload=nil
+    @io = payload
+  end
+
+  def read bytes=nil
+    io.read(bytes) if io.respond_to?(:read)
+  end
+
+  def size
+    if io.respond_to?(:size)
+      io.size
+    elsif io.respond_to?(:stat)
+      io.stat.size
+    else
+      0
     end
+  end
 
-    attr_reader  :io
-    alias_method :to_io, :io
+  def close  ; if io.respond_to?(:close) && !closed? then io.close;  end; end
+  def closed?; if io.respond_to?(:close?) then io.closed? else true; end; end
 
-    def read bytes=nil
-      io.read(bytes)
-    end
+  def headers
+    {}
+  end
 
+  class Streamed < Payload
     def headers
       {'Content-Length' => size.to_s}
     end
-
-    def size
-      if io.respond_to?(:size)
-        io.size
-      elsif io.respond_to?(:stat)
-        io.stat.size
-      else
-        0
-      end
-    end
-
-    def close  ; io.close unless closed?; end
-    def closed?; io.closed?             ; end
   end
 
   class StreamedString < Streamed
