@@ -20,17 +20,6 @@ class RestCore::EmHttpRequest
               FUTURE           => future)
   end
 
-  def close client, tmpfile
-    (client.instance_variable_get(:@callbacks)||[]).clear
-    (client.instance_variable_get(:@errbacks )||[]).clear
-    client.close
-    if tmpfile.respond_to?(:close!)   # tempfile
-      tmpfile.close!
-    elsif tmpfile.respond_to?(:close) # regular IO
-      tmpfile.close
-    end
-  end
-
   def request future, env
     payload = Payload.generate(env[REQUEST_PAYLOAD])
     tmpfile = payload2file(payload)
@@ -46,17 +35,19 @@ class RestCore::EmHttpRequest
                    :head => env[REQUEST_HEADERS].merge(payload.headers)))
 
     client.callback{
-      close(client, tmpfile)
+      close_tmpfile(tmpfile)
       future.on_load(client.response,
                      client.response_header.status,
                      client.response_header)}
 
     client.errback{
-      close(client, tmpfile)
+      close_client(client)
+      close_tmpfile(tmpfile)
       future.on_error(client.error)}
 
     env[TIMER].on_timeout{
-      close(client, tmpfile)
+      close_client(client)
+      close_tmpfile(tmpfile)
       future.on_error(env[TIMER].error)
     } if env[TIMER]
   end
@@ -81,5 +72,19 @@ class RestCore::EmHttpRequest
     tempfile = Tempfile.new("rest-core.em-http-request.#{rand(1_000_000)}")
     IO.copy_stream(io, tempfile)
     tempfile
+  end
+
+  def close_client client
+    (client.instance_variable_get(:@callbacks)||[]).clear
+    (client.instance_variable_get(:@errbacks )||[]).clear
+    client.close
+  end
+
+  def close_tmpfile tmpfile
+    if tmpfile.respond_to?(:close!)   # tempfile
+      tmpfile.close!
+    elsif tmpfile.respond_to?(:close) # regular IO
+      tmpfile.close
+    end
   end
 end
