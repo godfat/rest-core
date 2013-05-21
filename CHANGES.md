@@ -1,5 +1,18 @@
 # CHANGES
 
+## rest-core 2.1.1 -- 2013-05-21
+
+### Bugs fixes
+
+* Fixed em-http-request support.
+
+### Enhancement
+
+* [`Payload`] Now it is a class rather than a module.
+* [`Paylaod`] Introduced `Payload.generate_with_headers`.
+* [`Paylaod`] Give a `nil` if payload passing to `Payload.generate` should
+  not have any payload at all.
+
 ## rest-core 2.1.0 -- 2013-05-08
 
 ### Incompatible changes
