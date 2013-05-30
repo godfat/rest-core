@@ -295,7 +295,7 @@ installed before trying this.
 [rib]: https://github.com/godfat/rib
 [rest-more]: https://github.com/cardinalblue/rest-more
 
-## List of built-in Middlewares:
+## List of built-in Middleware:
 
 * `RC::AuthBasic`
 * `RC::Bypass`
@@ -317,7 +317,7 @@ installed before trying this.
 * `RC::Oauth2Query`
 * `RC::Timeout`
 
-## Build Your Own Middlewares:
+## Build Your Own Middleware:
 
 To be added.
 
