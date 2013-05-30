@@ -19,7 +19,7 @@ class RestCore::Builder
     struct = if fields.empty?
                Struct.new(nil)
              else
-               Struct.new(*fields)
+               Struct.new(*fields.uniq)
              end
     client = Class.new(struct)
     client.const_set('Struct', struct)

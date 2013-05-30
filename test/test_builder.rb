@@ -11,4 +11,14 @@ describe RC::Builder do
     builder.default_engine = RC::Dry
     builder.client.new.app.class.should.eq RC::Dry
   end
+
+  should 'not have duplicated fields' do
+    middleware = Class.new do
+      def self.members; [:value]; end
+      include RC::Middleware
+    end
+    client = RC::Builder.client(:value){ use middleware }.new
+    client.value = 10
+    client.value.should.eq 10
+  end
 end
