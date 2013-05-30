@@ -37,13 +37,6 @@ module RestCore::Client
         private :default_#{name}
       RUBY
     }
-    # if RUBY_VERSION < '1.9.2'
-    src << <<-RUBY if mod.members.first.kind_of?(String)
-      def members
-        super.map(&:to_sym)
-      end
-    RUBY
-    # end
     accessor = Module.new
     accessor.module_eval(src.join("\n"), __FILE__, __LINE__)
     mod.const_set('Accessor', accessor)
