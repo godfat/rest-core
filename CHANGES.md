@@ -1,5 +1,15 @@
 # CHANGES
 
+## rest-core 2.1.2 -- 2013-05-31
+
+### Incompatible changes
+
+* Remove support for Ruby < 1.9.2
+
+### Bugs fixes
+
+* [`Client`] Fixed a bug where if we're using duplicated attributes.
+
 ## rest-core 2.1.1 -- 2013-05-21
 
 ### Bugs fixes
