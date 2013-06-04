@@ -558,6 +558,7 @@ and complete.
 * Jaime Cham (@jcham)
 * John Fan (@johnfan)
 * Lin Jen-Shin (@godfat)
+* lulalala (@lulalala)
 * Mariusz Pruszynski (@snicky)
 * Mr. Big Cat (@miaout17)
 * Nicolas Fouché (@nfo)

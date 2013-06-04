@@ -17,6 +17,7 @@ class RestCore::Timeout::TimerThread
 
   def cancel
     @canceled = true
+    thread.kill.join
   end
 
   def canceled?

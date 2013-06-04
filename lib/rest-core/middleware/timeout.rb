@@ -37,6 +37,9 @@ class RestCore::Timeout
             end.new(timeout(env), timeout_error)
 
     yield(env.merge(TIMER => timer))
+  rescue Exception
+    timer.cancel
+    raise
   end
 
   def timeout_error
