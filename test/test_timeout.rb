@@ -22,7 +22,7 @@ describe RC::Timeout do
 
   should "not raise timeout error if there's already an error" do
     env = {'timeout' => 0.01}
-    mock(app.app).call(env){ raise "error" }
+    mock(app.app).call(hash_including(env)){ raise "error" }
     lambda{ app.call(env){} }.should    .raise(RuntimeError)
     lambda{ sleep 0.01      }.should.not.raise(Timeout::Error)
   end
