@@ -12,7 +12,7 @@ describe RC::FollowRedirect do
   app = RC::FollowRedirect.new(dry, 1)
 
   after do
-    RR.verify
+    Muack.verify
   end
 
   [301, 302, 303, 307].each do |status|

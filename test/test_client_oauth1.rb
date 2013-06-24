@@ -4,7 +4,7 @@ require 'rest-core/test'
 describe RC::ClientOauth1 do
   after do
     WebMock.reset!
-    RR.verify
+    Muack.verify
   end
 
   client = RC::Builder.client do

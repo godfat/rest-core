@@ -4,7 +4,7 @@ require 'rest-core/test'
 describe RC::Cache do
   after do
     WebMock.reset!
-    RR.verify
+    Muack.verify
   end
 
   should 'basic 0' do
@@ -174,7 +174,7 @@ describe RC::Cache do
       @url, @body = "https://cache", 'ok'
       stub_request(:get, @url).to_return(:body => @body)
       @cache = {}
-      mock(@cache).method(:store){ mock!.arity{ -3 } }
+      mock(@cache).method(:store){ mock.arity{ -3 }.object }
       mock(@cache).store(is_a(String), is_a(String), :expires_in => 3)
       @cache
     end

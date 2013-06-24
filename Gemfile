@@ -8,7 +8,7 @@ gem 'em-http-request'
 
 gem 'rake'
 gem 'bacon'
-gem 'rr'
+gem 'muack'
 gem 'webmock'
 
 gem 'json'

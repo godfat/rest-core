@@ -4,7 +4,7 @@ require 'rest-core/test'
 describe RC::Simple do
   after do
     WebMock.reset!
-    RR.verify
+    Muack.verify
   end
 
   should 'do simple request' do

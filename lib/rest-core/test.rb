@@ -3,14 +3,14 @@ require 'fiber'
 require 'em-http-request'
 require 'rest-core'
 
-require 'rr'
 require 'webmock'
+require 'muack'
 require 'bacon'
 
 # for testing lighten (serialization)
 require 'yaml'
 
-include RR::Adapters::RRMethods
+include Muack::API
 include WebMock::API
 WebMock.disable_net_connect!(:allow_localhost => true)
 Bacon.summary_on_exit

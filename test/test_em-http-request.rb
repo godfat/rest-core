@@ -77,12 +77,12 @@ describe RC::EmHttpRequest do
   describe RC::Timeout do
     after do
       WebMock.reset!
-      RR.verify
+      Muack.verify
     end
 
     should 'cancel timeout for fiber' do
       any_instance_of(RC::Timeout::TimerEm) do |timer|
-        proxy.mock(timer).cancel.times(2)
+        mock_proxy(timer).cancel.times(2)
       end
       path = 'http://example.com/'
       stub_request(:get, path).to_return(:body => 'response')

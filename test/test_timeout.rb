@@ -6,7 +6,7 @@ describe RC::Timeout do
 
   after do
     WebMock.reset!
-    RR.verify
+    Muack.verify
   end
 
   should 'bypass timeout if timeout is 0' do
@@ -16,7 +16,7 @@ describe RC::Timeout do
 
   should 'run the monitor to setup timeout' do
     env = {'timeout' => 2}
-    mock.proxy(app).monitor(env).times(1)
+    mock_proxy(app).monitor(env).times(1)
     app.call(env){|e| e[RC::TIMER].should.kind_of?(RC::Timeout::TimerThread)}
   end
 
