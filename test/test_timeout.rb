@@ -16,7 +16,7 @@ describe RC::Timeout do
 
   should 'run the monitor to setup timeout' do
     env = {'timeout' => 2}
-    mock_proxy(app).monitor(env).times(1)
+    mock(app).monitor(env).proxy.times(1)
     app.call(env){|e| e[RC::TIMER].should.kind_of?(RC::Timeout::TimerThread)}
   end
 
