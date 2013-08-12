@@ -16,7 +16,7 @@ task 'gem:spec' do
     require 'rest-core/version'
     s.name     = 'rest-core'
     s.version  = RestCore::VERSION
-    s.homepage = 'https://github.com/cardinalblue/rest-core'
+    s.homepage = 'https://github.com/godfat/rest-core'
 
     %w[rest-client].each{ |g| s.add_runtime_dependency(g) }
 

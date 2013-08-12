@@ -160,7 +160,7 @@ It's a bit outdated, but you can also checkout my blog post.
 [rest-core 2.0 roadmap, thunk based response][post]
 (p.s. now thunk is renamed to future)
 
-[use-cases.rb]: https://github.com/cardinalblue/rest-core/blob/master/example/use-cases.rb
+[use-cases.rb]: https://github.com/godfat/rest-core/blob/master/example/use-cases.rb
 [post]: http://blogger.godfat.org/2012/06/rest-core-20-roadmap-thunk-based.html
 
 ### Incompatible changes
@@ -263,8 +263,8 @@ This is a very significant release. The most important change is now we
 support asynchronous requests, by either passing a callback block or using
 fibers in Ruby 1.9 to make the whole program still look synchronous.
 
-Please read [README.md](https://github.com/cardinalblue/rest-core/blob/master/README.md)
-or [example](https://github.com/cardinalblue/rest-core/tree/master/example)
+Please read [README.md](https://github.com/godfat/rest-core/blob/master/README.md)
+or [example](https://github.com/godfat/rest-core/tree/master/example)
 for more detail.
 
 * [`Client`] Client#inspect is fixed for clients which do not have any
@@ -472,7 +472,7 @@ others are moved to [rest-more][]. Since bundler didn't like cyclic
 dependency, so rest-core is not depending on rest-more. Please install
 _rest-more_ if you want to use them.
 
-[rest-more]: https://github.com/cardinalblue/rest-more
+[rest-more]: https://github.com/godfat/rest-more
 
 ## rest-core 0.4.0 -- 2011-09-26
 
@@ -563,7 +563,7 @@ _rest-more_ if you want to use them.
         twitter:
           consumer_key: abc
 
-[rest-graph]: https://github.com/cardinalblue/rest-graph
+[rest-graph]: https://github.com/godfat/rest-graph
 
 ## rest-core 0.2.3 -- 2011-08-27
 

@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors = [
   "Cardinal Blue",
   "Lin Jen-Shin (godfat)"]
-  s.date = "2013-06-24"
-  s.description = "Modular Ruby clients interface for REST APIs.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/cardinalblue/rest-more"
+  s.date = "2013-08-12"
+  s.description = "Modular Ruby clients interface for REST APIs.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/godfat/rest-more"
   s.email = ["dev (XD) cardinalblue.com"]
   s.files = [
   ".gitignore",
@@ -95,11 +95,11 @@ Gem::Specification.new do |s|
   "test/test_timeout.rb",
   "test/test_universal.rb",
   "test/test_wrapper.rb"]
-  s.homepage = "https://github.com/cardinalblue/rest-core"
+  s.homepage = "https://github.com/godfat/rest-core"
   s.licenses = ["Apache License 2.0"]
   s.post_install_message = "# [rest-core] Since 2.1.0, Incompatible changes for POST requests:\n\n* We no longer support Rails-like POST payload, like translating\n  `{:foo => [1, 2]}` to `'foo[]=1&foo[]=2'`. It would now be translated to\n  `'foo=1&foo=2'`. If you like `'foo[]'` as the key, simply pass it as\n  `{'foo[]' => [1, 2]}`.\n\n* This also applies to nested hashes like `{:foo => {:bar => 1}`. If you\n  want that behaviour, just pass `{'foo[bar]' => 1}` which would then be\n  translated to `'foo[bar]=1'`.\n"
   s.require_paths = ["lib"]
-  s.rubygems_version = "2.0.3"
+  s.rubygems_version = "2.0.6"
   s.summary = "Modular Ruby clients interface for REST APIs."
   s.test_files = [
   "test/test_auth_basic.rb",

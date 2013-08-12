@@ -43,6 +43,6 @@ and use that along with pre-built ones to compose a very customized client.
 
 We present you rest-core.
 
-[rest-core]: https://github.com/cardinalblue/rest-core
+[rest-core]: https://github.com/godfat/rest-core
 [Rack]: https://github.com/rack/rack
 [Faraday]: https://github.com/technoweenie/faraday
