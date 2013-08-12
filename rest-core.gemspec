@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   "Lin Jen-Shin (godfat)"]
   s.date = "2013-08-12"
   s.description = "Modular Ruby clients interface for REST APIs.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/godfat/rest-more"
-  s.email = ["dev (XD) cardinalblue.com"]
+  s.email = ["godfat (XD) godfat.org"]
   s.files = [
   ".gitignore",
   ".gitmodules",

@@ -21,7 +21,6 @@ task 'gem:spec' do
     %w[rest-client].each{ |g| s.add_runtime_dependency(g) }
 
     s.authors  = ['Cardinal Blue', 'Lin Jen-Shin (godfat)']
-    s.email    = ['dev (XD) cardinalblue.com']
 
     s.post_install_message = <<-MARKDOWN
 # [rest-core] Since 2.1.0, Incompatible changes for POST requests:
