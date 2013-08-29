@@ -1,6 +1,6 @@
 # rest-core [![Build Status](https://secure.travis-ci.org/godfat/rest-core.png?branch=master)](http://travis-ci.org/godfat/rest-core)
 
-by Cardinal Blue <http://cardinalblue.com>
+by Lin Jen-Shin ([godfat](http://godfat.org))
 
 Lin Jen-Shin ([godfat][]) had given a talk about rest-core on
 [RubyConf Taiwan 2011][talk]. The slide is in English, but the
@@ -568,7 +568,7 @@ and complete.
 
 Apache License 2.0
 
-Copyright (c) 2011-2012, Cardinal Blue
+Copyright (c) 2011-2013, Lin Jen-Shin (godfat)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
