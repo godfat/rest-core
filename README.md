@@ -35,6 +35,11 @@ dedicated clients provided by [rest-more][].
 * Concurrent requests with synchronous or asynchronous interfaces with
   fibers or threads are both supported.
 
+## WHY?
+
+Build your own API clients for less dependencies, less codes,
+less memory, less conflicts, and run faster.
+
 ## REQUIREMENTS:
 
 ### Mandatory:
