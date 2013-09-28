@@ -1,28 +1,22 @@
-# encoding: utf-8
 
 begin
   require "#{dir = File.dirname(__FILE__)}/task/gemgem"
 rescue LoadError
   sh 'git submodule update --init'
-  exec Gem.ruby, '-S', 'rake', *ARGV
+  exec Gem.ruby, '-S', $PROGRAM_NAME, *ARGV
 end
 
-Gemgem.dir = dir
-($LOAD_PATH << File.expand_path("#{Gemgem.dir}/lib" )).uniq!
+Gemgem.init(dir) do |s|
+  require 'rest-core/version'
+  s.name     = 'rest-core'
+  s.version  = RestCore::VERSION
+  s.homepage = 'https://github.com/godfat/rest-core'
 
-desc 'Generate gemspec'
-task 'gem:spec' do
-  Gemgem.spec = Gemgem.create do |s|
-    require 'rest-core/version'
-    s.name     = 'rest-core'
-    s.version  = RestCore::VERSION
-    s.homepage = 'https://github.com/godfat/rest-core'
+  %w[rest-client].each{ |g| s.add_runtime_dependency(g) }
 
-    %w[rest-client].each{ |g| s.add_runtime_dependency(g) }
+  s.authors  = ['Lin Jen-Shin (godfat)']
 
-    s.authors  = ['Lin Jen-Shin (godfat)']
-
-    s.post_install_message = <<-MARKDOWN
+  s.post_install_message = <<-MARKDOWN
 # [rest-core] Since 2.1.0, Incompatible changes for POST requests:
 
 * We no longer support Rails-like POST payload, like translating
@@ -34,7 +28,4 @@ task 'gem:spec' do
   want that behaviour, just pass `{'foo[bar]' => 1}` which would then be
   translated to `'foo[bar]=1'`.
 MARKDOWN
-  end
-
-  Gemgem.write
 end
