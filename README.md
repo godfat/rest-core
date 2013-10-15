@@ -540,9 +540,10 @@ and complete.
 
 ## rest-core users:
 
-* [topcoder](https://github.com/miaout17/topcoder)
+* [rest-more-yahoo_buy](https://github.com/GoodLife/rest-more-yahoo_buy)
 * [s2sync](https://github.com/brucehsu/s2sync)
 * [s2sync_web](https://github.com/brucehsu/s2sync_web)
+* [topcoder](https://github.com/miaout17/topcoder)
 
 ## Powered sites:
 
