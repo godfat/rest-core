@@ -563,6 +563,7 @@ and complete.
 * Florent Vaucelle (@florent)
 * Jaime Cham (@jcham)
 * John Fan (@johnfan)
+* khoa nguyen (@khoan)
 * Lin Jen-Shin (@godfat)
 * lulalala (@lulalala)
 * Mariusz Pruszynski (@snicky)
