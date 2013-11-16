@@ -7,15 +7,26 @@ class RestCore::Oauth2Header
 
   def call env, &k
     start_time = Time.now
-    headers = {'Authorization' =>
-                 "#{access_token_type(env)} #{access_token(env)}"}.
-                merge(env[REQUEST_HEADERS]) if access_token(env)
+    headers    = build_headers(env)
+    auth       = headers['Authorization']
+    event      = Event::WithHeader.new(Time.now - start_time,
+                   "Authorization: #{auth}") if auth
 
-    event = Event::WithHeader.new(Time.now - start_time,
-              "Authorization: #{headers['Authorization']}") if headers
+    app.call(log(env.merge(REQUEST_HEADERS => headers), event), &k)
+  end
 
-    app.call(log(env.merge(REQUEST_HEADERS => headers ||
-                                              env[REQUEST_HEADERS]), event),
-             &k)
+  def build_headers env
+    auth = case token = access_token(env)
+           when String
+             token
+           when Hash
+            token.map{ |(k, v)| "#{k}=\"#{v}\"" }.join(', ')
+           end
+
+    if auth
+      {'Authorization' => "#{access_token_type(env)} #{auth}"}
+    else
+      {}
+    end.merge(env[REQUEST_HEADERS])
   end
 end
