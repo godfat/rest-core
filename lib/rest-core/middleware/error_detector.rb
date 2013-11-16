@@ -8,12 +8,7 @@ class RestCore::ErrorDetector
   def call env
     app.call(env){ |response|
       detector = error_detector(env)
-      yield(
-        if error = (detector && detector.call(response))
-          fail(response, error)
-        else
-          response
-        end)
+      yield(fail(response, detector && detector.call(response)))
     }
   end
 end

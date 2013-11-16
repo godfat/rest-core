@@ -39,10 +39,22 @@ module RestCore::Middleware
     mod.send(:include, accessor)
   end
 
-  def call env,  &k; app.call(env, &(k || id))                   ; end
-  def fail env, obj; env.merge(FAIL => (env[FAIL] || []) + [obj]); end
-  def log  env, obj; env.merge(LOG  => (env[LOG]  || []) + [obj]); end
-  def id           ; Middleware.id                               ; end
+  def call env, &k; app.call(env, &(k || id)); end
+  def id          ; Middleware.id            ; end
+  def fail env, obj
+    if obj
+      env.merge(FAIL => (env[FAIL] || []) + [obj])
+    else
+      env
+    end
+  end
+  def log env, obj
+    if obj
+      env.merge(LOG  => (env[LOG]  || []) + [obj])
+    else
+      env
+    end
+  end
   def run app=app
     if app.respond_to?(:app) && app.app
       run(app.app)
