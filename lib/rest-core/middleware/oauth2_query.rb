@@ -2,19 +2,18 @@
 require 'rest-core/middleware'
 
 class RestCore::Oauth2Query
-  def self.members; [:access_token, :client_id]; end
+  def self.members; [:access_token]; end
   include RestCore::Middleware
 
   def call env, &k
-    if (access_token = access_token(env))
+    local = if access_token(env)
+              env.merge(REQUEST_QUERY =>
+                          {'access_token' => access_token(env)}.
+                           merge(env[REQUEST_QUERY]))
+            else
+              env
+            end
 
-      env[REQUEST_QUERY]['access_token'] || = access_token
-
-    elsif (client_id = client_id(env))
-
-      env[REQUEST_QUERY]['client_id'] ||= client_id
-    end
-
-    app.call(env, &k)
+    app.call(local, &k)
   end
 end
