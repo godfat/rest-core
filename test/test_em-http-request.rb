@@ -82,7 +82,7 @@ describe RC::EmHttpRequest do
 
     should 'cancel timeout for fiber' do
       any_instance_of(RC::Timeout::TimerEm) do |timer|
-        mock(timer).cancel.proxy.times(2)
+        mock(timer).cancel.times(2)
       end
       path = 'http://example.com/'
       stub_request(:get, path).to_return(:body => 'response')

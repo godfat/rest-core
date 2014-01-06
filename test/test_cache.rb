@@ -175,7 +175,7 @@ describe RC::Cache do
       stub_request(:get, @url).to_return(:body => @body)
       @cache = {}
       mock(@cache).method(:store){ mock.arity{ -3 }.object }
-      mock(@cache).store(is_a(String), is_a(String), :expires_in => 3)
+      mock(@cache).store(is_a(String), is_a(String), :expires_in => 3){}
       @cache
     end
 
