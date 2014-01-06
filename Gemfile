@@ -18,14 +18,15 @@ gem 'multi_json'
 gem 'rack'
 gem 'ruby-hmac'
 
-platforms(:ruby) do
+platforms :ruby do
   gem 'yajl-ruby'
 end
 
-platforms(:jruby) do
-  gem 'jruby-openssl'
+platforms :rbx do
+  gem 'rubysl-singleton' # used in rake
+  gem 'rubysl-rexml'     # used in webmock used in crack
 end
 
-platforms(:rbx) do
-  gem 'rubysl-rexml' # required by webmock required by crack
+platforms :jruby do
+  gem 'jruby-openssl'
 end
