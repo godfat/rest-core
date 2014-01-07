@@ -24,6 +24,7 @@ end
 
 platforms :rbx do
   gem 'rubysl-fiber'      # used in rest-core
+  gem 'rubysl-weakref'    # used in rest-core
   gem 'rubysl-singleton'  # used in rake
   gem 'rubysl-rexml'      # used in crack used in webmock
   gem 'rubysl-bigdecimal' # used in crack used in webmock
