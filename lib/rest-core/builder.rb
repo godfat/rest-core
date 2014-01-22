@@ -30,6 +30,7 @@ class RestCore::Builder
   end
 
   def initialize &block
+    @engine    = nil
     @middles ||= []
     instance_eval(&block) if block_given?
   end

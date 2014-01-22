@@ -24,10 +24,10 @@ module RestCore::Wrapper
   end
 
   def initialize &block
+    @engine    = nil
     @middles ||= []
     instance_eval(&block) if block_given?
     @wrapped ||= to_app
-    @engine    = nil
   end
 
   def use middle, *args, &block
