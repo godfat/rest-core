@@ -8,7 +8,7 @@ require 'rest-core/middleware'
 class RestCore::RestClient
   include RestCore::Middleware
   def call env, &k
-    future  = Future::FutureThread.new(env, k, env[ASYNC])
+    future = Future::FutureThread.new(env, k, env[ASYNC])
 
     # we can implement thread pool in the future
     t = future.wrap{ request(future, env) }

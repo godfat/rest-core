@@ -34,8 +34,8 @@ class RestCore::EmHttpRequest
              end
            end.merge(:head => headers)
 
-    client  = ::EventMachine::HttpRequest.new(request_uri(env)).
-                send(env[REQUEST_METHOD], args)
+    client = ::EventMachine::HttpRequest.new(request_uri(env)).
+               send(env[REQUEST_METHOD], args)
 
     client.callback{
       close_tmpfile(tmpfile)
