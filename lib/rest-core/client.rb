@@ -43,12 +43,13 @@ module RestCore::Client
     mod.send(:include, accessor)
   end
 
-  attr_reader :app, :dry, :futures
+  attr_reader :app, :dry, :promises
   def initialize o={}
     @app ||= self.class.builder.to_app # lighten! would reinitialize anyway
     @dry ||= self.class.builder.to_app(Dry)
-    @futures = []  # don't record any futures in lighten!
-    @mutex   = nil # for locking futures, lazily initialized for serialization
+    @promises = []  # don't record any promises in lighten!
+    @mutex    = nil # for locking promises, lazily initialized
+                    # for serialization
     o.each{ |key, value| send("#{key}=", value) if respond_to?("#{key}=") }
   end
 
@@ -85,13 +86,13 @@ module RestCore::Client
   end
 
   def wait
-    return self if futures.empty?
-    current_futures = nil
+    return self if promises.empty?
+    current_promises = nil
     mutex.synchronize{
-      current_futures = futures.dup
-      futures.clear
+      current_promises = promises.dup
+      promises.clear
     }
-    current_futures.each{ |f|
+    current_promises.each{ |f|
       begin
         f.wait
       rescue WeakRef::RefError # it's gc'ed after we think it's alive
@@ -175,10 +176,10 @@ module RestCore::Client
 
     # under ASYNC callback, response might not be a response hash
     # in that case (maybe in a user created engine), Client#wait
-    # won't work because we have no way to track the future.
-    if response.kind_of?(Hash) && RestCore.const_defined?(:Future) &&
-       response[FUTURE].kind_of?(Future)
-      mutex.synchronize{ futures << WeakRef.new(response[FUTURE]) }
+    # won't work because we have no way to track the promise.
+    if response.kind_of?(Hash) && RestCore.const_defined?(:Promise) &&
+       response[PROMISE].kind_of?(Promise)
+      mutex.synchronize{ promises << WeakRef.new(response[PROMISE]) }
     end
 
     if block_given?

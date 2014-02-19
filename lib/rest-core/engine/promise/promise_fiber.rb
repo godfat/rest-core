@@ -1,13 +1,13 @@
 
 require 'fiber'
 
-class RestCore::Future::FutureFiber < RestCore::Future
+class RestCore::Promise::PromiseFiber < RestCore::Promise
   def initialize *args
     super
     self.fibers = []
   end
 
-  def wrap
+  def gofor
     Fiber.new{ yield }.resume
   end
 

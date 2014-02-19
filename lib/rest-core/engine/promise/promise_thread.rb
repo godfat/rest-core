@@ -1,14 +1,14 @@
 
 require 'thread'
 
-class RestCore::Future::FutureThread < RestCore::Future
+class RestCore::Promise::PromiseThread < RestCore::Promise
   def initialize *args
     super
     self.condv = ConditionVariable.new
     self.mutex = Mutex.new
   end
 
-  def wrap
+  def gofor
     Thread.new{ yield }
   end
 

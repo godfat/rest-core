@@ -16,7 +16,7 @@ module RestCore
 
   ASYNC            = 'async.callback'
   TIMER            = 'async.timer'
-  FUTURE           = 'async.future'
+  PROMISE          = 'async.promise'
 
   RootFiber        = Fiber.respond_to?(:current) && Fiber.current
 

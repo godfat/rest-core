@@ -1,16 +1,16 @@
 
 require 'rest-core'
 
-class RestCore::Future
+class RestCore::Promise
   include RestCore
 
-  class Proxy < BasicObject
-    def initialize future, target
-      @future, @target = future, target
+  class Future < BasicObject
+    def initialize promise, target
+      @promise, @target = promise, target
     end
 
     def method_missing msg, *args, &block
-      @future.yield[@target].__send__(msg, *args, &block)
+      @promise.yield[@target].__send__(msg, *args, &block)
     end
   end
 
@@ -18,24 +18,25 @@ class RestCore::Future
     if Fiber.respond_to?(:current) && RootFiber != Fiber.current &&
        # because under a thread, Fiber.current won't return the root fiber
        Thread.main == Thread.current
-      FutureFiber .new(*args, &block)
+      PromiseFiber .new(*args, &block)
     else
-      FutureThread.new(*args, &block)
+      PromiseThread.new(*args, &block)
     end
   end
 
-  def initialize env, k, immediate
+  def initialize env, k, immediate, &task
     self.env       = env
     self.k         = k
     self.immediate = immediate
     self.response, self.body, self.status, self.headers, self.error = nil
+    gofor(&task) if task
   end
 
-  def proxy_body   ; Proxy.new(self, RESPONSE_BODY   ); end
-  def proxy_status ; Proxy.new(self, RESPONSE_STATUS ); end
-  def proxy_headers; Proxy.new(self, RESPONSE_HEADERS); end
+  def future_body   ; Future.new(self, RESPONSE_BODY   ); end
+  def future_status ; Future.new(self, RESPONSE_STATUS ); end
+  def future_headers; Future.new(self, RESPONSE_HEADERS); end
 
-  def wrap  ; raise NotImplementedError; end
+  def gofor ; raise NotImplementedError; end
   def wait  ; raise NotImplementedError; end
   def resume; raise NotImplementedError; end
 
@@ -67,7 +68,7 @@ class RestCore::Future
     logger.call "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
   end
 
-  def on_load body, status, headers
+  def fulfill body, status, headers
     env[TIMER].cancel if env[TIMER]
     synchronize{
       self.body, self.status, self.headers = body, status, headers
@@ -77,13 +78,13 @@ class RestCore::Future
     resume # client or response might be waiting
   end
 
-  def on_error error
+  def reject error
     self.error = if error.kind_of?(Exception)
                    error
                  else
                    Error.new(error || 'unknown')
                  end
-    on_load('', 0, {})
+    fulfill('', 0, {})
   end
 
   protected
@@ -102,6 +103,6 @@ class RestCore::Future
     end
   end
 
-  autoload :FutureFiber , 'rest-core/engine/future/future_fiber'
-  autoload :FutureThread, 'rest-core/engine/future/future_thread'
+  autoload :PromiseFiber , 'rest-core/engine/promise/promise_fiber'
+  autoload :PromiseThread, 'rest-core/engine/promise/promise_thread'
 end

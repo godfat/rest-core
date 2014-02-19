@@ -2,29 +2,26 @@
 require 'restclient'
 require 'rest-core/patch/rest-client'
 
-require 'rest-core/engine/future/future'
+require 'rest-core/engine/promise/promise'
 require 'rest-core/middleware'
 
 class RestCore::RestClient
   include RestCore::Middleware
   def call env, &k
-    future = Future::FutureThread.new(env, k, env[ASYNC])
-
-    # we can implement thread pool in the future
-    t = future.wrap{ request(future, env) }
+    promise = Promise.create(env, k, env[ASYNC])
+    promise.gofor{ request(promise, env) }
 
     env[TIMER].on_timeout{
-      t.kill
-      future.on_error(env[TIMER].error)
+      promise.reject(env[TIMER].error)
     } if env[TIMER]
 
-    env.merge(RESPONSE_BODY    => future.proxy_body,
-              RESPONSE_STATUS  => future.proxy_status,
-              RESPONSE_HEADERS => future.proxy_headers,
-              FUTURE           => future)
+    env.merge(RESPONSE_BODY    => promise.future_body,
+              RESPONSE_STATUS  => promise.future_status,
+              RESPONSE_HEADERS => promise.future_headers,
+              PROMISE          => promise)
   end
 
-  def request future, env
+  def request promise, env
     payload, headers = Payload.generate_with_headers(env[REQUEST_PAYLOAD],
                                                      env[REQUEST_HEADERS])
     res = ::RestClient::Request.execute(:method   => env[REQUEST_METHOD],
@@ -32,17 +29,17 @@ class RestCore::RestClient
                                         :payload  => payload            ,
                                         :headers  => headers            ,
                                         :max_redirects => 0)
-    future.on_load(res.body, res.code, normalize_headers(res.raw_headers))
+    promise.fulfill(res.body, res.code, normalize_headers(res.raw_headers))
 
   rescue ::RestClient::Exception => e
     if res = e.response
       # we don't want to raise an exception for 404 requests
-      future.on_load(res.body, res.code, normalize_headers(res.raw_headers))
+      promise.fulfill(res.body, res.code, normalize_headers(res.raw_headers))
     else
-      future.on_error(e)
+      promise.reject(e)
     end
   rescue Exception => e
-    future.on_error(e)
+    promise.reject(e)
   end
 
   def normalize_headers raw_headers

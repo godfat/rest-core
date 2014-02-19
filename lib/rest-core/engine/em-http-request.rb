@@ -2,25 +2,26 @@
 require 'em-http-request'
 require 'restclient/payload'
 
-require 'rest-core/engine/future/future'
+require 'rest-core/engine/promise/promise'
 require 'rest-core/middleware'
 
 class RestCore::EmHttpRequest
   include RestCore::Middleware
   def call env, &k
-    future = Future.create(env, k, env[ASYNC])
+    promise = Promise.create(env, k, env[ASYNC])
+    promise.gofor{ request(promise, env) }
 
-    # eventmachine is not thread-safe, so...
-    # https://github.com/igrigorik/em-http-request/issues/190#issuecomment-16995528
-    ::EventMachine.schedule{ request(future, env) }
+    env[TIMER].on_timeout{
+      promise.reject(env[TIMER].error)
+    } if env[TIMER]
 
-    env.merge(RESPONSE_BODY    => future.proxy_body,
-              RESPONSE_STATUS  => future.proxy_status,
-              RESPONSE_HEADERS => future.proxy_headers,
-              FUTURE           => future)
+    env.merge(RESPONSE_BODY    => promise.future_body,
+              RESPONSE_STATUS  => promise.future_status,
+              RESPONSE_HEADERS => promise.future_headers,
+              PROMISE          => promise)
   end
 
-  def request future, env
+  def request promise, env
     payload, headers = Payload.generate_with_headers(env[REQUEST_PAYLOAD],
                                                      env[REQUEST_HEADERS])
     args = if payload.nil?
@@ -39,20 +40,14 @@ class RestCore::EmHttpRequest
 
     client.callback{
       close_tmpfile(tmpfile)
-      future.on_load(client.response,
-                     client.response_header.status,
-                     client.response_header)}
+      promise.fulfill(client.response,
+                      client.response_header.status,
+                      client.response_header)}
 
     client.errback{
       close_client(client)
       close_tmpfile(tmpfile)
-      future.on_error(client.error)}
-
-    env[TIMER].on_timeout{
-      close_client(client)
-      close_tmpfile(tmpfile)
-      future.on_error(env[TIMER].error)
-    } if env[TIMER]
+      promise.reject(client.error)}
   end
 
   def payload2file payload
