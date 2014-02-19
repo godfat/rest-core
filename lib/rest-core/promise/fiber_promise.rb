@@ -1,7 +1,7 @@
 
 require 'fiber'
 
-class RestCore::Promise::PromiseFiber < RestCore::Promise
+class RestCore::Promise::FiberPromise < RestCore::Promise
   def initialize *args
     super
     self.fibers = []

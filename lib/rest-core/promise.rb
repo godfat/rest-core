@@ -18,9 +18,9 @@ class RestCore::Promise
     if Fiber.respond_to?(:current) && RootFiber != Fiber.current &&
        # because under a thread, Fiber.current won't return the root fiber
        Thread.main == Thread.current
-      PromiseFiber .new(*args, &block)
+       FiberPromise.new(*args, &block)
     else
-      PromiseThread.new(*args, &block)
+      ThreadPromise.new(*args, &block)
     end
   end
 
@@ -103,6 +103,6 @@ class RestCore::Promise
     end
   end
 
-  autoload :PromiseFiber , 'rest-core/promise/promise_fiber'
-  autoload :PromiseThread, 'rest-core/promise/promise_thread'
+  autoload :ThreadPromise, 'rest-core/promise/thread_promise'
+  autoload :FiberPromise , 'rest-core/promise/fiber_promise'
 end

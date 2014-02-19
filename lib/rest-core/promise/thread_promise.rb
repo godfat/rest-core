@@ -1,7 +1,7 @@
 
 require 'thread'
 
-class RestCore::Promise::PromiseThread < RestCore::Promise
+class RestCore::Promise::ThreadPromise < RestCore::Promise
   def initialize *args
     super
     self.condv = ConditionVariable.new
