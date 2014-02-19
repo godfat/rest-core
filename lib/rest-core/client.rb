@@ -177,8 +177,7 @@ module RestCore::Client
     # under ASYNC callback, response might not be a response hash
     # in that case (maybe in a user created engine), Client#wait
     # won't work because we have no way to track the promise.
-    if response.kind_of?(Hash) && RestCore.const_defined?(:Promise) &&
-       response[PROMISE].kind_of?(Promise)
+    if response.kind_of?(Hash) && response[PROMISE].kind_of?(Promise)
       mutex.synchronize{ promises << WeakRef.new(response[PROMISE]) }
     end
 

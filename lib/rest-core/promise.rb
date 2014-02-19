@@ -103,6 +103,6 @@ class RestCore::Promise
     end
   end
 
-  autoload :PromiseFiber , 'rest-core/engine/promise/promise_fiber'
-  autoload :PromiseThread, 'rest-core/engine/promise/promise_thread'
+  autoload :PromiseFiber , 'rest-core/promise/promise_fiber'
+  autoload :PromiseThread, 'rest-core/promise/promise_thread'
 end

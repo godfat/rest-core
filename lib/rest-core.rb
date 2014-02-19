@@ -27,6 +27,7 @@ module RestCore
   autoload :Event         , 'rest-core/event'
   autoload :Middleware    , 'rest-core/middleware'
   autoload :Wrapper       , 'rest-core/wrapper'
+  autoload :Promise       , 'rest-core/promise'
 
   # oauth1 utilities
   autoload :ClientOauth1  , 'rest-core/client_oauth1'

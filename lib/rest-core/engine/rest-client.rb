@@ -2,7 +2,7 @@
 require 'restclient'
 require 'rest-core/patch/rest-client'
 
-require 'rest-core/engine/promise/promise'
+require 'rest-core/promise'
 require 'rest-core/middleware'
 
 class RestCore::RestClient

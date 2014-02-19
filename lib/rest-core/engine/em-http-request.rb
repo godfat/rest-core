@@ -2,7 +2,7 @@
 require 'em-http-request'
 require 'restclient/payload'
 
-require 'rest-core/engine/promise/promise'
+require 'rest-core/promise'
 require 'rest-core/middleware'
 
 class RestCore::EmHttpRequest
