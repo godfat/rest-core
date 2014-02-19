@@ -9,7 +9,11 @@ class RestCore::EmHttpRequest
   include RestCore::Middleware
   def call env, &k
     promise = Promise.create(env, k, env[ASYNC])
-    promise.gofor{ request(promise, env) }
+    promise.gofor do
+      # eventmachine is not thread-safe, so...
+      # https://github.com/igrigorik/em-http-request/issues/190#issuecomment-16995528
+      ::EventMachine.schedule{ request(promise, env) }
+    end
 
     env[TIMER].on_timeout{
       promise.reject(env[TIMER].error)
