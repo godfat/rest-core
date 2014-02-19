@@ -36,5 +36,23 @@ describe RC::RestClient do
       wr.close
       post[rd, 'socket']
     end
+
+    should 'not kill the thread if error was coming from the task' do
+      mock(RestClient::Request).execute{ raise 'boom' }.with_any_args
+      c.request({}, RC::FAIL).first.message.should.eq 'boom'
+      Muack.verify
+    end
+
+    should 'kill the thread if timing out' do
+      timer = Object.new.instance_eval do
+        def on_timeout; yield ; end
+        def error     ; 'boom'; end
+        def cancel    ;       ; end
+        self
+      end
+      mock(Thread).new.peek_return{ |t| mock(t).kill; t }
+      c.request({RC::TIMER => timer}, RC::FAIL).first.message.should.eq 'boom'
+      Muack.verify
+    end
   end
 end

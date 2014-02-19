@@ -9,7 +9,7 @@ class RestCore::Promise::ThreadPromise < RestCore::Promise
   end
 
   def gofor
-    Thread.new{ yield }
+    @thread = Thread.new{ yield }
   end
 
   def wait
@@ -21,8 +21,18 @@ class RestCore::Promise::ThreadPromise < RestCore::Promise
     condv.broadcast
   end
 
+  def reject error
+    # If thread == Thread.current, it means we have errors from the task.
+    # We shouldn't stop anything in this case.
+    # If thread != Thread.current, it means we want to cancel the task,
+    # maybe due to timing out or so, and we no longer care what's running
+    # in the task, and we should be able to kill it safely.
+    thread.kill if thread && thread != Thread.current
+    super
+  end
+
   protected
-  attr_accessor :condv, :mutex
+  attr_accessor :condv, :mutex, :thread
 
   private
   def synchronize; mutex.synchronize{ yield }; end
