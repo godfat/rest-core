@@ -18,6 +18,7 @@ class RestCore::EmHttpRequest
     env.merge(RESPONSE_BODY    => promise.future_body,
               RESPONSE_STATUS  => promise.future_status,
               RESPONSE_HEADERS => promise.future_headers,
+              FAIL             => promise.future_failures,
               PROMISE          => promise)
   end
 

@@ -32,9 +32,10 @@ class RestCore::Promise
     gofor(&task) if task
   end
 
-  def future_body   ; Future.new(self, RESPONSE_BODY   ); end
-  def future_status ; Future.new(self, RESPONSE_STATUS ); end
-  def future_headers; Future.new(self, RESPONSE_HEADERS); end
+  def future_body    ; Future.new(self, RESPONSE_BODY   ); end
+  def future_status  ; Future.new(self, RESPONSE_STATUS ); end
+  def future_headers ; Future.new(self, RESPONSE_HEADERS); end
+  def future_failures; Future.new(self, FAIL)            ; end
 
   def gofor ; raise NotImplementedError; end
   def wait  ; raise NotImplementedError; end
