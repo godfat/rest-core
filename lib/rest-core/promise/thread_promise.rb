@@ -9,7 +9,7 @@ class RestCore::Promise::ThreadPromise < RestCore::Promise
   end
 
   def gofor
-    @thread = Thread.new{ yield }
+    @thread = Thread.new{ synchronize{yield} }
   end
 
   def wait

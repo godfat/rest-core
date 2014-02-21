@@ -71,9 +71,7 @@ class RestCore::Promise
 
   def fulfill body, status, headers
     env[TIMER].cancel if env[TIMER]
-    synchronize{
-      self.body, self.status, self.headers = body, status, headers
-    }
+    self.body, self.status, self.headers = body, status, headers
     # under ASYNC callback, should call immediately
     next_tick{ callback_in_async } if immediate
     resume # client or response might be waiting
