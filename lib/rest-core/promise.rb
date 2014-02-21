@@ -65,8 +65,8 @@ class RestCore::Promise
   rescue Exception => e
     # nothing we can do here for an asynchronous exception,
     # so we just log the error
-    logger = method(:warn) # TODO: add error_log_method
-    logger.call "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
+    # TODO: add error_log_method
+    warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
   end
 
   def fulfill body, status, headers
