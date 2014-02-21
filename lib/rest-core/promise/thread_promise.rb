@@ -8,8 +8,12 @@ class RestCore::Promise::ThreadPromise < RestCore::Promise
     self.mutex = Mutex.new
   end
 
-  def gofor
-    @thread = Thread.new{ synchronize{yield} }
+  def defer
+    @thread = if pool_size > 0
+                ThreadPool[client_class].defer(self){ yield }
+              else
+                Thread.new{ synchronize{yield} }
+              end
   end
 
   def wait
@@ -31,9 +35,8 @@ class RestCore::Promise::ThreadPromise < RestCore::Promise
     super
   end
 
+  def synchronize; mutex.synchronize{ yield }; end
+
   protected
   attr_accessor :condv, :mutex, :thread
-
-  private
-  def synchronize; mutex.synchronize{ yield }; end
 end

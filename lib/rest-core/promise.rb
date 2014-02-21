@@ -37,9 +37,16 @@ class RestCore::Promise
   def future_headers ; Future.new(self, RESPONSE_HEADERS); end
   def future_failures; Future.new(self, FAIL)            ; end
 
-  def gofor ; raise NotImplementedError; end
   def wait  ; raise NotImplementedError; end
   def resume; raise NotImplementedError; end
+
+  def gofor
+    if pool_size < 0 # negative number for blocking call
+      yield
+    else
+      defer{ yield }
+    end
+  end
 
   def loaded?
     !!status
@@ -91,6 +98,15 @@ class RestCore::Promise
                 :response, :body, :status, :headers, :error
 
   private
+  def client_class; env[CLIENT].class; end
+  def pool_size
+    @pool_size ||= if client_class.respond_to?(:pool_size)
+                     client_class.pool_size
+                   else
+                     0
+                   end
+  end
+
   # next_tick is used for telling the reactor that there's something else
   # should be done, don't sleep and don't stop at the moment
   def next_tick
@@ -102,5 +118,7 @@ class RestCore::Promise
   end
 
   autoload :ThreadPromise, 'rest-core/promise/thread_promise'
+  autoload :ThreadPool   , 'rest-core/promise/thread_pool'
+
   autoload :FiberPromise , 'rest-core/promise/fiber_promise'
 end

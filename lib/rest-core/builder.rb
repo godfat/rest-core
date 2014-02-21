@@ -24,8 +24,12 @@ class RestCore::Builder
     client = Class.new(struct)
     client.const_set('Struct', struct)
     client.send(:include, Client)
-    class << client; attr_reader :builder; end
+    class << client
+      attr_reader   :builder
+      attr_accessor :pool_size
+    end
     client.instance_variable_set(:@builder, self)
+    client.instance_variable_set(:@pool_size, 0) # default to no pool
     client
   end
 

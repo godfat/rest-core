@@ -200,7 +200,8 @@ module RestCore::Client
      REQUEST_PAYLOAD => {}  ,
      REQUEST_HEADERS => {}  ,
      FAIL            => []  ,
-     LOG             => []  }
+     LOG             => []  ,
+     CLIENT          => self}
   end
   # ------------------------ instance ---------------------
 

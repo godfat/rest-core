@@ -7,7 +7,7 @@ class RestCore::Promise::FiberPromise < RestCore::Promise
     self.fibers = []
   end
 
-  def gofor
+  def defer
     Fiber.new{ yield }.resume
   end
 
