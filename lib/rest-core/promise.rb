@@ -91,7 +91,6 @@ class RestCore::Promise
                 :response, :body, :status, :headers, :error
 
   private
-  def synchronize; yield; end
   # next_tick is used for telling the reactor that there's something else
   # should be done, don't sleep and don't stop at the moment
   def next_tick
