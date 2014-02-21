@@ -30,29 +30,29 @@ end
 
 def_use_case 'pure_ruby_single_request' do
   q RC::Universal.new(:json_response => true).
-    get('https://api.github.com/users/godfat')['name']
+    get('https://graph.facebook.com/4')['name']
 end
 
 def_use_case 'pure_ruby_concurrent_requests' do
   client = RC::Universal.new(:json_response => true,
-                             :site => 'https://api.github.com/users/')
-  q [client.get('godfat'), client.get('cardinalblue')].map{ |u| u['name'] }
+                             :site => 'https://graph.facebook.com/')
+  q [client.get('4'), client.get('5')].map{ |u| u['name'] }
 end
 
 def_use_case 'pure_ruby_cache_requests' do
   client = RC::Universal.new(:json_response => true, :cache => {})
-  3.times{ q client.get('https://api.github.com/users/godfat')['name'] }
+  3.times{ q client.get('https://graph.facebook.com/4')['name'] }
 end
 
 def_use_case 'pure_ruby_callback_requests' do
   m = Mutex.new
   RC::Universal.new(:json_response => true                                  ,
-                    :site          => 'https://api.github.com/users/'       ,
+                    :site          => 'https://graph.facebook.com/'         ,
                     :log_method    => lambda{|str| m.synchronize{puts(str)}}).
-    get('godfat'){ |res|
+    get('4'){ |res|
       q res['name'], m
     }.
-    get('cardinalblue'){ |res|
+    get('5'){ |res|
       q res['name'], m
     }.wait
 end
@@ -60,30 +60,21 @@ end
 def_use_case 'pure_ruby_nested_concurrent_requests' do
   m = Mutex.new
   c = RC::Universal.new(:json_response => true                              ,
-                        :site          => 'https://api.github.com'          ,
+                        :site          => 'https://graph.facebook.com/'     ,
                         :log_method => lambda{|str| m.synchronize{puts(str)}})
 
-  %w[rubytaiwan godfat].each{ |user|
-    c.get("/users/#{user}/repos", :per_page => 100){ |repos|
-      rs = repos.reject{ |r| r['fork'] }
-      rs = [{}] if rs.size == 1 # out of API limit :(
-      most_watched = rs.max_by{ |r| r['watchers'] }['name']
-      most_size    = rs.max_by{ |r| r['size']     }['name']
+  %w[4 5].each{ |user|
+    c.get(user, :fields => 'cover'){ |data|
+      cover    = data['cover']
+      comments = c.get("#{cover['id']}/comments")
+      likes    = c.get("#{cover['id']}/likes")
+      most_liked_comment = comments['data'].max_by{|d|d['like_count']}
 
-      watch_contri = c.get("/repos/#{user}/#{most_watched}/contributors")
-       size_contri = c.get("/repos/#{user}/#{most_size}/contributors")
+      q "Author of most liked comment from #{user}'s cover photo:", m
+      q most_liked_comment['from']['name'], m
 
-      watch_contri = [{}] if watch_contri.size == 1 # out of API limit :(
-       size_contri = [{}] if  size_contri.size == 1 # out of API limit :(
-
-      most_watched_most_contri = watch_contri.max_by{ |c| c['contributions'] }
-      most_size_most_contri    =  size_contri.max_by{ |c| c['contributions'] }
-
-      q "Most contributed user for most watched: #{user}/#{most_watched}:", m
-      q most_watched_most_contri['login'], m
-
-      q "Most contributed user for most size   : #{user}/#{most_size}:", m
-      q most_size_most_contri['login'], m
+      y = !!likes['data'].find{|d|d['id'] == most_liked_comment['from']['id']}
+      q "Did the user also like the cover?: #{y}", m
     }
   }
 
