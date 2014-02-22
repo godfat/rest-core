@@ -1,4 +1,7 @@
 
+# reference implementation: puma
+# https://github.com/puma/puma/blob/v2.7.1/lib/puma/thread_pool.rb
+
 require 'thread'
 
 class RestCore::Promise::ThreadPool
