@@ -15,16 +15,18 @@ class RestCore::Promise::ThreadPool
 
     def call
       @thread = Thread.current
-      promise.synchronize{ job.call } unless @cancelled
-    rescue Exception => e
+      promise.synchronize{ job.call } unless cancelled
+    rescue Exception => e # should never happen, but just in case
       warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
     end
     # called from the other thread telling us it's timed out
     def kill
       @cancelled = true
-      @thread.kill if @thread
+      thread.kill if thread
       pool.refresh
     end
+    protected
+    attr_reader :thread, :cancelled
   end
 
   def self.[] client_class
