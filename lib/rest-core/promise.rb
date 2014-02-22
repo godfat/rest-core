@@ -32,6 +32,10 @@ class RestCore::Promise
     gofor(&task) if task
   end
 
+  def inspect
+    "<#{self.class.name} for #{env[REQUEST_PATH]}>"
+  end
+
   def future_body    ; Future.new(self, RESPONSE_BODY   ); end
   def future_status  ; Future.new(self, RESPONSE_STATUS ); end
   def future_headers ; Future.new(self, RESPONSE_HEADERS); end

@@ -5,6 +5,11 @@ class RestCore::Promise::ThreadPool
   include RestCore
 
   class Task < Struct.new(:pool, :promise, :job)
+    def inspect
+      "#<struct promise=#{promise.inspect}>"
+    end
+    alias_method :to_s, :inspect
+
     def call
       @thread = Thread.current
       promise.synchronize{ job.call } unless @cancelled
@@ -31,6 +36,10 @@ class RestCore::Promise::ThreadPool
     @workers       = []
     @workers_mutex = Mutex.new
     refresh
+  end
+
+  def inspect
+    "#<#{self.class.name} client_class=#{client_class}>"
   end
 
   def defer promise, &job
