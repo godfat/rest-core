@@ -51,7 +51,6 @@ class RestCore::Promise::ThreadPool
     @mutex        = Mutex.new
     @workers      = []
     @waiting      = 0
-    @spawned      = 0
   end
 
   def inspect
@@ -66,7 +65,7 @@ class RestCore::Promise::ThreadPool
     mutex.synchronize do
       task = Task.new(self, promise, job)
       queue << task
-      spawn_worker if waiting == 0 && spawned < max_size
+      spawn_worker if waiting == 0 && workers.size < max_size
       task
     end
   end
@@ -80,11 +79,10 @@ class RestCore::Promise::ThreadPool
   end
 
   protected
-  attr_reader :queue, :mutex, :condv, :workers, :waiting, :spawned
+  attr_reader :queue, :mutex, :condv, :workers, :waiting
 
   private
   def spawn_worker
-    @spawned += 1
     workers << Thread.new{
       Thread.current.abort_on_exception = !!$DEBUG
 
@@ -95,10 +93,7 @@ class RestCore::Promise::ThreadPool
         mutex.synchronize{ @waiting -= 1 }
       end while task.call
 
-      mutex.synchronize do
-        workers.delete(Thread.current)
-        @spawned -= 1
-      end
+      mutex.synchronize{ workers.delete(Thread.current) }
     }
   end
 end
