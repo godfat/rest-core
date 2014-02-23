@@ -96,7 +96,7 @@ class RestCore::Promise::ThreadPool
       end while task.call
 
       mutex.synchronize do
-        workers.delete(thread)
+        workers.delete(Thread.current)
         @spawned -= 1
       end
     }
