@@ -74,8 +74,11 @@ class RestCore::Promise::ThreadPool
     queue << lambda{ false } if force || waiting > 0
   end
 
+  # Block on shutting down, and should not add more jobs while shutting down
   def shutdown
-    max_size.times{ trim(true) }
+    workers.size.times{ trim(true) }
+    workers.first.join && trim(true) until workers.empty?
+    queue.clear
   end
 
   protected
