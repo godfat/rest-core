@@ -7,6 +7,39 @@ require 'thread'
 class RestCore::Promise::ThreadPool
   include RestCore
 
+  class Queue
+    def initialize
+      @queue = []
+      @mutex = Mutex.new
+      @condv = ConditionVariable.new
+    end
+
+    def << task
+      mutex.synchronize do
+        queue << task
+        condv.signal
+      end
+    end
+
+    def pop timeout=60
+      mutex.synchronize do
+        if queue.empty?
+          condv.wait(mutex, timeout)
+          queue.shift || lambda{ false } # shutdown idle workers
+        else
+          queue.shift
+        end
+      end
+    end
+
+    def clear
+      queue.clear
+    end
+
+    protected
+    attr_reader :queue, :mutex, :condv
+  end
+
   class Task < Struct.new(:pool, :promise, :job)
     def inspect
       "#<struct promise=#{promise.inspect}>"
@@ -61,6 +94,10 @@ class RestCore::Promise::ThreadPool
     client_class.pool_size
   end
 
+  def idle_time
+    client_class.pool_idle_time
+  end
+
   def defer promise, &job
     mutex.synchronize do
       task = Task.new(self, promise, job)
@@ -92,7 +129,7 @@ class RestCore::Promise::ThreadPool
       task = nil
       begin
         mutex.synchronize{ @waiting += 1 }
-        task = queue.pop
+        task = queue.pop(idle_time)
         mutex.synchronize{ @waiting -= 1 }
       end while task.call
 

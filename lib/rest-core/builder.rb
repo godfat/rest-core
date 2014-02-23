@@ -26,10 +26,11 @@ class RestCore::Builder
     client.send(:include, Client)
     class << client
       attr_reader   :builder
-      attr_accessor :pool_size
+      attr_accessor :pool_size, :pool_idle_time
     end
     client.instance_variable_set(:@builder, self)
     client.instance_variable_set(:@pool_size, 0) # default to no pool
+    client.instance_variable_set(:@pool_idle_time, 60) # default to 60 seconds
     client
   end
 
