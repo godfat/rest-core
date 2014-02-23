@@ -5,7 +5,7 @@ class RestCore::Auto
   include RestCore::Middleware
   def call env, &k
     client = http_client
-    client.call(log(env, "Auto   picked: #{client.class}"), &k)
+    client.call(log(env, "Auto    picked: #{client.class}"), &k)
   end
 
   def http_client

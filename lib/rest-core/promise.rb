@@ -68,7 +68,7 @@ class RestCore::Promise
                 RESPONSE_HEADERS => headers,
                 FAIL             => ((env[FAIL]||[]) + [error]).compact,
                 LOG              =>  (env[LOG] ||[]) +
-                                      ["Future picked: #{self.class}"]))
+                                      ["Promise picked: #{self.class}"]))
   end
 
   def callback_in_async
