@@ -15,3 +15,8 @@
 * headers and payload logs for CommonLogger
 
 # rest-request
+
+* fix DRY by defining `prepare :: env -> env`
+* fix TIMER by doing dedicated timeout, instead of using a generic timeout.
+  timeout middleware won't work well.
+* FAIL and LOG need to be reimplemented as well.
