@@ -86,7 +86,7 @@ class RestCore::Promise::ThreadPool
   def spawn_worker
     @spawned += 1
     workers << Thread.new{
-      Thread.current.abort_on_exception = true # DEBUG ONLY
+      Thread.current.abort_on_exception = !!$DEBUG
 
       task = nil
       begin
