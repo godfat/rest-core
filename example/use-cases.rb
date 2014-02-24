@@ -5,7 +5,13 @@ require 'rest-core'
 RC.eagerload
 
 def def_use_case name, &block
-  singleton_class.send(:define_method, "#{name}_", &block)
+  singleton_class.send(:define_method, "#{name}_") do
+    begin
+      yield
+    rescue => e
+      q "Encountering: #{e}"
+    end
+  end
   singleton_class.send(:define_method, name) do
     @count ||= 0
     printf "Use case #%02d: %s\n", @count+=1, name
@@ -50,9 +56,17 @@ def_use_case 'pure_ruby_callback_requests' do
                     :site          => 'https://graph.facebook.com/'         ,
                     :log_method    => lambda{|str| m.synchronize{puts(str)}}).
     get('4'){ |res|
+      if res.kind_of?(Exception)
+        p "Encountering: #{res}"
+        next
+      end
       q res['name'], m
     }.
     get('5'){ |res|
+      if res.kind_of?(Exception)
+        p "Encountering: #{res}"
+        next
+      end
       q res['name'], m
     }.wait
 end
@@ -65,6 +79,11 @@ def_use_case 'pure_ruby_nested_concurrent_requests' do
 
   %w[4 5].each{ |user|
     c.get(user, :fields => 'cover'){ |data|
+      if data.kind_of?(Exception)
+        q "Encountering: #{data}", m
+        next
+      end
+
       cover    = data['cover']
       comments = c.get("#{cover['id']}/comments")
       likes    = c.get("#{cover['id']}/likes")
