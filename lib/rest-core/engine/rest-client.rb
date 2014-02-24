@@ -23,14 +23,20 @@ class RestCore::RestClient
   end
 
   def request promise, env
+    open_timeout, read_timeout = calculate_timeout(env[TIMER])
     payload, headers = Payload.generate_with_headers(env[REQUEST_PAYLOAD],
                                                      env[REQUEST_HEADERS])
     res = ::RestClient::Request.execute(:method   => env[REQUEST_METHOD],
                                         :url      => request_uri(env)   ,
                                         :payload  => payload            ,
                                         :headers  => headers            ,
-                                        :max_redirects => 0)
+                                        :max_redirects => 0             ,
+                                        :open_timeout => open_timeout   ,
+                                             :timeout => read_timeout   )
     promise.fulfill(res.body, res.code, normalize_headers(res.raw_headers))
+
+  rescue ::RestClient::RequestTimeout
+    promise.reject(::Timeout::Error.new('execution expired'))
 
   rescue ::RestClient::Exception => e
     if res = e.response
@@ -39,8 +45,14 @@ class RestCore::RestClient
     else
       promise.reject(e)
     end
+
   rescue Exception => e
     promise.reject(e)
+  end
+
+  def calculate_timeout timer
+    return [] unless timer
+    [timer.timeout, timer.timeout]
   end
 
   def normalize_headers raw_headers
