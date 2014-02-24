@@ -125,4 +125,5 @@ class RestCore::Promise
   autoload :ThreadPool   , 'rest-core/promise/thread_pool'
 
   autoload :FiberPromise , 'rest-core/promise/fiber_promise'
+  autoload :FiberPool    , 'rest-core/promise/fiber_pool'
 end
