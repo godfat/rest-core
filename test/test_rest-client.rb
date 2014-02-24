@@ -43,14 +43,16 @@ describe RC::RestClient do
       Muack.verify
     end
 
-    should 'kill the thread if timing out' do
+    should 'cancel the task if timing out' do
       timer = Object.new.instance_eval do
         def on_timeout; yield ; end
         def error     ; 'boom'; end
         def cancel    ;       ; end
         self
       end
-      mock(Thread).new.peek_return{ |t| mock(t).kill; t }
+      stub(c.class).pool_size{ 1 }
+      mock(RC::Promise::ThreadPool::Task).new.with_any_args.
+        peek_return{ |t| mock(t).cancel; t }
       c.request({RC::TIMER => timer}, RC::FAIL).first.message.should.eq 'boom'
       Muack.verify
     end

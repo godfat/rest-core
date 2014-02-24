@@ -40,16 +40,14 @@ class RestCore::Promise::ThreadPool
     attr_reader :queue, :mutex, :condv
   end
 
-  class Task < Struct.new(:pool, :promise, :job)
+  class Task < Struct.new(:promise, :job)
     def inspect
       "#<struct promise=#{promise.inspect}>"
     end
     alias_method :to_s, :inspect
 
     def call
-      @thread = Thread.current
       promise.synchronize{ job.call } unless cancelled
-      @thread = nil # should only kill the thread for user tasks
       true
     rescue Exception => e # should never happen, but just in case
       warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
@@ -57,16 +55,8 @@ class RestCore::Promise::ThreadPool
       true
     end
     # called from the other thread telling us it's timed out
-    def kill
+    def cancel
       @cancelled = true
-      # we don't need to do anything if thread == Thread.current,
-      # because this thread would need to handle user callback,
-      # and the original request should already be cancelled and
-      # we're already sending back the exception
-      if thread && thread != Thread.current
-        # # don't kill for now, we're not yet properly handling this
-        # thread.kill
-      end
     end
     protected
     attr_reader :thread, :mutex, :cancelled
@@ -100,7 +90,7 @@ class RestCore::Promise::ThreadPool
 
   def defer promise, &job
     mutex.synchronize do
-      task = Task.new(self, promise, job)
+      task = Task.new(promise, job)
       queue << task
       spawn_worker if waiting == 0 && workers.size < max_size
       task
