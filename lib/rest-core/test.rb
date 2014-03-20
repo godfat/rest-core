@@ -10,10 +10,9 @@ require 'bacon'
 # for testing lighten (serialization)
 require 'yaml'
 
-include Muack::API
-include WebMock::API
 WebMock.disable_net_connect!(:allow_localhost => true)
 Bacon.summary_on_exit
+Bacon::Context.send(:include, Muack::API, WebMock::API)
 
 module Kernel
   def eq? rhs
