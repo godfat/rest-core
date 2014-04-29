@@ -27,6 +27,10 @@ class RestCore::Builder
     class << client
       attr_reader   :builder
       attr_accessor :pool_size, :pool_idle_time
+
+      def thread_pool
+        RestCore::ThreadPool[self]
+      end
     end
     client.instance_variable_set(:@builder, self)
     client.instance_variable_set(:@pool_size, 0) # default to no pool

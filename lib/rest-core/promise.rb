@@ -95,7 +95,7 @@ class RestCore::Promise
     if pool_size < 0 # negative number for blocking call
       job.call
     elsif pool_size > 0
-      self.task = ThreadPool[client_class].defer(self){ job.call }
+      self.task = client_class.thread_pool.defer(self){ job.call }
     else
       Thread.new{ synchronized_call }
     end
