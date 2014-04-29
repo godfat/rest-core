@@ -15,7 +15,7 @@ class RestCore::Promise
     end
   end
 
-  def initialize env, k, immediate, &task
+  def initialize env, k=RC.id, immediate=false, &task
     self.env       = env
     self.k         = k
     self.immediate = immediate
