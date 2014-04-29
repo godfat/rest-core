@@ -15,7 +15,6 @@ gem 'json_pure'
 gem 'multi_json'
 
 gem 'rack'
-gem 'ruby-hmac'
 
 platforms :ruby do
   gem 'yajl-ruby'
