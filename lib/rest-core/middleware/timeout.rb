@@ -21,15 +21,7 @@ class RestCore::Timeout
   end
 
   def monitor env
-    class_name = case name = run.class.to_s
-                 when /Auto/
-                   run.http_client.class.to_s
-                 else
-                   name
-                 end
-
     timer = Timer.new(timeout(env), timeout_error)
-
     yield(env.merge(TIMER => timer))
   rescue Exception
     timer.cancel

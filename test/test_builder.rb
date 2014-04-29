@@ -2,8 +2,8 @@
 require 'rest-core/test'
 
 describe RC::Builder do
-  should 'default app is RestCore::Auto' do
-    RC::Builder.client.new.app.class.should.eq RC::Auto
+  should 'default app is RestCore::RestClient' do
+    RC::Builder.client.new.app.class.should.eq RC::RestClient
   end
 
   should 'switch default_engine to RestCore::Dry' do

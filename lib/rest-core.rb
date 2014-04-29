@@ -60,7 +60,6 @@ module RestCore
   autoload :Timeout       , 'rest-core/middleware/timeout'
 
   # engines
-  autoload :Auto          , 'rest-core/engine/auto'
   autoload :Dry           , 'rest-core/engine/dry'
   autoload :RestClient    , 'rest-core/engine/rest-client'
 
