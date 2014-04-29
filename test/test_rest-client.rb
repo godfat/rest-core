@@ -51,7 +51,7 @@ describe RC::RestClient do
         self
       end
       stub(c.class).pool_size{ 1 }
-      mock(RC::Promise::ThreadPool::Task).new.with_any_args.
+      mock(RC::ThreadPool::Task).new.with_any_args.
         peek_return{ |t| mock(t).cancel; t }
       c.request({RC::TIMER => timer}, RC::FAIL).first.message.should.eq 'boom'
       Muack.verify
