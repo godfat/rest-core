@@ -15,13 +15,7 @@ class RestCore::Promise
   end
 
   def self.create *args, &block
-    if Fiber.respond_to?(:current) && RootFiber != Fiber.current &&
-       # because under a thread, Fiber.current won't return the root fiber
-       Thread.main == Thread.current
-       FiberPromise.new(*args, &block)
-    else
-      ThreadPromise.new(*args, &block)
-    end
+    ThreadPromise.new(*args, &block)
   end
 
   def initialize env, k, immediate, &task
@@ -111,23 +105,6 @@ class RestCore::Promise
                    end
   end
 
-  # next_tick is used for telling the reactor that there's something else
-  # should be done, don't sleep and don't stop at the moment
-  def next_tick
-    if Object.const_defined?(:EventMachine) && EventMachine.reactor_running?
-      EventMachine.next_tick{ yield }
-    else
-      yield
-    end
-  end
-
   autoload :ThreadPromise, 'rest-core/promise/thread_promise'
   autoload :ThreadPool   , 'rest-core/promise/thread_pool'
-
-  autoload :FiberPromise , 'rest-core/promise/fiber_promise'
-  autoload :FiberPool    , 'rest-core/promise/fiber_pool'
-  # rainbows/fiber_pool.rb
-  # rainbows/fiber/queue.rb
-  # https://github.com/alebsack/rack-fiber_pool/blob/master/lib/rack/fiber_pool.rb
-  # https://github.com/schmurfy/fiber_pool/blob/master/lib/fiber_pool/pool.rb
 end

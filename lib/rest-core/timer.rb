@@ -1,5 +1,5 @@
 
-class RestCore::Timeout::TimerThread
+class RestCore::Timer
   attr_accessor :timeout, :error
 
   def initialize timeout, error, &block

@@ -9,17 +9,6 @@ class RestCore::Auto
   end
 
   def http_client
-    if         Object.const_defined?(:EventMachine) &&
-       ::EventMachine.const_defined?(:HttpRequest)  &&
-       ::EventMachine.reactor_running?              &&
-       # it should be either wrapped around a thread or a fiber
-       ((Thread.main != Thread.current) ||
-        (Fiber.respond_to?(:current) && RootFiber != Fiber.current))
-
-      @emhttprequest ||= RestCore::EmHttpRequest.new
-
-    else
-      @restclient    ||= RestCore::RestClient.new
-    end
+    @restclient ||= RestCore::RestClient.new
   end
 end

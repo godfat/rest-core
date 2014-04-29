@@ -17,7 +17,7 @@ describe RC::Timeout do
   should 'run the monitor to setup timeout' do
     env = {'timeout' => 2}
     mock(app).monitor(env)
-    app.call(env){|e| e[RC::TIMER].should.kind_of?(RC::Timeout::TimerThread)}
+    app.call(env){|e| e[RC::TIMER].should.kind_of?(RC::Timer)}
   end
 
   should "not raise timeout error if there's already an error" do
