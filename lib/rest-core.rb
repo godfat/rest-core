@@ -19,8 +19,6 @@ module RestCore
   TIMER            = 'async.timer'
   PROMISE          = 'async.promise'
 
-  RootFiber        = Fiber.respond_to?(:current) && Fiber.current
-
   # core utilities
   autoload :Builder       , 'rest-core/builder'
   autoload :Client        , 'rest-core/client'
