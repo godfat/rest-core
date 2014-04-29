@@ -29,6 +29,7 @@ module RestCore
   autoload :Middleware    , 'rest-core/middleware'
   autoload :Wrapper       , 'rest-core/wrapper'
   autoload :Promise       , 'rest-core/promise'
+  autoload :ThreadPool    , 'rest-core/thread_pool'
 
   # oauth1 utilities
   autoload :ClientOauth1  , 'rest-core/client_oauth1'

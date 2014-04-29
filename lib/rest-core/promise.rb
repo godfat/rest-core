@@ -1,4 +1,5 @@
 
+require 'thread'
 require 'rest-core'
 
 class RestCore::Promise
@@ -14,16 +15,14 @@ class RestCore::Promise
     end
   end
 
-  def self.create *args, &block
-    ThreadPromise.new(*args, &block)
-  end
-
   def initialize env, k, immediate, &task
     self.env       = env
     self.k         = k
     self.immediate = immediate
     self.response, self.body, self.status, self.headers, self.error = nil
-    gofor(&task) if task
+    self.condv     = ConditionVariable.new
+    self.mutex     = Mutex.new
+    defer(&task) if task
   end
 
   def inspect
@@ -35,14 +34,22 @@ class RestCore::Promise
   def future_headers ; Future.new(self, RESPONSE_HEADERS); end
   def future_failures; Future.new(self, FAIL)            ; end
 
-  def wait  ; raise NotImplementedError; end
-  def resume; raise NotImplementedError; end
+  def wait
+    # it might be awaken by some other futures!
+    mutex.synchronize{ condv.wait(mutex) until loaded? } unless loaded?
+  end
 
-  def gofor
+  def resume
+    condv.broadcast
+  end
+
+  def defer
     if pool_size < 0 # negative number for blocking call
       yield
+    elsif pool_size > 0
+      self.task = ThreadPool[client_class].defer(self){ yield }
     else
-      defer{ yield }
+      Thread.new{ mutex.synchronize{yield} }
     end
   end
 
@@ -83,6 +90,8 @@ class RestCore::Promise
   end
 
   def reject error
+    task.cancel if task
+
     self.error = if error.kind_of?(Exception)
                    error
                  else
@@ -93,7 +102,8 @@ class RestCore::Promise
 
   protected
   attr_accessor :env, :k, :immediate,
-                :response, :body, :status, :headers, :error
+                :response, :body, :status, :headers, :error,
+                :condv, :mutex, :task
 
   private
   def client_class; env[CLIENT].class; end
@@ -104,7 +114,4 @@ class RestCore::Promise
                      0
                    end
   end
-
-  autoload :ThreadPromise, 'rest-core/promise/thread_promise'
-  autoload :ThreadPool   , 'rest-core/promise/thread_pool'
 end

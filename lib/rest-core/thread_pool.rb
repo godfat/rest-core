@@ -4,7 +4,7 @@
 
 require 'thread'
 
-class RestCore::Promise::ThreadPool
+class RestCore::ThreadPool
   include RestCore
 
   class Queue
