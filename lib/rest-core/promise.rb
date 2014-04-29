@@ -78,7 +78,7 @@ class RestCore::Promise
     env[TIMER].cancel if env[TIMER]
     self.body, self.status, self.headers = body, status, headers
     # under ASYNC callback, should call immediately
-    next_tick{ callback_in_async } if immediate
+    callback_in_async if immediate
     resume # client or response might be waiting
   end
 
