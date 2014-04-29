@@ -65,7 +65,6 @@ module RestCore
   autoload :Auto          , 'rest-core/engine/auto'
   autoload :Dry           , 'rest-core/engine/dry'
   autoload :RestClient    , 'rest-core/engine/rest-client'
-  autoload :EmHttpRequest , 'rest-core/engine/em-http-request'
 
   # clients
   autoload :Simple        , 'rest-core/client/simple'
