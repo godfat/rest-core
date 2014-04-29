@@ -126,4 +126,8 @@ class RestCore::Promise
 
   autoload :FiberPromise , 'rest-core/promise/fiber_promise'
   autoload :FiberPool    , 'rest-core/promise/fiber_pool'
+  # rainbows/fiber_pool.rb
+  # rainbows/fiber/queue.rb
+  # https://github.com/alebsack/rack-fiber_pool/blob/master/lib/rack/fiber_pool.rb
+  # https://github.com/schmurfy/fiber_pool/blob/master/lib/fiber_pool/pool.rb
 end
