@@ -172,7 +172,7 @@ module RestCore::Client
 
   def request_full env, app=app, &k
     response = app.call(build_env({ASYNC => !!k}.merge(env)),
-                        &(k || Middleware.id))
+                        &(k || RC.id))
 
     # under ASYNC callback, response might not be a response hash
     # in that case (maybe in a user created engine), Client#wait

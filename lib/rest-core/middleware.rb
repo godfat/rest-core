@@ -6,11 +6,6 @@ require 'uri'
 module RestCore::Middleware
   include RestCore
 
-  # identity function
-  def self.id
-    @id ||= lambda{ |a| a }
-  end
-
   def self.included mod
     mod.send(:include, RestCore)
     mod.send(:attr_reader, :app)
@@ -40,7 +35,7 @@ module RestCore::Middleware
   end
 
   def call env, &k; app.call(env, &(k || id)); end
-  def id          ; Middleware.id            ; end
+  def id          ; RC.id                    ; end
   def fail env, obj
     if obj
       env.merge(FAIL => (env[FAIL] || []) + [obj])
