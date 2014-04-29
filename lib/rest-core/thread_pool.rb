@@ -47,7 +47,7 @@ class RestCore::ThreadPool
     alias_method :to_s, :inspect
 
     def call
-      promise.synchronize{ job.call } unless cancelled
+      promise.synchronized_call unless cancelled
       true
     rescue Exception => e # should never happen, but just in case
       warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"

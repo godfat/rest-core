@@ -15,14 +15,17 @@ class RestCore::Promise
     end
   end
 
-  def initialize env, k=RC.id, immediate=false, &task
+  def initialize env, k=RC.id, immediate=false, &job
     self.env       = env
     self.k         = k
     self.immediate = immediate
+    self.job       = job
+
     self.response, self.body, self.status, self.headers, self.error = nil
     self.condv     = ConditionVariable.new
     self.mutex     = Mutex.new
-    defer(&task) if task
+
+    defer if job
   end
 
   def inspect
@@ -34,6 +37,10 @@ class RestCore::Promise
   def future_headers ; Future.new(self, RESPONSE_HEADERS); end
   def future_failures; Future.new(self, FAIL)            ; end
 
+  def synchronized_call
+    mutex.synchronize{ job.call }
+  end
+
   def wait
     # it might be awaken by some other futures!
     mutex.synchronize{ condv.wait(mutex) until loaded? } unless loaded?
@@ -43,16 +50,6 @@ class RestCore::Promise
     condv.broadcast
   end
 
-  def defer
-    if pool_size < 0 # negative number for blocking call
-      yield
-    elsif pool_size > 0
-      self.task = ThreadPool[client_class].defer(self){ yield }
-    else
-      Thread.new{ mutex.synchronize{yield} }
-    end
-  end
-
   def loaded?
     !!status
   end
@@ -60,24 +57,6 @@ class RestCore::Promise
   def yield
     wait
     callback
-  end
-
-  def callback
-    self.response ||= k.call(
-      env.merge(RESPONSE_BODY    => body  ,
-                RESPONSE_STATUS  => status,
-                RESPONSE_HEADERS => headers,
-                FAIL             => ((env[FAIL]||[]) + [error]).compact,
-                LOG              =>   env[LOG] ||[]))
-  end
-
-  def callback_in_async
-    callback
-  rescue Exception => e
-    # nothing we can do here for an asynchronous exception,
-    # so we just log the error
-    # TODO: add error_log_method
-    warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
   end
 
   def fulfill body, status, headers
@@ -100,11 +79,39 @@ class RestCore::Promise
   end
 
   protected
-  attr_accessor :env, :k, :immediate,
+  attr_accessor :env, :k, :immediate, :job,
                 :response, :body, :status, :headers, :error,
                 :condv, :mutex, :task
 
   private
+  def defer
+    if pool_size < 0 # negative number for blocking call
+      job.call
+    elsif pool_size > 0
+      self.task = ThreadPool[client_class].defer(self){ job.call }
+    else
+      Thread.new{ synchronized_call }
+    end
+  end
+
+  def callback
+    self.response ||= k.call(
+      env.merge(RESPONSE_BODY    => body  ,
+                RESPONSE_STATUS  => status,
+                RESPONSE_HEADERS => headers,
+                FAIL             => ((env[FAIL]||[]) + [error]).compact,
+                LOG              =>   env[LOG] ||[]))
+  end
+
+  def callback_in_async
+    callback
+  rescue Exception => e
+    # nothing we can do here for an asynchronous exception,
+    # so we just log the error
+    # TODO: add error_log_method
+    warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
+  end
+
   def client_class; env[CLIENT].class; end
   def pool_size
     @pool_size ||= if client_class.respond_to?(:pool_size)
