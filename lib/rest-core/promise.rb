@@ -19,13 +19,12 @@ class RestCore::Promise
     self.env       = env
     self.k         = k
     self.immediate = immediate
-    self.job       = job
 
     self.response, self.body, self.status, self.headers, self.error = nil
     self.condv     = ConditionVariable.new
     self.mutex     = Mutex.new
 
-    defer if job
+    defer(&job) if job
   end
 
   def inspect
@@ -37,9 +36,21 @@ class RestCore::Promise
   def future_headers ; Future.new(self, RESPONSE_HEADERS); end
   def future_failures; Future.new(self, FAIL)            ; end
 
+  def defer &job
+    if pool_size < 0 # negative number for blocking call
+      job.call
+    elsif pool_size > 0
+      self.task = client_class.thread_pool.defer do
+        synchronized_yield{ job.call }
+      end
+    else
+      Thread.new{ synchronized_yield{ job.call } }
+    end
+  end
+
   # called in a new thread if pool_size == 0, otherwise from the pool
-  def synchronized_call
-    mutex.synchronize{ job.call }
+  def synchronized_yield
+    mutex.synchronize{ yield }
   rescue Exception => e
     # nothing we can do here for an asynchronous exception,
     # so we just log the error
@@ -86,21 +97,11 @@ class RestCore::Promise
   end
 
   protected
-  attr_accessor :env, :k, :immediate, :job,
+  attr_accessor :env, :k, :immediate,
                 :response, :body, :status, :headers, :error,
                 :condv, :mutex, :task
 
   private
-  def defer
-    if pool_size < 0 # negative number for blocking call
-      job.call
-    elsif pool_size > 0
-      self.task = client_class.thread_pool.defer(self){ job.call }
-    else
-      Thread.new{ synchronized_call }
-    end
-  end
-
   def callback
     self.response ||= k.call(
       env.merge(RESPONSE_BODY    => body  ,

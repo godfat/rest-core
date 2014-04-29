@@ -8,7 +8,8 @@ require 'rest-core/middleware'
 class RestCore::RestClient
   include RestCore::Middleware
   def call env, &k
-    promise = Promise.new(env, k, env[ASYNC]){ request(promise, env) }
+    promise = Promise.new(env, k, env[ASYNC])
+    promise.defer{ request(promise, env) }
 
     env[TIMER].on_timeout{
       promise.reject(env[TIMER].error)

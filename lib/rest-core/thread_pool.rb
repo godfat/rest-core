@@ -40,15 +40,10 @@ class RestCore::ThreadPool
     attr_reader :queue, :mutex, :condv
   end
 
-  class Task < Struct.new(:promise, :job)
-    def inspect
-      "#<struct promise=#{promise.inspect}>"
-    end
-    alias_method :to_s, :inspect
-
+  class Task < Struct.new(:job)
     # this should never fail
     def call
-      promise.synchronized_call unless cancelled
+      job.call unless cancelled
     end
 
     # called from the other thread telling us it's timed out
@@ -85,9 +80,9 @@ class RestCore::ThreadPool
     client_class.pool_idle_time
   end
 
-  def defer promise, &job
+  def defer &job
     mutex.synchronize do
-      task = Task.new(promise, job)
+      task = Task.new(job)
       queue << task
       spawn_worker if waiting == 0 && workers.size < max_size
       task

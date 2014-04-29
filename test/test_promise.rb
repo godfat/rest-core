@@ -6,7 +6,8 @@ describe RC::Promise do
     client           = RC::Builder.client
     client.pool_size = 1
     flag             = 0
-    promise          = RC::Promise.new(RC::CLIENT => client.new) do
+    promise          = RC::Promise.new(RC::CLIENT => client.new)
+    promise.defer do
       flag.should.eq 0
       flag += 1
       promise.reject(nil)
@@ -21,7 +22,8 @@ describe RC::Promise do
     client           = RC::Builder.client
     client.pool_size = 2
     flag             = 0
-    promise          = RC::Promise.new(RC::CLIENT => client.new) do
+    promise          = RC::Promise.new(RC::CLIENT => client.new)
+    promise.defer do
       flag.should.eq 0
       flag += 1
       promise.fulfill('body', 1, {'K' => 'V'})
