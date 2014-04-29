@@ -46,14 +46,11 @@ class RestCore::ThreadPool
     end
     alias_method :to_s, :inspect
 
+    # this should never fail
     def call
       promise.synchronized_call unless cancelled
-      true
-    rescue Exception => e # should never happen, but just in case
-      warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
-      promise.reject(e)   # should never deadlock someone
-      true
     end
+
     # called from the other thread telling us it's timed out
     def cancel
       @cancelled = true

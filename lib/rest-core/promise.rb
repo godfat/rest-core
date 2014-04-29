@@ -37,8 +37,15 @@ class RestCore::Promise
   def future_headers ; Future.new(self, RESPONSE_HEADERS); end
   def future_failures; Future.new(self, FAIL)            ; end
 
+  # called in a new thread if pool_size == 0, otherwise from the pool
   def synchronized_call
     mutex.synchronize{ job.call }
+  rescue Exception => e
+    # nothing we can do here for an asynchronous exception,
+    # so we just log the error
+    # TODO: add error_log_method
+    warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
+    reject(e)   # should never deadlock someone
   end
 
   def wait
