@@ -17,7 +17,8 @@ class RestCore::RestClient < RestCore::Engine
     promise.fulfill(res.body, res.code, normalize_headers(res.raw_headers))
 
   rescue ::RestClient::RequestTimeout
-    promise.reject(::Timeout::Error.new('execution expired'))
+    promise.reject((env[TIMER] && env[TIMER].error) ||
+                   ::Timeout::Error.new('execution expired'))
 
   rescue ::RestClient::Exception => e
     if res = e.response
