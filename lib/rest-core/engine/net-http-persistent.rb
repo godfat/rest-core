@@ -1,27 +1,8 @@
 
 require 'net/http/persistent'
+require 'rest-core/engine'
 
-require 'rest-core/engine/dry'
-require 'rest-core/promise'
-require 'rest-core/middleware'
-
-class RestCore::NetHttpPersistent < RestCore::Dry
-  include RestCore::Middleware
-  def call env, &k
-    promise = Promise.new(env, k, env[ASYNC])
-    promise.defer{ request(promise, env) }
-
-    env[TIMER].on_timeout{
-      promise.reject(env[TIMER].error)
-    } if env[TIMER]
-
-    env.merge(RESPONSE_BODY    => promise.future_body,
-              RESPONSE_STATUS  => promise.future_status,
-              RESPONSE_HEADERS => promise.future_headers,
-              FAIL             => promise.future_failures,
-              PROMISE          => promise)
-  end
-
+class RestCore::NetHttpPersistent < RestCore::Engine
   def request promise, env
     http = ::Net::HTTP::Persistent.new
     http.open_timeout, http.read_timeout = calculate_timeout(env[TIMER])

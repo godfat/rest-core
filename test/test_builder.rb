@@ -3,7 +3,7 @@ require 'rest-core/test'
 
 describe RC::Builder do
   should 'default app is a kind of RestCore::Dry' do
-    RC::Builder.client.new.app.should.kind_of RC::Dry
+    RC::Builder.client.new.app.should.kind_of RC::Engine
   end
 
   should 'switch default_engine to RestCore::Dry' do

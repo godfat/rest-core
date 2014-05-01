@@ -1,28 +1,9 @@
 
 require 'restclient'
 require 'rest-core/patch/rest-client'
+require 'rest-core/engine'
 
-require 'rest-core/engine/dry'
-require 'rest-core/promise'
-require 'rest-core/middleware'
-
-class RestCore::RestClient < RestCore::Dry
-  include RestCore::Middleware
-  def call env, &k
-    promise = Promise.new(env, k, env[ASYNC])
-    promise.defer{ request(promise, env) }
-
-    env[TIMER].on_timeout{
-      promise.reject(env[TIMER].error)
-    } if env[TIMER]
-
-    env.merge(RESPONSE_BODY    => promise.future_body,
-              RESPONSE_STATUS  => promise.future_status,
-              RESPONSE_HEADERS => promise.future_headers,
-              FAIL             => promise.future_failures,
-              PROMISE          => promise)
-  end
-
+class RestCore::RestClient < RestCore::Engine
   def request promise, env
     open_timeout, read_timeout = calculate_timeout(env[TIMER])
     payload, headers = Payload.generate_with_headers(env[REQUEST_PAYLOAD],
