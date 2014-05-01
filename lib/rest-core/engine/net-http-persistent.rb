@@ -6,9 +6,7 @@ class RestCore::NetHttpPersistent < RestCore::Engine
   def request promise, env
     http = ::Net::HTTP::Persistent.new
     http.open_timeout, http.read_timeout = calculate_timeout(env[TIMER])
-
-    payload, headers = Payload.generate_with_headers(env[REQUEST_PAYLOAD],
-                                                     env[REQUEST_HEADERS])
+    payload, headers = payload_and_headers(env)
 
     uri = ::URI.parse(request_uri(env))
     req = ::Net::HTTP.const_get(env[REQUEST_METHOD].to_s.capitalize).

@@ -6,8 +6,7 @@ require 'rest-core/engine'
 class RestCore::RestClient < RestCore::Engine
   def request promise, env
     open_timeout, read_timeout = calculate_timeout(env[TIMER])
-    payload, headers = Payload.generate_with_headers(env[REQUEST_PAYLOAD],
-                                                     env[REQUEST_HEADERS])
+    payload, headers = payload_and_headers(env)
     res = ::RestClient::Request.execute(:method   => env[REQUEST_METHOD],
                                         :url      => request_uri(env)   ,
                                         :payload  => payload            ,
