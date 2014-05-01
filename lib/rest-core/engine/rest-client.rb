@@ -15,11 +15,6 @@ class RestCore::RestClient < RestCore::Engine
                                         :open_timeout => open_timeout   ,
                                              :timeout => read_timeout   )
     promise.fulfill(res.body, res.code, normalize_headers(res.raw_headers))
-
-  rescue ::RestClient::RequestTimeout
-    promise.reject((env[TIMER] && env[TIMER].error) ||
-                   ::Timeout::Error.new('execution expired'))
-
   rescue ::RestClient::Exception => e
     if res = e.response
       # we don't want to raise an exception for 404 requests
