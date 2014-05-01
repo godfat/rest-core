@@ -2,10 +2,11 @@
 require 'restclient'
 require 'rest-core/patch/rest-client'
 
+require 'rest-core/engine/dry'
 require 'rest-core/promise'
 require 'rest-core/middleware'
 
-class RestCore::RestClient
+class RestCore::RestClient < RestCore::Dry
   include RestCore::Middleware
   def call env, &k
     promise = Promise.new(env, k, env[ASYNC])
@@ -48,21 +49,5 @@ class RestCore::RestClient
 
   rescue Exception => e
     promise.reject(e)
-  end
-
-  def calculate_timeout timer
-    return [] unless timer
-    [timer.timeout, timer.timeout]
-  end
-
-  def normalize_headers raw_headers
-    raw_headers.inject({}){ |r, (k, v)|
-      r[k.to_s.upcase.tr('-', '_')] = if v.kind_of?(Array) && v.size == 1
-                                        v.first
-                                      else
-                                        v
-                                      end
-      r
-    }
   end
 end
