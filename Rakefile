@@ -12,7 +12,7 @@ Gemgem.init(dir) do |s|
   s.version  = RestCore::VERSION
   s.homepage = 'https://github.com/godfat/rest-core'
 
-  %w[rest-client].each{ |g| s.add_runtime_dependency(g) }
+  %w[timers].each{ |g| s.add_runtime_dependency(g) }
 
   s.authors  = ['Lin Jen-Shin (godfat)']
 

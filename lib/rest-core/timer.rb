@@ -1,13 +1,14 @@
 
-class RestCore::Timer
-  attr_accessor :timeout, :error
+require 'timers'
 
+class RestCore::Timer
+  TimerGen = Timers.new
+
+  attr_accessor :timeout, :error
   def initialize timeout, error, &block
-    t = Thread.current
     self.timeout = timeout
     self.error   = error
-    self.block   = block || lambda{ t.raise error }
-    @canceled    = false
+    self.block   = block
     start
   end
 
@@ -16,22 +17,14 @@ class RestCore::Timer
   end
 
   def cancel
-    @canceled = true
-    thread.kill.join
-  end
-
-  def canceled?
-    @canceled
+    timer.cancel
   end
 
   def start
     return if timeout.nil? || timeout.zero?
-    self.thread = Thread.new{
-      sleep(timeout)
-      block.call unless canceled?
-    }
+    self.timer = TimerGen.after(timeout){ block.call }
   end
 
   protected
-  attr_accessor :block, :thread
+  attr_accessor :block, :timer
 end

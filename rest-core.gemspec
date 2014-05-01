@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2014-04-29"
+  s.date = "2014-05-01"
   s.description = "Modular Ruby clients interface for REST APIs.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/godfat/rest-more"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
@@ -31,8 +31,10 @@ Gem::Specification.new do |s|
   "lib/rest-core/client/simple.rb",
   "lib/rest-core/client/universal.rb",
   "lib/rest-core/client_oauth1.rb",
-  "lib/rest-core/engine/auto.rb",
+  "lib/rest-core/engine.rb",
   "lib/rest-core/engine/dry.rb",
+  "lib/rest-core/engine/httpclient.rb",
+  "lib/rest-core/engine/net-http-persistent.rb",
   "lib/rest-core/engine/rest-client.rb",
   "lib/rest-core/error.rb",
   "lib/rest-core/event.rb",
@@ -59,9 +61,8 @@ Gem::Specification.new do |s|
   "lib/rest-core/patch/multi_json.rb",
   "lib/rest-core/patch/rest-client.rb",
   "lib/rest-core/promise.rb",
-  "lib/rest-core/promise/thread_pool.rb",
-  "lib/rest-core/promise/thread_promise.rb",
   "lib/rest-core/test.rb",
+  "lib/rest-core/thread_pool.rb",
   "lib/rest-core/timer.rb",
   "lib/rest-core/util/hmac.rb",
   "lib/rest-core/util/json.rb",
@@ -88,8 +89,10 @@ Gem::Specification.new do |s|
   "test/test_oauth1_header.rb",
   "test/test_oauth2_header.rb",
   "test/test_payload.rb",
+  "test/test_promise.rb",
   "test/test_rest-client.rb",
   "test/test_simple.rb",
+  "test/test_thread_pool.rb",
   "test/test_timeout.rb",
   "test/test_universal.rb",
   "test/test_wrapper.rb"]
@@ -115,8 +118,10 @@ Gem::Specification.new do |s|
   "test/test_oauth1_header.rb",
   "test/test_oauth2_header.rb",
   "test/test_payload.rb",
+  "test/test_promise.rb",
   "test/test_rest-client.rb",
   "test/test_simple.rb",
+  "test/test_thread_pool.rb",
   "test/test_timeout.rb",
   "test/test_universal.rb",
   "test/test_wrapper.rb"]
@@ -125,11 +130,11 @@ Gem::Specification.new do |s|
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<rest-client>, [">= 0"])
+      s.add_runtime_dependency(%q<timers>, [">= 0"])
     else
-      s.add_dependency(%q<rest-client>, [">= 0"])
+      s.add_dependency(%q<timers>, [">= 0"])
     end
   else
-    s.add_dependency(%q<rest-client>, [">= 0"])
+    s.add_dependency(%q<timers>, [">= 0"])
   end
 end
