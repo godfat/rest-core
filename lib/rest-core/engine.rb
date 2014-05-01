@@ -8,11 +8,6 @@ class RestCore::Engine
   def call env, &k
     promise = Promise.new(env, k, env[ASYNC])
     promise.defer{ request(promise, env) }
-
-    env[TIMER].on_timeout{
-      promise.reject(env[TIMER].error)
-    } if env[TIMER]
-
     env.merge(RESPONSE_BODY    => promise.future_body,
               RESPONSE_STATUS  => promise.future_status,
               RESPONSE_HEADERS => promise.future_headers,

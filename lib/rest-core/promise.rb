@@ -46,6 +46,7 @@ class RestCore::Promise
     else
       Thread.new{ synchronized_yield{ job.call } }
     end
+    env[TIMER].on_timeout{ reject(env[TIMER].error) } if env[TIMER]
   end
 
   # called in a new thread if pool_size == 0, otherwise from the pool
