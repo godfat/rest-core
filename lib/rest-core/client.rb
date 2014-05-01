@@ -1,7 +1,6 @@
 
-require 'rest-core'
-
 require 'weakref'
+require 'rest-core'
 
 module RestCore::Client
   include RestCore

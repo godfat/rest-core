@@ -3,6 +3,7 @@
 # https://github.com/puma/puma/blob/v2.7.1/lib/puma/thread_pool.rb
 
 require 'thread'
+require 'rest-core'
 
 class RestCore::ThreadPool
   include RestCore

@@ -1,7 +1,6 @@
 
-require 'rest-core'
-
 require 'uri'
+require 'rest-core'
 
 module RestCore::Middleware
   include RestCore
