@@ -162,9 +162,7 @@ module RestCore::Client
 
   def request env, key=RESPONSE_BODY, app=app
     if block_given?
-      request_full(env, app){ |response|
-        yield(response[key])
-      }
+      request_full(env, app){ |response| yield(response[key]) }
     else
       request_full(env, app)[key]
     end
