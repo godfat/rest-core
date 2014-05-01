@@ -7,7 +7,7 @@ class RestCore::Builder
   include Wrapper
 
   def self.default_engine
-    @default_engine ||= RestCore::RestClient
+    @default_engine ||= RestCore::HttpClient
   end
 
   def self.client *attrs, &block

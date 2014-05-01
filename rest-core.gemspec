@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   "lib/rest-core/client_oauth1.rb",
   "lib/rest-core/engine.rb",
   "lib/rest-core/engine/dry.rb",
-  "lib/rest-core/engine/httpclient.rb",
+  "lib/rest-core/engine/http-client.rb",
   "lib/rest-core/engine/net-http-persistent.rb",
   "lib/rest-core/engine/rest-client.rb",
   "lib/rest-core/error.rb",
@@ -131,10 +131,13 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<timers>, [">= 0"])
+      s.add_runtime_dependency(%q<httpclient>, [">= 0"])
     else
       s.add_dependency(%q<timers>, [">= 0"])
+      s.add_dependency(%q<httpclient>, [">= 0"])
     end
   else
     s.add_dependency(%q<timers>, [">= 0"])
+    s.add_dependency(%q<httpclient>, [">= 0"])
   end
 end
