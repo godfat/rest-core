@@ -102,8 +102,8 @@ describe RC::Cache do
         use RC::JsonResponse, true
       end
     end.new
-    stub_request(:get, 'me').to_return(:body => body = '{"a":"b"}')
-    c.get('me').should.eq 'a' => 'b'
+    stub_request(:get, 'http://me').to_return(:body => body = '{"a":"b"}')
+    c.get('http://me').should.eq 'a' => 'b'
     c.cache.values.first.should.eq "200\n\n\n#{body}"
   end
 
@@ -111,10 +111,10 @@ describe RC::Cache do
     c = RC::Builder.client do
       use RC::Cache, {}, 3600
     end.new
-    stub_request(:get, 'html').to_return(:body => body = "a\n\nb")
-    c.get('html').should.eq body
+    stub_request(:get, 'http://html').to_return(:body => body = "a\n\nb")
+    c.get('http://html').should.eq body
     c.cache.values.first.should.eq "200\n\n\n#{body}"
-    c.get('html')       .should.eq body
+    c.get('http://html').should.eq body
   end
 
   should "follow redirect with cache.update correctly" do
