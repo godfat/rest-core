@@ -2,6 +2,8 @@
 require 'rest-core'
 RC.eagerload
 
+RC::Universal.pool_size = 0 # default to no thread pool
+
 def def_use_case name, &block
   singleton_class.send(:define_method, "#{name}_") do
     begin
