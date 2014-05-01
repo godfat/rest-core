@@ -36,6 +36,7 @@ class RestCore::Promise
   def future_headers ; Future.new(self, RESPONSE_HEADERS); end
   def future_failures; Future.new(self, FAIL)            ; end
 
+  # called in client thread
   def defer &job
     if pool_size < 0 # negative number for blocking call
       job.call
@@ -49,43 +50,28 @@ class RestCore::Promise
     env[TIMER].on_timeout{ reject(env[TIMER].error) } if env[TIMER]
   end
 
-  # called in a new thread if pool_size == 0, otherwise from the pool
-  def synchronized_yield
-    mutex.synchronize{ yield }
-  rescue Exception => e
-    # nothing we can do here for an asynchronous exception,
-    # so we just log the error
-    # TODO: add error_log_method
-    warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
-    reject(e)   # should never deadlock someone
-  end
-
+  # called in client thread (client.wait)
   def wait
     # it might be awaken by some other futures!
-    mutex.synchronize{ condv.wait(mutex) until loaded? } unless loaded?
+    mutex.synchronize{ condv.wait(mutex) until !!status } unless !!status
   end
 
-  def resume
-    condv.broadcast
-  end
-
-  def loaded?
-    !!status
-  end
-
+  # called in client thread (from the future (e.g. body))
   def yield
     wait
     callback
   end
 
+  # called in requesting thread after the request is done
   def fulfill body, status, headers
     env[TIMER].cancel if env[TIMER]
     self.body, self.status, self.headers = body, status, headers
     # under ASYNC callback, should call immediately
     callback_in_async if immediate
-    resume # client or response might be waiting
+    condv.broadcast # client or response might be waiting
   end
 
+  # called in requesting thread if something goes wrong or timed out
   def reject error
     task.cancel if task
 
@@ -103,6 +89,19 @@ class RestCore::Promise
                 :condv, :mutex, :task
 
   private
+  # called in a new thread if pool_size == 0, otherwise from the pool
+  # i.e. requesting thread
+  def synchronized_yield
+    mutex.synchronize{ yield }
+  rescue Exception => e
+    # nothing we can do here for an asynchronous exception,
+    # so we just log the error
+    # TODO: add error_log_method
+    warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
+    reject(e)   # should never deadlock someone
+  end
+
+  # called in client thread, when yield is called
   def callback
     self.response ||= k.call(
       env.merge(RESPONSE_BODY    => body  ,
@@ -112,6 +111,7 @@ class RestCore::Promise
                 LOG              =>   env[LOG] ||[]))
   end
 
+  # called in requesting thread, whenever the request is done
   def callback_in_async
     callback
   rescue Exception => e
