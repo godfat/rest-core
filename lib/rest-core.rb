@@ -62,6 +62,7 @@ module RestCore
   # engines
   autoload :Dry           , 'rest-core/engine/dry'
   autoload :RestClient    , 'rest-core/engine/rest-client'
+  autoload :NetHttpPersistent, 'rest-core/engine/net-http-persistent'
 
   # clients
   autoload :Simple        , 'rest-core/client/simple'
