@@ -58,7 +58,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     end
   end
 
-  # would also be called upon closing
+  # would also be called upon closing, would always be called at least once
   def onerror error=nil, sock=nil, &cb
     if block_given?
       @onerror = cb
