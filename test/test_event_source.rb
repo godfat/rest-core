@@ -2,8 +2,9 @@
 require 'socket'
 require 'rest-core/test'
 
-describe RC::Client do
-  should 'event_source' do
+describe RC::EventSource do
+  client = RC::Builder.client.new
+  server = lambda do |close=true|
     serv = TCPServer.new(0)
     port = serv.addr[1]
     path = "http://localhost:#{port}/"
@@ -24,12 +25,15 @@ SSE
       sock.puts("Content-Type: text/event-stream\r")
       sock.puts
       sock.puts(payload)
-      sock.close
+      sock.close if close
     end
 
-    client = RC::Builder.client.new
+    [client.event_source(path, :a => 'b'), m, t]
+  end
+
+  should 'work regularly' do
+    es, m, t = server.call
     flag = 0
-    es = client.event_source(path, :a => 'b')
 
     es.onopen do |sock|
       sock.should.kind_of IO
@@ -55,6 +59,19 @@ SSE
     es.start
     es.wait
     flag.should.eq 4
+    t.join
+  end
+
+  should 'close' do
+    es, m, t = server.call(false)
+    flag = 0
+    es.onmessage do
+      es.close
+      flag += 1
+    end
+    es.start
+    es.wait
+    flag.should.eq 1
     t.join
   end
 end
