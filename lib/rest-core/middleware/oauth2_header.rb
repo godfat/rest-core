@@ -1,6 +1,7 @@
 
 require 'rest-core/middleware'
 
+# http://tools.ietf.org/html/rfc6749
 class RestCore::Oauth2Header
   def self.members; [:access_token_type, :access_token]; end
   include RestCore::Middleware

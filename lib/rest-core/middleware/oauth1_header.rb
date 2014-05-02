@@ -5,6 +5,7 @@ require 'rest-core/util/hmac'
 require 'uri'
 require 'openssl'
 
+# http://tools.ietf.org/html/rfc5849
 class RestCore::Oauth1Header
   def self.members
     [:request_token_path, :access_token_path, :authorize_path,
