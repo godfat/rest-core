@@ -25,6 +25,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
   end
 
   def wait
+    raise RC::Error.new("Not yet started for: #{self}") unless mutex
     mutex.synchronize{ condv.wait(mutex) until closed? } unless closed?
   end
 
