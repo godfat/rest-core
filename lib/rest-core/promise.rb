@@ -63,9 +63,10 @@ class RestCore::Promise
   end
 
   # called in requesting thread after the request is done
-  def fulfill body, status, headers
+  def fulfill body, status, headers, socket=nil
     env[TIMER].cancel if env[TIMER]
-    self.body, self.status, self.headers = body, status, headers
+    self.body, self.status, self.headers, self.socket =
+      body, status, headers, socket
     # under ASYNC callback, should call immediately
     callback_in_async if immediate
     condv.broadcast # client or response might be waiting
@@ -85,7 +86,7 @@ class RestCore::Promise
 
   protected
   attr_accessor :env, :k, :immediate,
-                :response, :body, :status, :headers, :error,
+                :response, :body, :status, :headers, :socket, :error,
                 :condv, :mutex, :task
 
   private
@@ -107,6 +108,7 @@ class RestCore::Promise
       env.merge(RESPONSE_BODY    => body  ,
                 RESPONSE_STATUS  => status,
                 RESPONSE_HEADERS => headers,
+                RESPONSE_SOCKET  => socket,
                 FAIL             => ((env[FAIL]||[]) + [error]).compact,
                 LOG              =>   env[LOG] ||[]))
   end

@@ -159,6 +159,10 @@ module RestCore::Client
        REQUEST_PAYLOAD => payload}.merge(opts), &cb)
   end
 
+  def event_source path, query={}, opts={}
+    EventSource.new(self, path, query, opts)
+  end
+
   def request env, key=RESPONSE_BODY, app=app
     if block_given?
       request_full(env, app){ |response| yield(response[key]) }

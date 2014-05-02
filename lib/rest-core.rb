@@ -9,6 +9,7 @@ module RestCore
   RESPONSE_BODY    = 'RESPONSE_BODY'
   RESPONSE_STATUS  = 'RESPONSE_STATUS'
   RESPONSE_HEADERS = 'RESPONSE_HEADERS'
+  RESPONSE_SOCKET  = 'RESPONSE_SOCKET'
 
   DRY              = 'core.dry'
   FAIL             = 'core.fail'
@@ -18,6 +19,7 @@ module RestCore
   ASYNC            = 'async.callback'
   TIMER            = 'async.timer'
   PROMISE          = 'async.promise'
+  HIJACK           = 'async.hijack'
 
   # core utilities
   autoload :Builder       , 'rest-core/builder'
@@ -28,6 +30,7 @@ module RestCore
   autoload :Wrapper       , 'rest-core/wrapper'
   autoload :Promise       , 'rest-core/promise'
   autoload :ThreadPool    , 'rest-core/thread_pool'
+  autoload :EventSource   , 'rest-core/event_source'
 
   # oauth1 utilities
   autoload :ClientOauth1  , 'rest-core/client_oauth1'
