@@ -45,6 +45,7 @@ class RestCore::ThreadPool
     # this should never fail
     def call
       job.call unless cancelled
+      true
     end
 
     # called from the other thread telling us it's timed out
