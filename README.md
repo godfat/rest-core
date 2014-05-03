@@ -403,25 +403,25 @@ installed before trying this.
 
 ## List of built-in Middleware:
 
-* `RC::AuthBasic`
-* `RC::Bypass`
-* `RC::Cache`
-* `RC::CommonLogger`
-* `RC::DefaultHeaders`
-* `RC::DefaultPayload`
-* `RC::DefaultQuery`
-* `RC::DefaultSite`
-* `RC::Defaults`
-* `RC::ErrorDetector`
-* `RC::ErrorDetectorHttp`
-* `RC::ErrorHandler`
-* `RC::FollowRedirect`
-* `RC::JsonRequest`
-* `RC::JsonResponse`
-* `RC::Oauth1Header`
-* `RC::Oauth2Header`
-* `RC::Oauth2Query`
-* `RC::Timeout`
+* [`RC::AuthBasic`](lib/rest-core/middleware/auth_basic.rb)
+* [`RC::Bypass`](lib/rest-core/middleware/bypass.rb)
+* [`RC::Cache`](lib/rest-core/middleware/cache.rb)
+* [`RC::CommonLogger`](lib/rest-core/middleware/common_logger.rb)
+* [`RC::DefaultHeaders`](lib/rest-core/middleware/default_headers.rb)
+* [`RC::DefaultPayload`](lib/rest-core/middleware/default_payload.rb)
+* [`RC::DefaultQuery`](lib/rest-core/middleware/default_query.rb)
+* [`RC::DefaultSite`](lib/rest-core/middleware/default_site.rb)
+* [`RC::Defaults`](lib/rest-core/middleware/defaults.rb)
+* [`RC::ErrorDetector`](lib/rest-core/middleware/error_detector.rb)
+* [`RC::ErrorDetectorHttp`](lib/rest-core/middleware/error_detector_http.rb)
+* [`RC::ErrorHandler`](lib/rest-core/middleware/error_handler.rb)
+* [`RC::FollowRedirect`](lib/rest-core/middleware/follow_redirect.rb)
+* [`RC::JsonRequest`](lib/rest-core/middleware/json_request.rb)
+* [`RC::JsonResponse`](lib/rest-core/middleware/json_response.rb)
+* [`RC::Oauth1Header`](lib/rest-core/middleware/oauth1_header.rb)
+* [`RC::Oauth2Header`](lib/rest-core/middleware/oauth2_header.rb)
+* [`RC::Oauth2Query`](lib/rest-core/middleware/oauth2_query.rb)
+* [`RC::Timeout`](lib/rest-core/middleware/timeout.rb)
 
 ## Build Your Own Middleware:
 
