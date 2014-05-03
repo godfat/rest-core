@@ -51,8 +51,9 @@ describe RC::RestClient do
         self
       end
       stub(c.class).pool_size{ 1 }
+      stub(c.class.thread_pool).queue{ [] } # don't queue the task
       mock(RC::ThreadPool::Task).new.with_any_args.
-        peek_return{ |t| mock(t).cancel; t }
+        peek_return{ |t| mock(t).cancel; t } # the task should be cancelled
       c.request({RC::TIMER => timer}, RC::FAIL).first.message.should.eq 'boom'
       Muack.verify
     end
