@@ -11,6 +11,7 @@ class RestCore::Engine
     env.merge(RESPONSE_BODY    => promise.future_body,
               RESPONSE_STATUS  => promise.future_status,
               RESPONSE_HEADERS => promise.future_headers,
+              RESPONSE_SOCKET  => promise.future_socket,
               FAIL             => promise.future_failures,
               PROMISE          => promise)
   end

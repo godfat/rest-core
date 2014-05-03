@@ -20,7 +20,9 @@ class RestCore::Promise
     self.k         = k
     self.immediate = immediate
 
-    self.response, self.body, self.status, self.headers, self.error = nil
+    self.body, self.status, self.headers,
+      self.socket, self.response, self.error, = nil
+
     self.condv     = ConditionVariable.new
     self.mutex     = Mutex.new
 
@@ -34,6 +36,7 @@ class RestCore::Promise
   def future_body    ; Future.new(self, RESPONSE_BODY   ); end
   def future_status  ; Future.new(self, RESPONSE_STATUS ); end
   def future_headers ; Future.new(self, RESPONSE_HEADERS); end
+  def future_socket  ; Future.new(self, RESPONSE_SOCKET ); end
   def future_failures; Future.new(self, FAIL)            ; end
 
   # called in client thread
