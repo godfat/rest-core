@@ -424,8 +424,8 @@ installed before trying this.
 * [RC::Timeout][]
 
 [RC::AuthBasic]: lib/rest-core/middleware/auth_basic.rb
-[RC::Bypass]: (lib/rest-core/middleware/bypass.rb
-[RC::Cache]: (lib/rest-core/middleware/cache.rb
+[RC::Bypass]: lib/rest-core/middleware/bypass.rb
+[RC::Cache]: lib/rest-core/middleware/cache.rb
 [RC::CommonLogger]: lib/rest-core/middleware/common_logger.rb
 [RC::DefaultHeaders]: lib/rest-core/middleware/default_headers.rb
 [RC::DefaultPayload]: lib/rest-core/middleware/default_payload.rb
