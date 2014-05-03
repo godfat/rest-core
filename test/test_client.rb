@@ -8,19 +8,23 @@ describe RC::Simple do
   end
 
   should 'do simple request' do
+    c = RC::Simple.new
     url = 'http://localhost/'
-    [:get, :post, :delete, :put, :patch, :options].each do |method|
+    [:get, :post, :delete, :put, :patch].each do |method|
       stub_request(method, url).to_return(:body => '[]')
-      RC::Simple.new.send(method, url).should.eq '[]'
+      c.send(method, url).should.eq '[]'
     end
 
-    stub_request(:head, url).to_return(:headers => {'A' => 'B'})
-    RC::Simple.new.head(url).should.eq({'A' => 'B'})
+    stub_request(:head   , url).to_return(:headers => {'A' => 'B'})
+    c.   head(url).should.eq('A' => 'B')
+
+    stub_request(:options, url).to_return(:headers => {'A' => 'B'})
+    c.options(url).should.eq('A' => 'B')
   end
 
   should 'call the callback' do
     url = 'http://localhost/'
-    [:get, :post, :delete, :put, :patch, :options].each do |method|
+    [:get, :post, :delete, :put, :patch].each do |method|
       stub_request(method, url).to_return(:body => '123')
       (client = RC::Simple.new).send(method, url){ |res|
         res.should.eq '123' }.should.eq client
@@ -30,6 +34,12 @@ describe RC::Simple do
     stub_request(:head, url).to_return(:headers => {'A' => 'B'})
     (client = RC::Simple.new).head(url){ |res|
       res.should.eq({'A' => 'B'})
+    }.should.eq client
+    client.wait
+
+    stub_request(:options, url).to_return(:headers => {'A' => 'B'})
+    (client = RC::Simple.new).options(url){ |res|
+      res.should.eq('A' => 'B')
     }.should.eq client
     client.wait
   end

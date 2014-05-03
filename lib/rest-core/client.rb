@@ -132,7 +132,7 @@ module RestCore::Client
     request(
       {REQUEST_METHOD  => :options,
        REQUEST_PATH    => path   ,
-       REQUEST_QUERY   => query  }.merge(opts), &cb)
+       REQUEST_QUERY   => query  }.merge(opts), RESPONSE_HEADERS, &cb)
   end
 
   def post   path, payload={}, query={}, opts={}, &cb
