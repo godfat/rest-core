@@ -1,8 +1,6 @@
 # TODO
 
 * middleware revisit (how to initialize?)
-* streaming?
-* connection pool?
 * X-Method-Override
 
 # BUG
@@ -17,6 +15,4 @@
 # rest-request
 
 * fix DRY by defining `prepare :: env -> env`
-* fix TIMER by doing dedicated timeout, instead of using a generic timeout.
-  timeout middleware won't work well.
 * FAIL and LOG need to be reimplemented as well.
