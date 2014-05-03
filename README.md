@@ -33,7 +33,7 @@ dedicated clients provided by [rest-more][].
 
 * Modular interface for REST clients similar to WSGI/Rack for servers.
 * Concurrent requests with synchronous or asynchronous interfaces with
-  fibers or threads are both supported.
+  threads.
 
 ## WHY?
 
@@ -51,7 +51,7 @@ less memory, less conflicts, and run faster.
 ### Optional:
 
 * gem json or yajl-ruby, or multi_json (if `JsonResponse` or
-  `JsonRequest` middlewares are used)
+  `JsonRequest` middleware is used)
 
 ## INSTALLATION:
 
@@ -93,12 +93,12 @@ configuration, e.g. different cache time or timeout time):
 
 ``` ruby
 client = YourClient.new(:cache => {})
-client.get('cardinalblue') # cache miss
-client.get('cardinalblue') # cache hit
+client.get('godfat') # cache miss
+client.get('godfat') # cache hit
 
 client.site = 'http://github.com/api/v2/json/user/show/'
-client.get('cardinalblue') # cache miss
-client.get('cardinalblue') # cache hit
+client.get('godfat') # cache miss
+client.get('godfat') # cache hit
 ```
 
 ### Concurrent Requests with Futures:
@@ -107,7 +107,7 @@ You can also make concurrent requests easily:
 (see "Advanced Concurrent HTTP Requests -- Embrace the Future" for detail)
 
 ``` ruby
-a = [client.get('cardinalblue'), client.get('godfat')]
+a = [client.get('godfat'), client.get('cardinalblue')]
 puts "It's not blocking... but doing concurrent requests underneath"
 p a.map{ |r| r['name'] } # here we want the values, so it blocks here
 puts "DONE"
@@ -168,7 +168,7 @@ should work.
 On the other hand, callback mode also available:
 
 ``` ruby
-client.get('cardinalblue'){ |v| p v }
+client.get('godfat'){ |v| p v }
 puts "It's not blocking... but doing concurrent requests underneath"
 client.wait # we block here to wait for the request done
 puts "DONE"
@@ -205,17 +205,15 @@ including the path.
 ``` ruby
 client.request_full({})[RC::RESPONSE_BODY] # {"message"=>"Not Found"}
 # This would print something like this:
-# RestCore: Auto   picked: RestCore::RestClient
-# RestCore: Future picked: RestCore::Future::FutureThread
-# RestCore: spent 1.135713 Requested GET https://api.github.com/users//
+# RestCore: spent 1.135713 Requested GET https://api.github.com/users/
 
-client.request_full(RC::REQUEST_PATH => 'cardinalblue')[RC::RESPONSE_STATUS]
-client.request_full(RC::REQUEST_PATH => 'cardinalblue')[RC::RESPONSE_HEADERS]
+client.request_full(RC::REQUEST_PATH => 'godfat')[RC::RESPONSE_STATUS]
+client.request_full(RC::REQUEST_PATH => 'godfat')[RC::RESPONSE_HEADERS]
 # Headers are normalized with all upper cases and
 # dashes are replaced by underscores.
 
 # To make POST (or any other request methods) request:
-client.request_full(RC::REQUEST_PATH   => 'cardinalblue',
+client.request_full(RC::REQUEST_PATH   => 'godfat',
                     RC::REQUEST_METHOD => :post)[RC::RESPONSE_STATUS] # 404
 ```
 
@@ -225,7 +223,7 @@ Runnable example is at: [example/simple.rb][]. Please see [rest-more][]
 for more complex examples to build clients, and [slides][] from
 [rubyconf.tw/2011][rubyconf.tw] for concepts.
 
-[example/simple.rb]: https://github.com/godfat/rest-core/blob/master/example/simple.rb
+[example/simple.rb]: example/simple.rb
 [rest-more]: https://github.com/godfat/rest-more
 [slides]: http://www.godfat.org/slide/2011-08-27-rest-core.html
 [rubyconf.tw]: http://rubyconf.tw/2011/#6
@@ -233,7 +231,7 @@ for more complex examples to build clients, and [slides][] from
 ## Playing Around:
 
 You can also play around with `RC::Universal` client, which has installed
-_all_ reasonable middlewares built-in rest-core. So the above example could
+_all_ reasonable middleware built-in rest-core. So the above example could
 also be achieved by:
 
 ``` ruby
@@ -241,7 +239,7 @@ require 'rest-core'
 client = RC::Universal.new(:site          => 'https://api.github.com/users/',
                            :json_response => true,
                            :log_method    => method(:puts))
-client.get('cardinalblue')
+client.get('godfat')
 ```
 
 `RC::Universal` is defined as:
@@ -279,7 +277,7 @@ rib rest-core
 And you will be entering a rib shell, which `self` is an instance of
 `RC::Universal` you can play:
 
-    rest-core>> get 'https://api.github.com/users/cardinalblue'
+    rest-core>> get 'https://api.github.com/users/godfat'
 
 will print out the response from Github. You can also do this to make
 calling Github easier:
@@ -289,7 +287,7 @@ calling Github easier:
 
 Then it would do exactly like the original example:
 
-    rest-core>> get 'cardinalblue' # you get a nice parsed hash
+    rest-core>> get 'godfat' # you get a nice parsed hash
 
 This is mostly for fun and experimenting, so it's only included in
 [rest-more][] and [rib][]. Please make sure you have both of them
@@ -429,7 +427,7 @@ end
 
 client = YourClient.new
 puts "rest-client with threads doing concurrent requests"
-a = [client.get('cardinalblue'), client.get('godfat')]
+a = [client.get('godfat'), client.get('cardinalblue')]
 puts "It's not blocking... but doing concurrent requests underneath"
 p a.map{ |r| r['name'] } # here we want the values, so it blocks here
 puts "DONE"
@@ -447,10 +445,10 @@ end
 
 client = YourClient.new
 puts "rest-client with threads doing concurrent requests"
-client.get('cardinalblue'){ |v|
+client.get('godfat'){ |v|
          p v['name']
        }.
-       get('godfat'){ |v|
+       get('cardinalblue'){ |v|
          p v['name']
        }
 puts "It's not blocking... but doing concurrent requests underneath"
@@ -462,14 +460,13 @@ You can pick whatever works for you.
 
 [future]: http://en.wikipedia.org/wiki/Futures_and_promises
 
-A full runnable example is at: [example/multi.rb][]. If you want to know
+A full runnable example is at: [example/simple.rb][]. If you want to know
 all the possible use cases, you can also see: [example/use-cases.rb][]. It's
 also served as a test for each possible combinations, so it's quite complex
 and complete.
 
-[example/multi.rb]: https://github.com/godfat/rest-core/blob/master/example/multi.rb
-
-[example/use-cases.rb]: https://github.com/godfat/rest-core/blob/master/example/use-cases.rb
+[example/simple.rb]: example/simple.rb
+[example/use-cases.rb]: example/use-cases.rb
 
 ## rest-core users:
 
