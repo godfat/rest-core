@@ -63,7 +63,7 @@ SSE
   end
 
   should 'close' do
-    es, m, t = server.call(false)
+    es, _, t = server.call(false)
     flag = 0
     es.onmessage do
       es.close

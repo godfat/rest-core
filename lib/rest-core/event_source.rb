@@ -8,6 +8,9 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
   def start
     self.mutex = Mutex.new
     self.condv = ConditionVariable.new
+    @onopen        ||= nil
+    @onmessage_for ||= nil
+    @onerror       ||= nil
 
     client.request(
       {REQUEST_METHOD  => :get ,
