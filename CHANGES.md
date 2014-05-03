@@ -1,6 +1,6 @@
 # CHANGES
 
-## rest-core 3.0.0 -- ?
+## rest-core 3.0.0 -- 2014-05-04
 
 Highlights:
 
