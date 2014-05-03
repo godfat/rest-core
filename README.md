@@ -44,16 +44,14 @@ less memory, less conflicts, and run faster.
 
 ### Mandatory:
 
-* MRI (official CRuby) 1.9.3, 2.0.0, Rubinius and JRuby.
-* gem rest-client
+* Tested with MRI (official CRuby), Rubinius and JRuby.
+* gem httpclient
+* gem timers
 
 ### Optional:
 
-* gem [em-http-request][] (if using eventmachine)
 * gem json or yajl-ruby, or multi_json (if `JsonResponse` or
   `JsonRequest` middlewares are used)
-
-[em-http-request]: https://github.com/igrigorik/em-http-request
 
 ## INSTALLATION:
 
@@ -463,71 +461,6 @@ puts "DONE"
 You can pick whatever works for you.
 
 [future]: http://en.wikipedia.org/wiki/Futures_and_promises
-
-### What Concurrency Model to Choose?
-
-In the above example, we're using rest-client with threads, which works
-for most of cases. But you might also want to use em-http-request with
-EventMachine, which is using a faster HTTP parser. In theory, it should
-be much more efficient than rest-client and threads.
-
-To pick em-http-request, you must run the requests inside the EventMachine's
-event loop, and also wrap your request with either a thread or a fiber,
-because we can't block the event loop and ask em-http-request to finish
-its job making requests.
-
-Here's an example of using em-http-request with threads:
-
-``` ruby
-require 'em-http-request'
-require 'rest-core'
-YourClient = RC::Builder.client do
-  use RC::DefaultSite , 'https://api.github.com/users/'
-  use RC::JsonResponse, true
-  use RC::CommonLogger, method(:puts)
-end
-
-client = YourClient.new
-puts "eventmachine with threads doing concurrent requests"
-EM.run{
-  Thread.new{
-    a = [client.get('cardinalblue'), client.get('godfat')]
-    p a.map{ |r| r['name'] } # here we want the values, so it blocks here
-    puts "DONE"
-    EM.stop
-  }
-  puts "It's not blocking... but doing concurrent requests underneath"
-}
-```
-
-And here's an example of using em-http-request with fibers:
-
-``` ruby
-require 'fiber'           # remember to require fiber first,
-require 'em-http-request' # or rest-core won't pick fibers
-require 'rest-core'
-YourClient = RC::Builder.client do
-  use RC::DefaultSite , 'https://api.github.com/users/'
-  use RC::JsonResponse, true
-  use RC::CommonLogger, method(:puts)
-end
-
-client = YourClient.new
-puts "eventmachine with fibers doing concurrent requests"
-EM.run{
-  Fiber.new{
-    a = [client.get('cardinalblue'), client.get('godfat')]
-    p a.map{ |r| r['name'] } # here we want the values, so it blocks here
-    puts "DONE"
-    EM.stop
-  }
-  puts "It's not blocking... but doing concurrent requests underneath"
-}
-```
-
-As you can see, both of them are quite similar to each other, because the
-idea behind the scene is the same. If you don't know what concurrency model
-to pick, start with rest-client since it's the easiest one to setup.
 
 A full runnable example is at: [example/multi.rb][]. If you want to know
 all the possible use cases, you can also see: [example/use-cases.rb][]. It's
