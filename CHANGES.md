@@ -1,5 +1,53 @@
 # CHANGES
 
+## rest-core 3.0.0 -- ?
+
+### Incompatible changes
+
+* Since eventmachine is buggy, and fibers without eventmachine doesn't make
+  too much sense, we have removed the support for eventmachine and fibers.
+
+* We also changed the default HTTP client from rest-client to httpclient.
+  If you still want to use rest-client, switch it like this:
+
+      RC::Builder.default_engine = RC::RestClient
+
+  Be warned, we might remove rest-client support in the future.
+
+* Removed support for Ruby 1.8.7 without openssl installed.
+
+* `RC::Future` is renamed to `RC::Promise`, and `RC::Future::Proxy` is
+  renamed to `RC::Promise::Future`.
+
+### Enhancement
+
+* HIJACK support, which is similar to Rack's HIJACK feature. If you're
+  passing `{RC::HIJACK => true}` whenever making a request, rest-core would
+  rather set the `RC::RESPONSE_BODY` as an empty string, and set
+  `RC::RESPONSE_SOCKET` as a socket for the response. This is used for
+  `RC::EventSource`, and you could also use this for streaming the response.
+  Note that this only works for default engine, httpclient.
+
+* Introduce `RC::EventSource`. You could obtain the object via
+  `RC::Client#event_source`, and then setup `onopen`, `onmessage`, and
+  `onerror` respectively, and then call `RC::EventSource#start` to begin
+  making the request, and receive the SSE (sever-sent events) from the server.
+  This is used in `RC::Firebase` from rest-more.
+
+* Now we have thread pool support. We could set the pool size with:
+  `RC::YourClient.pool_size = 10` and thread idle time with:
+  `RC::YourClient.pool_idle_time = 60`. By default, `pool_size` is 0
+  which means we don't use a thread pool. Setting it to a negative number
+  would mean do not spawn any threads, just make a blocking request.
+  `pool_idle_time` is default to 60, meaning an idle thread would be shut
+  down after 60 seconds without being used.
+
+* Now `RC::Middleware#fail` and `RC::Middleware#log` could accept `nil` as
+  an input, which would then do nothing. This could much simplify the code
+  building middleware.
+
+* Now we're using timers gem which should be less buggy from previous timeout.
+
 ## rest-core 2.1.2 -- 2013-05-31
 
 ### Incompatible changes

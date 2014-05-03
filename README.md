@@ -481,7 +481,7 @@ and complete.
 
 ## CHANGES:
 
-* [CHANGES](https://github.com/godfat/rest-core/blob/master/CHANGES.md)
+* [CHANGES](CHANGES.md)
 
 ## CONTRIBUTORS:
 

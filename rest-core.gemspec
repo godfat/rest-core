@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2014-05-01"
+  s.date = "2014-05-03"
   s.description = "Modular Ruby clients interface for REST APIs.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/godfat/rest-more"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
@@ -22,7 +22,6 @@ Gem::Specification.new do |s|
   "README.md",
   "Rakefile",
   "TODO.md",
-  "example/multi.rb",
   "example/simple.rb",
   "example/use-cases.rb",
   "lib/rest-core.rb",
@@ -38,6 +37,7 @@ Gem::Specification.new do |s|
   "lib/rest-core/engine/rest-client.rb",
   "lib/rest-core/error.rb",
   "lib/rest-core/event.rb",
+  "lib/rest-core/event_source.rb",
   "lib/rest-core/middleware.rb",
   "lib/rest-core/middleware/auth_basic.rb",
   "lib/rest-core/middleware/bypass.rb",
@@ -83,6 +83,7 @@ Gem::Specification.new do |s|
   "test/test_error_detector.rb",
   "test/test_error_detector_http.rb",
   "test/test_error_handler.rb",
+  "test/test_event_source.rb",
   "test/test_follow_redirect.rb",
   "test/test_json_request.rb",
   "test/test_json_response.rb",
@@ -98,7 +99,6 @@ Gem::Specification.new do |s|
   "test/test_wrapper.rb"]
   s.homepage = "https://github.com/godfat/rest-core"
   s.licenses = ["Apache License 2.0"]
-  s.post_install_message = "# [rest-core] Since 2.1.0, Incompatible changes for POST requests:\n\n* We no longer support Rails-like POST payload, like translating\n  `{:foo => [1, 2]}` to `'foo[]=1&foo[]=2'`. It would now be translated to\n  `'foo=1&foo=2'`. If you like `'foo[]'` as the key, simply pass it as\n  `{'foo[]' => [1, 2]}`.\n\n* This also applies to nested hashes like `{:foo => {:bar => 1}`. If you\n  want that behaviour, just pass `{'foo[bar]' => 1}` which would then be\n  translated to `'foo[bar]=1'`.\n"
   s.rubygems_version = "2.2.2"
   s.summary = "Modular Ruby clients interface for REST APIs."
   s.test_files = [
@@ -112,6 +112,7 @@ Gem::Specification.new do |s|
   "test/test_error_detector.rb",
   "test/test_error_detector_http.rb",
   "test/test_error_handler.rb",
+  "test/test_event_source.rb",
   "test/test_follow_redirect.rb",
   "test/test_json_request.rb",
   "test/test_json_response.rb",
