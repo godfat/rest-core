@@ -111,14 +111,14 @@ module RestCore::Client
     request(
       {REQUEST_METHOD  => :get   ,
        REQUEST_PATH    => path   ,
-       REQUEST_QUERY   => query  }.merge(opts), &cb)
+       REQUEST_QUERY   => query  }.merge(opts), response_key(opts), &cb)
   end
 
   def delete path, query={}, opts={}, &cb
     request(
       {REQUEST_METHOD  => :delete,
        REQUEST_PATH    => path   ,
-       REQUEST_QUERY   => query  }.merge(opts), &cb)
+       REQUEST_QUERY   => query  }.merge(opts), response_key(opts), &cb)
   end
 
   def head path, query={}, opts={}, &cb
@@ -140,7 +140,7 @@ module RestCore::Client
       {REQUEST_METHOD  => :post  ,
        REQUEST_PATH    => path   ,
        REQUEST_QUERY   => query  ,
-       REQUEST_PAYLOAD => payload}.merge(opts), &cb)
+       REQUEST_PAYLOAD => payload}.merge(opts), response_key(opts), &cb)
   end
 
   def put    path, payload={}, query={}, opts={}, &cb
@@ -148,7 +148,7 @@ module RestCore::Client
       {REQUEST_METHOD  => :put   ,
        REQUEST_PATH    => path   ,
        REQUEST_QUERY   => query  ,
-       REQUEST_PAYLOAD => payload}.merge(opts), &cb)
+       REQUEST_PAYLOAD => payload}.merge(opts), response_key(opts), &cb)
   end
 
   def patch  path, payload={}, query={}, opts={}, &cb
@@ -156,7 +156,7 @@ module RestCore::Client
       {REQUEST_METHOD  => :patch ,
        REQUEST_PATH    => path   ,
        REQUEST_QUERY   => query  ,
-       REQUEST_PAYLOAD => payload}.merge(opts), &cb)
+       REQUEST_PAYLOAD => payload}.merge(opts), response_key(opts), &cb)
   end
 
   def event_source path, query={}, opts={}
@@ -211,6 +211,10 @@ module RestCore::Client
   private
   def mutex
     @mutex ||= Mutex.new
+  end
+
+  def response_key opts
+    if opts[HIJACK] then RESPONSE_SOCKET else RESPONSE_BODY end
   end
 
   def lighten_hash hash

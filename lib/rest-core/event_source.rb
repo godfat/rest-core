@@ -12,15 +12,9 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     @onmessage_for ||= nil
     @onerror       ||= nil
 
-    client.request(
-      {REQUEST_METHOD  => :get ,
-       REQUEST_PATH    => path ,
-       REQUEST_QUERY   => query,
-       REQUEST_HEADERS => {'Accept' => 'text/event-stream'},
-       HIJACK          => true }.merge(opts), RESPONSE_SOCKET) do |sock|
-
-      onopen(sock)
-    end
+    o = {REQUEST_HEADERS => {'Accept' => 'text/event-stream'},
+         HIJACK          => true}.merge(opts)
+    client.get(path, query, o){ |sock| onopen(sock) }
   end
 
   def closed?
