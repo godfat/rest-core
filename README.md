@@ -551,7 +551,7 @@ YourClient = RC::Builder.client do
 end
 
 client = YourClient.new
-puts "rest-client with threads doing concurrent requests"
+puts "httpclient with threads doing concurrent requests"
 a = [client.get('godfat'), client.get('cardinalblue')]
 puts "It's not blocking... but doing concurrent requests underneath"
 p a.map{ |r| r['name'] } # here we want the values, so it blocks here
@@ -569,7 +569,7 @@ YourClient = RC::Builder.client do
 end
 
 client = YourClient.new
-puts "rest-client with threads doing concurrent requests"
+puts "httpclient with threads doing concurrent requests"
 client.get('godfat'){ |v|
          p v['name']
        }.

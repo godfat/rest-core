@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2014-05-03"
+  s.date = "2014-05-04"
   s.description = "Modular Ruby clients interface for REST APIs.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/godfat/rest-more"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
@@ -85,6 +85,7 @@ Gem::Specification.new do |s|
   "test/test_error_handler.rb",
   "test/test_event_source.rb",
   "test/test_follow_redirect.rb",
+  "test/test_future.rb",
   "test/test_json_request.rb",
   "test/test_json_response.rb",
   "test/test_oauth1_header.rb",
@@ -114,6 +115,7 @@ Gem::Specification.new do |s|
   "test/test_error_handler.rb",
   "test/test_event_source.rb",
   "test/test_follow_redirect.rb",
+  "test/test_future.rb",
   "test/test_json_request.rb",
   "test/test_json_response.rb",
   "test/test_oauth1_header.rb",
@@ -132,13 +134,16 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<timers>, [">= 0"])
+      s.add_runtime_dependency(%q<mime-types>, [">= 0"])
       s.add_runtime_dependency(%q<httpclient>, [">= 0"])
     else
       s.add_dependency(%q<timers>, [">= 0"])
+      s.add_dependency(%q<mime-types>, [">= 0"])
       s.add_dependency(%q<httpclient>, [">= 0"])
     end
   else
     s.add_dependency(%q<timers>, [">= 0"])
+    s.add_dependency(%q<mime-types>, [">= 0"])
     s.add_dependency(%q<httpclient>, [">= 0"])
   end
 end
