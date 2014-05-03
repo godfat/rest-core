@@ -46,9 +46,11 @@ less memory, less conflicts, and run faster.
 
 * Tested with MRI (official CRuby), Rubinius and JRuby.
 * gem [httpclient][]
+* gem [mime-types][]
 * gem [timers][]
 
 [httpclient]: https://github.com/nahi/httpclient
+[mime-types]: https://github.com/halostatue/mime-types
 [timers]: https://github.com/celluloid/timers
 
 ### Optional:
