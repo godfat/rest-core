@@ -595,6 +595,7 @@ and complete.
 
 ## rest-core users:
 
+* [rest-more][]
 * [rest-more-yahoo_buy](https://github.com/GoodLife/rest-more-yahoo_buy)
 * [s2sync](https://github.com/brucehsu/s2sync)
 * [s2sync_web](https://github.com/brucehsu/s2sync_web)
