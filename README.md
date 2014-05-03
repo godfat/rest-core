@@ -45,8 +45,11 @@ less memory, less conflicts, and run faster.
 ### Mandatory:
 
 * Tested with MRI (official CRuby), Rubinius and JRuby.
-* gem httpclient
-* gem timers
+* gem [httpclient][]
+* gem [timers][]
+
+[httpclient]: https://github.com/nahi/httpclient
+[timers]: https://github.com/celluloid/timers
 
 ### Optional:
 
@@ -192,6 +195,108 @@ end
 puts "It's not blocking... but doing concurrent requests underneath"
 client.wait # we block here to wait for the request done
 puts "DONE"
+```
+
+### Thread Pool / Connection Pool
+
+Underneath, rest-core would spawn a thread for each request, freeing you
+from blocking. However, occasionally we would not want this behaviour,
+giving that we might have limited resource and cannot maximize performance.
+
+For example, maybe we could not afford so many threads running concurrently,
+or the target server cannot accept so many concurrent connections. In those
+cases, we would want to have limited concurrent threads or connections.
+
+``` ruby
+YourClient.pool_size = 10
+YourClient.pool_idle_time = 60
+```
+
+This could set the thread pool size to 10, having a maximum of 10 threads
+running together, growing from requests. Each threads idled more than 60
+seconds would be shut down automatically.
+
+Note that `pool_size` should at least be larger than 4, or it might be
+very likely to have _deadlock_ if you're using nested callbacks and having
+a large number of concurrent calls.
+
+Also, setting `pool_size` to `-1` would mean we want to make blocking
+requests, without spawning any threads. This might be useful for debugging.
+
+### Persistent connections (keep-alive connections)
+
+Since we're using [httpclient][] by default now, we would reuse connections,
+making it much faster for hitting the same host repeatedly.
+
+### Streaming Requests
+
+Suppose we want to POST a file, instead of trying to read all the contents
+in memory and send them, we could stream it from the file system directly.
+
+``` ruby
+client.post('path', File.open('README.md'))
+```
+
+Basically, payloads could be any IO object. Check out
+[RC::Payload](lib/rest-core/util/payload.rb) for more information.
+
+### Streaming Responses
+
+This one is much harder then streaming requests, since all built-in
+middleware actually assume the responses should be blocking and buffered.
+Say, some JSON parser could not really parse from streams.
+
+We solve this issue similarly to the way Rack solves it. That is, we hijack
+the socket. This would be how we're doing:
+
+``` ruby
+sock = client.get('path', {}, RC::HIJACK => true)
+p sock.read(10)
+p sock.read(10)
+p sock.read(10)
+```
+
+Of course, if we don't want to block in order to get the socket, we could
+always use the callback form:
+
+``` ruby
+client.get('path', {}, RC::HIJACK => true) do |sock|
+  p sock.read(10)
+  p sock.read(10)
+  p sock.read(10)
+end
+```
+
+Note that since the socket would be put inside `RC::RESPONSE_SOCKET`
+instead of `RC::RESPONSE_BODY`, not all middleware would handle the socket.
+In the case of hijacking, `RC::RESPONSE_BODY` would always be mapped to an
+empty string, as it does not make sense to store the response in this case.
+
+### SSE (Server-Sent Events)
+
+Not only JavaScript could receive server-sent events, any languages could.
+Doing so would establish a keep-alive connection to the server, and receive
+data periodically. We'll take Firebase as an example:
+
+``` ruby
+es = RC::Universal.new.event_source(
+       'https://SampleChat.firebaseIO-demo.com/users/tom/.json')
+
+es.onopen{ |sock| p "Socket: #{sock}" }
+es.onmessage{ |event| p "Event: #{event}" }
+es.onerror{ |error| p "Error: #{error}" }
+
+es.start # Start making the request
+sleep(5) # Sleep awhile to see anything is happening
+es.close # Close the connection when we're done
+```
+
+Those callbacks would be called in a separate background thread,
+so we don't have to worry about blocking it. If we want to wait for
+the connection to be closed, we could call `wait`:
+
+``` ruby
+es.wait # This would block until the connection is closed
 ```
 
 ### More Control with `request_full`:

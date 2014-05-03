@@ -2,6 +2,13 @@
 
 ## rest-core 3.0.0 -- ?
 
+Highlights:
+
+* Hijack for streaming responses
+* EventSource for SSE (server-sent events)
+* Thread pool
+* Keep-alive connections from httpclient
+
 ### Incompatible changes
 
 * Since eventmachine is buggy, and fibers without eventmachine doesn't make
@@ -13,6 +20,8 @@
       RC::Builder.default_engine = RC::RestClient
 
   Be warned, we might remove rest-client support in the future.
+
+* `RC::Client#options` would now return the headers instead of response body.
 
 * Removed support for Ruby 1.8.7 without openssl installed.
 
@@ -41,6 +50,9 @@
   would mean do not spawn any threads, just make a blocking request.
   `pool_idle_time` is default to 60, meaning an idle thread would be shut
   down after 60 seconds without being used.
+
+* Since we're now using httpclient by default, we should also take the
+  advantage of using keep-alive connections for the same host.
 
 * Now `RC::Middleware#fail` and `RC::Middleware#log` could accept `nil` as
   an input, which would then do nothing. This could much simplify the code
