@@ -48,7 +48,7 @@ SSE
     end.
     onerror do |error, sock|
       error.should.kind_of EOFError
-      m.should.eq []
+      m.should.empty
       sock.should.closed?
       flag.should.eq 3
       flag += 1
