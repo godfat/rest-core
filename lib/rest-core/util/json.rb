@@ -34,7 +34,7 @@ module RestCore::Json
       JSON.dump(hash)
     end
     def decode json
-      JSON.parse(json)
+      JSON.parse(json, :quirks_mode => true)
     end
   end
 
