@@ -162,7 +162,7 @@ module RestCore::Client
   end
 
   def event_source path, query={}, opts={}
-    EventSource.new(self, path, query, opts)
+    self.class.event_source_class.new(self, path, query, opts)
   end
 
   def request env, app=app
