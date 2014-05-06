@@ -8,7 +8,7 @@ class RestCore::RestClient < RestCore::Engine
     open_timeout, read_timeout = calculate_timeout(env[TIMER])
     payload, headers = payload_and_headers(env)
     res = ::RestClient::Request.execute(:method   => env[REQUEST_METHOD],
-                                        :url      => request_uri(env)   ,
+                                        :url      => env[REQUEST_URI]   ,
                                         :payload  => payload            ,
                                         :headers  => headers            ,
                                         :max_redirects => 0             ,

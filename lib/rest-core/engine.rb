@@ -6,9 +6,10 @@ class RestCore::Engine
   include RestCore::Middleware
 
   def call env, &k
-    promise = Promise.new(env, k, env[ASYNC])
-    promise.defer{ request(promise, env) }
-    env.merge(RESPONSE_BODY    => promise.future_body,
+    req     = env.merge(REQUEST_URI => request_uri(env))
+    promise = Promise.new(req, k, req[ASYNC])
+    promise.defer{ request(promise, req) }
+    req.merge(RESPONSE_BODY    => promise.future_body,
               RESPONSE_STATUS  => promise.future_status,
               RESPONSE_HEADERS => promise.future_headers,
               RESPONSE_SOCKET  => promise.future_socket,

@@ -8,7 +8,7 @@ class RestCore::NetHttpPersistent < RestCore::Engine
     http.open_timeout, http.read_timeout = calculate_timeout(env[TIMER])
     payload, headers = payload_and_headers(env)
 
-    uri = ::URI.parse(request_uri(env))
+    uri = ::URI.parse(env[REQUEST_URI])
     req = ::Net::HTTP.const_get(env[REQUEST_METHOD].to_s.capitalize).
             new(uri, headers)
     req.body_stream = payload

@@ -24,7 +24,7 @@ class RestCore::HttpClient < RestCore::Engine
     client.connect_timeout, client.receive_timeout =
       calculate_timeout(env[TIMER])
 
-    res = client.request(env[REQUEST_METHOD], request_uri(env), nil,
+    res = client.request(env[REQUEST_METHOD], env[REQUEST_URI], nil,
             payload, {'User-Agent' => 'Ruby'}.merge(headers))
 
     promise.fulfill(res.content, res.status,
@@ -32,7 +32,7 @@ class RestCore::HttpClient < RestCore::Engine
   end
 
   def request_async client, payload, headers, promise, env
-    res = client.request_async(env[REQUEST_METHOD], request_uri(env), nil,
+    res = client.request_async(env[REQUEST_METHOD], env[REQUEST_URI], nil,
             payload, {'User-Agent' => 'Ruby'}.merge(headers)).pop
 
     promise.fulfill('', res.status,
