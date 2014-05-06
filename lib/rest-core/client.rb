@@ -214,7 +214,8 @@ module RestCore::Client
   end
 
   def response_key opts
-    if opts[HIJACK] then RESPONSE_SOCKET else RESPONSE_BODY end
+    opts[RESPONSE_KEY] ||
+      if opts[HIJACK] then RESPONSE_SOCKET else RESPONSE_BODY end
   end
 
   def lighten_hash hash

@@ -10,6 +10,7 @@ module RestCore
   RESPONSE_STATUS  = 'RESPONSE_STATUS'
   RESPONSE_HEADERS = 'RESPONSE_HEADERS'
   RESPONSE_SOCKET  = 'RESPONSE_SOCKET'
+  RESPONSE_KEY     = 'RESPONSE_KEY'
 
   DRY              = 'core.dry'
   FAIL             = 'core.fail'
