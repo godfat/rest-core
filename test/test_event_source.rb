@@ -39,25 +39,21 @@ SSE
       sock.should.kind_of IO
       flag.should.eq 0
       flag += 1
-    end
-
-    es.onmessage do |event, sock|
+    end.
+    onmessage do |event, sock|
       event.should.eq(m.shift)
       sock.should.kind_of IO
       sock.should.not.closed?
       flag += 1
-    end
-
-    es.onerror do |error, sock|
+    end.
+    onerror do |error, sock|
       error.should.kind_of EOFError
       m.should.eq []
       sock.should.closed?
       flag.should.eq 3
       flag += 1
-    end
+    end.start.wait
 
-    es.start
-    es.wait
     flag.should.eq 4
     t.join
   end
@@ -68,9 +64,8 @@ SSE
     es.onmessage do
       es.close
       flag += 1
-    end
-    es.start
-    es.wait
+    end.start.wait
+
     flag.should.eq 1
     t.join
   end

@@ -15,6 +15,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     o = {REQUEST_HEADERS => {'Accept' => 'text/event-stream'},
          HIJACK          => true}.merge(opts)
     client.get(path, query, o){ |sock| onopen(sock) }
+    self
   end
 
   def closed?
@@ -29,6 +30,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
   def wait
     raise RC::Error.new("Not yet started for: #{self}") unless mutex
     mutex.synchronize{ condv.wait(mutex) until closed? } unless closed?
+    self
   end
 
   def onopen sock=nil, &cb
@@ -38,6 +40,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
       @onopen.call(sock) if @onopen
       onmessage_for(sock)
     end
+    self
   rescue Exception => e
     begin # close the socket since we're going to stop anyway
       sock.close # if we don't close it, client might wait forever
@@ -53,6 +56,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     elsif @onmessage
       @onmessage.call(event, sock)
     end
+    self
   end
 
   # would also be called upon closing, would always be called at least once
@@ -66,6 +70,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
         condv.signal # should never deadlock someone
       end
     end
+    self
   end
 
   protected
