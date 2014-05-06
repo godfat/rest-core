@@ -41,7 +41,7 @@ SSE
       flag += 1
     end.
     onmessage do |event, sock|
-      event.should.eq(m.shift)
+      event.should.eq m.shift
       sock.should.kind_of IO
       sock.should.not.closed?
       flag += 1
