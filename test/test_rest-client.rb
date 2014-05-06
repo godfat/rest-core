@@ -39,7 +39,7 @@ describe RC::RestClient do
 
     should 'not kill the thread if error was coming from the task' do
       mock(RestClient::Request).execute{ raise 'boom' }.with_any_args
-      c.request({}, RC::FAIL).first.message.should.eq 'boom'
+      c.request(RC::RESPONSE_KEY => RC::FAIL).first.message.should.eq 'boom'
       Muack.verify
     end
 
@@ -54,7 +54,8 @@ describe RC::RestClient do
       stub(c.class.thread_pool).queue{ [] } # don't queue the task
       mock(RC::ThreadPool::Task).new.with_any_args.
         peek_return{ |t| mock(t).cancel; t } # the task should be cancelled
-      c.request({RC::TIMER => timer}, RC::FAIL).first.message.should.eq 'boom'
+      c.request(RC::RESPONSE_KEY => RC::FAIL, RC::TIMER => timer).
+        first.message.should.eq 'boom'
       Muack.verify
     end
   end

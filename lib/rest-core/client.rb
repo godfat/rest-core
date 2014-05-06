@@ -111,28 +111,30 @@ module RestCore::Client
     request(
       {REQUEST_METHOD  => :get   ,
        REQUEST_PATH    => path   ,
-       REQUEST_QUERY   => query  }.merge(opts), response_key(opts), &cb)
+       REQUEST_QUERY   => query  }.merge(opts), &cb)
   end
 
   def delete path, query={}, opts={}, &cb
     request(
       {REQUEST_METHOD  => :delete,
        REQUEST_PATH    => path   ,
-       REQUEST_QUERY   => query  }.merge(opts), response_key(opts), &cb)
+       REQUEST_QUERY   => query  }.merge(opts), &cb)
   end
 
   def head path, query={}, opts={}, &cb
     request(
       {REQUEST_METHOD  => :head  ,
        REQUEST_PATH    => path   ,
-       REQUEST_QUERY   => query  }.merge(opts), RESPONSE_HEADERS, &cb)
+       REQUEST_QUERY   => query  ,
+       RESPONSE_KEY    => RESPONSE_HEADERS}.merge(opts), &cb)
   end
 
   def options path, query={}, opts={}, &cb
     request(
       {REQUEST_METHOD  => :options,
        REQUEST_PATH    => path   ,
-       REQUEST_QUERY   => query  }.merge(opts), RESPONSE_HEADERS, &cb)
+       REQUEST_QUERY   => query  ,
+       RESPONSE_KEY    => RESPONSE_HEADERS}.merge(opts), &cb)
   end
 
   def post   path, payload={}, query={}, opts={}, &cb
@@ -140,7 +142,7 @@ module RestCore::Client
       {REQUEST_METHOD  => :post  ,
        REQUEST_PATH    => path   ,
        REQUEST_QUERY   => query  ,
-       REQUEST_PAYLOAD => payload}.merge(opts), response_key(opts), &cb)
+       REQUEST_PAYLOAD => payload}.merge(opts), &cb)
   end
 
   def put    path, payload={}, query={}, opts={}, &cb
@@ -148,7 +150,7 @@ module RestCore::Client
       {REQUEST_METHOD  => :put   ,
        REQUEST_PATH    => path   ,
        REQUEST_QUERY   => query  ,
-       REQUEST_PAYLOAD => payload}.merge(opts), response_key(opts), &cb)
+       REQUEST_PAYLOAD => payload}.merge(opts), &cb)
   end
 
   def patch  path, payload={}, query={}, opts={}, &cb
@@ -156,18 +158,18 @@ module RestCore::Client
       {REQUEST_METHOD  => :patch ,
        REQUEST_PATH    => path   ,
        REQUEST_QUERY   => query  ,
-       REQUEST_PAYLOAD => payload}.merge(opts), response_key(opts), &cb)
+       REQUEST_PAYLOAD => payload}.merge(opts), &cb)
   end
 
   def event_source path, query={}, opts={}
     EventSource.new(self, path, query, opts)
   end
 
-  def request env, key=RESPONSE_BODY, app=app
+  def request env, app=app
     if block_given?
-      request_full(env, app){ |response| yield(response[key]) }
+      request_full(env, app){ |response| yield(response[response_key(env)]) }
     else
-      request_full(env, app)[key]
+      request_full(env, app)[response_key(env)]
     end
   end
 

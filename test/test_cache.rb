@@ -34,7 +34,8 @@ describe RC::Cache do
     c.app.app.tick.should.eq 2
     c.head('/').should.eq('A' => 'B')
     c.get('/').should.eq 'response'
-    c.request({RC::REQUEST_PATH => '/'}, RC::RESPONSE_STATUS).should.eq 200
+    c.request(RC::REQUEST_PATH => '/',
+              RC::RESPONSE_KEY => RC::RESPONSE_STATUS).should.eq 200
   end
 
   should 'basic 1' do

@@ -39,6 +39,6 @@ describe RC::ErrorHandler do
 
   should 'no exception but errors' do
     client.new(:error_handler => lambda{ |res| 1 }).
-      request({RC::FAIL => [0]}, RC::FAIL).should.eq [0, 1]
+      request(RC::FAIL => [0], RC::RESPONSE_KEY => RC::FAIL).should.eq [0, 1]
   end
 end
