@@ -280,17 +280,42 @@ Not only JavaScript could receive server-sent events, any languages could.
 Doing so would establish a keep-alive connection to the server, and receive
 data periodically. We'll take Firebase as an example:
 
+If you are using Firebase, please consider the pre-built client in
+[rest-more][] instead.
+
 ``` ruby
-es = RC::Universal.new.event_source(
-       'https://SampleChat.firebaseIO-demo.com/users/tom/.json')
+# Streaming over 'users/tom.json'
+cl = RC::Universal.new(:site => 'https://SampleChat.firebaseIO-demo.com/')
+es = cl.event_source('users/tom.json', {}, # this is query, none here
+                     :headers => {'Accept' => 'text/event-stream'})
 
-es.onopen{ |sock| p "Socket: #{sock}" }
-es.onmessage{ |event| p "Event: #{event}" }
-es.onerror{ |error| p "Error: #{error}" }
+@reconnect = true
 
-es.start # Start making the request
-sleep(5) # Sleep awhile to see anything is happening
-es.close # Close the connection when we're done
+es.onopen   { |sock| p sock } # Called when connected
+es.onmessage{ |event, sock| p event, sock } # Called for each message
+es.onerror  { |error, sock| p error, sock } # Called whenever there's an error
+# Extra: If we return true in onreconnect callback, it would automatically
+#        reconnect the node for us if disconnected.
+es.onreconnect{ |error, sock| p error, sock; @reconnect }
+
+# Start making the request
+es.start
+
+# Try to close the connection and see it reconnects automatically
+es.close
+
+# Update users/tom.json
+p cl.put('users/tom.json', RC::Json.encode(:some => 'data'))
+p cl.post('users/tom.json', RC::Json.encode(:some => 'other'))
+p cl.get('users/tom.json')
+p cl.delete('users/tom.json')
+
+# Need to tell onreconnect stops reconnecting, or even if we close
+# the connection manually, it would still try to reconnect again.
+@reconnect = false
+
+# Close the connection to gracefully shut it down.
+es.close
 ```
 
 Those callbacks would be called in a separate background thread,
