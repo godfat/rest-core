@@ -37,6 +37,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     if block_given?
       @onopen = cb
     else
+      self.socket = sock # for you to track the socket
       @onopen.call(sock) if @onopen
       onmessage_for(sock)
     end
@@ -79,7 +80,6 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
   private
   # called in requesting thread after the request is done
   def onmessage_for sock
-    self.socket = sock # for you to track the socket
     until sock.eof?
       event = sock.readline("\n\n").split("\n").inject({}) do |r, i|
         k, v = i.split(': ', 2)
