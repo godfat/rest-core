@@ -106,8 +106,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
 
   def reconnect
     o = {REQUEST_HEADERS => {'Accept' => 'text/event-stream'},
-         HIJACK          => true,
-         :cache          => false}.merge(opts)
+         HIJACK          => true}.merge(opts)
     client.get(path, query, o){ |sock| onopen(sock) }
   end
 end

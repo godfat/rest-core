@@ -156,6 +156,17 @@ describe RC::Cache do
     c.cache.should.eq({})
   end
 
+  should 'not cache hijacking' do
+    stub_request(:get, 'http://a').to_return(:body => 'ok')
+    c = RC::Builder.client{use RC::Cache, {}, nil}.new
+    2.times do
+      c.get('http://a', {}, RC::HIJACK => true,
+                            RC::RESPONSE_KEY => RC::RESPONSE_SOCKET).
+        read.should.eq 'ok'
+    end
+    c.cache.should.eq({})
+  end
+
   should 'update cache if there is cache option set to false' do
     url, body = "https://cache", 'ok'
     stub_request(:get, url).to_return(:body => body)

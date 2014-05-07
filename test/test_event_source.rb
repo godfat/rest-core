@@ -7,7 +7,7 @@ describe RC::EventSource do
     WebMock.reset!
   end
 
-  client = RC::Builder.client.new
+  client = RC::Builder.client{use RC::Cache, {}, nil}.new
   server = lambda do |close=true|
     serv = TCPServer.new(0)
     port = serv.addr[1]
@@ -97,6 +97,31 @@ SSE
     end.onerror do |error|
       error.should.kind_of EOFError
       es.query = {:c => 'd'}
+
+    end.onreconnect do |error, sock|
+      error.should.kind_of EOFError
+      sock.should.respond_to :read
+      !m.empty? # not empty to reconnect
+
+    end.start.wait
+    m.should.empty
+  end
+
+  should 'not cache' do
+    stub_request(:get, 'https://a?b=c').to_return(:body => <<-SSE)
+event: put
+data: 0
+
+event: put
+data: 1
+SSE
+    es = client.event_source('https://a', :b => 'c')
+    m = %w[0 1 0 1]
+    es.onmessage do |event|
+      event['data'].should.eq m.shift
+
+    end.onerror do |error|
+      error.should.kind_of EOFError
 
     end.onreconnect do |error, sock|
       error.should.kind_of EOFError
