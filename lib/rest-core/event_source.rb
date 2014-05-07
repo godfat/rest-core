@@ -49,11 +49,11 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     onerror(e, sock)
   end
 
-  def onmessage event=nil, sock=nil, &cb
+  def onmessage event=nil, data=nil, sock=nil, &cb
     if block_given?
       @onmessage = cb
     elsif @onmessage
-      @onmessage.call(event, sock)
+      @onmessage.call(event, data, sock)
     end
     self
   end
@@ -99,7 +99,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
         r[k] = v
         r
       end
-      onmessage(event, sock)
+      onmessage(event['event'], event['data'], sock)
     end
     sock.close
     onerror(EOFError.new, sock)

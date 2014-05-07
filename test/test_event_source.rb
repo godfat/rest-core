@@ -44,8 +44,8 @@ SSE
       flag.should.eq 0
       flag += 1
     end.
-    onmessage do |event, sock|
-      event.should.eq m.shift
+    onmessage do |event, data, sock|
+      {'event' => event, 'data' => data}.should.eq m.shift
       sock.should.kind_of IO
       sock.should.not.closed?
       flag += 1
@@ -91,8 +91,8 @@ data: 3
 SSE
     es = client.event_source('https://a', :b => 'c')
     m = ('0'..'3').to_a
-    es.onmessage do |event|
-      event['data'].should.eq m.shift
+    es.onmessage do |event, data|
+      data.should.eq m.shift
 
     end.onerror do |error|
       error.should.kind_of EOFError
@@ -117,8 +117,8 @@ data: 1
 SSE
     es = client.event_source('https://a', :b => 'c')
     m = %w[0 1 0 1]
-    es.onmessage do |event|
-      event['data'].should.eq m.shift
+    es.onmessage do |event, data|
+      data.should.eq m.shift
 
     end.onerror do |error|
       error.should.kind_of EOFError

@@ -284,6 +284,8 @@ If you are using Firebase, please consider the pre-built client in
 [rest-more][] instead.
 
 ``` ruby
+require 'rest-core'
+
 # Streaming over 'users/tom.json'
 cl = RC::Universal.new(:site => 'https://SampleChat.firebaseIO-demo.com/')
 es = cl.event_source('users/tom.json', {}, # this is query, none here
@@ -292,11 +294,11 @@ es = cl.event_source('users/tom.json', {}, # this is query, none here
 @reconnect = true
 
 es.onopen   { |sock| p sock } # Called when connected
-es.onmessage{ |event, sock| p event, sock } # Called for each message
-es.onerror  { |error, sock| p error, sock } # Called whenever there's an error
+es.onmessage{ |event, data, sock| p event, data } # Called for each message
+es.onerror  { |error, sock| p error } # Called whenever there's an error
 # Extra: If we return true in onreconnect callback, it would automatically
 #        reconnect the node for us if disconnected.
-es.onreconnect{ |error, sock| p error, sock; @reconnect }
+es.onreconnect{ |error, sock| p error; @reconnect }
 
 # Start making the request
 es.start
