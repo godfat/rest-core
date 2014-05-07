@@ -65,9 +65,10 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     else
       begin
         @onerror.call(error, sock) if @onerror
-        onreconnect(error, sock) if closed?
-      ensure
-        condv.signal # should never deadlock someone
+        onreconnect(error, sock)
+      rescue
+        condv.signal # so we can't be reconnecting, need to try to unblock
+        raise
       end
     end
     self
@@ -78,8 +79,10 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
   def onreconnect error=nil, sock=nil, &cb
     if block_given?
       @onreconnect = cb
-    elsif @onreconnect && @onreconnect.call(error, sock)
+    elsif closed? && @onreconnect && @onreconnect.call(error, sock)
       reconnect
+    else
+      condv.signal # we could be closing, let's try to unblock it
     end
     self
   end
