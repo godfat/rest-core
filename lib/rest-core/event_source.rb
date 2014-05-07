@@ -8,13 +8,11 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
   def start
     self.mutex = Mutex.new
     self.condv = ConditionVariable.new
-    @onopen        ||= nil
-    @onmessage_for ||= nil
-    @onerror       ||= nil
-
-    o = {REQUEST_HEADERS => {'Accept' => 'text/event-stream'},
-         HIJACK          => true}.merge(opts)
-    client.get(path, query, o){ |sock| onopen(sock) }
+    @onopen      ||= nil
+    @onmessage   ||= nil
+    @onerror     ||= nil
+    @onreconnect ||= nil
+    reconnect
     self
   end
 
@@ -67,9 +65,21 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     else
       begin
         @onerror.call(error, sock) if @onerror
+        onreconnect(error, sock) if closed?
       ensure
         condv.signal # should never deadlock someone
       end
+    end
+    self
+  end
+
+  # would be called upon closing,
+  # and would try to reconnect if a callback is set and return true
+  def onreconnect error=nil, sock=nil, &cb
+    if block_given?
+      @onreconnect = cb
+    elsif @onreconnect && @onreconnect.call(error, sock)
+      reconnect
     end
     self
   end
@@ -92,5 +102,12 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     onerror(EOFError.new, sock)
   rescue IOError => e
     onerror(e, sock)
+  end
+
+  def reconnect
+    o = {REQUEST_HEADERS => {'Accept' => 'text/event-stream'},
+         HIJACK          => true,
+         :cache          => false}.merge(opts)
+    client.get(path, query, o){ |sock| onopen(sock) }
   end
 end
