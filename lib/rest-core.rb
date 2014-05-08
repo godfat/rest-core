@@ -42,6 +42,7 @@ module RestCore
   autoload :Json          , 'rest-core/util/json'
   autoload :ParseQuery    , 'rest-core/util/parse_query'
   autoload :Payload       , 'rest-core/util/payload'
+  autoload :Config        , 'rest-core/util/config'
 
   # middlewares
   autoload :AuthBasic     , 'rest-core/middleware/auth_basic'

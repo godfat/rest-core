@@ -1,0 +1,8 @@
+
+test:
+  facebook:
+    app_id: 41829
+    secret: <%= 'r41829'.reverse %>
+    json_response: false
+    lang: zh-tw
+    auto_authorize_scope: 'publish_stream'
