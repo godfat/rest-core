@@ -1,5 +1,5 @@
 
-require 'rest-more/test'
+require 'rest-core/test'
 
 describe RC::Config do
   before do
