@@ -16,6 +16,7 @@ module RestCore
       use ErrorHandler, nil
       use ErrorDetectorHttp
       use JsonResponse, false
+      use QueryResponse, false
     end
   end
 end
