@@ -1,5 +1,36 @@
 # CHANGES
 
+## rest-core 3.1.0 -- 2014-05-09
+
+### Incompatible changes
+
+* Now that the second argument `key` in `RC::Client#request` is replaced by
+  `RC::RESPONSE_KEY` passed in env. This would make it easier to use and
+  more consistent internally.
+* Now RC::EventSource#onmessage would receive the event in the first argument,
+  and the data in the second argument instead of a hash in the first argument.
+
+### Enhancement
+
+* Added RC::REQUEST_URI in the env so that we could access the requesting
+  URI easily.
+* Added middleware RC::QueryResponse which could parse query in response.
+* Added RC::Client.event_source_class which we could easily swap the class
+  used for event_source. Used in Firebase client to parse data in JSON.
+* Now methods in RC::EventSource would return itself so that we could chain
+  callbacks.
+* Added RC::EventSource#onreconnect callback to handle if we're going to
+  reconnect automatically or not.
+* RC::Config was extracted from rest-more, which could help us manage config
+  files.
+* RC::Json using JSON would now parse in quirks_mode, so that it could parse
+  not only JSON but also a single value.
+
+### Bugs Fixes
+
+* We should never cache hijacked requests.
+* Now we preserve payload and properly ignore query for RC::FollowRedirect.
+
 ## rest-core 3.0.0 -- 2014-05-04
 
 Highlights:

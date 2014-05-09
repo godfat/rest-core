@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-# stub: rest-core 3.0.0 ruby lib
+# stub: rest-core 3.1.0 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "3.0.0"
+  s.version = "3.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2014-05-04"
+  s.date = "2014-05-09"
   s.description = "Modular Ruby clients interface for REST APIs.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/godfat/rest-more"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
@@ -57,6 +57,7 @@ Gem::Specification.new do |s|
   "lib/rest-core/middleware/oauth1_header.rb",
   "lib/rest-core/middleware/oauth2_header.rb",
   "lib/rest-core/middleware/oauth2_query.rb",
+  "lib/rest-core/middleware/query_response.rb",
   "lib/rest-core/middleware/timeout.rb",
   "lib/rest-core/patch/multi_json.rb",
   "lib/rest-core/patch/rest-client.rb",
@@ -64,6 +65,7 @@ Gem::Specification.new do |s|
   "lib/rest-core/test.rb",
   "lib/rest-core/thread_pool.rb",
   "lib/rest-core/timer.rb",
+  "lib/rest-core/util/config.rb",
   "lib/rest-core/util/hmac.rb",
   "lib/rest-core/util/json.rb",
   "lib/rest-core/util/parse_query.rb",
@@ -73,11 +75,13 @@ Gem::Specification.new do |s|
   "rest-core.gemspec",
   "task/README.md",
   "task/gemgem.rb",
+  "test/config/rest-core.yaml",
   "test/test_auth_basic.rb",
   "test/test_builder.rb",
   "test/test_cache.rb",
   "test/test_client.rb",
   "test/test_client_oauth1.rb",
+  "test/test_config.rb",
   "test/test_default_payload.rb",
   "test/test_default_query.rb",
   "test/test_error_detector.rb",
@@ -92,6 +96,7 @@ Gem::Specification.new do |s|
   "test/test_oauth2_header.rb",
   "test/test_payload.rb",
   "test/test_promise.rb",
+  "test/test_query_response.rb",
   "test/test_rest-client.rb",
   "test/test_simple.rb",
   "test/test_thread_pool.rb",
@@ -108,6 +113,7 @@ Gem::Specification.new do |s|
   "test/test_cache.rb",
   "test/test_client.rb",
   "test/test_client_oauth1.rb",
+  "test/test_config.rb",
   "test/test_default_payload.rb",
   "test/test_default_query.rb",
   "test/test_error_detector.rb",
@@ -122,6 +128,7 @@ Gem::Specification.new do |s|
   "test/test_oauth2_header.rb",
   "test/test_payload.rb",
   "test/test_promise.rb",
+  "test/test_query_response.rb",
   "test/test_rest-client.rb",
   "test/test_simple.rb",
   "test/test_thread_pool.rb",
