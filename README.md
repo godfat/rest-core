@@ -433,41 +433,58 @@ installed before trying this.
 
 ## List of built-in Middleware:
 
-* [RC::AuthBasic][]
-* [RC::Bypass][]
-* [RC::Cache][]
+### [RC::AuthBasic][]
 
-  `use RC::Cache, cache, expires_in`
+### [RC::Bypass][]
 
-  where `cache` is the cache store which the cache data would be storing to.
-  `expires_in` would be passed to
-  `cache.store(key, value :expires_in => expires_in)` if `store` method is
-  available and its arity should be at least 3. The interface to the cache
-  could be referenced from [moneta][], namely:
+### [RC::Cache][]
 
-  * (required) `[](key)`
-  * (required) `[]=(key, value)`
-  * (optional, required if :expires_in is needed) `store(key, value, options)`
+    use RC::Cache, cache, expires_in
 
-  Note that `{:expires_in => seconds}` would be passed as the options in
-  `store(key, value, options)`.
+where `cache` is the cache store which the cache data would be storing to.
+`expires_in` would be passed to
+`cache.store(key, value :expires_in => expires_in)` if `store` method is
+available and its arity should be at least 3. The interface to the cache
+could be referenced from [moneta][], namely:
 
-* [RC::CommonLogger][]
-* [RC::DefaultHeaders][]
-* [RC::DefaultPayload][]
-* [RC::DefaultQuery][]
-* [RC::DefaultSite][]
-* [RC::Defaults][]
-* [RC::ErrorDetector][]
-* [RC::ErrorDetectorHttp][]
-* [RC::ErrorHandler][]
-* [RC::FollowRedirect][]
-* [RC::JsonRequest][]
-* [RC::JsonResponse][]
-* [RC::Oauth1Header][]
-* [RC::Oauth2Header][]
-* [RC::Oauth2Query][]
-* [RC::Timeout][]
+* (required) `[](key)`
+* (required) `[]=(key, value)`
+* (optional, required if :expires_in is needed) `store(key, value, options)`
+
+Note that `{:expires_in => seconds}` would be passed as the options in
+`store(key, value, options)`.
+
+### [RC::CommonLogger][]
+
+### [RC::DefaultHeaders][]
+
+### [RC::DefaultPayload][]
+
+### [RC::DefaultQuery][]
+
+### [RC::DefaultSite][]
+
+### [RC::Defaults][]
+
+### [RC::ErrorDetector][]
+
+### [RC::ErrorDetectorHttp][]
+
+### [RC::ErrorHandler][]
+
+### [RC::FollowRedirect][]
+
+### [RC::JsonRequest][]
+
+### [RC::JsonResponse][]
+
+### [RC::Oauth1Header][]
+
+### [RC::Oauth2Header][]
+
+### [RC::Oauth2Query][]
+
+### [RC::Timeout][]
 
 [RC::AuthBasic]: lib/rest-core/middleware/auth_basic.rb
 [RC::Bypass]: lib/rest-core/middleware/bypass.rb
