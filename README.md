@@ -87,7 +87,7 @@ YourClient = RC::Builder.client do
   use RC::DefaultSite , 'https://api.github.com/users/'
   use RC::JsonResponse, true
   use RC::CommonLogger, method(:puts)
-  use RC::Cache       , nil, 3600
+  use RC::Cache       , nil, 3600 # :expires_in if cache store supports
 end
 ```
 
@@ -392,7 +392,8 @@ module RestCore
 
     use FollowRedirect, 10
     use CommonLogger  , method(:puts)
-    use Cache         ,  {}, 600 do
+    use Cache         ,  {}, 600 do # default :expires_in 600 but the default
+                                    # cache {} didn't support it
       use ErrorHandler, nil
       use ErrorDetectorHttp
       use JsonResponse, false
@@ -435,6 +436,22 @@ installed before trying this.
 * [RC::AuthBasic][]
 * [RC::Bypass][]
 * [RC::Cache][]
+
+      use RC::Cache, cache, expires_in
+
+  where `cache` is the cache store which the cache data would be storing to.
+  `expires_in` would be passed to
+  `cache.store(key, value :expires_in => expires_in)` if `store` method is
+  available and its arity should be at least 3. The interface to the cache
+  could be referenced from [moneta][], namely:
+
+  * (required) `[](key)`
+  * (required) `[]=(key, value)`
+  * (optional, required if :expires_in is needed) `store(key, value, options)`
+
+  Note that `{:expires_in => seconds}` would be passed as the options in
+  `store(key, value, options)`.
+
 * [RC::CommonLogger][]
 * [RC::DefaultHeaders][]
 * [RC::DefaultPayload][]
@@ -471,6 +488,7 @@ installed before trying this.
 [RC::Oauth2Header]: lib/rest-core/middleware/oauth2_header.rb
 [RC::Oauth2Query]: lib/rest-core/middleware/oauth2_query.rb
 [RC::Timeout]: lib/rest-core/middleware/timeout.rb
+[moneta]: https://github.com/minad/moneta#expiration
 
 ## Build Your Own Middleware:
 
