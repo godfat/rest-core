@@ -437,7 +437,7 @@ installed before trying this.
 * [RC::Bypass][]
 * [RC::Cache][]
 
-      use RC::Cache, cache, expires_in
+  `use RC::Cache, cache, expires_in`
 
   where `cache` is the cache store which the cache data would be storing to.
   `expires_in` would be passed to
