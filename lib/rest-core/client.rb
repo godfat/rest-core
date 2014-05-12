@@ -86,19 +86,8 @@ module RestCore::Client
   end
 
   def wait
-    return self if promises.empty?
-    current_promises = nil
-    mutex.synchronize{
-      current_promises = promises.dup
-      promises.clear
-    }
-    current_promises.each{ |f|
-      begin
-        f.wait
-      rescue WeakRef::RefError # it's gc'ed after we think it's alive
-      end if f.weakref_alive?
-    }
-    wait
+    self.class.wait(promises, mutex)
+    self
   end
 
   def url path, query={}, opts={}
@@ -217,6 +206,7 @@ module RestCore::Client
   end
 
   def give_promise weak_promise
+    self.class.give_promise(weak_promise)
     mutex.synchronize{ promises << weak_promise }
   end
 

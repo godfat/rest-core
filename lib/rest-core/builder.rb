@@ -28,6 +28,8 @@ class RestCore::Builder
     client.pool_size          =  0 # default to no pool
     client.pool_idle_time     = 60 # default to 60 seconds
     client.event_source_class = EventSource
+    client.promises           = []
+    client.mutex              = Mutex.new
     client
   end
 
@@ -42,8 +44,29 @@ class RestCore::Builder
   def build_class_methods
     Module.new do
       attr_accessor :builder, :pool_size, :pool_idle_time,
-                    :event_source_class
+                    :event_source_class, :promises, :mutex
       def thread_pool; RestCore::ThreadPool[self]; end
+
+      def give_promise weak_promise
+        mutex.synchronize{ promises << weak_promise }
+      end
+
+      def wait ps=promises, m=mutex
+        return self if ps.empty?
+        current_promises = nil
+        m.synchronize do
+          current_promises = ps.dup
+          ps.clear
+        end
+        current_promises.each do |p|
+          next unless p.weakref_alive?
+          begin
+            p.wait
+          rescue WeakRef::RefError # it's gc'ed after we think it's alive
+          end
+        end
+        wait(ps, m)
+      end
     end
   end
 

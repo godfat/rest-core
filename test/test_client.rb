@@ -7,9 +7,10 @@ describe RC::Simple do
     Muack.verify
   end
 
+  url = 'http://localhost/'
+
   should 'do simple request' do
     c = RC::Simple.new
-    url = 'http://localhost/'
     [:get, :post, :delete, :put, :patch].each do |method|
       stub_request(method, url).to_return(:body => '[]')
       c.send(method, url).should.eq '[]'
@@ -23,7 +24,6 @@ describe RC::Simple do
   end
 
   should 'call the callback' do
-    url = 'http://localhost/'
     [:get, :post, :delete, :put, :patch].each do |method|
       stub_request(method, url).to_return(:body => '123')
       (client = RC::Simple.new).send(method, url){ |res|
@@ -42,6 +42,19 @@ describe RC::Simple do
       res.should.eq('A' => 'B')
     }.should.eq client
     client.wait
+  end
+
+  should 'wait for all the requests' do
+    t, i, m = 5, 0, Mutex.new
+    stub_request(:get, url).to_return do
+      m.synchronize{ i += 1 }
+      sleep(0.00001)
+    end
+
+    client = RC::Builder.client
+    t.times{ client.new.get(url) }
+    client.wait
+    i.should.eq t
   end
 
   should 'have correct to_i' do
