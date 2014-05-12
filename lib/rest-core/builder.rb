@@ -25,17 +25,16 @@ class RestCore::Builder
     client.const_set('Struct', struct)
     client.send(:include, Client)
     class << client
-      attr_reader   :builder
-      attr_accessor :pool_size, :pool_idle_time, :event_source_class
-
+      attr_accessor :builder, :pool_size, :pool_idle_time,
+                    :event_source_class
       def thread_pool
         RestCore::ThreadPool[self]
       end
     end
-    client.instance_variable_set(:@builder, self)
-    client.instance_variable_set(:@pool_size, 0) # default to no pool
-    client.instance_variable_set(:@pool_idle_time, 60) # default to 60 seconds
-    client.instance_variable_set(:@event_source_class, EventSource)
+    client.builder            = self
+    client.pool_size          =  0 # default to no pool
+    client.pool_idle_time     = 60 # default to 60 seconds
+    client.event_source_class = EventSource
     client
   end
 
