@@ -171,7 +171,9 @@ module RestCore::Client
     # in that case (maybe in a user created engine), Client#wait
     # won't work because we have no way to track the promise.
     if response.kind_of?(Hash) && response[PROMISE].kind_of?(Promise)
-      give_promise(WeakRef.new(response[PROMISE]))
+      weak_promise = WeakRef.new(response[PROMISE])
+      self.class.give_promise(weak_promise)
+      self.class.give_promise(weak_promise, promises, mutex)
     end
 
     if block_given?
@@ -203,11 +205,6 @@ module RestCore::Client
   private
   def mutex
     @mutex ||= Mutex.new
-  end
-
-  def give_promise weak_promise
-    self.class.give_promise(weak_promise)
-    mutex.synchronize{ promises << weak_promise }
   end
 
   def response_key opts

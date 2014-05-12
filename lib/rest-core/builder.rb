@@ -47,8 +47,11 @@ class RestCore::Builder
                     :event_source_class, :promises, :mutex
       def thread_pool; RestCore::ThreadPool[self]; end
 
-      def give_promise weak_promise
-        mutex.synchronize{ promises << weak_promise }
+      def give_promise weak_promise, ps=promises, m=mutex
+        m.synchronize do
+          ps << weak_promise
+          ps.keep_if(&:weakref_alive?)
+        end
       end
 
       def wait ps=promises, m=mutex

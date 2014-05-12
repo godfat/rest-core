@@ -54,7 +54,20 @@ describe RC::Simple do
     client = RC::Builder.client
     t.times{ client.new.get(url) }
     client.wait
+    client.promises.should.empty
     i.should.eq t
+  end
+
+  should 'cleanup promises' do
+    stub_request(:get, url)
+    client = RC::Builder.client
+    5.times{ client.new.get(url) }
+    sleep(0.00001)
+    GC.start
+    client.new.get(url)
+    client.promises.size.should < 6
+    client.wait
+    client.promises.should.empty
   end
 
   should 'have correct to_i' do
