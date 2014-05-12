@@ -452,7 +452,11 @@ could be referenced from [moneta][], namely:
 * (optional, required if :expires_in is needed) `store(key, value, options)`
 
 Note that `{:expires_in => seconds}` would be passed as the options in
-`store(key, value, options)`.
+`store(key, value, options)`, and a plain old Ruby hash `{}` satisfies
+the mandatory requirements: `[](key)` and `[]=(key, value)`, but not the
+last one for `:expires_in` because the `store` method for Hash did not take
+the third argument. That means we could use `{}` as the cache but it would
+simply ignore `:expires_in`.
 
 ### [RC::CommonLogger][]
 
