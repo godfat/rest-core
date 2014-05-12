@@ -48,7 +48,7 @@ describe RC::Simple do
     t, i, m = 5, 0, Mutex.new
     stub_request(:get, url).to_return do
       m.synchronize{ i += 1 }
-      sleep(0.00001)
+      Thread.pass
     end
 
     client = RC::Builder.client
@@ -62,7 +62,7 @@ describe RC::Simple do
     stub_request(:get, url)
     client = RC::Builder.client
     5.times{ client.new.get(url) }
-    sleep(0.00001)
+    Thread.pass
     GC.start
     client.new.get(url)
     client.promises.size.should < 6
