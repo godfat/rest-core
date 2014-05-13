@@ -54,12 +54,13 @@ class RestCore::Builder
         end
       end
 
-      # Shutdown the thread pool and wait for all requests
+      # Shutdown the thread pool for this client and wait for all requests
       def shutdown
         thread_pool.shutdown
         wait
       end
 
+      # Wait for all the requests to be done for this client
       def wait ps=promises, m=mutex
         return self if ps.empty?
         current_promises = nil
