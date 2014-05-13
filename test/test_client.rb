@@ -63,7 +63,8 @@ describe RC::Simple do
     client = RC::Builder.client
     5.times{ client.new.get(url) }
     Thread.pass
-    GC.start
+    GC.start # can only force GC run on MRI, so we mock for jruby and rubinius
+    stub(any_instance_of(WeakRef)).weakref_alive?{false}
     client.new.get(url)
     client.promises.size.should < 6
     client.wait
