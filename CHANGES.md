@@ -1,5 +1,15 @@
 # CHANGES
 
+## rest-core 3.1.1 -- 2014-05-13
+
+### Enhancements
+
+* Introduced `RC::Client.wait` along with `RC::Client#wait`. It would collect
+  all the promises from all instances of the client, so we could wait on all
+  promises we're waiting. This would make writing graceful shutdown much
+  easier. For example, we could have: `at_exit{ RC::Universal.wait }` to
+  wait on all requests from the universal client before exiting the process.
+
 ## rest-core 3.1.0 -- 2014-05-09
 
 ### Incompatible changes
@@ -10,7 +20,7 @@
 * Now RC::EventSource#onmessage would receive the event in the first argument,
   and the data in the second argument instead of a hash in the first argument.
 
-### Enhancement
+### Enhancements
 
 * Added RC::REQUEST_URI in the env so that we could access the requesting
   URI easily.
@@ -59,7 +69,7 @@ Highlights:
 * `RC::Future` is renamed to `RC::Promise`, and `RC::Future::Proxy` is
   renamed to `RC::Promise::Future`.
 
-### Enhancement
+### Enhancements
 
 * HIJACK support, which is similar to Rack's HIJACK feature. If you're
   passing `{RC::HIJACK => true}` whenever making a request, rest-core would
@@ -107,7 +117,7 @@ Highlights:
 
 * Fixed em-http-request support.
 
-### Enhancement
+### Enhancements
 
 * [`Payload`] Now it is a class rather than a module.
 * [`Paylaod`] Introduced `Payload.generate_with_headers`.
@@ -132,7 +142,7 @@ Highlights:
 * [`Payload`] Now we could correctly support payload with "foo=1&foo=2".
 * [`Client`] Fix inspect spacing.
 
-### Enhancement
+### Enhancements
 
 * [`Payload`] With this class introduced, replacing rest-client's own
   payload implementation, we could pass StringIO or other sockets as the
@@ -172,7 +182,7 @@ Highlights:
 * Don't walk into parent's constants in `RC.eagerload`.
 * Also rescue `NameError` in `RC.eagerload`.
 
-### Enhancement
+### Enhancements
 
 * Remove unnecessary `future.wrap` in `EmHttpRequest`.
 * Introduce Future#callback_in_async.
@@ -269,7 +279,7 @@ It's a bit outdated, but you can also checkout my blog post.
 * You must provide a block to `app.call(env){ ... }`.
 * Rename Wrapper#default_app to Wrapper#default_engine
 
-### Enhancement
+### Enhancements
 
 * The default engine is changed from `RestClient` to `Auto`, which would
   be using `EmHttpRequest` under the context of a event loop, while
@@ -317,7 +327,7 @@ It's a bit outdated, but you can also checkout my blog post.
 
 ## rest-core 1.0.3 -- 2012-08-15
 
-### Enhancement
+### Enhancements
 
 * [Client] `client.head` now returns the headers instead of response body.
   It doesn't make sense to return the response body, because there's no
@@ -334,7 +344,7 @@ It's a bit outdated, but you can also checkout my blog post.
 
 ## rest-core 1.0.2 -- 2012-06-05
 
-### Enhancement
+### Enhancements
 
 * Some internal refactoring.
 
@@ -459,7 +469,7 @@ for more detail.
 
 ## rest-core 0.8.2 -- 2012-02-18
 
-### Enhancement
+### Enhancements
 
 * [`DefaultPayload`] This middleware allows you to have default payload for
   POST and PUT requests.
@@ -474,7 +484,7 @@ for more detail.
 
 ## rest-core 0.8.1 -- 2012-02-09
 
-### Enhancement
+### Enhancements
 
 * [`Wrapper`] Introducing `Wrapper.default_app` (also `Builder.default_app`)
   which you can change the default app from `RestClient` to other HTTP
@@ -513,7 +523,7 @@ Changes are mostly related to OAuth.
 
 [OAuth 2.0 spec]: http://tools.ietf.org/html/draft-ietf-oauth-v2-22
 
-### Enhancement
+### Enhancements
 
 * [`AuthBasic`] Added a new middleware which could do
   [basic authentication][].
