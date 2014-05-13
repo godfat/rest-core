@@ -74,6 +74,10 @@ class RestCore::ThreadPool
     "#<#{self.class.name} client_class=#{client_class}>"
   end
 
+  def size
+    workers.size
+  end
+
   def max_size
     client_class.pool_size
   end

@@ -225,6 +225,26 @@ a large number of concurrent calls.
 Also, setting `pool_size` to `-1` would mean we want to make blocking
 requests, without spawning any threads. This might be useful for debugging.
 
+### Gracefully shutdown
+
+To shutdown gracefully, consider shutdown the thread pool (if we're using it),
+and wait for all requests for a given client. For example, suppose we're using
+`RC::Universal`, we'll do this when we're shutting down:
+
+``` ruby
+RC::Universal.shutdown
+```
+
+We could put them in `at_exit` callback like this:
+
+``` ruby
+at_exit do
+  RC::Universal.shutdown
+end
+```
+
+If you're using unicorn, you probably want to put that in the config.
+
 ### Persistent connections (keep-alive connections)
 
 Since we're using [httpclient][] by default now, we would reuse connections,

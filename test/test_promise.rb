@@ -12,7 +12,8 @@ describe RC::Promise do
   end
 
   after do
-    @client.thread_pool.shutdown
+    @client.shutdown
+    @client.thread_pool.size.should.eq 0
     Muack.verify
   end
 

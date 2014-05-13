@@ -67,7 +67,7 @@ describe RC::Simple do
     stub(any_instance_of(WeakRef)).weakref_alive?{false}
     client.new.get(url)
     client.promises.size.should < 6
-    client.wait
+    client.shutdown
     client.promises.should.empty
   end
 
