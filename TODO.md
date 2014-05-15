@@ -3,10 +3,6 @@
 * middleware revisit (how to initialize?)
 * X-Method-Override
 
-# BUG
-
-* inheritance should work; assign builder?
-
 # FEATURE
 
 * middleware composer

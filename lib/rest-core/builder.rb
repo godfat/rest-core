@@ -45,6 +45,16 @@ class RestCore::Builder
     Module.new do
       attr_accessor :builder, :pool_size, :pool_idle_time,
                     :event_source_class, :promises, :mutex
+
+      def inherited sub
+        sub.builder            = builder
+        sub.pool_size          = pool_size
+        sub.pool_idle_time     = pool_idle_time
+        sub.event_source_class = event_source_class
+        sub.promises           = []
+        sub.mutex              = Mutex.new
+      end
+
       def thread_pool; RestCore::ThreadPool[self]; end
 
       def give_promise weak_promise, ps=promises, m=mutex

@@ -72,8 +72,8 @@ describe RC::Simple do
   end
 
   should 'have correct to_i' do
-    stub_request(:get, 'http://localhost/').to_return(:body => '123')
-    RC::Simple.new.get('http://localhost/').to_i.should.eq 123
+    stub_request(:get, url).to_return(:body => '123')
+    RC::Simple.new.get(url).to_i.should.eq 123
   end
 
   should 'use defaults' do
@@ -105,5 +105,10 @@ describe RC::Simple do
     c.timeout.should.eq 2 # goes back to class default
     c.timeout = false
     c.timeout.should.eq false # false would disable default
+  end
+
+  should 'work for inheritance' do
+    stub_request(:get, url).to_return(:body => '123')
+    Class.new(RC::Simple).new.get(url).should.eq '123'
   end
 end
