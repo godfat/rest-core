@@ -10,11 +10,7 @@ class RestCore::Clash
 
   def [] k
     if hash.key?(k)
-      if (ret = hash[k]).kind_of?(Hash)
-        RestCore::Clash.new(ret)
-      else
-        ret
-      end
+      convert(hash[k])
     else
       Empty
     end
@@ -25,6 +21,18 @@ class RestCore::Clash
       hash == rhs.hash
     else
       hash == rhs
+    end
+  end
+
+  private
+  def convert value
+    case value
+    when Hash
+      RestCore::Clash.new(value)
+    when Array
+      value.map{ |ele| convert(ele) }
+    else
+      value
     end
   end
 
