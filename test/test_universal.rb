@@ -16,4 +16,13 @@ describe RC::Universal do
     u.request_full(env, u.dry)[RC::REQUEST_HEADERS].should.eq(
       {'Authorization' => 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=='}.merge(acc))
   end
+
+  should 'clash' do
+    url = 'http://localhost/'
+    stub_request(:get, url).to_return(:body => '{"a":{"b":"c"}}')
+    res = RC::Universal.new(:json_response => true,
+                            :clash_response => true,
+                            :log_method => false).get(url)
+    res['a']['d'].should.eq({})
+  end
 end

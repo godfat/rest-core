@@ -43,11 +43,13 @@ module RestCore
   autoload :ParseQuery    , 'rest-core/util/parse_query'
   autoload :Payload       , 'rest-core/util/payload'
   autoload :Config        , 'rest-core/util/config'
+  autoload :Clash         , 'rest-core/util/clash'
 
   # middlewares
   autoload :AuthBasic     , 'rest-core/middleware/auth_basic'
   autoload :Bypass        , 'rest-core/middleware/bypass'
   autoload :Cache         , 'rest-core/middleware/cache'
+  autoload :ClashResponse , 'rest-core/middleware/clash_response'
   autoload :CommonLogger  , 'rest-core/middleware/common_logger'
   autoload :DefaultHeaders, 'rest-core/middleware/default_headers'
   autoload :DefaultQuery  , 'rest-core/middleware/default_query'
