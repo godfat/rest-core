@@ -11,6 +11,14 @@ describe RC::Cache do
     RC::Builder.client{ use RC::Cache, {}, nil }.new
   end
 
+  def json_client
+    RC::Builder.client do
+      use RC::Cache, {}, 3600 do
+        use RC::JsonResponse, true
+      end
+    end.new
+  end
+
   should 'basic 0' do
     c = RC::Builder.client do
       use RC::Cache, {}, 3600
@@ -98,11 +106,7 @@ describe RC::Cache do
   end
 
   should 'cache the original response' do
-    c = RC::Builder.client do
-      use RC::Cache, {}, 3600 do
-        use RC::JsonResponse, true
-      end
-    end.new
+    c = json_client
     stub_request(:get, 'http://me').to_return(:body => body = '{"a":"b"}')
     c.get('http://me').should.eq 'a' => 'b'
     c.cache.values.first.should.eq "200\n\n\n#{body}"
