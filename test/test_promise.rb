@@ -45,6 +45,15 @@ describe RC::Promise do
     @promise.send(:headers).should.eq('K' => 'V')
   end
 
+  should 'then then then' do
+    plusone = lambda do |r|
+      r.merge(RC::RESPONSE_BODY => r[RC::RESPONSE_BODY] + 1)
+    end
+    2.times{ @promise.then(&plusone).then(&plusone).then(&plusone) }
+    @promise.fulfill(0, 200, {})
+    @promise.future_body.should.eq 6
+  end
+
   should 'call inline if pool_size < 0' do
     @client.pool_size = -1
     current_thread = Thread.current

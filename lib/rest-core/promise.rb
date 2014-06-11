@@ -25,7 +25,7 @@ class RestCore::Promise
 
   def initialize env, k=RC.id, immediate=false, &job
     self.env       = env
-    self.k         = k
+    self.k         = [k]
     self.immediate = immediate
 
     self.body, self.status, self.headers,
@@ -95,6 +95,12 @@ class RestCore::Promise
     fulfill('', 0, {})
   end
 
+  # append your actions, which would be called when we're calling back
+  def then &action
+    k << action
+    self
+  end
+
   protected
   attr_accessor :env, :k, :immediate,
                 :response, :body, :status, :headers, :socket, :error,
@@ -115,13 +121,13 @@ class RestCore::Promise
 
   # called in client thread, when yield is called
   def callback
-    self.response ||= k.call(
+    self.response ||= k.inject(
       env.merge(RESPONSE_BODY    => body  ,
                 RESPONSE_STATUS  => status,
                 RESPONSE_HEADERS => headers,
                 RESPONSE_SOCKET  => socket,
                 FAIL             => ((env[FAIL]||[]) + [error]).compact,
-                LOG              =>   env[LOG] ||[]))
+                LOG              =>   env[LOG] ||[])){ |r, i| i.call(r) }
   end
 
   # called in requesting thread, whenever the request is done
