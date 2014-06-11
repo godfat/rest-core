@@ -98,7 +98,7 @@ class RestCore::Cache
 
   def data_extract data
     _, status, headers, body =
-      data.match(/\A(\d+)\n([^\n]+\n)*\n\n(.*)\Z/m).to_a
+      data.match(/\A(\d+)\n((?:[^\n]+\n)*)\n\n(.*)\Z/m).to_a
 
     {RESPONSE_BODY    => body,
      RESPONSE_HEADERS => Hash[(headers||'').scan(/([^:]+): ([^\n]+)\n/)],

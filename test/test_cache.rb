@@ -108,6 +108,17 @@ describe RC::Cache do
     c.cache.values.first.should.eq "200\n\n\n#{body}"
   end
 
+  should 'cache multiple headers' do
+    c = RC::Builder.client do
+      use RC::Cache, {}, nil
+    end.new
+    stub_request(:get, 'http://me').to_return(:headers =>
+      {'Apple' => 'Orange', 'Orange' => 'Apple'})
+    expected = {'APPLE' => 'Orange', 'ORANGE' => 'Apple'}
+    args = ['http://me', {}, {RC::RESPONSE_KEY => RC::RESPONSE_HEADERS}]
+    2.times{ c.get(*args).should.eq expected }
+  end
+
   should 'multiline response' do
     c = RC::Builder.client do
       use RC::Cache, {}, 3600
