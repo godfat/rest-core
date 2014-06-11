@@ -129,6 +129,15 @@ describe RC::Cache do
     2.times{ c.get(*args).yield[RC::REQUEST_URI].should.eq uri }
   end
 
+  should 'preserve promise and preserve wrapped call' do
+    c = json_client
+    stub_request(:get, 'http://me').to_return(:body => body = '{"a":"b"}')
+    args = ['http://me', {}, {RC::RESPONSE_KEY => RC::PROMISE}]
+    2.times do
+      c.get(*args).then{ |r| r[RC::RESPONSE_BODY].should.eq 'a' => 'b' }.yield
+    end
+  end
+
   should 'multiline response' do
     c = simple_client
     stub_request(:get, 'http://html').to_return(:body => body = "a\n\nb")

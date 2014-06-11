@@ -22,18 +22,16 @@ class RestCore::Cache
           env
         end
 
-    if cached = cache_get(e)
+    cache_get(e){ |cached|
       e[TIMER].cancel if e[TIMER]
       wrapped.call(cached, &k)
-    else
-      app.call(e){ |res|
-        wrapped.call(res){ |res_wrapped|
-          k.call(if (res_wrapped[FAIL] || []).empty?
-                   cache_for(res).merge(res_wrapped)
-                 else
-                   res_wrapped
-                 end)}}
-    end
+    } || app.call(e){ |res|
+           wrapped.call(res){ |res_wrapped|
+             k.call(if (res_wrapped[FAIL] || []).empty?
+                      cache_for(res).merge(res_wrapped)
+                    else
+                      res_wrapped
+                    end)}}
   end
 
   def cache_key env
@@ -41,7 +39,7 @@ class RestCore::Cache
                                              cache_key_raw(env))}"
   end
 
-  def cache_get env
+  def cache_get env, &k
     return unless cache(env)
     return unless cache_for?(env)
 
@@ -49,7 +47,7 @@ class RestCore::Cache
     start_time = Time.now
     return unless data = cache(env)[cache_key(env)]
     log(env, Event::CacheHit.new(Time.now - start_time, uri)).
-      merge(data_extract(data, uri))
+      merge(data_extract(data, env.merge(REQUEST_URI => uri), k))
   end
 
   private
@@ -97,17 +95,19 @@ class RestCore::Cache
     "#{ res[RESPONSE_BODY]}"
   end
 
-  def data_extract data, uri
+  def data_extract data, env, k
     _, status, headers, body =
       data.match(/\A(\d+)\n((?:[^\n]+\n)*)\n\n(.*)\Z/m).to_a
 
-    response = {
-      RESPONSE_BODY    => body,
-      RESPONSE_HEADERS => Hash[(headers||'').scan(/([^:]+): ([^\n]+)\n/)],
-      RESPONSE_STATUS  => status.to_i,
-      REQUEST_URI      => uri
-    }
-    response.merge(PROMISE => Promise.claim(response))
+    promise = Promise.claim(env, k, body,status.to_i,
+      Hash[(headers||'').scan(/([^:]+): ([^\n]+)\n/)])
+
+    env.merge(RESPONSE_BODY    => promise.future_body,
+              RESPONSE_STATUS  => promise.future_status,
+              RESPONSE_HEADERS => promise.future_headers,
+              RESPONSE_SOCKET  => promise.future_socket,
+              FAIL             => promise.future_failures,
+              PROMISE          => promise)
   end
 
   def cache_for? env

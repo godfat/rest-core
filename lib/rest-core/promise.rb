@@ -15,11 +15,9 @@ class RestCore::Promise
     end
   end
 
-  def self.claim response
-    promise = new(response)
-    promise.fulfill(response[RESPONSE_BODY],
-                    response[RESPONSE_STATUS],
-                    response[RESPONSE_HEADERS])
+  def self.claim env, k=RC.id, body, status, headers
+    promise = new(env, k)
+    promise.fulfill(body, status, headers)
     promise
   end
 
