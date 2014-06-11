@@ -40,6 +40,7 @@ module RestCore
   # misc utilities
   autoload :Hmac          , 'rest-core/util/hmac'
   autoload :Json          , 'rest-core/util/json'
+  autoload :ParseLink     , 'rest-core/util/parse_link'
   autoload :ParseQuery    , 'rest-core/util/parse_query'
   autoload :Payload       , 'rest-core/util/payload'
   autoload :Config        , 'rest-core/util/config'
