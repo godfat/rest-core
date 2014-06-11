@@ -99,15 +99,8 @@ class RestCore::Cache
     _, status, headers, body =
       data.match(/\A(\d+)\n((?:[^\n]+\n)*)\n\n(.*)\Z/m).to_a
 
-    promise = Promise.claim(env, k, body,status.to_i,
-      Hash[(headers||'').scan(/([^:]+): ([^\n]+)\n/)])
-
-    env.merge(RESPONSE_BODY    => promise.future_body,
-              RESPONSE_STATUS  => promise.future_status,
-              RESPONSE_HEADERS => promise.future_headers,
-              RESPONSE_SOCKET  => promise.future_socket,
-              FAIL             => promise.future_failures,
-              PROMISE          => promise)
+    Promise.claim(env, k, body,status.to_i,
+      Hash[(headers||'').scan(/([^:]+): ([^\n]+)\n/)]).future_response
   end
 
   def cache_for? env

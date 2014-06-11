@@ -44,6 +44,14 @@ class RestCore::Promise
   def future_headers ; Future.new(self, RESPONSE_HEADERS); end
   def future_socket  ; Future.new(self, RESPONSE_SOCKET ); end
   def future_failures; Future.new(self, FAIL)            ; end
+  def future_response
+    env.merge(RESPONSE_BODY    => future_body,
+              RESPONSE_STATUS  => future_status,
+              RESPONSE_HEADERS => future_headers,
+              RESPONSE_SOCKET  => future_socket,
+              FAIL             => future_failures,
+              PROMISE          => self)
+  end
 
   # called in client thread
   def defer &job

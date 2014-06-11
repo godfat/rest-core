@@ -9,12 +9,7 @@ class RestCore::Engine
     req     = env.merge(REQUEST_URI => request_uri(env))
     promise = Promise.new(req, k, req[ASYNC])
     promise.defer{ request(promise, req) }
-    req.merge(RESPONSE_BODY    => promise.future_body,
-              RESPONSE_STATUS  => promise.future_status,
-              RESPONSE_HEADERS => promise.future_headers,
-              RESPONSE_SOCKET  => promise.future_socket,
-              FAIL             => promise.future_failures,
-              PROMISE          => promise)
+    promise.future_response
   end
 
   private
