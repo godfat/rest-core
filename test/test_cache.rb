@@ -7,6 +7,10 @@ describe RC::Cache do
     Muack.verify
   end
 
+  def simple_client
+    RC::Builder.client{ use RC::Cache, {}, nil }.new
+  end
+
   should 'basic 0' do
     c = RC::Builder.client do
       use RC::Cache, {}, 3600
@@ -60,17 +64,13 @@ describe RC::Cache do
   should 'not raise error if headers is nil' do
     path = 'http://a'
     stub_request(:get , path).to_return(:body => 'OK', :headers => nil)
-    c = RC::Builder.client do
-      use RC::Cache, {}, nil
-    end.new
+    c = simple_client
     c.get(path).should.eq 'OK'
     c.get(path).should.eq 'OK'
   end
 
   should 'head then get' do
-    c = RC::Builder.client do
-      use RC::Cache, {}, nil
-    end.new
+    c = simple_client
     path = 'http://example.com'
     stub_request(:head, path).to_return(:headers => {'A' => 'B'})
     c.head(path).should.eq('A' => 'B')
@@ -109,9 +109,7 @@ describe RC::Cache do
   end
 
   should 'cache multiple headers' do
-    c = RC::Builder.client do
-      use RC::Cache, {}, nil
-    end.new
+    c = simple_client
     stub_request(:get, 'http://me').to_return(:headers =>
       {'Apple' => 'Orange', 'Orange' => 'Apple'})
     expected = {'APPLE' => 'Orange', 'ORANGE' => 'Apple'}
@@ -120,9 +118,7 @@ describe RC::Cache do
   end
 
   should 'preserve promise and REQUEST_URI' do
-    c = RC::Builder.client do
-      use RC::Cache, {}, nil
-    end.new
+    c = simple_client
     uri = 'http://me?a=b'
     stub_request(:get, uri)
     args = ['http://me', {:a => 'b'}, {RC::RESPONSE_KEY => RC::PROMISE}]
@@ -130,9 +126,7 @@ describe RC::Cache do
   end
 
   should 'multiline response' do
-    c = RC::Builder.client do
-      use RC::Cache, {}, 3600
-    end.new
+    c = simple_client
     stub_request(:get, 'http://html').to_return(:body => body = "a\n\nb")
     c.get('http://html').should.eq body
     c.cache.values.first.should.eq "200\n\n\n#{body}"
@@ -172,14 +166,14 @@ describe RC::Cache do
   end
 
   should 'not cache dry run' do
-    c = RC::Builder.client{use RC::Cache, {}, nil}.new
+    c = simple_client
     c.url('test')
     c.cache.should.eq({})
   end
 
   should 'not cache hijacking' do
     stub_request(:get, 'http://a').to_return(:body => 'ok')
-    c = RC::Builder.client{use RC::Cache, {}, nil}.new
+    c = simple_client
     2.times do
       c.get('http://a', {}, RC::HIJACK => true,
                             RC::RESPONSE_KEY => RC::RESPONSE_SOCKET).
@@ -191,7 +185,7 @@ describe RC::Cache do
   should 'update cache if there is cache option set to false' do
     url, body = "https://cache", 'ok'
     stub_request(:get, url).to_return(:body => body)
-    c = RC::Builder.client{use RC::Cache, {}, nil}.new
+    c = simple_client
 
     c.get(url)                            .should.eq body
     stub_request(:get, url).to_return(:body => body.reverse).times(2)
