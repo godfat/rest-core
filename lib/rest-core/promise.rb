@@ -38,7 +38,7 @@ class RestCore::Promise
   end
 
   def inspect
-    "<#{self.class.name} for #{env[REQUEST_PATH]}>"
+    "<#{self.class.name} for #{env[REQUEST_URI]}>"
   end
 
   def future_body    ; Future.new(self, RESPONSE_BODY   ); end
