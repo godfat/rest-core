@@ -119,6 +119,16 @@ describe RC::Cache do
     2.times{ c.get(*args).should.eq expected }
   end
 
+  should 'preserve promise and REQUEST_URI' do
+    c = RC::Builder.client do
+      use RC::Cache, {}, nil
+    end.new
+    uri = 'http://me?a=b'
+    stub_request(:get, uri)
+    args = ['http://me', {:a => 'b'}, {RC::RESPONSE_KEY => RC::PROMISE}]
+    2.times{ c.get(*args).yield[RC::REQUEST_URI].should.eq uri }
+  end
+
   should 'multiline response' do
     c = RC::Builder.client do
       use RC::Cache, {}, 3600

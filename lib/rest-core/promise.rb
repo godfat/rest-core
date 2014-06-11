@@ -15,6 +15,14 @@ class RestCore::Promise
     end
   end
 
+  def self.claim response
+    promise = new(response)
+    promise.fulfill(response[RESPONSE_BODY],
+                    response[RESPONSE_STATUS],
+                    response[RESPONSE_HEADERS])
+    promise
+  end
+
   def initialize env, k=RC.id, immediate=false, &job
     self.env       = env
     self.k         = k
