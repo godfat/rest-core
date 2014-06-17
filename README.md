@@ -416,7 +416,10 @@ module RestCore
                                     # cache {} didn't support it
       use ErrorHandler, nil
       use ErrorDetectorHttp
-      use JsonResponse, false
+      use SmashResponse, false
+      use ClashResponse, false
+      use  JsonResponse, false
+      use QueryResponse, false
     end
   end
 end
@@ -513,6 +516,7 @@ simply ignore `:expires_in`.
 [RC::AuthBasic]: lib/rest-core/middleware/auth_basic.rb
 [RC::Bypass]: lib/rest-core/middleware/bypass.rb
 [RC::Cache]: lib/rest-core/middleware/cache.rb
+[RC::ClashResponse]: lib/rest-core/middleware/clash_response.rb
 [RC::CommonLogger]: lib/rest-core/middleware/common_logger.rb
 [RC::DefaultHeaders]: lib/rest-core/middleware/default_headers.rb
 [RC::DefaultPayload]: lib/rest-core/middleware/default_payload.rb
@@ -528,6 +532,7 @@ simply ignore `:expires_in`.
 [RC::Oauth1Header]: lib/rest-core/middleware/oauth1_header.rb
 [RC::Oauth2Header]: lib/rest-core/middleware/oauth2_header.rb
 [RC::Oauth2Query]: lib/rest-core/middleware/oauth2_query.rb
+[RC::SmashResponse]: lib/rest-core/middleware/smash_response.rb
 [RC::Timeout]: lib/rest-core/middleware/timeout.rb
 [moneta]: https://github.com/minad/moneta#expiration
 
