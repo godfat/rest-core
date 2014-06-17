@@ -10,16 +10,27 @@
 * Introduced `RC::Clash` which is a hash wrapper protecting you from getting
   nils from hashes. This is useful whenever we want to access a value deeply
   inside a hash. For example: `json['a']['b']['c']['d']` would never fail
-  due to nils.
+  due to nils. Note that `RC::Clash` is recursive.
+
+* Introduced `RC::Smash` which is a hash wrapper protecting you from getting
+  nils from hashes. This is useful whenever we want to access a value deeply
+  inside a hash. Instead of using multiple layers of subscript operators,
+  we try to use a "path" to specify which value we want. For example:
+  `json['a', 'b', 'c', 'd']` is the same as `json['a']['b']['c']['d']` but
+  with protection from nils in the middle. Note that `RC:Smash` is *not*
+  recursive.
 
 * Introduced `RC::ClashResponse` which would wrap the response inside
   `RC::Clash`. This is useful along with `RC::JsonResponse`.
 
+* Introduced `RC::SmashResponse` which would wrap the response inside
+  `RC::Smash`. This is useful along with `RC::JsonResponse`.
+
 * Introduced `RC::Client.shutdown` which is essentially the same as
   `RC::Client.thread_pool.shutdown` and `RC::Client.wait`.
 
-* `RC::ClashResponse` is added into `RC::Universal` with
-  `{:clash_response => false}` by default.
+* `RC::ClashResponse` and `RC::SmashResponse` is added into `RC::Universal`
+  with `{:clash_response => false, :smash_response => false}` by default.
 
 * Introduced `RC::Promise#future_response` to allow you customize the
   behaviour of promises more easily.

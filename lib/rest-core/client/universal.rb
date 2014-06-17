@@ -15,6 +15,7 @@ module RestCore
     use Cache         ,  {}, 600 do
       use ErrorHandler, nil
       use ErrorDetectorHttp
+      use SmashResponse, false
       use ClashResponse, false
       use JsonResponse , false
       use QueryResponse, false
