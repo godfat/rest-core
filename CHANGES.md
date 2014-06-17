@@ -1,5 +1,47 @@
 # CHANGES
 
+## rest-core 3.2.0 -- ?
+
+### Enhancements
+
+* Introduced `RC::ParseLink` utility for parsing web links described in
+  [RFC5988](http://tools.ietf.org/html/rfc5988)
+
+* Introduced `RC::Clash` which is a hash wrapper protecting you from getting
+  nils from hashes. This is useful whenever we want to access a value deeply
+  inside a hash. For example: `json['a']['b']['c']['d']` would never fail
+  due to nils.
+
+* Introduced `RC::ClashResponse` which would wrap the response inside
+  `RC::Clash`. This is useful along with `RC::JsonResponse`.
+
+* Introduced `RC::Client.shutdown` which is essentially the same as
+  `RC::Client.thread_pool.shutdown` and `RC::Client.wait`.
+
+* `RC::ClashResponse` is added into `RC::Universal` with
+  `{:clash_response => false}` by default.
+
+* Introduced `RC::Promise#future_response` to allow you customize the
+  behaviour of promises more easily.
+
+* Introduced `RC::Promise.claim` to allow you pre-fill a promise.
+
+* Introduced `RC::Promise#then` to allow you append a callback whenever
+  the response is ready. The type should be: `Env -> Response`
+
+* Now `RC::Promise#inspect` would show REQUEST_URI instead of REQUEST_PATH,
+  which should be easier to debug.
+
+* Introduced `RC::ThreadPool#size` which is a short hand for
+  `RC::ThreadPool#workers.size`.
+
+### Bugs fixed
+
+* Inheritance with `RC::Client` now works properly.
+* Now `RC::Cache` properly return cached headers.
+* Now `RC::Cache` would work more like `RC::Engine`, wrapping responses
+  inside futures.
+
 ## rest-core 3.1.1 -- 2014-05-13
 
 ### Enhancements
