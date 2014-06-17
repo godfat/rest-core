@@ -3,14 +3,14 @@ module RestCore; end
 class RestCore::Clash
   Empty = Hash.new(&(l = lambda{|_,_|Hash.new(&l).freeze})).freeze
 
-  attr_accessor :hash
-  def initialize hash
-    self.hash = hash
+  attr_accessor :data
+  def initialize data
+    self.data = data
   end
 
   def [] k
-    if hash.key?(k)
-      convert(hash[k])
+    if data.key?(k)
+      convert(data[k])
     else
       Empty
     end
@@ -18,9 +18,9 @@ class RestCore::Clash
 
   def == rhs
     if rhs.kind_of?(RestCore::Clash)
-      hash == rhs.hash
+      data == rhs.data
     else
-      hash == rhs
+      data == rhs
     end
   end
 
@@ -37,12 +37,12 @@ class RestCore::Clash
   end
 
   def respond_to_missing? msg, include_private=false
-    hash.respond_to?(msg, include_private)
+    data.respond_to?(msg, include_private)
   end
 
   def method_missing msg, *args, &block
-    if hash.respond_to?(msg)
-      hash.public_send(msg, *args, &block)
+    if data.respond_to?(msg)
+      data.public_send(msg, *args, &block)
     else
       super
     end
