@@ -2,7 +2,11 @@
 require 'timers'
 
 class RestCore::Timer
-  TimerGen = Timers.new
+  TimerGen = if Timers.respond_to?(:new)
+               Timers.new
+             else
+               Timers::Group.new
+             end
 
   attr_accessor :timeout, :error
   def initialize timeout, error, &block
