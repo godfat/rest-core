@@ -4,6 +4,12 @@
 
 ### Enhancements
 
+* Introduced `RC::JsonResponse::ParseError` which would be a subclass of
+  `RC::Json::ParseError`, and contain the original text before parsing.
+  This should be great for debugging. For example, some servers might
+  return HTML instead JSON, and we would like to read the HTML to learn
+  more why they are doing this.
+
 * Introduced `RC::ParseLink` utility for parsing web links described in
   [RFC5988](http://tools.ietf.org/html/rfc5988)
 
