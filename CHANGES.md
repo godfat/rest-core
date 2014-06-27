@@ -1,6 +1,6 @@
 # CHANGES
 
-## rest-core 3.2.0 -- ?
+## rest-core 3.2.0 -- 2014-06-27
 
 ### Enhancements
 
