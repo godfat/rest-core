@@ -10,7 +10,7 @@ describe RC::JsonRequest do
     'nested' => {'k' => 'v', 'a' => [4, 5, 6]}
   }
 
-  should 'encode payload as json' do
+  would 'encode payload as json' do
     e = env.merge(RC::REQUEST_METHOD  => :post,
                   RC::REQUEST_PAYLOAD => request_params)
 
@@ -21,7 +21,7 @@ describe RC::JsonRequest do
         RC::REQUEST_PAYLOAD => RC::Json.encode(request_params))}
   end
 
-  should 'do nothing if json_request is false' do
+  would 'do nothing if json_request is false' do
     app = RC::JsonRequest.new(RC::Dry.new, false)
     app.call(env){ |res| res.should.eq res }
   end

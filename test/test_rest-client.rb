@@ -14,15 +14,16 @@ describe RC::RestClient do
     c    = client.new
 
     post = lambda do |payload, body|
-      stub_request(:post, path).with(:body => body).to_return(:body => ok)
+      WebMock::API.stub_request(:post, path).
+        with(:body => body).to_return(:body => ok)
       c.post(path, payload).should.eq ok
     end
 
-    should 'post with string' do
+    would 'post with string' do
       post['string', 'string']
     end
 
-    should 'post with file' do
+    would 'post with file' do
       File.open(__FILE__) do |f|
         b = f.read
         f.rewind
@@ -30,20 +31,20 @@ describe RC::RestClient do
       end
     end
 
-    should 'post with socket' do
+    would 'post with socket' do
       rd, wr = IO.pipe
       wr.write('socket')
       wr.close
       post[rd, 'socket']
     end
 
-    should 'not kill the thread if error was coming from the task' do
+    would 'not kill the thread if error was coming from the task' do
       mock(RestClient::Request).execute{ raise 'boom' }.with_any_args
       c.request(RC::RESPONSE_KEY => RC::FAIL).first.message.should.eq 'boom'
       Muack.verify
     end
 
-    should 'cancel the task if timing out' do
+    would 'cancel the task if timing out' do
       timer = Object.new.instance_eval do
         def on_timeout; yield ; end
         def error     ; 'boom'; end

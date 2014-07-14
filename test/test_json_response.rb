@@ -6,13 +6,13 @@ describe RC::JsonResponse do
     app = RC::JsonResponse.new(RC::Dry.new, true)
     bad = 'bad json'
 
-    should 'do nothing' do
+    would 'do nothing' do
       expected = {RC::RESPONSE_BODY => nil,
                   RC::REQUEST_HEADERS => {'Accept' => 'application/json'}}
       app.call({}){ |response| response.should.eq(expected) }
     end
 
-    should 'decode' do
+    would 'decode' do
       expected = {RC::RESPONSE_BODY => {},
                   RC::REQUEST_HEADERS => {'Accept' => 'application/json'}}
       app.call(RC::RESPONSE_BODY => '{}') do |response|
@@ -20,18 +20,18 @@ describe RC::JsonResponse do
       end
     end
 
-    should 'give proper parse error' do
+    would 'give proper parse error' do
       app.call(RC::RESPONSE_BODY => bad) do |response|
         err = response[RC::FAIL].first
-        err.should.kind_of(RC::Json.const_get(:ParseError))
-        err.should.kind_of(RC::JsonResponse::ParseError)
+        err.should.kind_of?(RC::Json.const_get(:ParseError))
+        err.should.kind_of?(RC::JsonResponse::ParseError)
       end
     end
 
-    should 'give me original text' do
+    would 'give me original text' do
       app.call(RC::RESPONSE_BODY => bad) do |response|
         err = response[RC::FAIL].first
-        err.message    .should.include(bad)
+        err.message    .should.include?(bad)
         err.body       .should.eq(bad)
         err.cause.class.should.eq(RC::Json.const_get(:ParseError))
       end
@@ -48,14 +48,14 @@ describe RC::JsonResponse do
       }
     end
 
-    should 'do nothing' do
+    would 'do nothing' do
       expected = '{}'
       client.new(:json_response => false).get(''){ |response|
         response.should.eq(expected)
       }.get('').should.eq(expected)
     end
 
-    should 'decode' do
+    would 'decode' do
       expected = {}
       client.new.get(''){ |response|
         response.should.eq(expected)

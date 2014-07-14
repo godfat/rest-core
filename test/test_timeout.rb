@@ -9,18 +9,18 @@ describe RC::Timeout do
     Muack.verify
   end
 
-  should 'bypass timeout if timeout is 0' do
+  would 'bypass timeout if timeout is 0' do
     mock(app).monitor.times(0)
     app.call({}){ |e| e.should.eq({}) }
   end
 
-  should 'run the monitor to setup timeout' do
+  would 'run the monitor to setup timeout' do
     env = {'timeout' => 2}
     mock(app).monitor(env)
     app.call(env){|e| e[RC::TIMER].should.kind_of?(RC::Timer)}
   end
 
-  should "not raise timeout error if there's already an error" do
+  would "not raise timeout error if there's already an error" do
     env = {'timeout' => 0.01}
     mock(app.app).call(hash_including(env)){ raise "error" }
     lambda{ app.call(env){} }.should    .raise(RuntimeError)

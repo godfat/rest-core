@@ -35,24 +35,24 @@ SSE
     [client.event_source(path, :a => 'b'), m, t]
   end
 
-  should 'work regularly' do
+  would 'work regularly' do
     es, m, t = server.call
     flag = 0
 
     es.onopen do |sock|
-      sock.should.kind_of IO
+      sock.should.kind_of? IO
       flag.should.eq 0
       flag += 1
     end.
     onmessage do |event, data, sock|
       {'event' => event, 'data' => data}.should.eq m.shift
-      sock.should.kind_of IO
+      sock.should.kind_of? IO
       sock.should.not.closed?
       flag += 1
     end.
     onerror do |error, sock|
-      error.should.kind_of EOFError
-      m.should.empty
+      error.should.kind_of? EOFError
+      m.should.empty?
       sock.should.closed?
       flag.should.eq 3
       flag += 1
@@ -62,7 +62,7 @@ SSE
     t.join
   end
 
-  should 'close' do
+  would 'close' do
     es, _, t = server.call(false)
     flag = 0
     es.onmessage do
@@ -74,7 +74,7 @@ SSE
     t.join
   end
 
-  should 'reconnect' do
+  would 'reconnect' do
     stub_request(:get, 'https://a?b=c').to_return(:body => <<-SSE)
 event: put
 data: 0
@@ -95,19 +95,19 @@ SSE
       data.should.eq m.shift
 
     end.onerror do |error|
-      error.should.kind_of EOFError
+      error.should.kind_of? EOFError
       es.query = {:c => 'd'}
 
     end.onreconnect do |error, sock|
-      error.should.kind_of EOFError
-      sock.should.respond_to :read
+      error.should.kind_of? EOFError
+      sock.should.respond_to? :read
       !m.empty? # not empty to reconnect
 
     end.start.wait
-    m.should.empty
+    m.should.empty?
   end
 
-  should 'not cache' do
+  would 'not cache' do
     stub_request(:get, 'https://a?b=c').to_return(:body => <<-SSE)
 event: put
 data: 0
@@ -121,14 +121,14 @@ SSE
       data.should.eq m.shift
 
     end.onerror do |error|
-      error.should.kind_of EOFError
+      error.should.kind_of? EOFError
 
     end.onreconnect do |error, sock|
-      error.should.kind_of EOFError
-      sock.should.respond_to :read
+      error.should.kind_of? EOFError
+      sock.should.respond_to? :read
       !m.empty? # not empty to reconnect
 
     end.start.wait
-    m.should.empty
+    m.should.empty?
   end
 end

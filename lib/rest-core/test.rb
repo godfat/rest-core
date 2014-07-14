@@ -1,26 +1,17 @@
 
 require 'rest-core'
 
-require 'webmock'
+require 'pork/auto'
 require 'muack'
-require 'bacon'
+require 'webmock'
 
 # for testing lighten (serialization)
 require 'yaml'
 
 WebMock.disable_net_connect!(:allow_localhost => true)
-Bacon.summary_on_exit
-Bacon::Context.send(:include, Muack::API, WebMock::API)
+Pork::Executor.__send__(:include, Muack::API, WebMock::API)
 
 module Kernel
-  def eq? rhs
-    self == rhs
-  end
-
-  def lt? rhs
-    self < rhs
-  end
-
   def with_img
     f = Tempfile.new(['img', '.jpg'])
     n = File.basename(f.path)

@@ -9,7 +9,7 @@ describe RC::Simple do
 
   url = 'http://localhost/'
 
-  should 'do simple request' do
+  would 'do simple request' do
     c = RC::Simple.new
     [:get, :post, :delete, :put, :patch].each do |method|
       stub_request(method, url).to_return(:body => '[]')
@@ -23,7 +23,7 @@ describe RC::Simple do
     c.options(url).should.eq('A' => 'B')
   end
 
-  should 'call the callback' do
+  would 'call the callback' do
     [:get, :post, :delete, :put, :patch].each do |method|
       stub_request(method, url).to_return(:body => '123')
       (client = RC::Simple.new).send(method, url){ |res|
@@ -44,7 +44,7 @@ describe RC::Simple do
     client.wait
   end
 
-  should 'wait for all the requests' do
+  would 'wait for all the requests' do
     t, i, m = 5, 0, Mutex.new
     stub_request(:get, url).to_return do
       m.synchronize{ i += 1 }
@@ -54,11 +54,11 @@ describe RC::Simple do
     client = RC::Builder.client
     t.times{ client.new.get(url) }
     client.wait
-    client.promises.should.empty
+    client.promises.should.empty?
     i.should.eq t
   end
 
-  should 'cleanup promises' do
+  would 'cleanup promises' do
     stub_request(:get, url)
     client = RC::Builder.client
     5.times{ client.new.get(url) }
@@ -66,17 +66,17 @@ describe RC::Simple do
     GC.start # can only force GC run on MRI, so we mock for jruby and rubinius
     stub(any_instance_of(WeakRef)).weakref_alive?{false}
     client.new.get(url)
-    client.promises.size.should < 6
+    client.promises.size.should.lt 6
     client.shutdown
-    client.promises.should.empty
+    client.promises.should.empty?
   end
 
-  should 'have correct to_i' do
+  would 'have correct to_i' do
     stub_request(:get, url).to_return(:body => '123')
     RC::Simple.new.get(url).to_i.should.eq 123
   end
 
-  should 'use defaults' do
+  would 'use defaults' do
     client = RC::Builder.client do
       use RC::Timeout, 4
     end
@@ -107,7 +107,7 @@ describe RC::Simple do
     c.timeout.should.eq false # false would disable default
   end
 
-  should 'work for inheritance' do
+  would 'work for inheritance' do
     stub_request(:get, url).to_return(:body => '123')
     Class.new(RC::Simple).new.get(url).should.eq '123'
   end

@@ -17,7 +17,7 @@ describe RC::Config do
     @klass.default_lang         .should.eq 'zh-tw'
   end
 
-  should 'honor config' do
+  would 'honor config' do
     RC::Config.load(
       @klass,
       "#{File.dirname(__FILE__)}/config/rest-core.yaml",

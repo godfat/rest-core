@@ -5,19 +5,19 @@ describe RC::SmashResponse do
   describe 'app' do
     app = RC::SmashResponse.new(RC::Dry.new, true)
 
-    should 'do nothing' do
+    would 'do nothing' do
       env = {RC::RESPONSE_BODY => []}
       app.call(env) do |res|
         res.should.eq(env)
-        res[RC::RESPONSE_BODY].should.kind_of(Array)
+        res[RC::RESPONSE_BODY].should.kind_of?(Array)
       end
     end
 
-    should 'smash' do
+    would 'smash' do
       app.call(RC::RESPONSE_BODY => {}) do |res|
         body = res[RC::RESPONSE_BODY]
-        body.should.kind_of(RC::Smash)
-        body.should.empty
+        body.should.kind_of?(RC::Smash)
+        body.should.empty?
         body[0].should.eq(nil)
         body[0, 0].should.eq(nil)
       end
@@ -34,22 +34,22 @@ describe RC::SmashResponse do
         }
       end
 
-      should 'do nothing' do
+      would 'do nothing' do
         b = client.new(:smash_response => false).get(''){ |res|
           res.should.eq(body)
-          res.should.kind_of(Hash)
+          res.should.kind_of?(Hash)
         }.get('')
         b.should.eq(body)
-        b.should.kind_of(Hash)
+        b.should.kind_of?(Hash)
       end
 
-      should 'clash' do
+      would 'clash' do
         b = client.new.get(''){ |res|
           res.should.eq(body)
-          res.should.kind_of(RC::Smash)
+          res.should.kind_of?(RC::Smash)
         }.get('')
         b.should.eq(body)
-        b.should.kind_of(RC::Smash)
+        b.should.kind_of?(RC::Smash)
       end
     end
   end

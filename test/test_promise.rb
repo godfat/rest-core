@@ -17,7 +17,7 @@ describe RC::Promise do
     Muack.verify
   end
 
-  should 'work, reject, yield' do
+  would 'work, reject, yield' do
     @client.pool_size = 1
     flag = 0
     @promise.defer do
@@ -27,10 +27,10 @@ describe RC::Promise do
     end
     @promise.yield
     flag.should.eq 1
-    @promise.send(:error).should.kind_of RC::Error
+    @promise.send(:error).should.kind_of? RC::Error
   end
 
-  should 'work, fulfill, yield' do
+  would 'work, fulfill, yield' do
     @client.pool_size = 2
     flag = 0
     @promise.defer do
@@ -45,7 +45,7 @@ describe RC::Promise do
     @promise.send(:headers).should.eq('K' => 'V')
   end
 
-  should 'then then then' do
+  would 'then then then' do
     plusone = lambda do |r|
       r.merge(RC::RESPONSE_BODY => r[RC::RESPONSE_BODY] + 1)
     end
@@ -54,7 +54,7 @@ describe RC::Promise do
     @promise.future_body.should.eq 6
   end
 
-  should 'call inline if pool_size < 0' do
+  would 'call inline if pool_size < 0' do
     @client.pool_size = -1
     current_thread = Thread.current
     @promise.defer do
@@ -62,7 +62,7 @@ describe RC::Promise do
     end
   end
 
-  should 'call in a new thread if pool_size == 0' do
+  would 'call in a new thread if pool_size == 0' do
     @client.pool_size = 0
     thread = nil
     mock(Thread).new.with_any_args.peek_return do |t|
@@ -75,7 +75,7 @@ describe RC::Promise do
     @promise.yield
   end
 
-  should 'call in thread pool if pool_size > 0' do
+  would 'call in thread pool if pool_size > 0' do
     @client.pool_size = 1
     flag = 0
     rd, wr = IO.pipe

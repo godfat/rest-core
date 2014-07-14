@@ -2,7 +2,7 @@
 require 'rest-core/test'
 
 describe RC::Universal do
-  should 'send Authorization header' do
+  would 'send Authorization header' do
     u = RC::Universal.new(:log_method => false)
     u.username = 'Aladdin'
     u.password = 'open sesame'
@@ -17,7 +17,7 @@ describe RC::Universal do
       {'Authorization' => 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=='}.merge(acc))
   end
 
-  should 'clash' do
+  would 'clash' do
     url = 'http://localhost/'
     stub_request(:get, url).to_return(:body => '{"a":{"b":"c"}}')
     res = RC::Universal.new(:json_response => true,

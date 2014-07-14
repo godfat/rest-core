@@ -19,7 +19,7 @@ describe RC::Cache do
     end.new
   end
 
-  should 'basic 0' do
+  would 'basic 0' do
     c = RC::Builder.client do
       use RC::Cache, {}, 3600
       run Class.new{
@@ -50,7 +50,7 @@ describe RC::Cache do
               RC::RESPONSE_KEY => RC::RESPONSE_STATUS).should.eq 200
   end
 
-  should 'basic 1' do
+  would 'basic 1' do
     path = 'http://a'
     stub_request(:get , path).to_return(:body => 'OK')
     stub_request(:post, path).to_return(:body => 'OK')
@@ -69,7 +69,7 @@ describe RC::Cache do
                                                             should.eq('OK')
   end
 
-  should 'not raise error if headers is nil' do
+  would 'not raise error if headers is nil' do
     path = 'http://a'
     stub_request(:get , path).to_return(:body => 'OK', :headers => nil)
     c = simple_client
@@ -77,7 +77,7 @@ describe RC::Cache do
     c.get(path).should.eq 'OK'
   end
 
-  should 'head then get' do
+  would 'head then get' do
     c = simple_client
     path = 'http://example.com'
     stub_request(:head, path).to_return(:headers => {'A' => 'B'})
@@ -86,7 +86,7 @@ describe RC::Cache do
     c.get(path).should.eq('body')
   end
 
-  should 'only [] and []= should be implemented' do
+  would 'only [] and []= should be implemented' do
     cache = Class.new do
       def initialize    ; @h = {}                      ; end
       def []  key       ; @h[key]                      ; end
@@ -105,14 +105,14 @@ describe RC::Cache do
     c.get('4').should.eq '5'
   end
 
-  should 'cache the original response' do
+  would 'cache the original response' do
     c = json_client
     stub_request(:get, 'http://me').to_return(:body => body = '{"a":"b"}')
     c.get('http://me').should.eq 'a' => 'b'
     c.cache.values.first.should.eq "200\n\n\n#{body}"
   end
 
-  should 'cache multiple headers' do
+  would 'cache multiple headers' do
     c = simple_client
     stub_request(:get, 'http://me').to_return(:headers =>
       {'Apple' => 'Orange', 'Orange' => 'Apple'})
@@ -121,7 +121,7 @@ describe RC::Cache do
     2.times{ c.get(*args).should.eq expected }
   end
 
-  should 'preserve promise and REQUEST_URI' do
+  would 'preserve promise and REQUEST_URI' do
     c = simple_client
     uri = 'http://me?a=b'
     stub_request(:get, uri)
@@ -129,7 +129,7 @@ describe RC::Cache do
     2.times{ c.get(*args).yield[RC::REQUEST_URI].should.eq uri }
   end
 
-  should 'preserve promise and preserve wrapped call' do
+  would 'preserve promise and preserve wrapped call' do
     c = json_client
     stub_request(:get, 'http://me').to_return(:body => body = '{"a":"b"}')
     args = ['http://me', {}, {RC::RESPONSE_KEY => RC::PROMISE}]
@@ -138,7 +138,7 @@ describe RC::Cache do
     end
   end
 
-  should 'multiline response' do
+  would 'multiline response' do
     c = simple_client
     stub_request(:get, 'http://html').to_return(:body => body = "a\n\nb")
     c.get('http://html').should.eq body
@@ -146,7 +146,7 @@ describe RC::Cache do
     c.get('http://html').should.eq body
   end
 
-  should "follow redirect with cache.update correctly" do
+  would "follow redirect with cache.update correctly" do
     c = RC::Builder.client do
       use RC::FollowRedirect, 10
       use RC::Cache, {}, nil
@@ -160,7 +160,7 @@ describe RC::Cache do
     c.get(x, {}, 'cache.update' => true).should.eq 'OK'
   end
 
-  should 'not cache post/put/delete' do
+  would 'not cache post/put/delete' do
     [:put, :post, :delete].each{ |meth|
       url, body = "https://cache", 'ok'
       stub_request(meth, url).to_return(:body => body).times(3)
@@ -178,13 +178,13 @@ describe RC::Cache do
     }
   end
 
-  should 'not cache dry run' do
+  would 'not cache dry run' do
     c = simple_client
     c.url('test')
     c.cache.should.eq({})
   end
 
-  should 'not cache hijacking' do
+  would 'not cache hijacking' do
     stub_request(:get, 'http://a').to_return(:body => 'ok')
     c = simple_client
     2.times do
@@ -195,7 +195,7 @@ describe RC::Cache do
     c.cache.should.eq({})
   end
 
-  should 'update cache if there is cache option set to false' do
+  would 'update cache if there is cache option set to false' do
     url, body = "https://cache", 'ok'
     stub_request(:get, url).to_return(:body => body)
     c = simple_client
@@ -219,12 +219,12 @@ describe RC::Cache do
       @cache
     end
 
-    should 'respect in options' do
+    would 'respect in options' do
       c = RC::Builder.client{use RC::Cache, nil, nil}.new
       c.get(@url, {}, :cache => @cache, :expires_in => 3).should.eq @body
     end
 
-    should 'respect in middleware' do
+    would 'respect in middleware' do
       c = RC::Builder.client{use RC::Cache, nil,   3}.new(:cache => @cache)
       c.get(@url).should.eq @body
     end

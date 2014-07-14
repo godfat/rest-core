@@ -2,7 +2,7 @@
 require 'rest-core/test'
 
 describe RC::ErrorDetector do
-  should 'lighten' do
+  would 'lighten' do
     client = RC::Builder.client do
       use RC::ErrorDetector
       run RC::Dry

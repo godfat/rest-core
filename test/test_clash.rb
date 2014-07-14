@@ -2,7 +2,7 @@
 require 'rest-core/test'
 
 describe RC::Clash do
-  should 'never give nil for non-existing values' do
+  would 'never give nil for non-existing values' do
     h = {0 => 1, 2 => {3 => 4, 5 => [6, {7 => 8}]}, 9 => false, 10 => nil}
     c = RC::Clash.new(h)
     c[0]            .should.eq(1)

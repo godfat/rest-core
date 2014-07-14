@@ -2,7 +2,7 @@
 require 'rest-core/test'
 
 describe RC::Smash do
-  should 'deep access' do
+  would 'deep access' do
     h = {0 => 1, 2 => {3 => 4, 5 => [6, {7 => 8}]}, 9 => false, 10 => nil}
     c = RC::Smash.new(h)
     c[0]            .should.eq(1)

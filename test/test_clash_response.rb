@@ -5,19 +5,19 @@ describe RC::ClashResponse do
   describe 'app' do
     app = RC::ClashResponse.new(RC::Dry.new, true)
 
-    should 'do nothing' do
+    would 'do nothing' do
       env = {RC::RESPONSE_BODY => []}
       app.call(env) do |res|
         res.should.eq(env)
-        res[RC::RESPONSE_BODY].should.kind_of(Array)
+        res[RC::RESPONSE_BODY].should.kind_of?(Array)
       end
     end
 
-    should 'clash' do
+    would 'clash' do
       app.call(RC::RESPONSE_BODY => {}) do |res|
         body = res[RC::RESPONSE_BODY]
-        body.should.kind_of(RC::Clash)
-        body.should.empty
+        body.should.kind_of?(RC::Clash)
+        body.should.empty?
         body[0].should.eq({})
         body[0][0].should.eq({})
       end
@@ -34,22 +34,22 @@ describe RC::ClashResponse do
         }
       end
 
-      should 'do nothing' do
+      would 'do nothing' do
         b = client.new(:clash_response => false).get(''){ |res|
           res.should.eq(body)
-          res.should.kind_of(Hash)
+          res.should.kind_of?(Hash)
         }.get('')
         b.should.eq(body)
-        b.should.kind_of(Hash)
+        b.should.kind_of?(Hash)
       end
 
-      should 'clash' do
+      would 'clash' do
         b = client.new.get(''){ |res|
           res.should.eq(body)
-          res.should.kind_of(RC::Clash)
+          res.should.kind_of?(RC::Clash)
         }.get('')
         b.should.eq(body)
-        b.should.kind_of(RC::Clash)
+        b.should.kind_of?(RC::Clash)
       end
     end
   end

@@ -9,11 +9,11 @@ describe RC::DefaultQuery do
   env = {RC::REQUEST_QUERY => {}}
 
   describe 'when given query' do
-    should 'do nothing' do
+    would 'do nothing' do
       @app.call(env){ |r| r[RC::REQUEST_QUERY].should.eq({}) }
     end
 
-    should 'merge query' do
+    would 'merge query' do
       @app.instance_eval{@query = {'q' => 'uery'}}
 
       @app.call(env){ |r| r.should.eq({RC::REQUEST_QUERY => {'q' => 'uery'}}) }
@@ -25,7 +25,7 @@ describe RC::DefaultQuery do
         r.should.eq({RC::REQUEST_QUERY => {'q' => 'uery'}.merge(format)}) }
     end
 
-    should 'string_keys in query' do
+    would 'string_keys in query' do
       e = {'query' => {:symbol => 'value'}}
       @app.call(env.merge(e)){ |r|
         r.should.eq({RC::REQUEST_QUERY => {'symbol' => 'value'}}.merge(e))
@@ -34,7 +34,7 @@ describe RC::DefaultQuery do
   end
 
   describe 'when not given query' do
-    should 'merge query with {}' do
+    would 'merge query with {}' do
       @app.call(env){ |r| r.should.eq(RC::REQUEST_QUERY => {}) }
     end
   end

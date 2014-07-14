@@ -8,15 +8,15 @@ describe RC::QueryResponse do
                 RC::REQUEST_HEADERS =>
                   {'Accept' => 'application/x-www-form-urlencoded'}}
 
-    should 'give {} for nil' do
+    would 'give {} for nil' do
       app.call({}){ |response| response.should.eq(expected) }
     end
 
-    should 'give {} for ""' do
+    would 'give {} for ""' do
       app.call(RC::RESPONSE_BODY => ''){ |r| r.should.eq(expected) }
     end
 
-    should 'give {"a" => "b"} for "a=b"' do
+    would 'give {"a" => "b"} for "a=b"' do
       e = expected.merge(RC::RESPONSE_BODY => {'a' => 'b'})
       app.call(RC::RESPONSE_BODY => 'a=b'){ |r| r.should.eq(e) }
     end
@@ -32,14 +32,14 @@ describe RC::QueryResponse do
       }
     end
 
-    should 'do nothing' do
+    would 'do nothing' do
       expected = 'a=b&c=d'
       client.new(:query_response => false).get(''){ |response|
         response.should.eq(expected)
       }.get('').should.eq(expected)
     end
 
-    should 'parse' do
+    would 'parse' do
       expected = {'a' => 'b', 'c' => 'd'}
       client.new.get(''){ |response|
         response.should.eq(expected)

@@ -16,30 +16,30 @@ describe RC::FollowRedirect do
   end
 
   [301, 302, 303, 307].each do |status|
-    should "not follow redirect if reached max_redirects: #{status}" do
+    would "not follow redirect if reached max_redirects: #{status}" do
       dry.status = status
       app.call(RC::REQUEST_METHOD => :get, 'max_redirects' => 0) do |res|
         res[RC::RESPONSE_HEADERS]['LOCATION'].should.eq 'location'
       end
     end
 
-    should "follow once: #{status}" do
+    would "follow once: #{status}" do
       dry.status = status
       app.call(RC::REQUEST_METHOD => :get) do |res|
         res[RC::RESPONSE_HEADERS]['LOCATION'].should.eq 'location'
       end
     end
 
-    should "not carry query string: #{status}" do
+    would "not carry query string: #{status}" do
       dry.status = status
       app.call(RC::REQUEST_METHOD => :get,
                RC::REQUEST_QUERY => {:a => 'a'}) do |res|
         res[RC::REQUEST_PATH] .should.eq 'location'
-        res[RC::REQUEST_QUERY].should.empty
+        res[RC::REQUEST_QUERY].should.empty?
       end
     end
 
-    should "carry payload for #{status}" do
+    would "carry payload for #{status}" do
       dry.status = status
       app.call(RC::REQUEST_METHOD => :put,
                RC::REQUEST_PAYLOAD => {:a => 'a'}) do |res|
@@ -49,7 +49,7 @@ describe RC::FollowRedirect do
   end
 
   [200, 201, 404, 500].each do |status|
-    should "not follow redirect if it's not a redirect status: #{status}" do
+    would "not follow redirect if it's not a redirect status: #{status}" do
       dry.status = status
       app.call(RC::REQUEST_METHOD => :get, 'max_redirects' => 9) do |res|
         res[RC::RESPONSE_HEADERS]['LOCATION'].should.eq 'location'

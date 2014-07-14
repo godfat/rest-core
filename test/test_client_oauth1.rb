@@ -13,7 +13,7 @@ describe RC::ClientOauth1 do
 
   client.send(:include, RC::ClientOauth1)
 
-  should 'restore data with correct sig' do
+  would 'restore data with correct sig' do
     data = {'a' => 'b', 'c' => 'd'}
     sig = Digest::MD5.hexdigest('e&a=b&c=d')
     data_sig = data.merge('sig' => sig)
@@ -36,7 +36,7 @@ describe RC::ClientOauth1 do
     c.data.should.eq({})
   end
 
-  should 'have correct default data' do
+  would 'have correct default data' do
     c = client.new
     c.data.should.eq({})
     c.data = nil
@@ -44,7 +44,7 @@ describe RC::ClientOauth1 do
     c.data['a'].should.eq 'b'
   end
 
-  should 'authorize' do
+  would 'authorize' do
     stub_request(:post, 'http://localhost').
       to_return(:body => 'oauth_token=abc')
 

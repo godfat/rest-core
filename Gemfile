@@ -6,7 +6,7 @@ gemspec
 gem 'rest-client'
 
 gem 'rake'
-gem 'bacon'
+gem 'pork'
 gem 'muack'
 gem 'webmock'
 

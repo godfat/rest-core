@@ -8,11 +8,11 @@ describe RC::AuthBasic do
 
   env = {RC::REQUEST_HEADERS => {}}
 
-  should 'do nothing' do
+  would 'do nothing' do
     @auth.call({}){ |res| res.should.eq({}) }
   end
 
-  should 'send Authorization header' do
+  would 'send Authorization header' do
     @auth.instance_eval{@username = 'Aladdin'}
     @auth.instance_eval{@password = 'open sesame'}
 
@@ -30,12 +30,12 @@ describe RC::AuthBasic do
     }
   end
 
-  should 'leave a log if username are not both provided' do
+  would 'leave a log if username are not both provided' do
     @auth.instance_eval{@username = 'Aladdin'}
     @auth.call(env){ |res| res[RC::LOG].size.should.eq 1 }
   end
 
-  should 'leave a log if password are not both provided' do
+  would 'leave a log if password are not both provided' do
     @auth.instance_eval{@password = 'open sesame'}
     @auth.call(env){ |res| res[RC::LOG].size.should.eq 1 }
   end

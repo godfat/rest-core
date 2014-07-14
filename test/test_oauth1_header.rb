@@ -24,7 +24,7 @@ describe RC::Oauth1Header do
     'GDdmIQH6jhtmLUypg82g',
     'MCD8BKwGdgPHvAuvgvz4EQpqDAtx89grbuNMRd7Eh98')
 
-  should 'have correct signature' do
+  would 'have correct signature' do
     auth.signature(env, oauth_params).should.eq(
       '8wUi7m5HFQy76nowoCThusfgB+Q=')
   end
@@ -43,36 +43,36 @@ describe RC::Oauth1Header do
       auth.base_string(e, oauth_params).should.eq b
     end
 
-    should 'have correct base_string' do
+    would 'have correct base_string' do
       check[env, base_string]
     end
 
-    should 'not use payload in multipart request for base_string' do
+    would 'not use payload in multipart request for base_string' do
       File.open(__FILE__) do |f|
         check[env.merge(RC::REQUEST_PAYLOAD => {'file' => f}), base_string]
       end
     end
 
-    should 'not use payload if it contains binary' do
+    would 'not use payload if it contains binary' do
       File.open(__FILE__) do |f|
         check[env.merge(RC::REQUEST_PAYLOAD => f), base_string]
       end
     end
 
-    should 'not use payload if it contains [binary]' do
+    would 'not use payload if it contains [binary]' do
       File.open(__FILE__) do |f|
         check[env.merge(RC::REQUEST_PAYLOAD => [f]), base_string]
       end
     end
 
-    should 'not use payload if Content-Type is not x-www-form-urlencoded' do
+    would 'not use payload if Content-Type is not x-www-form-urlencoded' do
       check[
         env.merge(RC::REQUEST_PAYLOAD => {'pay' => 'load'},
                   RC::REQUEST_HEADERS => {'Content-Type' => 'text/plain'}),
         base_string]
     end
 
-    should 'use payload if Content-Type is x-www-form-urlencoded' do
+    would 'use payload if Content-Type is x-www-form-urlencoded' do
       check[env.merge(
               RC::REQUEST_PAYLOAD => {'pay' => 'load'},
               RC::REQUEST_HEADERS =>
@@ -80,12 +80,12 @@ describe RC::Oauth1Header do
             base_string + '%26pay%3Dload']
     end
 
-    should 'use payload if there is no binary data' do
+    would 'use payload if there is no binary data' do
       check[env.merge(RC::REQUEST_PAYLOAD => {'pay' => 'load'}),
             base_string + '%26pay%3Dload']
     end
 
-    should 'not escape ~' do
+    would 'not escape ~' do
       check[env.merge(RC::REQUEST_PAYLOAD => {'tilde' => '~'}),
             base_string + '%26tilde%3D~']
     end

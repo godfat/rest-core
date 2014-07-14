@@ -5,11 +5,11 @@ describe RC::DefaultPayload do
   app = RC::DefaultPayload.new(RC::Dry.new, {})
   env = {RC::REQUEST_PAYLOAD => {}}
 
-  should 'do nothing' do
+  would 'do nothing' do
     app.call(env){ |r| r[RC::REQUEST_PAYLOAD].should.eq({}) }
   end
 
-  should 'merge payload' do
+  would 'merge payload' do
     app.instance_eval{@payload = {'pay' => 'load'}}
 
     app.call(env){ |r| r.should.eq({RC::REQUEST_PAYLOAD =>
@@ -22,7 +22,7 @@ describe RC::DefaultPayload do
       {'pay' => 'load'}.merge(format)})}
   end
 
-  should 'accept non-hash payload' do
+  would 'accept non-hash payload' do
     u = RC::Universal.new(:log_method => false)
     env = {RC::REQUEST_PAYLOAD => 'payload'}
     u.request_full(env, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
