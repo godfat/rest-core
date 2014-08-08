@@ -25,4 +25,14 @@ describe RC::Universal do
                             :log_method => false).get(url)
     res['a']['d'].should.eq({})
   end
+
+  would 'follow redirect regardless response body' do
+    url = 'http://localhost/'
+    stub_request(:get, url).to_return(:body => 'bad json!',
+      :status => 302, :headers => {'Location' => "#{url}a"})
+    stub_request(:get, "#{url}a").to_return(:body => '{"good":"json!"}')
+    RC::Universal.new(:json_response => true,
+                      :log_method => false).
+      get(url).should.eq 'good' => 'json!'
+  end
 end
