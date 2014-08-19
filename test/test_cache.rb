@@ -13,9 +13,8 @@ describe RC::Cache do
 
   def json_client
     RC::Builder.client do
-      use RC::Cache, {}, 3600 do
-        use RC::JsonResponse, true
-      end
+      use RC::JsonResponse, true
+      use RC::Cache, {}, 3600
     end.new
   end
 

@@ -2,14 +2,30 @@
 require 'rest-core/test'
 
 describe RC::Builder do
-  would 'default app is a kind of RestCore::Dry' do
+  would 'default client app is a kind of RestCore::Engine' do
     RC::Builder.client.new.app.should.kind_of? RC::Engine
+  end
+
+  would 'default        app is a kind of RestCore::Engine' do
+    RC::Builder.new.to_app.should.kind_of? RC::Engine
+  end
+
+  would 'switch default_engine to RestCore::RestClient' do
+    builder = Class.new(RC::Builder)
+    builder.default_engine = RC::RestClient
+    builder.new.to_app.class.should.eq RC::RestClient
   end
 
   would 'switch default_engine to RestCore::Dry' do
     builder = RC::Builder.dup
     builder.default_engine = RC::Dry
     builder.client.new.app.class.should.eq RC::Dry
+  end
+
+  would 'accept middleware without a member' do
+    RC::Builder.client{
+      use Class.new.send(:include, RC::Middleware)
+    }.members.should.eq []
   end
 
   would 'not have duplicated fields' do

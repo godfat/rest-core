@@ -29,7 +29,6 @@ module RestCore
   autoload :Error         , 'rest-core/error'
   autoload :Event         , 'rest-core/event'
   autoload :Middleware    , 'rest-core/middleware'
-  autoload :Wrapper       , 'rest-core/wrapper'
   autoload :Promise       , 'rest-core/promise'
   autoload :ThreadPool    , 'rest-core/thread_pool'
   autoload :EventSource   , 'rest-core/event_source'

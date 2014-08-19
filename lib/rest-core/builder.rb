@@ -1,18 +1,61 @@
 
 require 'thread'
 require 'rest-core/client'
-require 'rest-core/wrapper'
 
 class RestCore::Builder
   include RestCore
-  include Wrapper
 
-  def self.default_engine
-    @default_engine ||= RestCore::HttpClient
+  singleton_class.module_eval do
+    attr_writer :default_engine
+    def default_engine
+      @default_engine ||= RestCore::HttpClient
+    end
+
+    def client *attrs, &block
+      new(&block).to_client(*attrs)
+    end
   end
 
-  def self.client *attrs, &block
-    new(&block).to_client(*attrs)
+  def initialize &block
+    @engine    = nil
+    @middles ||= []
+    instance_eval(&block) if block_given?
+  end
+
+  attr_reader :middles
+  attr_writer :default_engine
+  def default_engine
+    @default_engine ||= self.class.default_engine
+  end
+
+  def use middle, *args, &block
+    middles << [middle, args, block]
+  end
+
+  def run engine
+    @engine = engine
+  end
+
+  def members
+    middles.map{ |(middle, args, block)|
+      if middle.public_method_defined?(:wrapped)
+        # TODO: this is hacky... try to avoid calling new!
+        middle.members + middle.new(Dry.new, *args, &block).members
+      else
+        middle.members
+      end if middle.respond_to?(:members)
+    }.flatten.compact
+  end
+
+  def to_app engine=@engine || default_engine
+    # === foldr m.new app middles
+    middles.reverse.inject(engine.new){ |app, (middle, args, block)|
+      begin
+        middle.new(app, *partial_deep_copy(args), &block)
+      rescue ArgumentError => e
+        raise ArgumentError.new("#{middle}: #{e}")
+      end
+    }
   end
 
   def to_client *attrs
@@ -31,6 +74,16 @@ class RestCore::Builder
     client.promises           = []
     client.mutex              = Mutex.new
     client
+  end
+
+  private
+  def partial_deep_copy obj
+    case obj
+      when Array; obj.map{ |o| partial_deep_copy(o) }
+      when Hash ; obj.inject({}){ |r, (k, v)| r[k] = partial_deep_copy(v); r }
+      when Numeric, Symbol, TrueClass, FalseClass, NilClass; obj
+      else begin obj.dup; rescue TypeError; obj; end
+    end
   end
 
   def build_struct fields
@@ -88,11 +141,5 @@ class RestCore::Builder
         wait(ps, m)
       end
     end
-  end
-
-  def initialize &block
-    @engine    = nil
-    @middles ||= []
-    instance_eval(&block) if block_given?
   end
 end

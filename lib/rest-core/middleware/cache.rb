@@ -1,14 +1,12 @@
 
 require 'rest-core/event'
 require 'rest-core/middleware'
-require 'rest-core/wrapper'
 
 require 'digest/md5'
 
 class RestCore::Cache
   def self.members; [:cache, :expires_in]; end
   include RestCore::Middleware
-  include RestCore::Wrapper
 
   def initialize app, cache, expires_in, &block
     super(&block)
@@ -24,14 +22,18 @@ class RestCore::Cache
 
     cache_get(e){ |cached|
       e[TIMER].cancel if e[TIMER]
-      wrapped.call(cached, &k)
-    } || app.call(e){ |res|
-           wrapped.call(res){ |res_wrapped|
-             k.call(if (res_wrapped[FAIL] || []).empty?
-                      cache_for(res).merge(res_wrapped)
-                    else
-                      res_wrapped
-                    end)}}
+      k.call(cached)
+    } || app_call(e, &k)
+  end
+
+  def app_call env
+    app.call(env) do |res|
+      yield(if (res[FAIL] || []).empty?
+              cache_for(res)
+            else
+              res
+            end)
+    end
   end
 
   def cache_key env
