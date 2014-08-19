@@ -88,6 +88,7 @@ Gem::Specification.new do |s|
   "test/test_client.rb",
   "test/test_client_oauth1.rb",
   "test/test_config.rb",
+  "test/test_default_headers.rb",
   "test/test_default_payload.rb",
   "test/test_default_query.rb",
   "test/test_error_detector.rb",
@@ -124,6 +125,7 @@ Gem::Specification.new do |s|
   "test/test_client.rb",
   "test/test_client_oauth1.rb",
   "test/test_config.rb",
+  "test/test_default_headers.rb",
   "test/test_default_payload.rb",
   "test/test_default_query.rb",
   "test/test_error_detector.rb",
@@ -154,15 +156,15 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<httpclient>, [">= 0"])
       s.add_runtime_dependency(%q<mime-types>, [">= 0"])
-      s.add_runtime_dependency(%q<timers>, [">= 0"])
+      s.add_runtime_dependency(%q<timers>, ["< 4"])
     else
       s.add_dependency(%q<httpclient>, [">= 0"])
       s.add_dependency(%q<mime-types>, [">= 0"])
-      s.add_dependency(%q<timers>, [">= 0"])
+      s.add_dependency(%q<timers>, ["< 4"])
     end
   else
     s.add_dependency(%q<httpclient>, [">= 0"])
     s.add_dependency(%q<mime-types>, [">= 0"])
-    s.add_dependency(%q<timers>, [">= 0"])
+    s.add_dependency(%q<timers>, ["< 4"])
   end
 end
