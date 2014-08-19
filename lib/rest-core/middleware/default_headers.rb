@@ -5,7 +5,7 @@ class RestCore::DefaultHeaders
   def self.members; [:headers]; end
   include RestCore::Middleware
   def call env, &k
-    app.call(env.merge(REQUEST_HEADERS =>
-      @headers.merge(headers(env)).merge(env[REQUEST_HEADERS])), &k)
+    h = merge_hash(headers(env), env[REQUEST_HEADERS])
+    app.call(env.merge(REQUEST_HEADERS => h), &k)
   end
 end

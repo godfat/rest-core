@@ -113,4 +113,21 @@ module RestCore::Middleware
     }
   end
   public :string_keys
+
+  # this method is intended to merge payloads if they are non-empty hashes,
+  # but prefer the right most one if they are not hashes.
+  def merge_hash a, b
+    if b.respond_to?(:empty?) && b.empty?
+      Middleware.string_keys(a)
+    elsif a.respond_to?(:merge)
+      if b.respond_to?(:merge)
+        Middleware.string_keys(a).merge(Middleware.string_keys(b))
+      else
+        Middleware.string_keys(b)
+      end
+    else
+      Middleware.string_keys(b)
+    end
+  end
+  public :merge_hash
 end
