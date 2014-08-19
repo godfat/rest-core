@@ -21,8 +21,13 @@ describe RC::JsonRequest do
         RC::REQUEST_PAYLOAD => RC::Json.encode(request_params))}
   end
 
+  would 'do nothing if payload is empty' do
+    e = env.merge(RC::REQUEST_PAYLOAD => {})
+    app.call(e){ |res| res.should.eq e }
+  end
+
   would 'do nothing if json_request is false' do
-    app = RC::JsonRequest.new(RC::Dry.new, false)
-    app.call(env){ |res| res.should.eq res }
+    a = RC::JsonRequest.new(RC::Dry.new, false)
+    a.call(env){ |res| res.should.eq env }
   end
 end

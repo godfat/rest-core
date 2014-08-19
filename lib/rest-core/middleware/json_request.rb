@@ -10,7 +10,8 @@ class RestCore::JsonRequest
 
   def call env, &k
     return app.call(env, &k) unless json_request(env)
-    return app.call(env, &k) unless env[REQUEST_PAYLOAD]
+    return app.call(env, &k) unless env[REQUEST_PAYLOAD] &&
+                                    !env[REQUEST_PAYLOAD].empty?
 
     app.call(env.merge(
       REQUEST_HEADERS => JSON_REQUEST_HEADER.merge(env[REQUEST_HEADERS]||{}),
