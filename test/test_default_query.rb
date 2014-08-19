@@ -31,6 +31,14 @@ describe RC::DefaultQuery do
         r.should.eq({RC::REQUEST_QUERY => {'symbol' => 'value'}}.merge(e))
       }
     end
+
+    would 'also merge the very default query' do
+      @app.query = {'a' => 'b'}
+      @app.call('query' => {'b' => 'c'},
+               RC::REQUEST_QUERY => {'c' => 'd'}) do |r|
+        r[RC::REQUEST_QUERY].should.eq 'a' => 'b', 'b' => 'c', 'c' => 'd'
+      end
+    end
   end
 
   describe 'when not given query' do

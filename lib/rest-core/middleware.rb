@@ -10,6 +10,7 @@ module RestCore::Middleware
     mod.send(:attr_reader, :app)
     mem = if mod.respond_to?(:members) then mod.members else [] end
     src = mem.map{ |member| <<-RUBY }
+      attr_accessor :#{member}
       def #{member} env
         if    env.key?('#{member}')
           env['#{member}']
@@ -116,17 +117,19 @@ module RestCore::Middleware
 
   # this method is intended to merge payloads if they are non-empty hashes,
   # but prefer the right most one if they are not hashes.
-  def merge_hash a, b
-    if b.respond_to?(:empty?) && b.empty?
-      Middleware.string_keys(a)
-    elsif a.respond_to?(:merge)
-      if b.respond_to?(:merge)
-        Middleware.string_keys(a).merge(Middleware.string_keys(b))
+  def merge_hash *hashes
+    hashes.reverse_each.inject do |r, i|
+      if r.kind_of?(Hash)
+        if i.kind_of?(Hash)
+          Middleware.string_keys(i).merge(Middleware.string_keys(r))
+        elsif r.empty?
+          i # prefer non-empty ones
+        else
+          r # don't try to merge non-hashes
+        end
       else
-        Middleware.string_keys(b)
+        r
       end
-    else
-      Middleware.string_keys(b)
     end
   end
   public :merge_hash

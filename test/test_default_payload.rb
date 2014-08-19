@@ -22,6 +22,14 @@ describe RC::DefaultPayload do
       {'pay' => 'load'}.merge(format)})}
   end
 
+  would 'also merge the very default payload' do
+    a = RC::DefaultPayload.new(RC::Dry.new, 'a' => 'b')
+    a.call('payload' => {'b' => 'c'},
+           RC::REQUEST_PAYLOAD => {'c' => 'd'}) do |r|
+      r[RC::REQUEST_PAYLOAD].should.eq 'a' => 'b', 'b' => 'c', 'c' => 'd'
+    end
+  end
+
   would 'accept non-hash payload' do
     u = RC::Universal.new(:log_method => false)
     env = {RC::REQUEST_PAYLOAD => 'payload'}
