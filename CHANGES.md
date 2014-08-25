@@ -1,5 +1,28 @@
 # CHANGES
 
+## rest-core 3.3.0 -- 2014-08-25
+
+### Incompatible changes
+
+* Removed `RC::Wrapper`. Apparently it's introducing more troubles than the
+  benefit than it brings. Currently, only `RC::Cache` is really using it,
+  and now the old functionality is merged back to `RC::Builder`.
+
+* Therefore `RC::Cache` is no longer accepting a block.
+
+* `RC::Universal` is then updated accordingly to respect the new `RC::Cache`.
+
+### Enhancements
+
+* Now `RC::DefaultQuery`, `RC::DefaultPayload`, and `RC::DefaultHeaders`
+  work the same way. Previously they merge hashes slightly differently.
+
+* Introduced `RC::Middleware#member=` in addition to `RC::Middleware#member`.
+
+* RC::JsonResponse would now strip the problematic UTF-8 BOM before parsing.
+  This was introduced because Stackoverflow would return it. We also
+  try to not raise any encoding issues here.
+
 ## rest-core 3.2.0 -- 2014-06-27
 
 ### Enhancements
