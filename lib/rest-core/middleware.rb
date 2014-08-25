@@ -10,7 +10,7 @@ module RestCore::Middleware
     mod.send(:attr_reader, :app)
     mem = if mod.respond_to?(:members) then mod.members else [] end
     src = mem.map{ |member| <<-RUBY }
-      attr_accessor :#{member}
+      attr_writer :#{member}
       def #{member} env
         if    env.key?('#{member}')
           env['#{member}']
