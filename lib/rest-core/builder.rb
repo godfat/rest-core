@@ -38,12 +38,7 @@ class RestCore::Builder
 
   def members
     middles.map{ |(middle, args, block)|
-      if middle.public_method_defined?(:wrapped)
-        # TODO: this is hacky... try to avoid calling new!
-        middle.members + middle.new(Dry.new, *args, &block).members
-      else
-        middle.members
-      end if middle.respond_to?(:members)
+      middle.members if middle.respond_to?(:members)
     }.flatten.compact
   end
 

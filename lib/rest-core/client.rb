@@ -25,9 +25,6 @@ module RestCore::Client
             self.class.default_#{name}      # old class default style
           elsif app.respond_to?(:#{name})
             app.#{name}({})                 # middleware instance value
-          elsif app.respond_to?(:wrapped)
-            default_#{name}(app.wrapped) || # wrapper value
-            default_#{name}(app.app)        # walk into it
           elsif app.respond_to?(:app)
             default_#{name}(app.app)        # walk into next app
           else
@@ -249,14 +246,7 @@ module RestCore::Client
               end
 
     if app.respond_to?(:app) && app.app
-      wrapped = if app.respond_to?(:wrapped) && app.wrapped
-                  lighten_app(app.wrapped)
-                else
-                  nil
-                end
-      app.class.new(lighten_app(app.app), *members){
-        @wrapped = wrapped if wrapped
-      }
+      app.class.new(lighten_app(app.app), *members)
     else
       app.class.new(*members)
     end
