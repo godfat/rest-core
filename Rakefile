@@ -12,5 +12,5 @@ Gemgem.init(dir) do |s|
   s.version  = RestCore::VERSION
   s.homepage = 'https://github.com/godfat/rest-core'
   %w[httpclient mime-types].each{ |g| s.add_runtime_dependency(g) }
-  s.add_runtime_dependency('timers', '<4')
+  s.add_runtime_dependency('timers', '>=4.0.1')
 end

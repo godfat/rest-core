@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-# stub: rest-core 3.3.0 ruby lib
+# stub: rest-core 3.3.1 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "3.3.0"
+  s.version = "3.3.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2014-08-25"
+  s.date = "2014-09-12"
   s.description = "Modular Ruby clients interface for REST APIs.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/godfat/rest-more"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
@@ -156,15 +156,15 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<httpclient>, [">= 0"])
       s.add_runtime_dependency(%q<mime-types>, [">= 0"])
-      s.add_runtime_dependency(%q<timers>, ["< 4"])
+      s.add_runtime_dependency(%q<timers>, [">= 4.0.1"])
     else
       s.add_dependency(%q<httpclient>, [">= 0"])
       s.add_dependency(%q<mime-types>, [">= 0"])
-      s.add_dependency(%q<timers>, ["< 4"])
+      s.add_dependency(%q<timers>, [">= 4.0.1"])
     end
   else
     s.add_dependency(%q<httpclient>, [">= 0"])
     s.add_dependency(%q<mime-types>, [">= 0"])
-    s.add_dependency(%q<timers>, ["< 4"])
+    s.add_dependency(%q<timers>, [">= 4.0.1"])
   end
 end
