@@ -71,6 +71,7 @@ describe RC::Simple do
                   # done first than `wait` anyway. raising the sleeping time
                   # would make this test more reliable...
       called = true
+      nil # test against returning nil, so that Promise#response is not set
     end
     rd.gets
     client.wait

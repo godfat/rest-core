@@ -26,8 +26,8 @@ class RestCore::Promise
     self.k         = [k]
     self.immediate = immediate
 
-    self.body, self.status, self.headers,
-      self.socket, self.response, self.error, = nil
+    self.body, self.status, self.headers, self.socket,
+      self.response, self.error, self.called = nil
 
     self.condv     = ConditionVariable.new
     self.mutex     = Mutex.new
@@ -109,16 +109,16 @@ class RestCore::Promise
 
   # It's considered done only if the HTTP request is done, and we're not
   # in asynchronous mode otherwise the callback should be called first.
-  # Here we check the response because the callback should set the response.
   # For synchronous mode, since we're waiting for the callback anyway,
-  # we don't really have to check the response.
+  # we don't really have to check if it's called.
   def done?
-    !!status && !(immediate && !response)
+    !!status && !(immediate && !called)
   end
 
   protected
   attr_accessor :env, :k, :immediate,
-                :response, :body, :status, :headers, :socket, :error,
+                :body, :status, :headers, :socket,
+                :response, :error, :called,
                 :condv, :mutex, :task
 
   private
@@ -136,13 +136,16 @@ class RestCore::Promise
 
   # called in client thread, when yield is called
   def callback
-    self.response ||= k.inject(
+    return response if called
+    self.response = k.inject(
       env.merge(RESPONSE_BODY    => body  ,
                 RESPONSE_STATUS  => status,
                 RESPONSE_HEADERS => headers,
                 RESPONSE_SOCKET  => socket,
                 FAIL             => ((env[FAIL]||[]) + [error]).compact,
                 LOG              =>   env[LOG] ||[])){ |r, i| i.call(r) }
+    self.called = true
+    response
   end
 
   # called in requesting thread, whenever the request is done
