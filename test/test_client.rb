@@ -58,6 +58,25 @@ describe RC::Simple do
     i.should.eq t
   end
 
+  would 'wait for callback' do
+    rd, wr = IO.pipe
+    called = false
+    stub_request(:get, url).to_return(:body => 'nnf')
+    client = RC::Builder.client.new.get(url) do |nnf|
+      wr.puts
+      sleep 0.001 # make sure our callback is slow enough,
+                  # so that if `wait` is not waiting for the callback,
+                  # it would leave before the callback is completely done.
+                  # without sleeping, the callback is very likely to be
+                  # done first than `wait` anyway. raising the sleeping time
+                  # would make this test more reliable...
+      called = true
+    end
+    rd.gets
+    client.wait
+    called.should.eq true
+  end
+
   would 'cleanup promises' do
     stub_request(:get, url)
     client = RC::Builder.client

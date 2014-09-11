@@ -70,7 +70,7 @@ class RestCore::Promise
   # called in client thread (client.wait)
   def wait
     # it might be awaken by some other futures!
-    mutex.synchronize{ condv.wait(mutex) until !!status } unless !!status
+    mutex.synchronize{ condv.wait(mutex) until done? } unless done?
   end
 
   # called in client thread (from the future (e.g. body))
@@ -105,6 +105,15 @@ class RestCore::Promise
   def then &action
     k << action
     self
+  end
+
+  # It's considered done only if the HTTP request is done, and we're not
+  # in asynchronous mode otherwise the callback should be called first.
+  # Here we check the response because the callback should set the response.
+  # For synchronous mode, since we're waiting for the callback anyway,
+  # we don't really have to check the response.
+  def done?
+    !!status && !(immediate && !response)
   end
 
   protected
