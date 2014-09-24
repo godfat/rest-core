@@ -37,7 +37,7 @@ class RestCore::Builder
   end
 
   def members
-    middles.map{ |(middle, args, block)|
+    middles.map{ |(middle, _, _)|
       middle.members if middle.respond_to?(:members)
     }.flatten.compact
   end

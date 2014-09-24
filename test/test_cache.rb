@@ -130,7 +130,7 @@ describe RC::Cache do
 
   would 'preserve promise and preserve wrapped call' do
     c = json_client
-    stub_request(:get, 'http://me').to_return(:body => body = '{"a":"b"}')
+    stub_request(:get, 'http://me').to_return(:body => '{"a":"b"}')
     args = ['http://me', {}, {RC::RESPONSE_KEY => RC::PROMISE}]
     2.times do
       c.get(*args).then{ |r| r[RC::RESPONSE_BODY].should.eq 'a' => 'b' }.yield
