@@ -81,9 +81,11 @@ module RestCore::Middleware
   end
   public :percent_encode
 
-  UNRESERVED = /[^a-zA-Z0-9\-\.\_\~]/
+  UNRESERVED = /[^a-zA-Z0-9\-\.\_\~]+/
   def escape string
-    URI.escape(string, UNRESERVED)
+    string.gsub(UNRESERVED) do |s|
+      "%#{s.unpack('H2' * s.bytesize).join('%')}".upcase
+    end
   end
   public :escape
 
