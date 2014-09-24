@@ -24,9 +24,28 @@ describe RC::Oauth1Header do
     'GDdmIQH6jhtmLUypg82g',
     'MCD8BKwGdgPHvAuvgvz4EQpqDAtx89grbuNMRd7Eh98')
 
+  sig = '8wUi7m5HFQy76nowoCThusfgB+Q='
+
+  after do
+    Muack.verify
+  end
+
   would 'have correct signature' do
-    auth.signature(env, oauth_params).should.eq(
-      '8wUi7m5HFQy76nowoCThusfgB+Q=')
+    auth.signature(env, oauth_params).should.eq(sig)
+  end
+
+  would 'escape keys and values' do
+    mock(Time).now{
+      mock.to_i{
+        mock.to_s{
+          oauth_params['oauth_timestamp'] }.object }.object }
+    mock(auth).nonce{ oauth_params['oauth_nonce'] }
+
+    oauth = auth.oauth_header(env.merge(oauth_params))
+    oauth.should.
+      include?("oauth_callback=\"#{RC::Middleware.escape(callback)}\"")
+    oauth.should.
+      include?("oauth_signature=\"#{RC::Middleware.escape(sig)}\"")
   end
 
   describe 'base_string' do

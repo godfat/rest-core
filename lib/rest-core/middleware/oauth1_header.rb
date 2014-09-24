@@ -26,7 +26,7 @@ class RestCore::Oauth1Header
   end
 
   def oauth_header env
-    header = attach_signature(env,
+    oauth = attach_signature(env,
       'oauth_consumer_key'     => consumer_key(env),
       'oauth_signature_method' => 'HMAC-SHA1',
       'oauth_timestamp'        => Time.now.to_i.to_s,
@@ -34,14 +34,15 @@ class RestCore::Oauth1Header
       'oauth_version'          => '1.0',
       'oauth_callback'         => oauth_callback(env),
       'oauth_verifier'         => oauth_verifier(env),
-      'oauth_token'            => oauth_token(env))
+      'oauth_token'            => oauth_token(env)).
+      map{ |(k, v)| "#{k}=\"#{escape(v)}\"" }.join(', ')
 
-    "OAuth #{header.map{ |(k, v)| "#{k}=\"#{v}\"" }.join(', ')}"
+    "OAuth #{oauth}"
   end
 
   def attach_signature env, oauth_params
     params = reject_blank(oauth_params)
-    params.merge('oauth_signature' => escape(signature(env, params)))
+    params.merge('oauth_signature' => signature(env, params))
   end
 
   def signature env, params
