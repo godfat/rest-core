@@ -9,7 +9,7 @@ module RestClient
     # Follow a redirection
     def follow_redirection request = nil, result = nil, & block
       url = headers[:location]
-      if url !~ /^http/
+      if url !~ /^http/u
         url = URI.parse(args[:url]).merge(url).to_s
       end
       args[:url] = url
