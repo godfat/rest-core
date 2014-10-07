@@ -6,12 +6,19 @@ class RestCore::DefaultSite
   include RestCore::Middleware
 
   def call env, &k
-    path = if env[REQUEST_PATH].to_s.start_with?('http')
+    path = if full_url?(env[REQUEST_PATH])
              env[REQUEST_PATH]
            else
-             "#{site(env)}#{env[REQUEST_PATH]}"
+             File.join(site(env), env[REQUEST_PATH])
            end
 
     app.call(env.merge(REQUEST_PATH => path), &k)
+  end
+
+  private
+
+  def full_url?(path)
+    path = path.to_s
+    path.start_with?('http') || path.start_with?('https')
   end
 end
