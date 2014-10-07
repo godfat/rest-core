@@ -1,5 +1,21 @@
 # CHANGES
 
+## rest-core 3.3.1 -- 2014-10-08
+
+* `RC::Oauth1Header` would now properly encode queries in oauth_callback.
+  rest-more#6 khoa nguyen (@khoan)
+
+* Made all literal regular expression UTF-8 encoded, fixing encoding issue
+  on JRuby. #10 Joe Chen (@joe1chen)
+
+* Now `RC::DefaultSite` would use `URI.join` to prepend the default site,
+  therefore eliminating duplicated / or missing /. #11 Man Vuong (@kidlab)
+
+* Fixed deprecation warnings from `URI.escape`. Lin Jen-Shin (@godfat)
+
+* Now we properly wait for the callback to be called to consider the request
+  is done. Lin Jen-Shin (@godfat)
+
 ## rest-core 3.3.0 -- 2014-08-25
 
 ### Incompatible changes
