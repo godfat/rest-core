@@ -718,6 +718,7 @@ and complete.
 * khoa nguyen (@khoan)
 * Lin Jen-Shin (@godfat)
 * lulalala (@lulalala)
+* Man Vuong (@kidlab)
 * Mariusz Pruszynski (@snicky)
 * Mr. Big Cat (@miaout17)
 * Nicolas Fouché (@nfo)
