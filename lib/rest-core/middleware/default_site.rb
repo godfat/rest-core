@@ -8,10 +8,8 @@ class RestCore::DefaultSite
   def call env, &k
     path = if env[REQUEST_PATH].to_s.include?('://')
              env[REQUEST_PATH]
-           elsif site(env).to_s.include?('://')
-             URI.join(site(env), env[REQUEST_PATH]).to_s
            else
-             "#{site(env)}#{env[REQUEST_PATH]}"
+             File.join(site(env).to_s, env[REQUEST_PATH].to_s)
            end
 
     app.call(env.merge(REQUEST_PATH => path), &k)

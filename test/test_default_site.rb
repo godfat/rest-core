@@ -21,4 +21,10 @@ describe RC::DefaultSite do
       res[RC::REQUEST_PATH].should.eq 'http://example.com/nnf.tw'
     end
   end
+
+  would 'concatenate site and path regardlessly' do
+    app.call(RC::REQUEST_PATH => 'nnf.tw', 'site' => 'example.com') do |res|
+      res[RC::REQUEST_PATH].should.eq 'example.com/nnf.tw'
+    end
+  end
 end
