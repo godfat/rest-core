@@ -1,5 +1,11 @@
 # CHANGES
 
+## rest-core 3.3.2 -- 2014-10-11
+
+* Just use `File.join` for `RC::DefaultSite` as `File::SEPARATOR` is
+  universally `/` and it would not try to raise exceptions for improperly
+  encoded URI. #11 Man Vuong (@kidlab)
+
 ## rest-core 3.3.1 -- 2014-10-08
 
 * `RC::Oauth1Header` would now properly encode queries in oauth_callback.
