@@ -73,8 +73,6 @@ gem 'rest-core', :git => 'git://github.com/godfat/rest-core.git',
 If you just want to use Facebook or Twitter clients, please take a look at
 [rest-more][] which has a lot of clients built with rest-core.
 
-[rest-more]: http://github.com/godfat/rest-more
-
 ## Build Your Own Clients:
 
 You can use `RestCore::Builder` to build your own dedicated clients.
@@ -374,12 +372,10 @@ client.request_full(RC::REQUEST_PATH   => 'godfat',
 
 Runnable example is at: [example/simple.rb][]. Please see [rest-more][]
 for more complex examples to build clients, and [slides][] from
-[rubyconf.tw/2011][rubyconf.tw] for concepts.
+[rubyconf.tw/2011][talk] for concepts.
 
 [example/simple.rb]: example/simple.rb
-[rest-more]: https://github.com/godfat/rest-more
 [slides]: http://www.godfat.org/slide/2011-08-27-rest-core.html
-[rubyconf.tw]: http://rubyconf.tw/2011/#6
 
 ## Playing Around:
 
@@ -452,7 +448,6 @@ This is mostly for fun and experimenting, so it's only included in
 installed before trying this.
 
 [rib]: https://github.com/godfat/rib
-[rest-more]: https://github.com/godfat/rest-more
 
 ## List of built-in Middleware:
 
@@ -683,7 +678,6 @@ all the possible use cases, you can also see: [example/use-cases.rb][]. It's
 also served as a test for each possible combinations, so it's quite complex
 and complete.
 
-[example/simple.rb]: example/simple.rb
 [example/use-cases.rb]: example/use-cases.rb
 
 ## rest-core users:
