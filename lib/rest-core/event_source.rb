@@ -103,7 +103,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     end
     sock.close
     onerror(EOFError.new, sock)
-  rescue IOError => e
+  rescue IOError, SystemCallError => e
     onerror(e, sock)
   end
 
