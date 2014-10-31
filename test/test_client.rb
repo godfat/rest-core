@@ -146,4 +146,15 @@ describe RC::Simple do
       client.class.shutdown
     end
   end
+
+  would 'be able access caller outside the callback' do
+    client = RC::Simple.new
+    stub_request(:get, url).to_return(:body => 'nnf')
+    client.get(url) do
+      current_file = /^#{__FILE__}/
+                     caller.grep(current_file).should.empty?
+      RC::Promise.backtrace.grep(current_file).should.not.empty?
+    end
+    client.wait
+  end
 end

@@ -21,6 +21,10 @@ class RestCore::Promise
     promise
   end
 
+  def self.backtrace
+    Thread.current[:backtrace]
+  end
+
   def initialize env, k=RC.id, immediate=false, &job
     self.env       = env
     self.k         = [k]
@@ -58,11 +62,13 @@ class RestCore::Promise
     if pool_size < 0 # negative number for blocking call
       job.call
     elsif pool_size > 0
+      backtrace = caller
       self.task = client_class.thread_pool.defer do
-        synchronized_yield{ job.call }
+        synchronized_yield(backtrace){ job.call }
       end
     else
-      Thread.new{ synchronized_yield{ job.call } }
+      backtrace = caller
+      Thread.new{ synchronized_yield(backtrace){ job.call } }
     end
     env[TIMER].on_timeout{ reject(env[TIMER].error) } if env[TIMER]
   end
@@ -124,7 +130,8 @@ class RestCore::Promise
   private
   # called in a new thread if pool_size == 0, otherwise from the pool
   # i.e. requesting thread
-  def synchronized_yield
+  def synchronized_yield backtrace
+    Thread.current[:backtrace] = backtrace
     mutex.synchronize{ yield }
   rescue Exception => e
     # nothing we can do here for an asynchronous exception,
