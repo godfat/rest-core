@@ -112,7 +112,7 @@ class RestCore::Promise
   # For synchronous mode, since we're waiting for the callback anyway,
   # we don't really have to check if it's called.
   def done?
-    !!status && !(immediate && !called)
+    !!status && (!immediate || called)
   end
 
   protected
