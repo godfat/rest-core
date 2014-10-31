@@ -144,8 +144,8 @@ class RestCore::Promise
                 RESPONSE_SOCKET  => socket,
                 FAIL             => ((env[FAIL]||[]) + [error]).compact,
                 LOG              =>   env[LOG] ||[])){ |r, i| i.call(r) }
+  ensure
     self.called = true
-    response
   end
 
   # called in requesting thread, whenever the request is done

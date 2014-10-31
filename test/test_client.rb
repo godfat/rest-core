@@ -131,4 +131,19 @@ describe RC::Simple do
     stub_request(:get, url).to_return(:body => '123')
     Class.new(RC::Simple).new.get(url).should.eq '123'
   end
+
+  would 'not deadlock when exception was raised in the callback' do
+    client = Class.new(RC::Simple).new
+    stub_request(:get, url).to_return(:body => 'nnf')
+    (-1..1).each do |size|
+      mock(any_instance_of(RC::Promise)).warn(is_a(String)) do |msg|
+        msg.should.include?('nnf')
+      end
+      client.class.pool_size = size
+      client.get(url) do |body|
+        raise body
+      end
+      client.class.shutdown
+    end
+  end
 end
