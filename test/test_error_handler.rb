@@ -41,4 +41,18 @@ describe RC::ErrorHandler do
     client.new(:error_handler => lambda{ |res| 1 }).
       request(RC::FAIL => [0], RC::RESPONSE_KEY => RC::FAIL).should.eq [0, 1]
   end
+
+  would 'set full backtrace' do
+    url = 'http://example.com/'
+    client = RC::Builder.client do
+      use RC::ErrorHandler, lambda{ |env|
+                              RuntimeError.new(env[RC::RESPONSE_BODY]) }
+      use RC::ErrorDetectorHttp
+    end.new
+    stub_request(:get, url).to_return(:status => 404, :body => 'nnf')
+    client.get(url) do |error|
+      error.backtrace.grep(/^#{__FILE__}/).should.not.empty?
+    end
+    client.wait
+  end
 end

@@ -30,6 +30,7 @@ class RestCore::ErrorHandler
   end
 
   def process res, err
+    RC::Promise.set_backtrace(err)
     if res[ASYNC]
       res.merge(RESPONSE_BODY => err)
     else
