@@ -135,6 +135,7 @@ class RestCore::Promise
     Thread.current[:backtrace] = backtrace
     mutex.synchronize{ yield }
   rescue Exception => e
+    set_backtrace(e)
     # nothing we can do here for an asynchronous exception,
     # so we just log the error
     # TODO: add error_log_method
@@ -156,6 +157,9 @@ class RestCore::Promise
     self.called = true
   end
 
+  def set_backtrace e
+    e.set_backtrace(e.backtrace + self.class.backtrace)
+  end
 
   def client_class; env[CLIENT].class; end
   def pool_size
