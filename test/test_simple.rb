@@ -33,5 +33,6 @@ describe RC::Simple do
     stub_request(:get, "#{path}?a=b").to_return(:body => 'OK')
     RC::Simple.new.get(path, {:a => 'b'},
       RC::RESPONSE_KEY => RC::REQUEST_URI).should.eq "#{path}?a=b"
+    RC::Simple.wait
   end
 end
