@@ -51,6 +51,7 @@ describe RC::ErrorHandler do
     end.new
     stub_request(:get, url).to_return(:status => 404, :body => 'nnf')
     client.get(url) do |error|
+      error.message.should.eq 'nnf'
       error.backtrace.grep(/^#{__FILE__}/).should.not.empty?
     end
     client.wait
