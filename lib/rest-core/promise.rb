@@ -91,7 +91,8 @@ class RestCore::Promise
     self.body, self.status, self.headers, self.socket =
       body, status, headers, socket
     # under ASYNC callback, should call immediately
-    callback_in_async if immediate
+    callback if immediate
+  ensure
     condv.broadcast # client or response might be waiting
   end
 
@@ -138,7 +139,7 @@ class RestCore::Promise
     # so we just log the error
     # TODO: add error_log_method
     warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
-    reject(e)   # should never deadlock someone
+    reject(e) unless done?  # not done: i/o error; done: callback error
   end
 
   # called in client thread, when yield is called
@@ -155,15 +156,6 @@ class RestCore::Promise
     self.called = true
   end
 
-  # called in requesting thread, whenever the request is done
-  def callback_in_async
-    callback
-  rescue Exception => e
-    # nothing we can do here for an asynchronous exception,
-    # so we just log the error
-    # TODO: add error_log_method
-    warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
-  end
 
   def client_class; env[CLIENT].class; end
   def pool_size

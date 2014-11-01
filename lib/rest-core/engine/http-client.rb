@@ -16,8 +16,6 @@ class RestCore::HttpClient < RestCore::Engine
     else
       request_sync(client, payload, headers, promise, env)
     end
-  rescue Exception => e
-    promise.reject(e)
   end
 
   def request_sync client, payload, headers, promise, env

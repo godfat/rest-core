@@ -49,6 +49,7 @@ describe RC::Simple do
     stub_request(:get, url).to_return do
       m.synchronize{ i += 1 }
       Thread.pass
+      {}
     end
 
     client = RC::Builder.client
@@ -135,7 +136,8 @@ describe RC::Simple do
   would 'not deadlock when exception was raised in the callback' do
     client = Class.new(RC::Simple).new
     stub_request(:get, url).to_return(:body => 'nnf')
-    (-1..1).each do |size|
+
+    (0..1).each do |size|
       mock(any_instance_of(RC::Promise)).warn(is_a(String)) do |msg|
         msg.should.include?('nnf')
       end
@@ -145,6 +147,14 @@ describe RC::Simple do
       end
       client.class.shutdown
     end
+
+    client.class.pool_size = -1
+    should.raise do
+      client.get(url) do |body|
+        raise body
+      end
+    end.message.should.eq 'nnf'
+    client.class.shutdown
   end
 
   would 'be able access caller outside the callback' do
