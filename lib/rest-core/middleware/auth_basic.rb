@@ -24,6 +24,6 @@ class RestCore::AuthBasic
 
   def auth_basic_header env
     {'Authorization' =>
-       "Basic #{["#{username(env)}:#{password(env)}"].pack('m').tr("\n",'')}"}
+       "Basic #{["#{username(env)}:#{password(env)}"].pack('m0')}"}
   end
 end

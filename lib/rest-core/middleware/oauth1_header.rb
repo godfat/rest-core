@@ -47,7 +47,7 @@ class RestCore::Oauth1Header
 
   def signature env, params
     [Hmac.sha1("#{consumer_secret(env)}&#{oauth_token_secret(env)}",
-               base_string(env, params))].pack('m').tr("\n", '')
+               base_string(env, params))].pack('m0')
   end
 
   def base_string env, oauth_params
@@ -63,7 +63,7 @@ class RestCore::Oauth1Header
   end
 
   def nonce
-    [OpenSSL::Random.random_bytes(32)].pack('m').tr("+/=\n", '')
+    [OpenSSL::Random.random_bytes(32)].pack('m0').tr("+/=", '')
   end
 
   # according to OAuth 1.0a spec, only:
