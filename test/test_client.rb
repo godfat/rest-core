@@ -157,14 +157,19 @@ describe RC::Simple do
     client.class.shutdown
   end
 
-  would 'be able access caller outside the callback' do
+  would 'be able to access caller outside the callback' do
     client = RC::Simple.new
     stub_request(:get, url).to_return(:body => 'nnf')
     client.get(url) do
       current_file = /^#{__FILE__}/
                      caller.grep(current_file).should.empty?
       RC::Promise.backtrace.grep(current_file).should.not.empty?
+      client.get(url) do
+        RC::Promise.backtrace.last.should.not =~ /promise\.rb:\d+:in/
+        client = nil
+      end
     end
     client.wait
+    client.should.nil? # to make sure the inner most block did run
   end
 end

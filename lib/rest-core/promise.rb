@@ -22,11 +22,11 @@ class RestCore::Promise
   end
 
   def self.backtrace
-    Thread.current[:backtrace]
+    Thread.current[:backtrace] || []
   end
 
   def self.set_backtrace e
-    e.set_backtrace((e.backtrace || caller) + (backtrace || []))
+    e.set_backtrace((e.backtrace || caller) + backtrace)
   end
 
   def initialize env, k=RC.id, immediate=false, &job
@@ -66,12 +66,12 @@ class RestCore::Promise
     if pool_size < 0 # negative number for blocking call
       job.call
     elsif pool_size > 0
-      backtrace = caller
+      backtrace = caller + self.class.backtrace
       self.task = client_class.thread_pool.defer do
         synchronized_yield(backtrace){ job.call }
       end
     else
-      backtrace = caller
+      backtrace = caller + self.class.backtrace
       Thread.new{ synchronized_yield(backtrace){ job.call } }
     end
     env[TIMER].on_timeout{ reject(env[TIMER].error) } if env[TIMER]
