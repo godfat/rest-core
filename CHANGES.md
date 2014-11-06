@@ -1,5 +1,27 @@
 # CHANGES
 
+## rest-core 3.3.3 -- 2014-11-07
+
+### Bugs fixed
+
+* `RC::EventSource` would now properly reconnect for SystemCallError such as
+  `Errno::ECONNRESET`.
+
+* It would now always emit a warning whenever there's an exception raised
+  asynchronously.
+
+* All exceptions raised from a thread or thread pool would now have a
+  proper backtrace. This was fixed by introducing `RC::Promise.backtrace`
+
+### Enhancements
+
+* Introduced `RC::Promise.backtrace`. Using this in a callback could give you
+  proper backtrace, comparing to `caller` would only give you the backtrace
+  for current thread.
+
+* Introduced `RC::Promise.set_backtrace`. Using this we could set exceptions
+  with proper backtrace.
+
 ## rest-core 3.3.2 -- 2014-10-11
 
 * Just use `File.join` for `RC::DefaultSite` as `File::SEPARATOR` is
