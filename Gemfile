@@ -9,7 +9,6 @@ gem 'rake'
 gem 'pork'
 gem 'muack'
 gem 'webmock'
-gem 'httpclient', '<2.5.3' # https://github.com/bblimke/webmock/pull/430
 
 gem 'json'
 gem 'json_pure'
