@@ -1,4 +1,4 @@
-# rest-core [![Build Status](https://secure.travis-ci.org/godfat/rest-core.png?branch=master)](http://travis-ci.org/godfat/rest-core)
+# rest-core [![Build Status](https://secure.travis-ci.org/godfat/rest-core.png?branch=master)](http://travis-ci.org/godfat/rest-core) [![Coverage Status](https://coveralls.io/repos/godfat/rest-core/badge.png)](https://coveralls.io/r/godfat/rest-core)
 
 by Lin Jen-Shin ([godfat](http://godfat.org))
 
