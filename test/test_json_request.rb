@@ -3,7 +3,7 @@ require 'rest-core/test'
 
 describe RC::JsonRequest do
   app = RC::JsonRequest.new(RC::Dry.new, true)
-  env = {RC::REQUEST_HEADERS => {}}
+  env = {RC::REQUEST_HEADERS => {}, RC::REQUEST_METHOD => :post}
   request_params = {
     'key' => 'value',
     'array' => [1, 2, 3],
@@ -21,9 +21,21 @@ describe RC::JsonRequest do
         RC::REQUEST_PAYLOAD => RC::Json.encode(request_params))}
   end
 
-  would 'do nothing if payload is empty' do
-    e = env.merge(RC::REQUEST_PAYLOAD => {})
-    app.call(e){ |res| res.should.eq e }
+  would 'encode false and nil' do
+    [[nil, 'null'], [false, 'false'], [true, 'true']].each do |(value, exp)|
+      [:post, :put, :patch].each do |meth|
+        e = env.merge(RC::REQUEST_METHOD  => meth,
+                      RC::REQUEST_PAYLOAD => value)
+        app.call(e){ |res| res[RC::REQUEST_PAYLOAD].should.eq(exp) }
+      end
+    end
+  end
+
+  would 'do nothing for get, delete, head, options' do
+    [:get, :delete, :head, :options].each do |meth|
+      e = env.merge(RC::REQUEST_PAYLOAD => {}, RC::REQUEST_METHOD => meth)
+      app.call(e){ |res| res.should.eq e }
+    end
   end
 
   would 'do nothing if json_request is false' do
