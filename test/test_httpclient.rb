@@ -1,14 +1,14 @@
 
 require 'rest-core/test'
 
-describe RC::RestClient do
+describe RC::HttpClient do
   describe 'POST Payload' do
     after do
       WebMock.reset!
     end
 
     client = RC::Builder.client
-    client.builder.run(RC::RestClient)
+    client.builder.run(RC::HttpClient)
     path = 'http://example.com'
     ok   = 'OK'
     c    = client.new
@@ -39,7 +39,7 @@ describe RC::RestClient do
     end
 
     would 'not kill the thread if error was coming from the task' do
-      mock(RestClient::Request).execute{ raise 'boom' }.with_any_args
+      mock(HTTPClient).new{ raise 'boom' }.with_any_args
       c.request(RC::RESPONSE_KEY => RC::FAIL).first.message.should.eq 'boom'
       Muack.verify
     end

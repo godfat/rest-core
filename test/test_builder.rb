@@ -10,13 +10,13 @@ describe RC::Builder do
     RC::Builder.new.to_app.should.kind_of? RC::Engine
   end
 
-  would 'switch default_engine to RestCore::RestClient' do
+  would 'switch default_engine to RestCore::Dry a' do
     builder = Class.new(RC::Builder)
-    builder.default_engine = RC::RestClient
-    builder.new.to_app.class.should.eq RC::RestClient
+    builder.default_engine = RC::Dry
+    builder.new.to_app.class.should.eq RC::Dry
   end
 
-  would 'switch default_engine to RestCore::Dry' do
+  would 'switch default_engine to RestCore::Dry b' do
     builder = RC::Builder.dup
     builder.default_engine = RC::Dry
     builder.client.new.app.class.should.eq RC::Dry
