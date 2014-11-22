@@ -57,14 +57,14 @@ def_use_case 'pure_ruby_callback_requests' do
                     :log_method    => lambda{|str| m.synchronize{puts(str)}}).
     get('4'){ |res|
       if res.kind_of?(Exception)
-        p "Encountering: #{res}"
+        q "Encountering: #{res}"
         next
       end
       q res['name'], m
     }.
     get('5'){ |res|
       if res.kind_of?(Exception)
-        p "Encountering: #{res}"
+        q "Encountering: #{res}"
         next
       end
       q res['name'], m
