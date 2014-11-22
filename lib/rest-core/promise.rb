@@ -62,19 +62,25 @@ class RestCore::Promise
   end
 
   # called in client thread
-  def defer &job
+  def defer
+    env[TIMER].on_timeout{ cancel_task } if env[TIMER]
     if pool_size < 0 # negative number for blocking call
-      job.call
-    elsif pool_size > 0
-      backtrace = caller + self.class.backtrace
-      self.task = client_class.thread_pool.defer do
-        synchronized_yield(backtrace){ job.call }
-      end
+      self.thread = Thread.current
+      protected_yield{ yield }
     else
       backtrace = caller + self.class.backtrace
-      Thread.new{ synchronized_yield(backtrace){ job.call } }
+      if pool_size > 0
+        self.task = client_class.thread_pool.defer do
+          Thread.current[:backtrace] = backtrace
+          protected_yield{ yield }
+        end
+      else
+        self.thread = Thread.new do
+          Thread.current[:backtrace] = backtrace
+          protected_yield{ yield }
+        end
+      end
     end
-    env[TIMER].on_timeout{ reject(env[TIMER].error) } if env[TIMER]
   end
 
   # called in client thread (client.wait)
@@ -92,24 +98,13 @@ class RestCore::Promise
   # called in requesting thread after the request is done
   def fulfill body, status, headers, socket=nil
     env[TIMER].cancel if env[TIMER]
-    self.body, self.status, self.headers, self.socket =
-      body, status, headers, socket
-    # under ASYNC callback, should call immediately
-    callback if immediate
-  ensure
-    condv.broadcast # client or response might be waiting
+    mutex.synchronize{ fulfilling(body, status, headers, socket) }
   end
 
   # called in requesting thread if something goes wrong or timed out
   def reject error
-    task.cancel if task
-
-    self.error = if error.kind_of?(Exception)
-                   error
-                 else
-                   Error.new(error || 'unknown')
-                 end
-    fulfill('', 0, {})
+    env[TIMER].cancel if env[TIMER]
+    mutex.synchronize{ rejecting(error) }
   end
 
   # append your actions, which would be called when we're calling back
@@ -130,21 +125,42 @@ class RestCore::Promise
   attr_accessor :env, :k, :immediate,
                 :body, :status, :headers, :socket,
                 :response, :error, :called,
-                :condv, :mutex, :task
+                :condv, :mutex, :task, :thread
 
   private
+  def fulfilling body, status, headers, socket=nil
+    self.body, self.status, self.headers, self.socket =
+      body, status, headers, socket
+    # under ASYNC callback, should call immediately
+    callback if immediate
+  ensure
+    condv.broadcast # client or response might be waiting
+  end
+
+  def rejecting error
+    self.error = if error.kind_of?(Exception)
+                   error
+                 else
+                   Error.new(error || 'unknown')
+                 end
+    fulfilling('', 0, {})
+  end
+
   # called in a new thread if pool_size == 0, otherwise from the pool
   # i.e. requesting thread
-  def synchronized_yield backtrace
-    Thread.current[:backtrace] = backtrace
-    mutex.synchronize{ yield }
+  def protected_yield
+    yield
   rescue Exception => e
-    self.class.set_backtrace(e)
-    # nothing we can do here for an asynchronous exception,
-    # so we just log the error
-    # TODO: add error_log_method
-    warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
-    reject(e) unless done?  # not done: i/o error; done: callback error
+    # pray if timeout won't trigger here!
+    env[TIMER].cancel if env[TIMER]
+    mutex.synchronize do
+      self.class.set_backtrace(e)
+      # nothing we can do here for an asynchronous exception,
+      # so we just log the error
+      # TODO: add error_log_method
+      # warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
+      rejecting(e) unless done?  # not done: i/o error; done: callback error
+    end
   end
 
   # called in client thread, when yield is called
@@ -159,6 +175,13 @@ class RestCore::Promise
                 LOG              =>   env[LOG] ||[])){ |r, i| i.call(r) }
   ensure
     self.called = true
+  end
+
+  def cancel_task
+    mutex.synchronize do
+      next if done?
+      (thread || task.thread).raise(env[TIMER].error)
+    end
   end
 
   def client_class; env[CLIENT].class; end

@@ -2,11 +2,15 @@
 require 'timers'
 
 class RestCore::Timer
-  TimerGen = if Timers.respond_to?(:new)
-               Timers.new
-             else
-               Timers::Group.new
-             end
+  TimerGen = Timers::Group.new
+  TimerGen.every(1){}
+  Thread = ::Thread.new do
+    begin
+      TimerGen.wait
+    rescue => e
+      warn "timeout exception: #{e}"
+    end while 'not exiting'
+  end
 
   attr_accessor :timeout, :error
   def initialize timeout, error, &block
@@ -22,11 +26,12 @@ class RestCore::Timer
 
   def cancel
     timer.cancel
+    self.block = nil
   end
 
   def start
     return if timeout.nil? || timeout.zero?
-    self.timer = TimerGen.after(timeout){ block.call }
+    self.timer = TimerGen.after(timeout){ block.call if block }
   end
 
   protected

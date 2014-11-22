@@ -26,7 +26,7 @@ class RestCore::ThreadPool
       mutex.synchronize do
         if queue.empty?
           condv.wait(mutex, timeout)
-          queue.shift || lambda{ false } # shutdown idle workers
+          queue.shift || lambda{ |_| false } # shutdown idle workers
         else
           queue.shift
         end
@@ -41,19 +41,13 @@ class RestCore::ThreadPool
     attr_reader :queue, :mutex, :condv
   end
 
-  class Task < Struct.new(:job)
+  class Task < Struct.new(:job, :thread)
     # this should never fail
-    def call
-      job.call unless cancelled
+    def call working_thread
+      self.thread = working_thread
+      job.call
       true
     end
-
-    # called from the other thread telling us it's timed out
-    def cancel
-      @cancelled = true
-    end
-    protected
-    attr_reader :thread, :mutex, :cancelled
   end
 
   def self.[] client_class
@@ -96,7 +90,7 @@ class RestCore::ThreadPool
   end
 
   def trim force=false
-    queue << lambda{ false } if force || waiting > 0
+    queue << lambda{ |_| false } if force || waiting > 0
   end
 
   # Block on shutting down, and should not add more jobs while shutting down
@@ -119,7 +113,7 @@ class RestCore::ThreadPool
         mutex.synchronize{ @waiting += 1 }
         task = queue.pop(idle_time)
         mutex.synchronize{ @waiting -= 1 }
-      end while task.call
+      end while task.call(Thread.current)
 
       mutex.synchronize{ workers.delete(Thread.current) }
     }
