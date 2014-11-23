@@ -17,11 +17,6 @@ class RestCore::Engine
     Payload.generate_with_headers(env[REQUEST_PAYLOAD], env[REQUEST_HEADERS])
   end
 
-  def calculate_timeout timer
-    return [] unless timer
-    [timer.timeout, timer.timeout]
-  end
-
   def normalize_headers headers
     headers.inject({}){ |r, (k, v)|
       r[k.to_s.upcase.tr('-', '_')] = if v.kind_of?(Array) && v.size == 1
