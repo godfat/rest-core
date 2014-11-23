@@ -4,23 +4,29 @@ require 'timers'
 
 class RestCore::Timer
   @mutex = Mutex.new
+  @interval = 1
 
-  def self.group
-    @group ||= @mutex.synchronize{ @group || group_new }
-  end
+  singleton_class.module_eval do
+    attr_accessor :interval
 
-  def self.group_new
-    g = Timers::Group.new
-    g.every(1){}
-    @thread = Thread.new do
-      begin
-        g.wait
-      rescue => e
-        warn "RestCore::Timer: ERROR: #{e}\n  from #{e.backtrace.inspect}"
-      end while g.count > 1
-      @group = nil
+    def group
+      @group ||= @mutex.synchronize{ @group || group_new }
     end
-    g
+
+    private
+    def group_new
+      g = Timers::Group.new
+      g.every(interval){}
+      @thread = Thread.new do
+        begin
+          g.wait
+        rescue => e
+          warn "RestCore::Timer: ERROR: #{e}\n  from #{e.backtrace.inspect}"
+        end while g.count > 1
+        @group = nil
+      end
+      g
+    end
   end
 
   attr_accessor :timeout, :error
