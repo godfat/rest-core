@@ -47,4 +47,37 @@ describe RC::Timeout do
       first.message.should.eq 'boom'
     Muack.verify
   end
+
+  would 'interrupt the task if timing out' do
+    rd, wr = IO.pipe
+    timer = Object.new.instance_eval do
+      define_singleton_method :on_timeout do |&block|
+        Thread.new do
+          rd.gets
+          block.call
+        end
+      end
+      def error     ; 'boom'; end
+      def cancel    ;       ; end
+      self
+    end
+    app = RC::Builder.client do
+      run Class.new(RC::Engine){
+        def request _, env
+          env['pipe'].puts
+          sleep
+        end
+      }
+    end
+    (-1..1).each do |size|
+      mock(any_instance_of(RC::Promise)).warn(is_a(String)) do |msg|
+        msg.should.include?('boom')
+      end
+      app.pool_size = size
+      app.new.request(RC::RESPONSE_KEY => RC::FAIL, RC::TIMER => timer,
+                      'pipe' => wr).
+        first.message.should.eq 'boom'
+      Muack.verify
+    end
+  end
 end
