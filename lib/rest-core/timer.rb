@@ -16,7 +16,7 @@ class RestCore::Timer
       begin
         g.wait
       rescue => e
-        warn "timeout exception: #{e}"
+        warn "RestCore::Timer: ERROR: #{e}\n  from #{e.backtrace.inspect}"
       end while g.count > 1
       @group = nil
     end
