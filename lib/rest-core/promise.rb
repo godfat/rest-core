@@ -65,6 +65,7 @@ class RestCore::Promise
   def defer
     if pool_size < 0 # negative number for blocking call
       self.thread = Thread.current
+      # set timeout after thread set, before yield (because yield is blocking)
       env[TIMER].on_timeout{ cancel_task } if env[TIMER]
       protected_yield{ yield }
     else
@@ -80,6 +81,7 @@ class RestCore::Promise
           protected_yield{ yield }
         end
       end
+      # set timeout after thread/task set
       env[TIMER].on_timeout{ cancel_task } if env[TIMER]
     end
   end
