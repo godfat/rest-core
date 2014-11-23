@@ -1,15 +1,26 @@
 
+require 'thread'
 require 'timers'
 
 class RestCore::Timer
-  TimerGen = Timers::Group.new
-  TimerGen.every(1){}
-  Thread = ::Thread.new do
-    begin
-      TimerGen.wait
-    rescue => e
-      warn "timeout exception: #{e}"
-    end while 'not exiting'
+  @mutex = Mutex.new
+
+  def self.group
+    @group ||= @mutex.synchronize{ @group || group_new }
+  end
+
+  def self.group_new
+    g = Timers::Group.new
+    g.every(1){}
+    @thread = Thread.new do
+      begin
+        g.wait
+      rescue => e
+        warn "timeout exception: #{e}"
+      end while g.count > 1
+      @group = nil
+    end
+    g
   end
 
   attr_accessor :timeout, :error
@@ -31,7 +42,7 @@ class RestCore::Timer
 
   def start
     return if timeout.nil? || timeout.zero?
-    self.timer = TimerGen.after(timeout){ block.call if block }
+    self.timer = self.class.group.after(timeout){ block.call if block }
   end
 
   protected
