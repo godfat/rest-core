@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-# stub: rest-core 3.3.3 ruby lib
+# stub: rest-core 3.4.0 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "3.3.3"
+  s.version = "3.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2014-11-07"
+  s.date = "2014-11-23"
   s.description = "Modular Ruby clients interface for REST APIs.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/godfat/rest-more"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
@@ -33,8 +33,6 @@ Gem::Specification.new do |s|
   "lib/rest-core/engine.rb",
   "lib/rest-core/engine/dry.rb",
   "lib/rest-core/engine/http-client.rb",
-  "lib/rest-core/engine/net-http-persistent.rb",
-  "lib/rest-core/engine/rest-client.rb",
   "lib/rest-core/error.rb",
   "lib/rest-core/event.rb",
   "lib/rest-core/event_source.rb",
@@ -61,8 +59,6 @@ Gem::Specification.new do |s|
   "lib/rest-core/middleware/query_response.rb",
   "lib/rest-core/middleware/smash_response.rb",
   "lib/rest-core/middleware/timeout.rb",
-  "lib/rest-core/patch/multi_json.rb",
-  "lib/rest-core/patch/rest-client.rb",
   "lib/rest-core/promise.rb",
   "lib/rest-core/test.rb",
   "lib/rest-core/thread_pool.rb",
@@ -98,6 +94,7 @@ Gem::Specification.new do |s|
   "test/test_event_source.rb",
   "test/test_follow_redirect.rb",
   "test/test_future.rb",
+  "test/test_httpclient.rb",
   "test/test_json_request.rb",
   "test/test_json_response.rb",
   "test/test_oauth1_header.rb",
@@ -106,7 +103,6 @@ Gem::Specification.new do |s|
   "test/test_payload.rb",
   "test/test_promise.rb",
   "test/test_query_response.rb",
-  "test/test_rest-client.rb",
   "test/test_simple.rb",
   "test/test_smash.rb",
   "test/test_smash_response.rb",
@@ -115,7 +111,7 @@ Gem::Specification.new do |s|
   "test/test_universal.rb"]
   s.homepage = "https://github.com/godfat/rest-core"
   s.licenses = ["Apache License 2.0"]
-  s.rubygems_version = "2.4.2"
+  s.rubygems_version = "2.4.4"
   s.summary = "Modular Ruby clients interface for REST APIs."
   s.test_files = [
   "test/test_auth_basic.rb",
@@ -136,6 +132,7 @@ Gem::Specification.new do |s|
   "test/test_event_source.rb",
   "test/test_follow_redirect.rb",
   "test/test_future.rb",
+  "test/test_httpclient.rb",
   "test/test_json_request.rb",
   "test/test_json_response.rb",
   "test/test_oauth1_header.rb",
@@ -144,7 +141,6 @@ Gem::Specification.new do |s|
   "test/test_payload.rb",
   "test/test_promise.rb",
   "test/test_query_response.rb",
-  "test/test_rest-client.rb",
   "test/test_simple.rb",
   "test/test_smash.rb",
   "test/test_smash_response.rb",

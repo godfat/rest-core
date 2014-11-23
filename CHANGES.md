@@ -1,5 +1,37 @@
 # CHANGES
 
+## rest-core 3.4.0 -- ?
+
+### Incompatible changes
+
+* Removed rest-client support.
+* Removed net-http-persistent support.
+* Removed patch for old multi-json.
+
+### Bugs fixed
+
+* `RC::JsonRequest` can now POST, PUT, or PATCH with a single `false`.
+
+* Previously, we're not handling timeout correctly. We left all that to
+  httpclient, and which would raise `HTTPClient::ConnectTimeoutError` and
+  `HTTPClient::ReceiveTimeoutError`. The problem is that connecting and
+  receiving are counted separately. That means, if we have 30 seconds timeout,
+  we might be ending up with 58 seconds requesting time, for 29 seconds
+  connecting time and 29 seconds receiving time. Now it should probably
+  interrupt the request in 30 seconds by handling this by ourselves with a
+  timer thread in the background. The timer thread would be shut down
+  automatically if there's no jobs left, and it would recreate the thread
+  when there's a job comes in, keeping working until there's no jobs left.
+
+### Enhancements
+
+* Introduced `RC::Timer.interval` which is the interval to check if there's
+  a request timed out. The default interval is 1 second, which means it would
+  check if there's a request timed out for every 1 second. This also means
+  timeout with less than 1 second won't be accurate at all. You could
+  decrease the value if you need timeout less than 1 second, or increase it
+  if your timeout is far from 30 second by calling `RC::Timer.interval = 5`.
+
 ## rest-core 3.3.3 -- 2014-11-07
 
 ### Bugs fixed
