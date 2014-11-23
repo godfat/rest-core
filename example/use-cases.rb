@@ -23,13 +23,8 @@ def def_use_case name, &block
   end
 end
 
-def q str, m=nil
-  p = lambda{ puts "\e[33m=> #{str.inspect}\e[0m" }
-  if m
-    m.synchronize(&p)
-  else
-    p.call
-  end
+def q str
+  Thread.exclusive{ puts "\e[33m=> #{str.inspect}\e[0m" }
 end
 
 # ----------------------------------------------------------------------
@@ -51,36 +46,36 @@ def_use_case 'pure_ruby_cache_requests' do
 end
 
 def_use_case 'pure_ruby_callback_requests' do
-  m = Mutex.new
   RC::Universal.new(:json_response => true                                  ,
                     :site          => 'https://graph.facebook.com/'         ,
-                    :log_method    => lambda{|str| m.synchronize{puts(str)}}).
+                    :log_method    => lambda{|str|
+                      Thread.exclusive{puts(str)}}).
     get('4'){ |res|
       if res.kind_of?(Exception)
         q "Encountering: #{res}"
         next
       end
-      q res['name'], m
+      q res['name']
     }.
     get('5'){ |res|
       if res.kind_of?(Exception)
         q "Encountering: #{res}"
         next
       end
-      q res['name'], m
+      q res['name']
     }.wait
 end
 
 def_use_case 'pure_ruby_nested_concurrent_requests' do
-  m = Mutex.new
   c = RC::Universal.new(:json_response => true                              ,
                         :site          => 'https://graph.facebook.com/'     ,
-                        :log_method => lambda{|str| m.synchronize{puts(str)}})
+                        :log_method => lambda{ |str|
+                          Thread.exclusive{puts(str)}})
 
   %w[4 5].each{ |user|
     c.get(user, :fields => 'cover'){ |data|
       if data.kind_of?(Exception)
-        q "Encountering: #{data}", m
+        q "Encountering: #{data}"
         next
       end
 
@@ -89,11 +84,11 @@ def_use_case 'pure_ruby_nested_concurrent_requests' do
       likes    = c.get("#{cover['id']}/likes")
       most_liked_comment = comments['data'].max_by{|d|d['like_count']}
 
-      q "Author of most liked comment from #{user}'s cover photo:", m
-      q most_liked_comment['from']['name'], m
+      q "Author of most liked comment from #{user}'s cover photo:"
+      q most_liked_comment['from']['name']
 
       y = !!likes['data'].find{|d|d['id'] == most_liked_comment['from']['id']}
-      q "Did the user also like the cover?: #{y}", m
+      q "Did the user also like the cover?: #{y}"
     }
   }
 
