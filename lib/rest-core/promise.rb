@@ -63,14 +63,14 @@ class RestCore::Promise
 
   # called in client thread
   def defer
-    env[TIMER].on_timeout{ cancel_task } if env[TIMER]
     if pool_size < 0 # negative number for blocking call
       self.thread = Thread.current
+      env[TIMER].on_timeout{ cancel_task } if env[TIMER]
       protected_yield{ yield }
     else
       backtrace = caller + self.class.backtrace
       if pool_size > 0
-        self.task = client_class.thread_pool.defer do
+        self.task = client_class.thread_pool.defer(mutex) do
           Thread.current[:backtrace] = backtrace
           protected_yield{ yield }
         end
@@ -80,6 +80,7 @@ class RestCore::Promise
           protected_yield{ yield }
         end
       end
+      env[TIMER].on_timeout{ cancel_task } if env[TIMER]
     end
   end
 
@@ -158,7 +159,7 @@ class RestCore::Promise
       # nothing we can do here for an asynchronous exception,
       # so we just log the error
       # TODO: add error_log_method
-      # warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
+      warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
       rejecting(e) unless done?  # not done: i/o error; done: callback error
     end
   end
@@ -180,7 +181,12 @@ class RestCore::Promise
   def cancel_task
     mutex.synchronize do
       next if done?
-      (thread || task.thread).raise(env[TIMER].error)
+      if t = thread || task.thread
+        t.raise(env[TIMER].error)
+      else
+        task.cancel
+        rejecting(env[TIMER].error)
+      end
     end
   end
 

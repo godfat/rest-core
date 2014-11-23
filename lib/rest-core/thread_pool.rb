@@ -41,12 +41,19 @@ class RestCore::ThreadPool
     attr_reader :queue, :mutex, :condv
   end
 
-  class Task < Struct.new(:job, :thread)
+  class Task < Struct.new(:job, :mutex, :thread, :cancelled)
     # this should never fail
     def call working_thread
-      self.thread = working_thread
+      mutex.synchronize do
+        return if cancelled
+        self.thread = working_thread
+      end
       job.call
       true
+    end
+
+    def cancel
+      self.cancelled = true
     end
   end
 
@@ -80,9 +87,9 @@ class RestCore::ThreadPool
     client_class.pool_idle_time
   end
 
-  def defer &job
+  def defer mutex=nil, &job
     mutex.synchronize do
-      task = Task.new(job)
+      task = Task.new(job, mutex)
       queue << task
       spawn_worker if waiting == 0 && workers.size < max_size
       task

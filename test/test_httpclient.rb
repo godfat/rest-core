@@ -39,24 +39,11 @@ describe RC::HttpClient do
     end
 
     would 'not kill the thread if error was coming from the task' do
+      mock(any_instance_of(RC::Promise)).warn(is_a(String)) do |msg|
+        msg.should.include?('boom')
+      end
       mock(HTTPClient).new{ raise 'boom' }.with_any_args
       c.request(RC::RESPONSE_KEY => RC::FAIL).first.message.should.eq 'boom'
-      Muack.verify
-    end
-
-    would 'cancel the task if timing out' do
-      timer = Object.new.instance_eval do
-        def on_timeout; yield ; end
-        def error     ; 'boom'; end
-        def cancel    ;       ; end
-        self
-      end
-      stub(c.class).pool_size{ 1 }
-      stub(c.class.thread_pool).queue{ [] } # don't queue the task
-      mock(RC::ThreadPool::Task).new.with_any_args.
-        peek_return{ |t| mock(t).cancel; t } # the task should be cancelled
-      c.request(RC::RESPONSE_KEY => RC::FAIL, RC::TIMER => timer).
-        first.message.should.eq 'boom'
       Muack.verify
     end
   end

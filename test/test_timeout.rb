@@ -1,5 +1,6 @@
 
 require 'rest-core/test'
+require 'rest-core/engine'
 
 describe RC::Timeout do
   app = RC::Timeout.new(RC::Dry.new, 0)
@@ -25,5 +26,25 @@ describe RC::Timeout do
     mock(app.app).call(hash_including(env)){ raise "error" }
     lambda{ app.call(env){} }.should    .raise(RuntimeError)
     lambda{ sleep 0.01      }.should.not.raise(Timeout::Error)
+  end
+
+  would 'cancel the task if timing out' do
+    timer = Object.new.instance_eval do
+      def on_timeout; yield ; end
+      def error     ; 'boom'; end
+      def cancel    ;       ; end
+      self
+    end
+    app = RC::Builder.client do
+      run Class.new(RC::Engine){
+        def request _, _
+          sleep
+        end
+      }
+    end
+    app.pool_size = 1
+    app.new.request(RC::RESPONSE_KEY => RC::FAIL, RC::TIMER => timer).
+      first.message.should.eq 'boom'
+    Muack.verify
   end
 end
