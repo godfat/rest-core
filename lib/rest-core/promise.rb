@@ -162,7 +162,11 @@ class RestCore::Promise
       # so we just log the error
       # TODO: add error_log_method
       warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
-      rejecting(e) unless done?  # not done: i/o error; done: callback error
+      begin
+        rejecting(e)
+      rescue Exception => e
+        warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
+      end unless done? # not done: i/o error; done: callback error
     end
   end
 
