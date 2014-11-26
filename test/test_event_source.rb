@@ -131,4 +131,25 @@ SSE
     end.start.wait
     m.should.empty?
   end
+
+  def mock_warning
+    mock(any_instance_of(RC::Promise)).warn(is_a(String)) do |msg|
+      msg.should.include?(Errno::ECONNREFUSED.new.message)
+    end
+  end
+
+  would 'not deadlock without ErrorHandler' do
+    mock_warning
+    client = RC::Simple.new.event_source('http://localhost:1')
+    client.onerror{ |e| e.should.eq nil }
+    client.start.wait
+  end
+
+  would 'not deadlock with ErrorHandler' do
+    mock_warning
+    client = RC::Universal.new(:log_method => false).
+               event_source('http://localhost:1')
+    client.onerror{ |e| e.should.kind_of?(Errno::ECONNREFUSED) }
+    client.start.wait
+  end
 end

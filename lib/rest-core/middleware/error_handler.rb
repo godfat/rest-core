@@ -32,7 +32,11 @@ class RestCore::ErrorHandler
   def process res, err
     RC::Promise.set_backtrace(err)
     if res[ASYNC]
-      res.merge(RESPONSE_BODY => err)
+      if res[HIJACK]
+        res.merge(RESPONSE_SOCKET => err)
+      else
+        res.merge(RESPONSE_BODY => err)
+      end
     else
       raise err
     end

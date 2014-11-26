@@ -27,7 +27,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
 
   def wait
     raise RC::Error.new("Not yet started for: #{self}") unless mutex
-    mutex.synchronize{ condv.wait(mutex) until closed? } unless closed?
+    mutex.synchronize{ condv.wait(mutex) unless closed? } unless closed?
     self
   end
 
@@ -110,6 +110,12 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
   def reconnect
     o = {REQUEST_HEADERS => {'Accept' => 'text/event-stream'},
          HIJACK          => true}.merge(opts)
-    client.get(path, query, o){ |sock| onopen(sock) }
+    client.get(path, query, o) do |sock|
+      if sock.nil? || sock.kind_of?(Exception)
+        onerror(sock)
+      else
+        onopen(sock)
+      end
+    end
   end
 end
