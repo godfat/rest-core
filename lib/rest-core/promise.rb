@@ -25,6 +25,7 @@ class RestCore::Promise
     Thread.current[:backtrace] || []
   end
 
+  # should never raise!
   def self.set_backtrace e
     e.set_backtrace((e.backtrace || caller) + backtrace)
   end
@@ -154,20 +155,30 @@ class RestCore::Promise
   def protected_yield
     yield
   rescue Exception => e
-    # pray if timeout won't trigger here!
-    env[TIMER].cancel if env[TIMER]
     mutex.synchronize do
-      self.class.set_backtrace(e)
-      # nothing we can do here for an asynchronous exception,
-      # so we just log the error
-      # TODO: add error_log_method
-      warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
-      begin
-        rejecting(e)
-      rescue Exception => e
+      never_raise_yield do
+        env[TIMER].cancel if env[TIMER]
+        self.class.set_backtrace(e)
+        # TODO: add error_log_method
         warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
-      end unless done? # not done: i/o error; done: callback error
+      end
+
+      begin
+        rejecting(e) unless done? # not done: i/o error; done: callback error
+      rescue Exception => e
+        never_raise_yield do
+          warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
+        end
+      end
     end
+  end
+
+  # only use this for unimportant stuffs and in most critical section
+  # e.g. error logging in critical section
+  def never_raise_yield
+    yield
+  rescue Exception => e
+    Thread.main.raise(e) if !!$DEBUG
   end
 
   # called in client thread, when yield is called

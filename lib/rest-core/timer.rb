@@ -41,6 +41,7 @@ class RestCore::Timer
     self.block = block
   end
 
+  # should never raise!
   def cancel
     timer.cancel
     self.block = nil
