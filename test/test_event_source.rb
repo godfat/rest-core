@@ -153,4 +153,13 @@ SSE
     c.onerror{ |e| e.should.kind_of?(Errno::ECONNREFUSED) }
     c.start.wait
   end
+
+  would 'not deadlock if errors in onmessage' do
+    err = nil
+    es, m, t = server.call
+    es.onmessage do |event, data|
+      raise err = "error"
+    end.start.wait
+    err.should.eq "error"
+  end
 end
