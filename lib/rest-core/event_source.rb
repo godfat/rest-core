@@ -12,12 +12,13 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     @onmessage   ||= nil
     @onerror     ||= nil
     @onreconnect ||= nil
+    @closed      ||= false
     reconnect
     self
   end
 
   def closed?
-    !!(socket && socket.closed?)
+    !!(socket && socket.closed?) || @closed
   end
 
   def close
@@ -27,7 +28,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
 
   def wait
     raise RC::Error.new("Not yet started for: #{self}") unless mutex
-    mutex.synchronize{ condv.wait(mutex) unless closed? } unless closed?
+    mutex.synchronize{ condv.wait(mutex) until closed? } unless closed?
     self
   end
 
@@ -66,8 +67,11 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
       begin
         @onerror.call(error, sock) if @onerror
         onreconnect(error, sock)
-      rescue
-        condv.signal # so we can't be reconnecting, need to try to unblock
+      rescue Exception => e
+        mutex.synchronize do
+          @closed = true
+          condv.signal # so we can't be reconnecting, need to try to unblock
+        end
         raise
       end
     end
@@ -82,7 +86,10 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     elsif closed? && @onreconnect && @onreconnect.call(error, sock)
       reconnect
     else
-      condv.signal # we could be closing, let's try to unblock it
+      mutex.synchronize do
+        @closed = true
+        condv.signal # we could be closing, let's try to unblock it
+      end
     end
     self
   end

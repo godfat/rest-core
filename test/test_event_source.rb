@@ -4,6 +4,7 @@ require 'rest-core/test'
 
 describe RC::EventSource do
   after do
+    Muack.verify
     WebMock.reset!
   end
 
@@ -140,16 +141,16 @@ SSE
 
   would 'not deadlock without ErrorHandler' do
     mock_warning
-    client = RC::Simple.new.event_source('http://localhost:1')
-    client.onerror{ |e| e.should.eq nil }
-    client.start.wait
+    c = RC::Simple.new.event_source('http://localhost:1')
+    c.onerror{ |e| e.should.eq nil }
+    c.start.wait
   end
 
   would 'not deadlock with ErrorHandler' do
     mock_warning
-    client = RC::Universal.new(:log_method => false).
+    c = RC::Universal.new(:log_method => false).
                event_source('http://localhost:1')
-    client.onerror{ |e| e.should.kind_of?(Errno::ECONNREFUSED) }
-    client.start.wait
+    c.onerror{ |e| e.should.kind_of?(Errno::ECONNREFUSED) }
+    c.start.wait
   end
 end
