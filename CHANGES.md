@@ -1,5 +1,14 @@
 # CHANGES
 
+## rest-core 3.4.1 -- 2014-11-29
+
+### Bugs fixed
+
+* Handle errors for `RC::EventSource` more conservatively to avoid any
+  potential deadlock.
+
+* It would not deadlock even if logging failed.
+
 ## rest-core 3.4.0 -- 2014-11-26
 
 ### Incompatible changes
