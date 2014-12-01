@@ -88,7 +88,7 @@ module RestCore
         c = const.const_get(n)
       rescue LoadError, NameError => e
         warn "RestCore: WARN: #{e} for #{const}\n" \
-             "  from #{e.backtrace.grep(/top.+required/u).first}"
+             "  from #{e.backtrace.grep(/top.+required/).first}"
       end
       eagerload(c, loaded) if c.respond_to?(:constants) && !loaded[n]
     }

@@ -57,7 +57,7 @@ module RestCore::Client
   def inspect
     fields = if size > 0
                ' ' + attributes.map{ |k, v|
-                 "#{k}=#{v.inspect.sub(/(?<=.{12}).{4,}/u, '...')}"
+                 "#{k}=#{v.inspect.sub(/(?<=.{12}).{4,}/, '...')}"
                }.join(', ')
              else
                ''

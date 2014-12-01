@@ -64,7 +64,7 @@ module RestCore::Middleware
     if (query = (env[REQUEST_QUERY] || {}).select{ |k, v| v }).empty?
       env[REQUEST_PATH].to_s
     else
-      q = if env[REQUEST_PATH] =~ /\?/u then '&' else '?' end
+      q = if env[REQUEST_PATH] =~ /\?/ then '&' else '?' end
       "#{env[REQUEST_PATH]}#{q}#{percent_encode(query)}"
     end
   end
@@ -81,7 +81,7 @@ module RestCore::Middleware
   end
   public :percent_encode
 
-  UNRESERVED = /[^a-zA-Z0-9\-\.\_\~]+/u
+  UNRESERVED = /[^a-zA-Z0-9\-\.\_\~]+/
   def escape string
     string.gsub(UNRESERVED) do |s|
       "%#{s.unpack('H2' * s.bytesize).join('%')}".upcase
