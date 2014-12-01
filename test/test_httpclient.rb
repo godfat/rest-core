@@ -43,7 +43,8 @@ describe RC::HttpClient do
         msg.should.include?('boom')
       end
       mock(HTTPClient).new{ raise 'boom' }.with_any_args
-      c.request(RC::RESPONSE_KEY => RC::FAIL).first.message.should.eq 'boom'
+      c.request(RC::RESPONSE_KEY => RC::FAIL,
+                RC::ASYNC => true).first.message.should.eq 'boom'
       Muack.verify
     end
   end

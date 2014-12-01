@@ -161,8 +161,9 @@ module RestCore::Client
   end
 
   def request_full env, app=app, &k
-    response = app.call(build_env({ASYNC => !!k}.merge(env)),
-                        &(k || RC.id))
+    response = app.call(build_env({ASYNC => !!k}.merge(env))) do |res|
+      (k || RC.id).call(request_complete(res))
+    end
 
     # under ASYNC callback, response might not be a response hash
     # in that case (maybe in a user created engine), Client#wait
@@ -200,6 +201,23 @@ module RestCore::Client
 
 
   private
+  def request_complete res
+    if err = res[FAIL].find{ |f| f.kind_of?(Exception) }
+      RC::Promise.set_backtrace(err)
+      if res[ASYNC]
+        if res[HIJACK]
+          res.merge(RESPONSE_SOCKET => err)
+        else
+          res.merge(RESPONSE_BODY => err)
+        end
+      else
+        raise err
+      end
+    else
+      res
+    end
+  end
+
   def mutex
     @mutex ||= Mutex.new
   end

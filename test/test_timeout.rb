@@ -43,7 +43,8 @@ describe RC::Timeout do
       }
     end
     app.pool_size = 1
-    app.new.request(RC::RESPONSE_KEY => RC::FAIL, RC::TIMER => timer).
+    app.new.request(RC::RESPONSE_KEY => RC::FAIL, RC::TIMER => timer,
+                    RC::ASYNC => true).
       first.message.should.eq 'boom'
     Muack.verify
   end
@@ -75,7 +76,7 @@ describe RC::Timeout do
       end
       app.pool_size = size
       app.new.request(RC::RESPONSE_KEY => RC::FAIL, RC::TIMER => timer,
-                      'pipe' => wr).
+                      RC::ASYNC => true, 'pipe' => wr).
         first.message.should.eq 'boom'
       Muack.verify
     end

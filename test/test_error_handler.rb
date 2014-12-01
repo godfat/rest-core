@@ -12,7 +12,7 @@ describe RC::ErrorHandler do
   describe 'there is an exception' do
     would 'raise an error with future' do
       lambda{
-      client.new.get('/', {}, RC::FAIL => [exp.new('fail')])
+        client.new.get('/', {}, RC::FAIL => [exp.new('fail')])
       }.should.raise(exp)
     end
 
