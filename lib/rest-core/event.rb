@@ -5,7 +5,13 @@ module RestCore
 
   class Event < EventStruct
     def name; self.class.name[/(?<=::)\w+$/]; end
-    def to_s; "spent #{duration} #{name} #{message}"; end
+    def to_s
+      if duration
+        "spent #{duration} #{name} #{message}"
+      else
+        "#{name} #{message}"
+      end
+    end
   end
   class Event::MultiDone    < Event; end
   class Event::Requested    < Event; end
