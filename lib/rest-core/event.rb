@@ -4,8 +4,7 @@ module RestCore
     RestCore.const_defined?(:EventStruct)
 
   class Event < EventStruct
-    # self.class.name[/(?<=::)\w+$/] if RUBY_VERSION >= '1.9.2'
-    def name; self.class.name[/::(\w+)$/, 1]        ; end
+    def name; self.class.name[/(?<=::)\w+$/]; end
     def to_s; "spent #{duration} #{name} #{message}"; end
   end
   class Event::MultiDone    < Event; end
