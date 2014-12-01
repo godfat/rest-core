@@ -48,8 +48,9 @@ class RestCore::Cache
     uri = request_uri(env)
     start_time = Time.now
     return unless data = cache(env)[cache_key(env)]
-    log(env, Event::CacheHit.new(Time.now - start_time, uri)).
-      merge(data_extract(data, env.merge(REQUEST_URI => uri), k))
+    res = log(env.merge(REQUEST_URI => uri),
+              Event::CacheHit.new(Time.now - start_time, uri))
+    data_extract(data, res, k)
   end
 
   private
@@ -97,11 +98,11 @@ class RestCore::Cache
     "#{ res[RESPONSE_BODY]}"
   end
 
-  def data_extract data, env, k
+  def data_extract data, res, k
     _, status, headers, body =
       data.match(/\A(\d+)\n((?:[^\n]+\n)*)\n\n(.*)\Z/m).to_a
 
-    Promise.claim(env, k, body, status.to_i,
+    Promise.claim(res, k, body, status.to_i,
       Hash[(headers||'').scan(/([^:]+): ([^\n]+)\n/)]).future_response
   end
 
