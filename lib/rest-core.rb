@@ -68,6 +68,7 @@ module RestCore
   autoload :Oauth1Header  , 'rest-core/middleware/oauth1_header'
   autoload :Oauth2Header  , 'rest-core/middleware/oauth2_header'
   autoload :Oauth2Query   , 'rest-core/middleware/oauth2_query'
+  autoload :Retry         , 'rest-core/middleware/retry'
   autoload :Timeout       , 'rest-core/middleware/timeout'
 
   # engines

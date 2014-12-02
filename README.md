@@ -531,6 +531,7 @@ simply ignore `:expires_in`.
 [RC::Oauth2Header]: lib/rest-core/middleware/oauth2_header.rb
 [RC::Oauth2Query]: lib/rest-core/middleware/oauth2_query.rb
 [RC::SmashResponse]: lib/rest-core/middleware/smash_response.rb
+[RC::Retry]: lib/rest-core/middleware/retry.rb
 [RC::Timeout]: lib/rest-core/middleware/timeout.rb
 [moneta]: https://github.com/minad/moneta#expiration
 

@@ -19,4 +19,5 @@ module RestCore
   class Event::CacheCleared < Event; end
   class Event::Failed       < Event; end
   class Event::WithHeader   < Event; end
+  class Event::Retrying     < Event; end
 end

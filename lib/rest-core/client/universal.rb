@@ -9,6 +9,7 @@ module RestCore
     use DefaultPayload, {}
     use JsonRequest   , false
     use AuthBasic     , nil, nil
+    use Retry         , 2
     use ErrorHandler  , nil
     use ErrorDetectorHttp
 
