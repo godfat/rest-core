@@ -10,21 +10,12 @@ class RestCore::Timeout
 
   def call env, &k
     return app.call(env, &k) if env[DRY] || timeout(env) == 0
-    monitor(env){ |e|
-      app.call(e){ |r|
-        if r[ASYNC] ||
-           !(exp = (r[FAIL]||[]).find{ |f| f.kind_of?(::Timeout::Error) })
-          # we do nothing special for callback and rest-client
-          k.call(r)
-        else
-          # it would go to this branch only under response future
-          raise exp
-        end}}
+    process(env, &k)
   end
 
-  def monitor env
+  def process env, &k
     timer = Timer.new(timeout(env), timeout_error)
-    yield(env.merge(TIMER => timer))
+    app.call(env.merge(TIMER => timer), &k)
   rescue Exception
     timer.cancel
     raise

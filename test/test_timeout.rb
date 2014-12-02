@@ -11,13 +11,13 @@ describe RC::Timeout do
   end
 
   would 'bypass timeout if timeout is 0' do
-    mock(app).monitor.times(0)
+    mock(app).process.times(0)
     app.call({}){ |e| e.should.eq({}) }
   end
 
-  would 'run the monitor to setup timeout' do
+  would 'run the process to setup timeout' do
     env = {'timeout' => 2}
-    mock(app).monitor(env)
+    mock(app).process(env)
     app.call(env){|e| e[RC::TIMER].should.kind_of?(RC::Timer)}
   end
 
