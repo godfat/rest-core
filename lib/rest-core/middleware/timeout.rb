@@ -1,4 +1,6 @@
 
+require 'timeout'
+
 require 'rest-core/middleware'
 require 'rest-core/timer'
 
