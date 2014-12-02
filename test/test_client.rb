@@ -7,7 +7,7 @@ describe RC::Simple do
     Muack.verify
   end
 
-  url = 'http://localhost/'
+  url = 'http://example.com/'
 
   would 'do simple request' do
     c = RC::Simple.new
@@ -80,7 +80,7 @@ describe RC::Simple do
   end
 
   would 'cleanup promises' do
-    stub_request(:get, url)
+    stub_request(:get, url).to_return(:body => 'nnf')
     client = RC::Builder.client
     5.times{ client.new.get(url) }
     Thread.pass
