@@ -10,7 +10,7 @@ class RestCore::Timer
     attr_accessor :interval
 
     def group
-      @group ||= @mutex.synchronize{ @group || group_new }
+      @group ||= @mutex.synchronize{ @group ||= group_new }
     end
 
     private
