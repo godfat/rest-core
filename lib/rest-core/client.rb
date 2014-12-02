@@ -203,7 +203,7 @@ module RestCore::Client
   private
   def request_complete res
     if err = res[FAIL].find{ |f| f.kind_of?(Exception) }
-      RC::Promise.set_backtrace(err)
+      RC::Promise.set_backtrace(err) unless err.backtrace
       if res[ASYNC]
         if res[HIJACK]
           res.merge(RESPONSE_SOCKET => err)

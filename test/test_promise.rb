@@ -65,10 +65,13 @@ describe RC::Promise do
   would 'call in a new thread if pool_size == 0' do
     @client.pool_size = 0
     thread = nil
+    rd, wr = IO.pipe
     mock(Thread).new.with_any_args.peek_return do |t|
       thread = t
+      wr.puts
     end
     @promise.defer do
+      rd.gets
       Thread.current.should.eq thread
       @promise.reject(nil)
     end
