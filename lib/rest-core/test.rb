@@ -11,7 +11,7 @@ require 'yaml'
 WebMock.disable_net_connect!(:allow_localhost => true)
 Pork::Executor.__send__(:include, Muack::API, WebMock::API)
 
-module Kernel
+class Pork::Executor
   def with_img
     f = Tempfile.new(['img', '.jpg'])
     n = File.basename(f.path)
