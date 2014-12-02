@@ -1,8 +1,6 @@
 
 module RestCore
   Universal = Builder.client do
-    use Timeout       , 0
-
     use DefaultSite   , nil
     use DefaultHeaders, {}
     use DefaultQuery  , {}
@@ -10,6 +8,7 @@ module RestCore
     use JsonRequest   , false
     use AuthBasic     , nil, nil
     use Retry         , 0, Retry::DefaultRetryExceptions
+    use Timeout       , 0
     use ErrorHandler  , nil
     use ErrorDetectorHttp
 
