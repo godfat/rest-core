@@ -67,7 +67,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
       begin
         @onerror.call(error, sock) if @onerror
         onreconnect(error, sock)
-      rescue Exception => e
+      rescue Exception
         mutex.synchronize do
           @closed = true
           condv.signal # so we can't be reconnecting, need to try to unblock

@@ -156,7 +156,7 @@ SSE
 
   would 'not deadlock if errors in onmessage' do
     err = nil
-    es, m, t = server.call
+    es, _, _ = server.call
     es.onmessage do |event, data|
       raise err = "error"
     end.start.wait
