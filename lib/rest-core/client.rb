@@ -41,12 +41,14 @@ module RestCore::Client
   end
 
   attr_reader :app, :dry, :promises
+  attr_accessor :error_callback
   def initialize o={}
     @app ||= self.class.builder.to_app # lighten! would reinitialize anyway
     @dry ||= self.class.builder.to_app(Dry)
     @promises = []  # don't record any promises in lighten!
     @mutex    = nil # for locking promises, lazily initialized
                     # for serialization
+    @error_callback = nil
     o.each{ |key, value| send("#{key}=", value) if respond_to?("#{key}=") }
   end
 
@@ -204,6 +206,7 @@ module RestCore::Client
   def request_complete res
     if err = res[FAIL].find{ |f| f.kind_of?(Exception) }
       RC::Promise.set_backtrace(err) unless err.backtrace
+      error_callback.call(err) if error_callback
       if res[ASYNC]
         if res[HIJACK]
           res.merge(RESPONSE_SOCKET => err)

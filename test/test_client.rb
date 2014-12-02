@@ -164,4 +164,15 @@ describe RC::Simple do
     client.wait
     client.should.nil? # to make sure the inner most block did run
   end
+
+  would 'call error_callback' do
+    mock_warning
+    error = nil
+    error_callback = lambda{ |e| error = e }
+    should.raise(Errno::ECONNREFUSED) do
+      RC::Simple.new(:error_callback => error_callback).
+        get('http://localhost/').tap{}
+    end
+    error.should.kind_of?(Errno::ECONNREFUSED)
+  end
 end

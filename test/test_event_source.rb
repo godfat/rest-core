@@ -133,12 +133,6 @@ SSE
     m.should.empty?
   end
 
-  def mock_warning
-    mock(any_instance_of(RC::Promise)).warn(is_a(String)) do |msg|
-      msg.should.include?(Errno::ECONNREFUSED.new.message)
-    end
-  end
-
   would 'not deadlock without ErrorHandler' do
     mock_warning
     c = RC::Simple.new.event_source('http://localhost:1')

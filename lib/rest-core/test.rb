@@ -21,4 +21,10 @@ class Pork::Executor
   ensure
     f.close!
   end
+
+  def mock_warning
+    mock(any_instance_of(RC::Promise)).warn(is_a(String)) do |msg|
+      msg.should.include?(Errno::ECONNREFUSED.new.message)
+    end
+  end
 end
