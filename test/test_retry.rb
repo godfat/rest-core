@@ -15,17 +15,40 @@ describe RC::Retry do
     @app = RC::Retry.new(engine, 5)
   end
 
-  would 'retry max_retries times' do
-    @errors.replace([RuntimeError.new] * @app.max_retries({}))
-    @app.call({RC::FAIL => [true]}){}
-    @called.size.should.eq @app.max_retries({}) + 1
+  after do
     @errors.size.should.eq 0
   end
 
-  would 'retry several times' do
-    @errors.replace([RuntimeError.new] * 2)
+  def call
     @app.call({RC::FAIL => [true]}){}
+  end
+
+  def max_retries
+    @app.max_retries({})
+  end
+
+  would 'retry max_retries times' do
+    @errors.replace([IOError.new] * max_retries)
+    call
+    @called.size.should.eq max_retries + 1
+  end
+
+  would 'retry several times' do
+    @errors.replace([IOError.new] * 2)
+    call
     @called.size.should.eq 3
-    @errors.size.should.eq 0
+  end
+
+  would 'not retry RuntimeError by default' do
+    @errors.replace([RuntimeError.new])
+    call
+    @called.size.should.eq 1
+  end
+
+  would 'retry RuntimeError when setup' do
+    @errors.replace([RuntimeError.new] * max_retries)
+    @app.retry_exceptions = [RuntimeError]
+    call
+    @called.size.should.eq max_retries + 1
   end
 end
