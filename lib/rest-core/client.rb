@@ -167,6 +167,16 @@ module RestCore::Client
       (k || RC.id).call(request_complete(res))
     end
 
+    give_promise(response)
+
+    if block_given?
+      self
+    else
+      response
+    end
+  end
+
+  def give_promise response
     # under ASYNC callback, response might not be a response hash
     # in that case (maybe in a user created engine), Client#wait
     # won't work because we have no way to track the promise.
@@ -174,12 +184,6 @@ module RestCore::Client
       weak_promise = WeakRef.new(response[PROMISE])
       self.class.give_promise(weak_promise)
       self.class.give_promise(weak_promise, promises, mutex)
-    end
-
-    if block_given?
-      self
-    else
-      response
     end
   end
 

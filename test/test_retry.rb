@@ -10,6 +10,7 @@ describe RC::Retry do
         called << true
         env[RC::FAIL].should.eq [true]
         block.call(env.merge(RC::FAIL => [true, errors.shift]))
+        {}
       end
     end.new
     @app = RC::Retry.new(engine, 5)

@@ -4,6 +4,10 @@ require 'rest-core/test'
 describe RC::Universal do
   url = 'http://localhost/'
 
+  after do
+    WebMock.reset!
+  end
+
   would 'send Authorization header' do
     u = RC::Universal.new(:log_method => false)
     u.username = 'Aladdin'
@@ -34,5 +38,15 @@ describe RC::Universal do
     RC::Universal.new(:json_response => true,
                       :log_method => false).
       get(url).should.eq 'good' => 'json!'
+  end
+
+  would 'retry and call error_callback' do
+    errors = []
+    called = []
+    RC::Universal.new(:error_callback => errors.method(:<<),
+                      :max_retries => 1, :log_method => false).
+      get(url, &called.method(:<<)).wait
+    errors.map(&:class).should.eq [Errno::ECONNREFUSED]*2
+    called.map(&:class).should.eq [Errno::ECONNREFUSED]
   end
 end

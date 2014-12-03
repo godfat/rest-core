@@ -24,8 +24,8 @@ class RestCore::Retry
       err = res[FAIL].delete_at(idx)
       error_callback(res, err)
       env = res.merge('max_retries' => times - 1)
-      call(log(env, Event::Retrying.new(
-                      nil, "(#{times}) for: #{err.inspect}")), &k)
+      give_promise(call(log(
+        env, Event::Retrying.new(nil, "(#{times}) for: #{err.inspect}")), &k))
     else
       k.call(res)
     end
@@ -34,5 +34,9 @@ class RestCore::Retry
   def error_callback res, err
     res[CLIENT].error_callback.call(err) if
       res[CLIENT] && res[CLIENT].error_callback
+  end
+
+  def give_promise res
+    res[CLIENT].give_promise(res) if res[CLIENT]
   end
 end
