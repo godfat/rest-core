@@ -2,6 +2,8 @@
 require 'rest-core/test'
 
 describe RC::Universal do
+  url = 'http://localhost/'
+
   would 'send Authorization header' do
     u = RC::Universal.new(:log_method => false)
     u.username = 'Aladdin'
@@ -18,7 +20,6 @@ describe RC::Universal do
   end
 
   would 'clash' do
-    url = 'http://localhost/'
     stub_request(:get, url).to_return(:body => '{"a":{"b":"c"}}')
     res = RC::Universal.new(:json_response => true,
                             :clash_response => true,
@@ -27,7 +28,6 @@ describe RC::Universal do
   end
 
   would 'follow redirect regardless response body' do
-    url = 'http://localhost/'
     stub_request(:get, url).to_return(:body => 'bad json!',
       :status => 302, :headers => {'Location' => "#{url}a"})
     stub_request(:get, "#{url}a").to_return(:body => '{"good":"json!"}')

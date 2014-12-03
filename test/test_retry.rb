@@ -19,8 +19,8 @@ describe RC::Retry do
     @errors.size.should.eq 0
   end
 
-  def call
-    @app.call({RC::FAIL => [true]}){}
+  def call env={}
+    @app.call({RC::FAIL => [true]}.merge(env)){}
   end
 
   def max_retries
@@ -50,5 +50,13 @@ describe RC::Retry do
     @app.retry_exceptions = [RuntimeError]
     call
     @called.size.should.eq max_retries + 1
+  end
+
+  would 'call error_callback upon retrying' do
+    @errors.replace([IOError.new] * 2)
+    errors = []
+    call(RC::CLIENT => stub.error_callback{errors.method(:<<)}.object)
+    @called.size.should.eq 3
+    errors.size.should.eq 2
   end
 end
