@@ -39,9 +39,6 @@ describe RC::HttpClient do
     end
 
     would 'not kill the thread if error was coming from the task' do
-      mock(any_instance_of(RC::Promise)).warn(is_a(String)) do |msg|
-        msg.should.include?('boom')
-      end
       mock(HTTPClient).new{ raise 'boom' }.with_any_args
       c.request(RC::RESPONSE_KEY => RC::FAIL,
                 RC::ASYNC => true).first.message.should.eq 'boom'

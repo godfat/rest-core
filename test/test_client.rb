@@ -166,7 +166,6 @@ describe RC::Simple do
   end
 
   would 'call error_callback' do
-    mock_warning
     error = nil
     error_callback = lambda{ |e| error = e }
     should.raise(Errno::ECONNREFUSED) do

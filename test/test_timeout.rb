@@ -46,7 +46,6 @@ describe RC::Timeout do
     app.new.request(RC::RESPONSE_KEY => RC::FAIL, RC::TIMER => timer,
                     RC::ASYNC => true).
       first.message.should.eq 'boom'
-    Muack.verify
   end
 
   would 'interrupt the task if timing out' do
@@ -71,14 +70,10 @@ describe RC::Timeout do
       }
     end
     (-1..1).each do |size|
-      mock(any_instance_of(RC::Promise)).warn(is_a(String)) do |msg|
-        msg.should.include?('boom')
-      end
       app.pool_size = size
       app.new.request(RC::RESPONSE_KEY => RC::FAIL, RC::TIMER => timer,
                       RC::ASYNC => true, 'pipe' => wr).
         first.message.should.eq 'boom'
-      Muack.verify
     end
   end
 end

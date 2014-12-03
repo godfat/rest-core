@@ -134,14 +134,12 @@ SSE
   end
 
   would 'not deadlock without ErrorHandler' do
-    mock_warning
     c = RC::Simple.new.event_source('http://localhost:1')
     c.onerror{ |e| e.should.kind_of?(Errno::ECONNREFUSED) }
     c.start.wait
   end
 
   would 'not deadlock with ErrorHandler' do
-    mock_warning
     c = RC::Universal.new(:log_method => false).
                event_source('http://localhost:1')
     c.onerror{ |e| e.should.kind_of?(Errno::ECONNREFUSED) }

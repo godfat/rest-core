@@ -45,6 +45,27 @@ describe RC::Promise do
     @promise.send(:headers).should.eq('K' => 'V')
   end
 
+  would 'warn on callback error' do
+    mock(any_instance_of(RC::Promise)).warn(is_a(String)) do |msg|
+      msg.should.eq 'boom'
+    end
+
+    @client.new.get('http://localhost/') do |err|
+      err.should.kind_of?(Errno::ECONNREFUSED)
+      raise 'boom'
+    end.wait
+  end
+
+  would 'call error_callback on errors' do
+    errors = []
+    @client.new(:error_callback => lambda{ |e| errors << e }).
+      get('http://localhost/') do |err|
+        err.should.kind_of?(Errno::ECONNREFUSED)
+        raise 'boom'
+      end.wait
+    errors.map(&:class).should.eq [Errno::ECONNREFUSED, RuntimeError]
+  end
+
   would 'then then then' do
     plusone = lambda do |r|
       r.merge(RC::RESPONSE_BODY => r[RC::RESPONSE_BODY] + 1)

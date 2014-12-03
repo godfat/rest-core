@@ -159,15 +159,15 @@ class RestCore::Promise
       never_raise_yield do
         env[TIMER].cancel if env[TIMER]
         self.class.set_backtrace(e)
-        # TODO: add error_log_method
-        warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
       end
 
-      begin
-        rejecting(e) unless done? # not done: i/o error; done: callback error
-      rescue Exception => e
-        never_raise_yield do
-          warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
+      if done?
+        callback_error(e)
+      else
+        begin
+          rejecting(e) # i/o error
+        rescue Exception => e
+          callback_error(e)
         end
       end
     end
@@ -193,6 +193,16 @@ class RestCore::Promise
                 LOG              =>   env[LOG] ||[])){ |r, i| i.call(r) }
   ensure
     self.called = true
+  end
+
+  def callback_error e
+    never_raise_yield do
+      if env[CLIENT].error_callback
+        env[CLIENT].error_callback.call(e)
+      else
+        warn "RestCore: ERROR: #{e}\n  from #{e.backtrace.inspect}"
+      end
+    end
   end
 
   def cancel_task
