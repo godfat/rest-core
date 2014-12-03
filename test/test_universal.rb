@@ -32,12 +32,16 @@ describe RC::Universal do
   end
 
   would 'follow redirect regardless response body' do
+    called = []
     stub_request(:get, url).to_return(:body => 'bad json!',
       :status => 302, :headers => {'Location' => "#{url}a"})
-    stub_request(:get, "#{url}a").to_return(:body => '{"good":"json!"}')
-    RC::Universal.new(:json_response => true,
-                      :log_method => false).
-      get(url).should.eq 'good' => 'json!'
+    stub_request(:get, "#{url}a").to_return do
+      Thread.pass
+      {:body => '{"good":"json!"}'}
+    end
+    RC::Universal.new(:json_response => true, :log_method => false).
+      get(url, &called.method(:<<)).wait
+    called.should.eq([{'good' => 'json!'}])
   end
 
   would 'retry and call error_callback' do

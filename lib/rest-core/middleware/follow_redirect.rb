@@ -26,9 +26,10 @@ class RestCore::FollowRedirect
                  res[REQUEST_METHOD]
                end
 
-    call(res.merge(REQUEST_METHOD => meth    ,
-                   REQUEST_PATH   => location,
-                   REQUEST_QUERY  => {}      ,
-                   'max_redirects' => max_redirects(res) - 1), &k)
+    give_promise(call(res.merge(
+      REQUEST_METHOD => meth    ,
+      REQUEST_PATH   => location,
+      REQUEST_QUERY  => {}      ,
+      'max_redirects' => max_redirects(res) - 1), &k))
   end
 end

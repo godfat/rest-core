@@ -30,13 +30,4 @@ class RestCore::Retry
       k.call(res)
     end
   end
-
-  def error_callback res, err
-    res[CLIENT].error_callback.call(err) if
-      res[CLIENT] && res[CLIENT].error_callback
-  end
-
-  def give_promise res
-    res[CLIENT].give_promise(res) if res[CLIENT]
-  end
 end
