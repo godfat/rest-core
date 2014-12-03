@@ -7,7 +7,9 @@ class RestCore::ErrorHandler
 
   def call env
     app.call(env){ |res|
-      yield(if (res[FAIL] || []).empty? || !(h = error_handler(res))
+      h = error_handler(res)
+      f = res[FAIL] || []
+      yield(if f.empty? || f.find{ |ff| ff.kind_of?(Exception) } || !h
               res
             else
               fail(res, h.call(res))

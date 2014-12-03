@@ -56,4 +56,14 @@ describe RC::ErrorHandler do
     end
     client.wait
   end
+
+  would 'not call error_handler if there is already an exception' do
+    called = false
+    RC::Builder.client do
+      use RC::ErrorHandler, lambda{ |_| called = true }
+    end.new.get('http://localhost') do |error|
+      error.should.kind_of?(SystemCallError)
+    end.wait
+    called.should.eq false
+  end
 end
