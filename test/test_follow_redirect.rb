@@ -7,6 +7,7 @@ describe RC::FollowRedirect do
     def call env
       yield(env.merge(RC::RESPONSE_STATUS  => status,
                       RC::RESPONSE_HEADERS => {'LOCATION' => 'location'}))
+      env
     end
   end.new
   app = RC::FollowRedirect.new(dry, 1)

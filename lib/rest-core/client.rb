@@ -185,6 +185,8 @@ module RestCore::Client
       self.class.give_promise(weak_promise)
       self.class.give_promise(weak_promise, promises, mutex)
     end
+
+    response
   end
 
   def build_env env={}
