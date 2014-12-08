@@ -1,5 +1,36 @@
 # CHANGES
 
+## rest-core 3.5.0 -- 2014-12-09
+
+### Incompatible changes
+
+* `RC::Builder` would now only deep copy arrays and hashes.
+* `RC::ErrorHandler`'s only responsibility is now creating the exception.
+  Raising the exceptions or passing it to the callback is now handled by
+  `RC::Client` instead. (Thanks Andrew Clunis, #6)
+* Since exceptions are raised by `RC::Client` now, `RC::Timeout` would not
+  raise any exception, but just hand over to `RC::Client`.
+* Support for Ruby version < 1.9.2 is dropped.
+
+### Bugs fixed
+
+* Reverted #10 because it caused the other encoding issue. (#12)
+* `RC::Client#wait` and `RC::Client.wait` would now properly wait for
+  `RC::FollowRedirect`
+* `RC::Event::CacheHit` is properly logged again.
+
+### Enhancements
+
+* Introduced `RC::Client#error_callback` which would get called for each
+  exceptions raised. This is useful for monitoring and logging errors.
+
+* Introduced `RC::Retry` which could retry the request upon certain errors.
+  Specify `max_retries` for maximum times for retrying, and `retry_exceptions`
+  for which exceptions should be trying.
+  Default is `[IOError, SystemCallError]`
+
+* Eliminated a few warnings when `-w` is used.
+
 ## rest-core 3.4.1 -- 2014-11-29
 
 ### Bugs fixed
