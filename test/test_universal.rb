@@ -2,7 +2,7 @@
 require 'rest-core/test'
 
 describe RC::Universal do
-  url = 'http://localhost/'
+  url = 'http://localhost:1'
 
   after do
     WebMock.reset!
