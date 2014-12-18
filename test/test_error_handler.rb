@@ -61,7 +61,7 @@ describe RC::ErrorHandler do
     called = false
     RC::Builder.client do
       use RC::ErrorHandler, lambda{ |_| called = true }
-    end.new.get('http://localhost') do |error|
+    end.new.get('http://localhost:1') do |error|
       error.should.kind_of?(SystemCallError)
     end.wait
     called.should.eq false

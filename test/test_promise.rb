@@ -50,7 +50,7 @@ describe RC::Promise do
       msg.should.eq 'boom'
     end
 
-    @client.new.get('http://localhost/') do |err|
+    @client.new.get('http://localhost:1') do |err|
       err.should.kind_of?(Errno::ECONNREFUSED)
       raise 'boom'
     end.wait
@@ -59,7 +59,7 @@ describe RC::Promise do
   would 'call error_callback on errors' do
     errors = []
     @client.new(:error_callback => lambda{ |e| errors << e }).
-      get('http://localhost/') do |err|
+      get('http://localhost:1') do |err|
         err.should.kind_of?(Errno::ECONNREFUSED)
         raise 'boom'
       end.wait

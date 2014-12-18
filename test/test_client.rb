@@ -170,7 +170,7 @@ describe RC::Simple do
     error_callback = lambda{ |e| error = e }
     should.raise(Errno::ECONNREFUSED) do
       RC::Simple.new(:error_callback => error_callback).
-        get('http://localhost/').tap{}
+        get('http://localhost:1').tap{}
     end
     error.should.kind_of?(Errno::ECONNREFUSED)
   end
