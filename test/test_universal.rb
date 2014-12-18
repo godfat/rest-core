@@ -34,7 +34,7 @@ describe RC::Universal do
   would 'follow redirect regardless response body' do
     called = []
     stub_request(:get, url).to_return(:body => 'bad json!',
-      :status => 302, :headers => {'Location' => "#{url}a"})
+      :status => 302, :headers => {'Location' => "#{url}/a"})
     stub_request(:get, "#{url}/a").to_return do
       Thread.pass
       {:body => '{"good":"json!"}'}
