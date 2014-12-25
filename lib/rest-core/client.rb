@@ -20,13 +20,13 @@ module RestCore::Client
           end
         end
 
-        def default_#{name} app=app
+        def default_#{name} a=app
           if self.class.respond_to?("default_#{name}")
             self.class.default_#{name}      # old class default style
-          elsif app.respond_to?(:#{name})
-            app.#{name}({})                 # middleware instance value
-          elsif app.respond_to?(:app)
-            default_#{name}(app.app)        # walk into next app
+          elsif a.respond_to?(:#{name})
+            a.#{name}({})                 # middleware instance value
+          elsif a.respond_to?(:app)
+            default_#{name}(a.app)        # walk into next app
           else
             nil
           end
@@ -154,16 +154,16 @@ module RestCore::Client
     self.class.event_source_class.new(self, path, query, opts)
   end
 
-  def request env, app=app
+  def request env, a=app
     if block_given?
-      request_full(env, app){ |response| yield(response[response_key(env)]) }
+      request_full(env, a){ |response| yield(response[response_key(env)]) }
     else
-      request_full(env, app)[response_key(env)]
+      request_full(env, a)[response_key(env)]
     end
   end
 
-  def request_full env, app=app, &k
-    response = app.call(build_env({ASYNC => !!k}.merge(env))) do |res|
+  def request_full env, a=app, &k
+    response = a.call(build_env({ASYNC => !!k}.merge(env))) do |res|
       (k || RC.id).call(request_complete(res))
     end
 

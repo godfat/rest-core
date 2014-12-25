@@ -50,11 +50,11 @@ module RestCore::Middleware
       env
     end
   end
-  def run app=app
-    if app.respond_to?(:app) && app.app
-      run(app.app)
+  def run a=app
+    if a.respond_to?(:app) && a.app
+      run(a.app)
     else
-      app
+      a
     end
   end
   def error_callback res, err
