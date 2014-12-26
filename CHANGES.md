@@ -1,5 +1,9 @@
 # CHANGES
 
+## rest-core 3.5.1 -- 2014-12-27
+
+* Ruby 2.2 compatibility.
+
 ## rest-core 3.5.0 -- 2014-12-09
 
 ### Incompatible changes
