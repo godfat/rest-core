@@ -43,9 +43,8 @@ describe RC::Timeout do
       }
     end
     app.pool_size = 1
-    app.new.request(RC::RESPONSE_KEY => RC::FAIL, RC::TIMER => timer,
-                    RC::ASYNC => true).
-      first.message.should.eq 'boom'
+    app.new.request(RC::TIMER => timer, RC::ASYNC => true).
+      message.should.eq 'boom'
   end
 
   would 'interrupt the task if timing out' do
@@ -71,9 +70,8 @@ describe RC::Timeout do
     end
     (-1..1).each do |size|
       app.pool_size = size
-      app.new.request(RC::RESPONSE_KEY => RC::FAIL, RC::TIMER => timer,
-                      RC::ASYNC => true, 'pipe' => wr).
-        first.message.should.eq 'boom'
+      app.new.request(RC::TIMER => timer, RC::ASYNC => true, 'pipe' => wr).
+        message.should.eq 'boom'
     end
   end
 end

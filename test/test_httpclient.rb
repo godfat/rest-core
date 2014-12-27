@@ -40,8 +40,7 @@ describe RC::HttpClient do
 
     would 'not kill the thread if error was coming from the task' do
       mock(HTTPClient).new{ raise 'boom' }.with_any_args
-      c.request(RC::RESPONSE_KEY => RC::FAIL,
-                RC::ASYNC => true).first.message.should.eq 'boom'
+      c.request(RC::ASYNC => true).message.should.eq 'boom'
       Muack.verify
     end
   end
