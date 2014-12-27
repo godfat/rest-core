@@ -214,11 +214,7 @@ module RestCore::Client
       RC::Promise.set_backtrace(err) unless err.backtrace
       error_callback.call(err) if error_callback
       if res[ASYNC]
-        if res[HIJACK]
-          res.merge(RESPONSE_SOCKET => err)
-        else
-          res.merge(RESPONSE_BODY => err)
-        end
+        res.merge(response_key(res) => err)
       else
         raise err
       end
