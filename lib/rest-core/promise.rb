@@ -167,7 +167,7 @@ class RestCore::Promise
         begin
           rejecting(e)
         rescue Exception => f # log user callback error
-          callback_error(f)
+          callback_error(f, true)
         end
       end
     end
@@ -196,8 +196,9 @@ class RestCore::Promise
   end
 
   # log user callback error
-  def callback_error e
+  def callback_error e, set_backtrace=false
     never_raise_yield do
+      self.class.set_backtrace(e) if set_backtrace
       if env[CLIENT].error_callback
         env[CLIENT].error_callback.call(e)
       else
