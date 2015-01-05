@@ -83,7 +83,7 @@ class RestCore::Promise
         end
       end
       # set timeout after thread/task set
-      env[TIMER].on_timeout{ cancel_task } if env[TIMER]
+      env[TIMER].on_timeout{ cancel_task(backtrace) } if env[TIMER]
     end
   end
 
@@ -207,14 +207,18 @@ class RestCore::Promise
     end
   end
 
-  def cancel_task
+  def cancel_task backtrace=nil
     mutex.synchronize do
       next if done? # don't cancel if it's done
       if t = thread || task.thread
         t.raise(env[TIMER].error) # raise Timeout::Error to working thread
-      else          # task was queued and never started, just cancel it and
-        task.cancel # fulfil the promise with Timeout::Error
-        rejecting(env[TIMER].error)
+      else    # task was queued and never started, just cancel it and
+        begin # fulfil the promise with Timeout::Error
+          task.cancel
+          rejecting(env[TIMER].error)
+        rescue Exception => e # log user callback error
+          callback_error(e){e.set_backtrace(e.backtrace + (backtrace || []))}
+        end
       end
     end
   end
