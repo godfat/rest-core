@@ -65,10 +65,10 @@ class RestCore::Promise
   # called in client thread
   def defer
     if pool_size < 0 # negative number for blocking call
-      self.thread = Thread.current
+      self.thread = Thread.current # set working thread
       # set timeout after thread set, before yield (because yield is blocking)
-      env[TIMER].on_timeout{ cancel_task } if env[TIMER]
-      protected_yield{ yield }
+      env[TIMER].on_timeout{ cancel_task } if env[TIMER] # set timeout
+      protected_yield{ yield } # avoid any exception and do the job
     else
       backtrace = caller + self.class.backtrace
       if pool_size > 0
@@ -154,20 +154,20 @@ class RestCore::Promise
   # i.e. requesting thread
   def protected_yield
     yield
-  rescue Exception => e
+  rescue Exception => e # could be Timeout::Error
     mutex.synchronize do
       never_raise_yield do
         env[TIMER].cancel if env[TIMER]
         self.class.set_backtrace(e)
       end
 
-      if done?
+      if done? # log user callback error
         callback_error(e)
-      else
+      else # IOError, SystemCallError, etc
         begin
-          rejecting(e) # i/o error
-        rescue Exception => e
-          callback_error(e)
+          rejecting(e)
+        rescue Exception => f # log user callback error
+          callback_error(f)
         end
       end
     end
@@ -195,6 +195,7 @@ class RestCore::Promise
     self.called = true
   end
 
+  # log user callback error
   def callback_error e
     never_raise_yield do
       if env[CLIENT].error_callback
@@ -207,11 +208,11 @@ class RestCore::Promise
 
   def cancel_task
     mutex.synchronize do
-      next if done?
+      next if done? # don't cancel if it's done
       if t = thread || task.thread
-        t.raise(env[TIMER].error)
-      else
-        task.cancel
+        t.raise(env[TIMER].error) # raise Timeout::Error to working thread
+      else          # task was queued and never started, just cancel it and
+        task.cancel # fulfil the promise with Timeout::Error
         rejecting(env[TIMER].error)
       end
     end
