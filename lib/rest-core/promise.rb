@@ -75,6 +75,7 @@ class RestCore::Promise
         self.task = client_class.thread_pool.defer(mutex) do
           Thread.current[:backtrace] = backtrace
           protected_yield{ yield }
+          Thread.current[:backtrace] = nil
         end
       else
         self.thread = Thread.new do
