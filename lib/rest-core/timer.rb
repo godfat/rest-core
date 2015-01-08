@@ -34,16 +34,17 @@ class RestCore::Timer
     self.timeout = timeout
     self.error   = error
     self.block   = block
-    start
+    start if block_given?
   end
 
   def on_timeout &block
     self.block = block
+    start if block_given?
   end
 
   # should never raise!
   def cancel
-    timer.cancel
+    timer.cancel if timer
     self.block = nil
   end
 

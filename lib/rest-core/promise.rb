@@ -66,8 +66,6 @@ class RestCore::Promise
   def defer
     if pool_size < 0 # negative number for blocking call
       self.thread = Thread.current # set working thread
-      # set timeout after thread set, before yield (because yield is blocking)
-      env[TIMER].on_timeout{ cancel_task } if env[TIMER] # set timeout
       protected_yield{ yield } # avoid any exception and do the job
     else
       backtrace = caller + self.class.backtrace
@@ -83,8 +81,6 @@ class RestCore::Promise
           protected_yield{ yield }
         end
       end
-      # set timeout after thread/task set
-      env[TIMER].on_timeout{ cancel_task(backtrace) } if env[TIMER]
     end
   end
 
@@ -154,14 +150,29 @@ class RestCore::Promise
   # called in a new thread if pool_size == 0, otherwise from the pool
   # i.e. requesting thread
   def protected_yield
-    yield
-  rescue Exception => e # could be Timeout::Error
-    mutex.synchronize do
-      never_raise_yield do
-        env[TIMER].cancel if env[TIMER]
-        self.class.set_backtrace(e)
+    if env[TIMER]
+      Thread.handle_interrupt(env[TIMER].error => :never) do
+        timeout_protected_yield{ yield }
       end
+    else
+      yield
+    end
+  rescue Exception => e
+    handle_exception(e)
+  end
 
+  def timeout_protected_yield
+    env[TIMER].on_timeout{ cancel_task } # set timeout
+    Thread.handle_interrupt(env[TIMER].error => :on_blocking) do
+      yield
+    end
+  ensure
+    env[TIMER].cancel
+  end
+
+  def handle_exception e
+    mutex.synchronize do
+      self.class.set_backtrace(e)
       if done? # log user callback error
         callback_error(e)
       else # IOError, SystemCallError, etc
