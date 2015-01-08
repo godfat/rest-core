@@ -185,14 +185,6 @@ class RestCore::Promise
     end
   end
 
-  # only use this for unimportant stuffs and in most critical section
-  # e.g. error logging in critical section
-  def never_raise_yield
-    yield
-  rescue Exception => e
-    Thread.main.raise(e) if !!$DEBUG
-  end
-
   # called in client thread, when yield is called
   def callback
     return response if called
@@ -219,6 +211,7 @@ class RestCore::Promise
     end
   end
 
+  # timeout!
   def cancel_task backtrace=nil
     mutex.synchronize do
       next if done? # don't cancel if it's done
@@ -233,6 +226,14 @@ class RestCore::Promise
         end
       end
     end
+  end
+
+  # only use this for unimportant stuffs and in most critical section
+  # e.g. error logging in critical section
+  def never_raise_yield
+    yield
+  rescue Exception => e
+    Thread.main.raise(e) if !!$DEBUG
   end
 
   def client_class; env[CLIENT].class; end
