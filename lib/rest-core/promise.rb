@@ -68,7 +68,7 @@ class RestCore::Promise
       self.thread = Thread.current # set working thread
       protected_yield{ yield } # avoid any exception and do the job
     else
-      backtrace = caller + self.class.backtrace
+      backtrace = caller + self.class.backtrace # retain the backtrace so far
       if pool_size > 0
         self.task = client_class.thread_pool.defer(mutex) do
           Thread.current[:backtrace] = backtrace
@@ -162,7 +162,7 @@ class RestCore::Promise
         callback_error(e)
       else # IOError, SystemCallError, etc
         begin
-          rejecting(e)
+          rejecting(e) # would call user callback
         rescue Exception => f # log user callback error
           callback_error(f){ self.class.set_backtrace(f) }
         end
@@ -210,7 +210,7 @@ class RestCore::Promise
       if t = thread || task.thread
         t.raise(env[TIMER].error) # raise Timeout::Error to working thread
       else    # task was queued and never started, just cancel it and
-        begin # fulfil the promise with Timeout::Error
+        begin # fulfill the promise with Timeout::Error
           task.cancel
           rejecting(env[TIMER].error)
         rescue Exception => e # log user callback error
