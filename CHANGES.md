@@ -1,5 +1,16 @@
 # CHANGES
 
+## rest-core 3.5.2 -- 2015-01-09
+
+### Bugs fixed
+
+* Now callbacks would respect `RC::RESPONSE_KEY`.
+* Clear `Thread.current[:backtrace]` after done in thread pool to reduce
+  memory footprint.
+* Fixed backtrace for exception raised in callbacks.
+* Fixed some potential corner cases where errors are not properly handled
+  when timeout happened.
+
 ## rest-core 3.5.1 -- 2014-12-27
 
 * Ruby 2.2 compatibility.
