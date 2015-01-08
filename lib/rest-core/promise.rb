@@ -151,9 +151,7 @@ class RestCore::Promise
   # i.e. requesting thread
   def protected_yield
     if env[TIMER]
-      Thread.handle_interrupt(env[TIMER].error => :never) do
-        timeout_protected_yield{ yield }
-      end
+      timeout_protected_yield{ yield }
     else
       yield
     end
@@ -163,9 +161,7 @@ class RestCore::Promise
 
   def timeout_protected_yield
     env[TIMER].on_timeout{ cancel_task } # set timeout
-    Thread.handle_interrupt(env[TIMER].error => :on_blocking) do
-      yield
-    end
+    yield
   ensure
     env[TIMER].cancel
   end
