@@ -156,17 +156,6 @@ class RestCore::Promise
       yield
     end
   rescue Exception => e
-    handle_exception(e)
-  end
-
-  def timeout_protected_yield
-    env[TIMER].on_timeout{ cancel_task } # set timeout
-    yield
-  ensure
-    env[TIMER].cancel
-  end
-
-  def handle_exception e
     mutex.synchronize do
       self.class.set_backtrace(e)
       if done? # log user callback error
@@ -179,6 +168,13 @@ class RestCore::Promise
         end
       end
     end
+  end
+
+  def timeout_protected_yield
+    env[TIMER].on_timeout{ cancel_task } # set timeout
+    yield
+  ensure
+    env[TIMER].cancel
   end
 
   # called in client thread, when yield is called
