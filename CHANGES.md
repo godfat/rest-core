@@ -1,5 +1,11 @@
 # CHANGES
 
+## rest-core 3.5.3 -- 2015-01-11
+
+### Bugs fixed
+
+* Fixed a regression where timeout is not properly handled for thread pool.
+
 ## rest-core 3.5.2 -- 2015-01-09
 
 ### Bugs fixed
