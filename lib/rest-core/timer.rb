@@ -29,7 +29,7 @@ class RestCore::Timer
     end
   end
 
-  attr_accessor :timeout, :error
+  attr_accessor :timeout, :error, :timer
   def initialize timeout, error, &block
     self.timeout = timeout
     self.error   = error
@@ -54,5 +54,5 @@ class RestCore::Timer
   end
 
   protected
-  attr_accessor :block, :timer
+  attr_accessor :block
 end

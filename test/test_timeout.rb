@@ -34,7 +34,7 @@ describe RC::Timeout do
       def on_timeout; @block = true; Thread.new{yield}; end
       def error     ; 'boom'; end
       def cancel    ;       ; end
-      def block     ; @block; end
+      def timer     ; @block; end
       self
     end
   end
@@ -55,7 +55,7 @@ describe RC::Timeout do
     app.pool_size = 1
     app.new.request(RC::TIMER => timer, RC::ASYNC => true).
       message.should.eq 'boom'
-    timer.block.should.not.nil?
+    timer.timer.should.not.nil?
   end
 
   would 'still timeout if the task never processed for thread pool' do
@@ -82,7 +82,7 @@ describe RC::Timeout do
       end
       def error     ; 'boom'; end
       def cancel    ;       ; end
-      def block     ; @block; end
+      def timer     ; @block; end
       self
     end
     app = RC::Builder.client do

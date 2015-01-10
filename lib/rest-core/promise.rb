@@ -176,7 +176,7 @@ class RestCore::Promise
 
   def timeout_protected_yield
     # timeout might already be set for thread_pool (pool_size > 0)
-    env[TIMER].on_timeout{ cancel_task } unless env[TIMER].block
+    env[TIMER].on_timeout{ cancel_task } unless env[TIMER].timer
     yield
   ensure
     env[TIMER].cancel
