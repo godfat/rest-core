@@ -70,10 +70,14 @@ class RestCore::Promise
     else
       backtrace = caller + self.class.backtrace # retain the backtrace so far
       if pool_size > 0
-        self.task = client_class.thread_pool.defer(mutex) do
-          Thread.current[:backtrace] = backtrace
-          protected_yield{ yield }
-          Thread.current[:backtrace] = nil
+        mutex.synchronize do
+          # still timing it out if the task never processed
+          env[TIMER].on_timeout{ cancel_task } if env[TIMER]
+          self.task = client_class.thread_pool.defer(mutex) do
+            Thread.current[:backtrace] = backtrace
+            protected_yield{ yield }
+            Thread.current[:backtrace] = nil
+          end
         end
       else
         self.thread = Thread.new do
@@ -171,7 +175,8 @@ class RestCore::Promise
   end
 
   def timeout_protected_yield
-    env[TIMER].on_timeout{ cancel_task } # set timeout
+    # timeout might already be set for thread_pool (pool_size > 0)
+    env[TIMER].on_timeout{ cancel_task } unless env[TIMER].block
     yield
   ensure
     env[TIMER].cancel

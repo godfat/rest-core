@@ -88,12 +88,10 @@ class RestCore::ThreadPool
   end
 
   def defer mutex=nil, &job
-    mutex.synchronize do
-      task = Task.new(job, mutex)
-      queue << task
-      spawn_worker if waiting == 0 && workers.size < max_size
-      task
-    end
+    task = Task.new(job, mutex)
+    queue << task
+    spawn_worker if waiting == 0 && workers.size < max_size
+    task
   end
 
   def trim force=false

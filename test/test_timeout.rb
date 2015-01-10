@@ -28,36 +28,61 @@ describe RC::Timeout do
     lambda{ sleep 0.01      }.should.not.raise(Timeout::Error)
   end
 
-  would 'cancel the task if timing out' do
-    timer = Object.new.instance_eval do
-      def on_timeout; yield ; end
+  def fake_timer
+    Object.new.instance_eval do
+      @block = nil
+      def on_timeout; @block = true; Thread.new{yield}; end
       def error     ; 'boom'; end
       def cancel    ;       ; end
+      def block     ; @block; end
       self
     end
-    app = RC::Builder.client do
+  end
+
+  def sleeping_app
+    RC::Builder.client do
       run Class.new(RC::Engine){
         def request _, _
           sleep
         end
       }
     end
+  end
+
+  would 'cancel the task if timing out for thread pool' do
+    timer = fake_timer
+    app   = sleeping_app
     app.pool_size = 1
     app.new.request(RC::TIMER => timer, RC::ASYNC => true).
       message.should.eq 'boom'
+    timer.block.should.not.nil?
+  end
+
+  would 'still timeout if the task never processed for thread pool' do
+    app = sleeping_app
+    app.pool_size = 1
+    app.new.request(RC::TIMER => fake_timer, RC::ASYNC => true) do |e|
+      e.message.should.eq 'boom'
+      app.new.request(RC::TIMER => fake_timer, RC::ASYNC => true).tap{}
+    end
+    app.wait
   end
 
   would 'interrupt the task if timing out' do
     rd, wr = IO.pipe
     timer = Object.new.instance_eval do
+      @block = nil
       define_singleton_method :on_timeout do |&block|
+        @block = block
         Thread.new do
           rd.gets
           block.call
+          @block = nil
         end
       end
       def error     ; 'boom'; end
       def cancel    ;       ; end
+      def block     ; @block; end
       self
     end
     app = RC::Builder.client do
