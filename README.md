@@ -4,10 +4,11 @@ by Lin Jen-Shin ([godfat](http://godfat.org))
 
 Lin Jen-Shin ([godfat][]) had given a talk about rest-core on
 [RubyConf Taiwan 2011][talk]. The slide is in English, but the
-talk is in Mandarin.
+talk is in Mandarin. There's another talk about [The Promise of rest-core][]
 
 [godfat]: https://github.com/godfat
 [talk]: http://rubyconf.tw/2011/#6
+[The Promise of rest-core]: http://godfat.org/slide/2015-01-13-rest-core-promise/
 
 ## LINKS:
 
