@@ -1,5 +1,12 @@
 # CHANGES
 
+## rest-core 3.5.4 -- 2015-01-17
+
+### Bugs fixed
+
+* Fixed a regression where callback is not called for `RC::Cache` when cache
+  is available.
+
 ## rest-core 3.5.3 -- 2015-01-11
 
 ### Bugs fixed
