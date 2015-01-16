@@ -16,7 +16,7 @@ class RestCore::Promise
   end
 
   def self.claim env, k=RC.id, body, status, headers
-    promise = new(env, k)
+    promise = new(env, k, env[ASYNC])
     promise.fulfill(body, status, headers)
     promise
   end

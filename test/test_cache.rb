@@ -68,6 +68,15 @@ describe RC::Cache do
                                                             should.eq('OK')
   end
 
+  would 'still call callback for cached response' do
+    client = RC::Builder.client{ use RC::Cache, {}, nil; run RC::Dry }.new
+    client.get('', {}, RC::RESPONSE_BODY => 'nnf') do |a|
+      client.get('') do |res|
+        res.should.eq 'nnf'
+      end
+    end.wait
+  end
+
   would 'not raise error if headers is nil' do
     path = 'http://a'
     stub_request(:get , path).to_return(:body => 'OK', :headers => nil)
