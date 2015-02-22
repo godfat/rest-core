@@ -696,8 +696,8 @@ in some situation. (e.g. making requests against a self-signed testing server)
 In such cases, we could use `config_engine` option to configure the underlying
 engine. This could be set with request based, client instance based, or
 client class based. Please refer to:
-[How We Pick the Default Value](#how-we-pick-the-default-value)
-Except that there's no middleware for `config_engine`.
+[How We Pick the Default Value](#how-we-pick-the-default-value),
+except that there's no middleware for `config_engine`.
 
 Here are some examples:
 
