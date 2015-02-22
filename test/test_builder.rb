@@ -25,7 +25,7 @@ describe RC::Builder do
   would 'accept middleware without a member' do
     RC::Builder.client{
       use Class.new.send(:include, RC::Middleware)
-    }.members.should.eq []
+    }.members.should.eq [:config_engine]
   end
 
   would 'not have duplicated fields' do

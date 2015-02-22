@@ -3,6 +3,7 @@ require 'rest-core/promise'
 require 'rest-core/middleware'
 
 class RestCore::Engine
+  def self.members; [:config_engine]; end
   include RestCore::Middleware
 
   def call env, &k

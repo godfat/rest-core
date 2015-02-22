@@ -9,6 +9,7 @@ class RestCore::HttpClient < RestCore::Engine
     client.cookie_manager = nil
     client.follow_redirect_count = 0
     client.transparent_gzip_decompression = true
+    config = config_engine(env) and config.call(client)
     payload, headers = payload_and_headers(env)
 
     if env[HIJACK]

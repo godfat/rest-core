@@ -685,6 +685,64 @@ and complete.
 
 [example/use-cases.rb]: example/use-cases.rb
 
+## Configure the underlying HTTP engine
+
+Occasionally we might want to configure the underlying HTTP engine, which
+for now is [httpclient][]. For example, we might not want to decompress
+gzip automatically, (rest-core configures httpclient to request and
+decompress gzip automatically). or we might want to skip verifying SSL
+in some situation. (e.g. making requests against a self-signed testing server)
+
+In such cases, we could use `config_engine` option to configure the underlying
+engine. This could be set with request based, client instance based, or
+client class based. Please refer to:
+[How We Pick the Default Value](#how-we-pick-the-default-value)
+Except that there's no middleware for `config_engine`.
+
+Here are some examples:
+
+``` ruby
+require 'rest-core'
+YourClient = RC::Builder.client
+
+# class based:
+def YourClient.default_config_engine
+  lambda do |engine|
+    # disable auto-gzip:
+    engine.transparent_gzip_decompression = false
+
+    # disable verifying SSL
+    engine.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  end
+end
+
+# instance based:
+client = YourClient.new(:config_engine => lambda do |engine|
+  # disable auto-gzip:
+  engine.transparent_gzip_decompression = false
+
+  # disable verifying SSL
+  engine.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+end)
+
+# request based:
+client.get('http://example.com/', {}, :config_engine => lambda do |engine|
+  # disable auto-gzip:
+  engine.transparent_gzip_decompression = false
+
+  # disable verifying SSL
+  engine.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+end)
+```
+
+As we stated in
+[How We Pick the Default Value](#how-we-pick-the-default-value),
+the priority here is:
+
+0. request based
+0. instance based
+0. class based
+
 ## rest-core users:
 
 * [rest-firebase](https://github.com/CodementorIO/rest-firebase)
@@ -727,7 +785,7 @@ and complete.
 
 Apache License 2.0
 
-Copyright (c) 2011-2014, Lin Jen-Shin (godfat)
+Copyright (c) 2011-2015, Lin Jen-Shin (godfat)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

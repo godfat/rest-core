@@ -54,7 +54,7 @@ class RestCore::Builder
   end
 
   def to_client *attrs
-    fields = members + attrs
+    fields = (members + attrs + [:config_engine]).uniq
     struct = build_struct(fields)
     client = Class.new(struct)
     client.const_set('Struct', struct)
