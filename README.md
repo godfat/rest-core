@@ -303,6 +303,8 @@ data periodically. We'll take Firebase as an example:
 
 If you are using Firebase, please consider [rest-firebase][] instead.
 
+[rest-firebase]: https://github.com/CodementorIO/rest-firebase
+
 ``` ruby
 require 'rest-core'
 
@@ -744,7 +746,7 @@ the priority here is:
 
 ## rest-core users:
 
-* [rest-firebase](https://github.com/CodementorIO/rest-firebase)
+* [rest-firebase][]
 * [rest-more][]
 * [rest-more-yahoo_buy](https://github.com/GoodLife/rest-more-yahoo_buy)
 * [s2sync](https://github.com/brucehsu/s2sync)
