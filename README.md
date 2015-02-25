@@ -301,8 +301,7 @@ Not only JavaScript could receive server-sent events, any languages could.
 Doing so would establish a keep-alive connection to the server, and receive
 data periodically. We'll take Firebase as an example:
 
-If you are using Firebase, please consider the pre-built client in
-[rest-more][] instead.
+If you are using Firebase, please consider [rest-firebase][] instead.
 
 ``` ruby
 require 'rest-core'
