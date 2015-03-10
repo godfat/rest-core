@@ -51,21 +51,21 @@ describe RC::Timeout do
 
   would 'cancel the task if timing out for thread pool' do
     timer = fake_timer
-    app   = sleeping_app
-    app.pool_size = 1
-    app.new.request(RC::TIMER => timer, RC::ASYNC => true).
+    a     = sleeping_app
+    a.pool_size = 1
+    a.new.request(RC::TIMER => timer, RC::ASYNC => true).
       message.should.eq 'boom'
     timer.timer.should.not.nil?
   end
 
   would 'still timeout if the task never processed for thread pool' do
-    app = sleeping_app
-    app.pool_size = 1
-    app.new.request(RC::TIMER => fake_timer, RC::ASYNC => true) do |e|
+    a = sleeping_app
+    a.pool_size = 1
+    a.new.request(RC::TIMER => fake_timer, RC::ASYNC => true) do |e|
       e.message.should.eq 'boom'
-      app.new.request(RC::TIMER => fake_timer, RC::ASYNC => true).tap{}
+      a.new.request(RC::TIMER => fake_timer, RC::ASYNC => true).tap{}
     end
-    app.wait
+    a.wait
   end
 
   would 'interrupt the task if timing out' do
@@ -85,7 +85,7 @@ describe RC::Timeout do
       def timer     ; @block; end
       self
     end
-    app = RC::Builder.client do
+    a = RC::Builder.client do
       run Class.new(RC::Engine){
         def request _, env
           env['pipe'].puts
@@ -94,8 +94,8 @@ describe RC::Timeout do
       }
     end
     (-1..1).each do |size|
-      app.pool_size = size
-      app.new.request(RC::TIMER => timer, RC::ASYNC => true, 'pipe' => wr).
+      a.pool_size = size
+      a.new.request(RC::TIMER => timer, RC::ASYNC => true, 'pipe' => wr).
         message.should.eq 'boom'
     end
   end

@@ -44,17 +44,17 @@ describe RC::ErrorHandler do
 
   would 'set full backtrace' do
     url = 'http://example.com/'
-    client = RC::Builder.client do
+    c = RC::Builder.client do
       use RC::ErrorHandler, lambda{ |env|
                               RuntimeError.new(env[RC::RESPONSE_BODY]) }
       use RC::ErrorDetectorHttp
     end.new
     stub_request(:get, url).to_return(:status => 404, :body => 'nnf')
-    client.get(url) do |error|
+    c.get(url) do |error|
       error.message.should.eq 'nnf'
       error.backtrace.grep(/^#{__FILE__}/).should.not.empty?
     end
-    client.wait
+    c.wait
   end
 
   would 'not call error_handler if there is already an exception' do

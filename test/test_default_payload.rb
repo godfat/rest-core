@@ -5,6 +5,10 @@ describe RC::DefaultPayload do
   app = RC::DefaultPayload.new(RC::Dry.new, {})
   env = {RC::REQUEST_PAYLOAD => {}}
 
+  before do
+    app.instance_eval{@payload = {}}
+  end
+
   would 'do nothing' do
     app.call(env){ |r| r[RC::REQUEST_PAYLOAD].should.eq({}) }
   end
@@ -16,9 +20,9 @@ describe RC::DefaultPayload do
       {'pay' => 'load'}}) }
 
     format = {'format' => 'json'}
-    env    = {RC::REQUEST_PAYLOAD => format}
+    e      = {RC::REQUEST_PAYLOAD => format}
 
-    app.call(env){ |r| r.should.eq({RC::REQUEST_PAYLOAD =>
+    app.call(e){ |r| r.should.eq({RC::REQUEST_PAYLOAD =>
       {'pay' => 'load'}.merge(format)})}
   end
 
@@ -32,15 +36,15 @@ describe RC::DefaultPayload do
 
   would 'accept non-hash payload' do
     u = RC::Universal.new(:log_method => false)
-    env = {RC::REQUEST_PAYLOAD => 'payload'}
-    u.request_full(env, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
+    e = {RC::REQUEST_PAYLOAD => 'payload'}
+    u.request_full(e, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
 
     u.payload = 'default'
-    u.request_full(env, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
-    u.request_full({} , u.dry)[RC::REQUEST_PAYLOAD].should.eq('default')
+    u.request_full( e, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
+    u.request_full({}, u.dry)[RC::REQUEST_PAYLOAD].should.eq('default')
 
     u = RC::Builder.client{use RC::DefaultPayload, 'maylord'}.new
-    u.request_full({} , u.dry)[RC::REQUEST_PAYLOAD].should.eq('maylord')
-    u.request_full(env, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
+    u.request_full({}, u.dry)[RC::REQUEST_PAYLOAD].should.eq('maylord')
+    u.request_full( e, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
   end
 end
