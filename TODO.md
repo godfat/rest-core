@@ -1,14 +1,13 @@
 # TODO
 
-* middleware revisit (how to initialize?)
-* X-Method-Override
+# NEAR FUTURE
 
-# FEATURE
+* revisit error_callback (use middleware)
+* ActiveRecord::ConnectionAdapters::ConnectionManagement
+
+# FAR FUTURE
 
 * middleware composer
 * headers and payload logs for CommonLogger
-
-# rest-request
-
 * fix DRY by defining `prepare :: env -> env`
 * FAIL and LOG need to be reimplemented as well.
