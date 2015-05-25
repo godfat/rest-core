@@ -3,7 +3,11 @@
 
 require 'rest-core/error'
 
-require 'mime/types'
+begin
+  require 'mime/types/columnar'
+rescue LoadError
+  require 'mime/types'
+end
 
 require 'stringio'
 require 'tempfile'
