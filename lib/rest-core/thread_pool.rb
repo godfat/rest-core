@@ -11,25 +11,24 @@ class RestCore::ThreadPool
   class Queue
     def initialize
       @queue = []
-      @mutex = Mutex.new
       @condv = ConditionVariable.new
     end
 
-    def << task
-      mutex.synchronize do
-        queue << task
-        condv.signal
-      end
+    def size
+      @queue.size
     end
 
-    def pop timeout=60
-      mutex.synchronize do
-        if queue.empty?
-          condv.wait(mutex, timeout)
-          queue.shift || lambda{ |_| false } # shutdown idle workers
-        else
-          queue.shift
-        end
+    def << task
+      queue << task
+      condv.signal
+    end
+
+    def pop mutex, timeout=60
+      if queue.empty?
+        condv.wait(mutex, timeout)
+        queue.shift || lambda{ |_| false } # shutdown idle workers
+      else
+        queue.shift
       end
     end
 
@@ -38,7 +37,7 @@ class RestCore::ThreadPool
     end
 
     protected
-    attr_reader :queue, :mutex, :condv
+    attr_reader :queue, :condv
   end
 
   class Task < Struct.new(:job, :mutex, :thread, :cancelled)
@@ -61,7 +60,7 @@ class RestCore::ThreadPool
     (@pools ||= {})[client_class] ||= new(client_class)
   end
 
-  attr_reader :client_class
+  attr_reader :client_class, :workers
 
   def initialize client_class
     @client_class = client_class
@@ -87,37 +86,43 @@ class RestCore::ThreadPool
     client_class.pool_idle_time
   end
 
-  def defer mutex=nil, &job
-    task = Task.new(job, mutex)
-    queue << task
-    spawn_worker if waiting == 0 && workers.size < max_size
-    task
+  def defer promise_mutex, &job
+    mutex.synchronize do
+      task = Task.new(job, promise_mutex)
+      queue << task
+      spawn_worker if waiting < queue.size && workers.size < max_size
+      task
+    end
   end
 
   def trim force=false
-    queue << lambda{ |_| false } if force || waiting > 0
+    mutex.synchronize do
+      queue << lambda{ |_| false } if force || waiting > 0
+    end
   end
 
   # Block on shutting down, and should not add more jobs while shutting down
   def shutdown
     workers.size.times{ trim(true) }
     workers.first.join && trim(true) until workers.empty?
-    queue.clear
+    mutex.synchronize{ queue.clear }
   end
 
   protected
-  attr_reader :queue, :mutex, :condv, :workers, :waiting
+  attr_reader :queue, :mutex, :condv, :waiting
 
   private
   def spawn_worker
     workers << Thread.new{
-      Thread.current.abort_on_exception = !!$DEBUG
+      Thread.current.abort_on_exception = true
 
       task = nil
       begin
-        mutex.synchronize{ @waiting += 1 }
-        task = queue.pop(idle_time)
-        mutex.synchronize{ @waiting -= 1 }
+        mutex.synchronize do
+          @waiting += 1
+          task = queue.pop(mutex, idle_time)
+          @waiting -= 1
+        end
       end while task.call(Thread.current)
 
       mutex.synchronize{ workers.delete(Thread.current) }
