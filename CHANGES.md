@@ -1,5 +1,11 @@
 # CHANGES
 
+## rest-core 3.5.5 -- 2015-07-22
+
+### Bugs fixed
+
+* Fixed a possible data race for thread pool when enqueuing very quickly.
+
 ## rest-core 3.5.4 -- 2015-01-17
 
 ### Bugs fixed

@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-# stub: rest-core 3.5.4 ruby lib
+# stub: rest-core 3.5.5 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "3.5.4"
+  s.version = "3.5.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2015-01-17"
+  s.date = "2015-07-22"
   s.description = "Modular Ruby clients interface for REST APIs.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/godfat/rest-more"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
@@ -113,7 +113,7 @@ Gem::Specification.new do |s|
   "test/test_universal.rb"]
   s.homepage = "https://github.com/godfat/rest-core"
   s.licenses = ["Apache License 2.0"]
-  s.rubygems_version = "2.4.5"
+  s.rubygems_version = "2.4.8"
   s.summary = "Modular Ruby clients interface for REST APIs."
   s.test_files = [
   "test/test_auth_basic.rb",
