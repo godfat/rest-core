@@ -1,5 +1,12 @@
 # CHANGES
 
+## rest-core 3.5.6 -- 2015-07-23
+
+### Bugs fixed
+
+* Removed changes shouldn't be made into JsonResponse. My bad.
+  I should `git stash` before making releases.
+
 ## rest-core 3.5.5 -- 2015-07-22
 
 ### Bugs fixed
