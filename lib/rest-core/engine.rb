@@ -15,7 +15,12 @@ class RestCore::Engine
 
   private
   def payload_and_headers env
-    Payload.generate_with_headers(env[REQUEST_PAYLOAD], env[REQUEST_HEADERS])
+    if has_payload?(env)
+      Payload.generate_with_headers(env[REQUEST_PAYLOAD],
+                                    env[REQUEST_HEADERS])
+    else
+      [{}, env[REQUEST_HEADERS]]
+    end
   end
 
   def normalize_headers headers

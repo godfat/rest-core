@@ -8,6 +8,22 @@ describe RC::Universal do
     WebMock.reset!
   end
 
+  would 'only send payload for post, put, patch' do
+    c = RC::Universal.new(:log_method => false, :payload => '$payload')
+    [:get, :delete, :head, :options].each do |method|
+      stub_request(method, url)
+      c.send(method, url).tap{}
+      assert_requested(method, url, :body => nil)
+    end
+
+    [:put, :post, :patch].each do |method|
+      stub_request(method, url).with(:body => '$payload')
+      c.send(method, url).tap{}
+      assert_requested(method, url, :body => '$payload')
+    end
+    ok
+  end
+
   would 'send Authorization header' do
     u = RC::Universal.new(:log_method => false)
     u.username = 'Aladdin'

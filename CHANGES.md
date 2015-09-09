@@ -1,5 +1,20 @@
 # CHANGES
 
+## rest-core 3.5.7 -- 2015-09-10
+
+### Incompatible changes
+
+* JSON_REQUEST_METHOD was removed.
+
+### Bugs fixed
+
+* GET/DELETE/HEAD/OPTIONS would no longer try to attach any payload.
+
+### Enhancements
+
+* Introduced Middleware.has_payload? which would detect if the request
+  should attach a payload or not.
+
 ## rest-core 3.5.6 -- 2015-07-23
 
 ### Bugs fixed

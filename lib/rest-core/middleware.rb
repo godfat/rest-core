@@ -4,6 +4,7 @@ require 'rest-core'
 
 module RestCore::Middleware
   include RestCore
+  METHODS_WITH_PAYLOAD = [:post, :put, :patch]
 
   def self.included mod
     mod.send(:include, RestCore)
@@ -95,6 +96,11 @@ module RestCore::Middleware
     end
   end
   public :escape
+
+  def has_payload? env
+    METHODS_WITH_PAYLOAD.include?(env[REQUEST_METHOD])
+  end
+  public :has_payload?
 
   def contain_binary? payload
     return false unless payload
