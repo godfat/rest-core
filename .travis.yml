@@ -9,3 +9,7 @@ rvm:
 
 install: 'bundle install --retry=3'
 script: 'ruby -r bundler/setup -S rake test'
+
+matrix:
+  allow_failures:
+    - rvm: rbx-2
