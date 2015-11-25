@@ -16,4 +16,4 @@ script: 'ruby -vr bundler/setup -S rake test'
 
 matrix:
   allow_failures:
-    rvm: rbx
+    - rvm: rbx
