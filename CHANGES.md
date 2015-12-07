@@ -1,5 +1,11 @@
 # CHANGES
 
+## rest-core 3.5.8 -- 2015-12-07
+
+### Enhancements
+
+* Added `Client.defer` for doing arbitrary asynchronous tasks.
+
 ## rest-core 3.5.7 -- 2015-09-10
 
 ### Incompatible changes
