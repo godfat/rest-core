@@ -118,6 +118,11 @@ class RestCore::Promise
     self
   end
 
+  # called in Client.defer to mark this promise as done
+  def done
+    fulfill('', 0, {})
+  end
+
   # It's considered done only if the HTTP request is done, and we're not
   # in asynchronous mode otherwise the callback should be called first.
   # For synchronous mode, since we're waiting for the callback anyway,

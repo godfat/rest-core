@@ -1,5 +1,6 @@
 
 require 'thread'
+require 'weakref'
 require 'rest-core/client'
 
 class RestCore::Builder
@@ -103,6 +104,20 @@ class RestCore::Builder
       end
 
       def thread_pool; RestCore::ThreadPool[self]; end
+
+      def defer
+        raise ArgumentError.new('no block given') unless block_given?
+        promise = RestCore::Promise.new(RestCore::CLIENT => self)
+        give_promise(WeakRef.new(promise))
+        promise.defer do
+          begin
+            yield
+          ensure
+            promise.done
+          end
+        end
+        promise
+      end
 
       def give_promise weak_promise, ps=promises, m=mutex
         m.synchronize do

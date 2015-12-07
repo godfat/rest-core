@@ -45,6 +45,18 @@ describe RC::Promise do
     @promise.send(:headers).should.eq('K' => 'V')
   end
 
+  would 'work, wait, done' do
+    @client.pool_size = 3
+    flag = 0
+    promise = @client.defer do
+      flag.should.eq 0
+      flag += 1
+    end
+    @client.wait
+    flag.should.eq 1
+    promise.should.done?
+  end
+
   would 'warn on callback error' do
     mock(any_instance_of(RC::Promise)).warn(is_a(String)) do |msg|
       msg.should.eq 'boom'

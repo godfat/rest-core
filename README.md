@@ -246,6 +246,22 @@ end
 
 If you're using unicorn, you probably want to put that in the config.
 
+### Random Asynchronous Tasks
+
+Occasionally we might want to do some asynchronous tasks which could take
+the advantage of the concurrency facilities inside rest-core, for example,
+using `wait` and `shutdown`. You could do this with `defer` for a particular
+client. Still take `RC::Universal` as an example:
+
+``` ruby
+RC::Universal.defer do
+  sleep(1)
+  puts "Slow task done"
+end
+
+RC::Universal.wait
+```
+
 ### Persistent connections (keep-alive connections)
 
 Since we're using [httpclient][] by default now, we would reuse connections,
