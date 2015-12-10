@@ -23,6 +23,7 @@ module RestCore::Json
     def decode json
       Yajl::Parser.parse(json)
     end
+    alias_method :decode_from_io, :decode
   end
 
   module Json

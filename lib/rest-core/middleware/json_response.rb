@@ -28,11 +28,16 @@ class RestCore::JsonResponse
   end
 
   def process response
-    # StackExchange returns the problematic BOM! in UTF-8, so we need to
-    # strip it or it would break JSON parsers (i.e. yajl-ruby and json)
     body = response[RESPONSE_BODY].to_s.sub(/\A\xEF\xBB\xBF/, '')
-    response.merge(RESPONSE_BODY => Json.decode("[#{body}]").first)
-    # [this].first is not needed for yajl-ruby
+    if response[HIJACK] && Json.respond_to?(:decode_from_io)
+      response.merge(
+        RESPONSE_SOCKET => Json.decode_from_io(response[RESPONSE_SOCKET]))
+    else
+      # StackExchange returns the problematic BOM! in UTF-8, so we need to
+      # strip it or it would break JSON parsers (i.e. yajl-ruby and json)
+      response.merge(RESPONSE_BODY => Json.decode("[#{body}]").first)
+      # [this].first is not needed for yajl-ruby
+    end
   rescue Json.const_get(:ParseError) => error
     fail(response, ParseError.new(error, body))
   end

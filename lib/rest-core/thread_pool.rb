@@ -60,7 +60,7 @@ class RestCore::ThreadPool
     (@pools ||= {})[client_class] ||= new(client_class)
   end
 
-  attr_reader :client_class, :workers
+  attr_reader :client_class, :queue, :workers, :waiting
 
   def initialize client_class
     @client_class = client_class
@@ -109,7 +109,7 @@ class RestCore::ThreadPool
   end
 
   protected
-  attr_reader :queue, :mutex, :condv, :waiting
+  attr_reader :mutex, :condv
 
   private
   def spawn_worker
