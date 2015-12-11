@@ -1,5 +1,18 @@
 # CHANGES
 
+## rest-core 3.5.9 -- 2015-12-11
+
+### Bugs fixed
+
+* Fixed a potential deadlock or using a partially loaded stuff for
+  _httpclient_. We fixed this by requiring eagerly instead of loading
+  it lazily. The offender was: _http-cookie_: `http/cookie_jar/hash_store.rb`.
+  _httpclient_ could try to load this eagerly or just don't load it since
+  we're not using `cookie_manager` anyway. The errors we've seen:
+  * `NoMethodError: undefined method `implementation' for HTTP::CookieJar::AbstractStore:Class`
+  * `ArgumentError: cookie store unavailable: :hash`
+  * deadlock (because it's requiring it in a thread)
+
 ## rest-core 3.5.8 -- 2015-12-07
 
 ### Enhancements

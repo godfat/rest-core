@@ -1,5 +1,8 @@
 
 require 'httpclient'
+# httpclient could require this in a thread causing deadlock, load it first!
+require 'http/cookie_jar/hash_store'
+
 require 'rest-core/engine'
 
 class RestCore::HttpClient < RestCore::Engine
