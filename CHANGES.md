@@ -1,5 +1,13 @@
 # CHANGES
 
+## rest-core 3.5.91 -- 2015-12-11
+
+### Bugs fixed
+
+* Instead of forcing to load `http/cookie_jar/hash_store.rb`, which is only
+  available when _http-cookie_ is available, we just initialize httpclient
+  and throw it away. Hopefully this would be more compatible between versions.
+
 ## rest-core 3.5.9 -- 2015-12-11
 
 ### Bugs fixed

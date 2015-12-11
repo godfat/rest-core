@@ -1,7 +1,8 @@
 
 require 'httpclient'
-# httpclient could require this in a thread causing deadlock, load it first!
-require 'http/cookie_jar/hash_store'
+# httpclient would require something (cookie manager) while initialized,
+# so we should try to force requiring them to avoid require deadlock!
+HTTPClient.new
 
 require 'rest-core/engine'
 
