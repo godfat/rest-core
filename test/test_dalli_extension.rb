@@ -17,7 +17,7 @@ describe RC::DalliExtension do
     RC::Cache.new(method(:engine), dalli, 10).
       call({RC::REQUEST_METHOD => :get,
             RC::REQUEST_HEADERS => {}}.merge(opts),
-           &:itself)[RC::RESPONSE_BODY]
+           &lambda{|_|_})[RC::RESPONSE_BODY]
   end
 
   would 'set and get' do
