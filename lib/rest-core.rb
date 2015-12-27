@@ -45,6 +45,7 @@ module RestCore
   autoload :Config        , 'rest-core/util/config'
   autoload :Clash         , 'rest-core/util/clash'
   autoload :Smash         , 'rest-core/util/smash'
+  autoload :DalliExtension, 'rest-core/util/dalli_extension'
 
   # middlewares
   autoload :AuthBasic     , 'rest-core/middleware/auth_basic'
