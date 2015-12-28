@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-# stub: rest-core 3.5.91 ruby lib
+# stub: rest-core 3.5.92 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "3.5.91"
+  s.version = "3.5.92"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2015-12-11"
+  s.date = "2015-12-28"
   s.description = "Modular Ruby clients interface for REST APIs.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/godfat/rest-more"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
@@ -66,6 +66,7 @@ Gem::Specification.new do |s|
   "lib/rest-core/timer.rb",
   "lib/rest-core/util/clash.rb",
   "lib/rest-core/util/config.rb",
+  "lib/rest-core/util/dalli_extension.rb",
   "lib/rest-core/util/hmac.rb",
   "lib/rest-core/util/json.rb",
   "lib/rest-core/util/parse_link.rb",
@@ -85,6 +86,7 @@ Gem::Specification.new do |s|
   "test/test_client.rb",
   "test/test_client_oauth1.rb",
   "test/test_config.rb",
+  "test/test_dalli_extension.rb",
   "test/test_default_headers.rb",
   "test/test_default_payload.rb",
   "test/test_default_query.rb",
@@ -113,7 +115,7 @@ Gem::Specification.new do |s|
   "test/test_universal.rb"]
   s.homepage = "https://github.com/godfat/rest-core"
   s.licenses = ["Apache License 2.0"]
-  s.rubygems_version = "2.5.0"
+  s.rubygems_version = "2.5.1"
   s.summary = "Modular Ruby clients interface for REST APIs."
   s.test_files = [
   "test/test_auth_basic.rb",
@@ -124,6 +126,7 @@ Gem::Specification.new do |s|
   "test/test_client.rb",
   "test/test_client_oauth1.rb",
   "test/test_config.rb",
+  "test/test_dalli_extension.rb",
   "test/test_default_headers.rb",
   "test/test_default_payload.rb",
   "test/test_default_query.rb",

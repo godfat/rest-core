@@ -1,5 +1,13 @@
 # CHANGES
 
+## rest-core 3.5.92 -- 2015-12-28
+
+### Enhancements
+
+* Added `RestCore::DalliExtension` for making `Dalli::Client` walk and quad
+  like `Hash` so that you could pass it as a cache client to
+  `RestCore::Cache`.
+
 ## rest-core 3.5.91 -- 2015-12-11
 
 ### Bugs fixed
