@@ -119,8 +119,8 @@ class RestCore::Promise
   end
 
   # called in Client.defer to mark this promise as done
-  def done
-    fulfill('', 0, {})
+  def done body=''
+    fulfill(body, 0, {})
   end
 
   # It's considered done only if the HTTP request is done, and we're not

@@ -111,9 +111,9 @@ class RestCore::Builder
         give_promise(WeakRef.new(promise))
         promise.defer do
           begin
-            yield
+            result = yield
           ensure
-            promise.done
+            promise.done(result)
           end
         end
         promise

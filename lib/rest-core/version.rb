@@ -1,4 +1,4 @@
 
 module RestCore
-  VERSION = '3.5.92'
+  VERSION = '3.6.0'
 end
