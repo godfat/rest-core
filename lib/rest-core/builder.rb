@@ -105,7 +105,7 @@ class RestCore::Builder
 
       def thread_pool; RestCore::ThreadPool[self]; end
 
-      def defer
+      def defer returns=:future_body
         raise ArgumentError.new('no block given') unless block_given?
         promise = RestCore::Promise.new(RestCore::CLIENT => self)
         give_promise(WeakRef.new(promise))
@@ -116,7 +116,7 @@ class RestCore::Builder
             promise.done(result)
           end
         end
-        promise
+        promise.send(returns)
       end
 
       def give_promise weak_promise, ps=promises, m=mutex

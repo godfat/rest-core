@@ -48,7 +48,7 @@ describe RC::Promise do
   would 'work, wait, done' do
     @client.pool_size = 3
     flag = 0
-    promise = @client.defer do
+    promise = @client.defer(:itself) do
       flag.should.eq 0
       flag += 1
     end
@@ -63,7 +63,7 @@ describe RC::Promise do
     result = @client.defer do
       flag.should.eq 0
       flag += 1
-    end.future_body
+    end
     result.should.eq 1
     flag.should.eq 1
   end
