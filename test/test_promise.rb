@@ -55,7 +55,7 @@ describe RC::Promise do
     @client.wait
     flag.should.eq 1
     promise.should.done?
-  end
+  end if Object.respond_to?(:itself)
 
   would 'work, check body' do
     @client.pool_size = 3
