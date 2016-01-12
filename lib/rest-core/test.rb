@@ -21,4 +21,8 @@ class Pork::Executor
   ensure
     f.close!
   end
+
+  def stub_select_for_stringio
+    stub(IO).select(where([is_a(StringIO)]), [], [], 30){ |rd, *| rd }
+  end
 end
