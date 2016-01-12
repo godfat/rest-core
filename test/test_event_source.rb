@@ -76,6 +76,7 @@ SSE
   end
 
   would 'reconnect' do
+    stub_select_for_stringio
     stub_request(:get, 'https://a?b=c').to_return(:body => <<-SSE)
 event: put
 data: 0
@@ -109,6 +110,7 @@ SSE
   end
 
   would 'not cache' do
+    stub_select_for_stringio
     stub_request(:get, 'https://a?b=c').to_return(:body => <<-SSE)
 event: put
 data: 0
