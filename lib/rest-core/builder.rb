@@ -107,13 +107,21 @@ class RestCore::Builder
 
       def defer returns=:future_body
         raise ArgumentError.new('no block given') unless block_given?
-        promise = RestCore::Promise.new(RestCore::CLIENT => self)
+        promise = RestCore::Promise.new({RestCore::CLIENT => self},
+          lambda{ |res|
+            if err = res[FAIL].find{ |f| f.kind_of?(Exception) }
+              Promise.set_backtrace(err) unless err.backtrace
+              raise err
+            else
+              res
+            end
+          })
         give_promise(WeakRef.new(promise))
         promise.defer do
           begin
-            result = yield
-          ensure
-            promise.done(result)
+            promise.done(yield)
+          rescue => e
+            promise.reject(e)
           end
         end
         promise.send(returns)
