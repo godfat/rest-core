@@ -110,10 +110,16 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
       end
       onmessage(event['event'], event['data'], sock)
     end
-    sock.close
+    close_sock(sock)
     onerror(EOFError.new, sock)
   rescue IOError, SystemCallError => e
+    close_sock(sock)
+    onerror(e, sock)
+  end
+
+  def close_sock sock
     sock.close
+  rescue IOError => e
     onerror(e, sock)
   end
 
