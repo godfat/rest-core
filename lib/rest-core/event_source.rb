@@ -5,6 +5,8 @@ require 'rest-core'
 class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
                                          :socket)
   include RestCore
+  READ_WAIT = 30
+
   def start
     self.mutex = Mutex.new
     self.condv = ConditionVariable.new
@@ -100,7 +102,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
   private
   # called in requesting thread after the request is done
   def onmessage_for sock
-    until sock.eof? || IO.select([sock], [], [], 30).nil?
+    until IO.select([sock], [], [], READ_WAIT).nil?
       event = sock.readline("\n\n").split("\n").inject({}) do |r, i|
         k, v = i.split(': ', 2)
         r[k] = v
@@ -111,6 +113,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
     sock.close
     onerror(EOFError.new, sock)
   rescue IOError, SystemCallError => e
+    sock.close
     onerror(e, sock)
   end
 
