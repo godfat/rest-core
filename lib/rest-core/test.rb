@@ -23,6 +23,7 @@ class Pork::Executor
   end
 
   def stub_select_for_stringio
-    stub(IO).select(where([is_a(StringIO)]), [], [], 30){ |rd, *| rd }
+    stub(IO).select(where([is_a(StringIO)]), [], [],
+                    RestCore::EventSource::READ_WAIT){ |rd, *| rd }
   end
 end
