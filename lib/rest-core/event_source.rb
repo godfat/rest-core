@@ -102,7 +102,7 @@ class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
   private
   # called in requesting thread after the request is done
   def onmessage_for sock
-    until IO.select([sock], [], [], READ_WAIT).nil?
+    while IO.select([sock], [], [], READ_WAIT)
       event = sock.readline("\n\n").split("\n").inject({}) do |r, i|
         k, v = i.split(': ', 2)
         r[k] = v
