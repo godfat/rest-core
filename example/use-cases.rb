@@ -8,6 +8,10 @@ RC::Universal.module_eval do
   def default_query
     {:access_token => ENV['FACEBOOK_ACCESS_TOKEN']}
   end
+
+  def default_timeout
+    10
+  end
 end
 
 def def_use_case name, &block
