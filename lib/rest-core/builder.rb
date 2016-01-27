@@ -91,8 +91,8 @@ class RestCore::Builder
 
   def build_class_methods
     Module.new do
-      attr_accessor :builder, :pool_size, :pool_idle_time,
-                    :event_source_class, :promises, :mutex
+      attr_accessor :builder, :event_source_class, :promises, :mutex
+      attr_reader :pool_size, :pool_idle_time
 
       def inherited sub
         sub.builder            = builder
@@ -103,8 +103,19 @@ class RestCore::Builder
         sub.mutex              = Mutex.new
       end
 
+      def pool_size= size
+        @pool_size = size
+        thread_pool.max_size = size
+      end
+
+      def pool_idle_time= time
+        @pool_idle_time = time
+        thread_pool.idle_time = time
+      end
+
       def thread_pool
-        @thread_pool ||= PromisePool::ThreadPool.new(0, 60)
+        @thread_pool ||=
+          PromisePool::ThreadPool.new(pool_size, pool_idle_time)
       end
 
       def defer

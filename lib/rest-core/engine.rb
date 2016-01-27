@@ -13,12 +13,15 @@ class RestCore::Engine
 
     promise.then{ |result| req.merge(result).merge(FAIL => env[FAIL]) }.
             then(&k)
-    # case env[CLIENT].pool_size
-    # when 0
+
+    pool_size = env[CLIENT].class.pool_size
+    if pool_size < 0
+      promise.call{ request(req) }
+    elsif pool_size == 0
       promise.defer{ request(req) }
-    # else
-    #   promise.defer(env[CLIENT].thread_pool){ request(req) }
-    # end
+    else
+      promise.defer(env[CLIENT].class.thread_pool){ request(req) }
+    end
 
     req
   end
