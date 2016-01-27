@@ -11,7 +11,8 @@ class RestCore::Engine
     req     = env.merge(REQUEST_URI => request_uri(env)).
                   merge(promise.future_response)
 
-    promise.then{ |result| req.merge(result) }.then(&k)
+    promise.then{ |result| req.merge(result).merge(FAIL => env[FAIL]) }.
+            then(&k)
     # case env[CLIENT].pool_size
     # when 0
       promise.defer{ request(req) }

@@ -9,7 +9,7 @@ YourClient = RC::Builder.client do
   use RC::Cache       , nil, 3600
 end
 
-YourClient.pool_size = 5
+YourClient.thread_pool.max_size = 5
 
 client = YourClient.new(:cache => {})
 p client.get('godfat') # cache miss
