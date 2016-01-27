@@ -1,5 +1,7 @@
 
 require 'promise_pool'
+require 'rest-core/builder'
+require 'rest-core/promise'
 
 module RestCore
   REQUEST_METHOD   = 'REQUEST_METHOD'
@@ -26,8 +28,6 @@ module RestCore
   HIJACK           = 'async.hijack'
 
   # core utilities
-  autoload :Builder       , 'rest-core/builder'
-  autoload :Client        , 'rest-core/client'
   autoload :Error         , 'rest-core/error'
   autoload :Event         , 'rest-core/event'
   autoload :Middleware    , 'rest-core/middleware'

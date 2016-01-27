@@ -4,8 +4,12 @@ require 'rest-core/test'
 
 describe RC::Promise::Future do
   would 'fulfill the future' do
-    promise = RC::Promise.new(RC::FAIL => [])
-    promise.fulfill('body', 200, {'A' => 'B'}, StringIO.new)
+    promise = RC::Promise.new
+    promise.fulfill(RC::RESPONSE_STATUS => 200,
+                    RC::RESPONSE_HEADERS => {'A' => 'B'},
+                    RC::RESPONSE_BODY => 'body',
+                    RC::RESPONSE_SOCKET => StringIO.new,
+                    RC::FAIL => [])
 
     promise.future_body    .should.eq 'body'
     promise.future_status  .should.eq 200

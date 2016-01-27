@@ -3,6 +3,7 @@ require 'thread'
 require 'weakref'
 require 'rest-core/client'
 
+module RestCore; end
 class RestCore::Builder
   include RestCore
 

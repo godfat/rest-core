@@ -3,6 +3,7 @@ require 'thread'
 require 'weakref'
 require 'rest-core'
 
+module RestCore; end
 module RestCore::Client
   include RestCore
 
@@ -211,7 +212,7 @@ module RestCore::Client
   private
   def request_complete res
     if err = res[FAIL].find{ |f| f.kind_of?(Exception) }
-      PromisePool::Promise.set_backtrace(err) unless err.backtrace
+      Promise.set_backtrace(err) unless err.backtrace
       error_callback.call(err) if error_callback
       if res[ASYNC]
         res.merge(response_key(res) => err)

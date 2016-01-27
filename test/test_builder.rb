@@ -37,4 +37,9 @@ describe RC::Builder do
     client.value = 10
     client.value.should.eq 10
   end
+
+  would 'have the same pool for the same client' do
+    client = RC::Builder.client
+    client.thread_pool.object_id.should.eq client.thread_pool.object_id
+  end
 end

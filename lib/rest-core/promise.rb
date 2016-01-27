@@ -2,18 +2,18 @@
 require 'promise_pool/promise'
 
 module RestCore
-  class Future < PromisePool::Future
-    def initialize promise, key
-      super(promise)
-      @key = key
-    end
-
-    def method_missing msg, *args, &block
-      @promise.yield[@key].__send__(msg, *args, &block)
-    end
-  end
-
   class Promise < PromisePool::Promise
+    class Future < PromisePool::Future
+      def initialize promise, key
+        super(promise)
+        @key = key
+      end
+
+      def method_missing msg, *args, &block
+        @promise.yield[@key].__send__(msg, *args, &block)
+      end
+    end
+
     def future_status  ; Future.new(self, RESPONSE_STATUS ); end
     def future_headers ; Future.new(self, RESPONSE_HEADERS); end
     def future_body    ; Future.new(self, RESPONSE_BODY   ); end
