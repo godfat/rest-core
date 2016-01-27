@@ -5,7 +5,7 @@ require 'rest-core'
 class RestCore::EventSource < Struct.new(:client, :path, :query, :opts,
                                          :socket)
   include RestCore
-  READ_WAIT = 30
+  READ_WAIT = 35
 
   def start
     self.mutex = Mutex.new
