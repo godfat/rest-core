@@ -1,5 +1,22 @@
 # CHANGES
 
+## rest-core 3.6.0 -- 2016-01-27
+
+### Incompatible changes
+
+* Client.defer would now raise an error if the block would raise an error.
+
+### Enhancements
+
+* EventSource would now try to close the socket (actually, pipe from
+  httpclient) if there's no data coming in in 35 seconds,
+  (RC::EventSource::READ_WAIT) therefore we could reconnect in this case.
+  This is mostly for rest-firebase, reference:
+  <https://github.com/CodementorIO/rest-firebase/issues/8>
+  We would surely need a way to configure this timeout rather than
+  hard coding it for 35 seconds as different services could use different
+  timeout. Thanks @volksport for investigating this.
+
 ## rest-core 3.5.92 -- 2015-12-28
 
 ### Enhancements
