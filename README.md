@@ -796,6 +796,7 @@ the priority here is:
 * Mariusz Pruszynski (@snicky)
 * Mr. Big Cat (@miaout17)
 * Nicolas Fouché (@nfo)
+* Robert Balousek (@volksport)
 * Szu-Kai Hsu (@brucehsu)
 
 ## LICENSE:
