@@ -216,8 +216,10 @@ module RestCore::Client
       error_callback.call(err) if error_callback
       if res[ASYNC]
         res.merge(response_key(res) => err)
-      else
+      elsif res[PROMISE] # promise would handle the exception for us
         err
+      else
+        raise err
       end
     else
       res

@@ -37,7 +37,7 @@ describe RC::DefaultPayload do
   would 'accept non-hash payload' do
     u = RC::Universal.new(:log_method => false)
     e = {RC::REQUEST_PAYLOAD => 'payload'}
-    u.request_full(e, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
+    u.request_full( e, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
 
     u.payload = 'default'
     u.request_full( e, u.dry)[RC::REQUEST_PAYLOAD].should.eq('payload')
