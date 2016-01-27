@@ -42,7 +42,7 @@ describe RC::Timeout do
   def sleeping_app
     RC::Builder.client do
       run Class.new(RC::Engine){
-        def request _, _
+        def request _
           sleep
         end
       }
