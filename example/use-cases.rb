@@ -23,8 +23,10 @@ def def_use_case name, &block
   end
 end
 
+@mutex = Mutex.new
+
 def q str
-  Thread.exclusive{ puts "\e[33m=> #{str.inspect}\e[0m" }
+  @mutex.synchronize{ puts "\e[33m=> #{str.inspect}\e[0m" }
 end
 
 # ----------------------------------------------------------------------
@@ -49,7 +51,7 @@ def_use_case 'pure_ruby_callback_requests' do
   RC::Universal.new(:json_response => true                                  ,
                     :site          => 'https://graph.facebook.com/'         ,
                     :log_method    => lambda{|str|
-                      Thread.exclusive{puts(str)}}).
+                      @mutex.synchronize{puts(str)}}).
     get('4'){ |res|
       if res.kind_of?(Exception)
         q "Encountering: #{res}"
@@ -70,7 +72,7 @@ def_use_case 'pure_ruby_nested_concurrent_requests' do
   c = RC::Universal.new(:json_response => true                              ,
                         :site          => 'https://graph.facebook.com/'     ,
                         :log_method => lambda{ |str|
-                          Thread.exclusive{puts(str)}})
+                          @mutex.synchronize{puts(str)}})
 
   %w[4 5].each{ |user|
     c.get(user, :fields => 'cover'){ |data|
