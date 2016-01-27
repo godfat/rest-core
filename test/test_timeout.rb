@@ -18,7 +18,7 @@ describe RC::Timeout do
   would 'run the process to setup timeout' do
     env = {'timeout' => 2}
     mock(app).process(env)
-    app.call(env){|e| e[RC::TIMER].should.kind_of?(RC::Timer)}
+    app.call(env){|e| e[RC::TIMER].should.kind_of?(PromisePool::Timer)}
   end
 
   would "not raise timeout error if there's already an error" do
@@ -32,7 +32,7 @@ describe RC::Timeout do
     Object.new.instance_eval do
       @block = nil
       def on_timeout; @block = true; Thread.new{yield}; end
-      def error     ; 'boom'; end
+      def error     ; RuntimeError.new('boom')        ; end
       def cancel    ;       ; end
       def timer     ; @block; end
       self
@@ -80,14 +80,14 @@ describe RC::Timeout do
           @block = nil
         end
       end
-      def error     ; 'boom'; end
-      def cancel    ;       ; end
-      def timer     ; @block; end
+      def error     ; RuntimeError.new('boom'); end
+      def cancel    ;                         ; end
+      def timer     ; @block                  ; end
       self
     end
     a = RC::Builder.client do
       run Class.new(RC::Engine){
-        def request _, env
+        def request env
           env['pipe'].puts
           sleep
         end
