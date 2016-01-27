@@ -7,10 +7,19 @@ class RestCore::Engine
   include RestCore::Middleware
 
   def call env, &k
-    req     = env.merge(REQUEST_URI => request_uri(env))
-    promise = Promise.new(req, k, req[ASYNC])
-    promise.defer{ request(promise, req) }
-    promise.future_response
+    promise = Promise.new(env[TIMER])
+    req     = env.merge(REQUEST_URI => request_uri(env)).
+                  merge(promise.future_response)
+
+    promise.then{ |result| req.merge(result) }.then(&k)
+    # case env[CLIENT].pool_size
+    # when 0
+      promise.defer{ request(req) }
+    # else
+    #   promise.defer(env[CLIENT].thread_pool){ request(req) }
+    # end
+
+    req
   end
 
   private

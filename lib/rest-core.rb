@@ -1,4 +1,6 @@
 
+require 'promise_pool'
+
 module RestCore
   REQUEST_METHOD   = 'REQUEST_METHOD'
   REQUEST_PATH     = 'REQUEST_PATH'
@@ -29,8 +31,6 @@ module RestCore
   autoload :Error         , 'rest-core/error'
   autoload :Event         , 'rest-core/event'
   autoload :Middleware    , 'rest-core/middleware'
-  autoload :Promise       , 'rest-core/promise'
-  autoload :ThreadPool    , 'rest-core/thread_pool'
   autoload :EventSource   , 'rest-core/event_source'
 
   # oauth1 utilities

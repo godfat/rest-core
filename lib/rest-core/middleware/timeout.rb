@@ -2,7 +2,6 @@
 require 'timeout'
 
 require 'rest-core/middleware'
-require 'rest-core/timer'
 
 class RestCore::Timeout
   def self.members; [:timeout]; end
@@ -14,7 +13,7 @@ class RestCore::Timeout
   end
 
   def process env, &k
-    timer = Timer.new(timeout(env), timeout_error)
+    timer = PromisePool::Timer.new(timeout(env), timeout_error)
     app.call(env.merge(TIMER => timer), &k)
   rescue Exception
     timer.cancel

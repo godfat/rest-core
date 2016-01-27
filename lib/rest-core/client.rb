@@ -211,7 +211,7 @@ module RestCore::Client
   private
   def request_complete res
     if err = res[FAIL].find{ |f| f.kind_of?(Exception) }
-      Promise.set_backtrace(err) unless err.backtrace
+      PromisePool::Promise.set_backtrace(err) unless err.backtrace
       error_callback.call(err) if error_callback
       if res[ASYNC]
         res.merge(response_key(res) => err)

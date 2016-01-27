@@ -103,28 +103,15 @@ class RestCore::Builder
         sub.mutex              = Mutex.new
       end
 
-      def thread_pool; RestCore::ThreadPool[self]; end
+      def thread_pool
+        @thread_pool ||= PromisePool::ThreadPool.new(0, 60)
+      end
 
-      def defer returns=:future_body
+      def defer
         raise ArgumentError.new('no block given') unless block_given?
-        promise = RestCore::Promise.new({RestCore::CLIENT => self},
-          lambda{ |res|
-            if err = res[FAIL].find{ |f| f.kind_of?(Exception) }
-              Promise.set_backtrace(err) unless err.backtrace
-              raise err
-            else
-              res
-            end
-          })
+        promise = PromisePool::Promise.new(thread_pool)
         give_promise(WeakRef.new(promise))
-        promise.defer do
-          begin
-            promise.done(yield)
-          rescue => e
-            promise.reject(e)
-          end
-        end
-        promise.send(returns)
+        promise.defer{ yield }.future
       end
 
       def give_promise weak_promise, ps=promises, m=mutex

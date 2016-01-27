@@ -8,7 +8,7 @@ require 'rest-core/engine'
 
 class RestCore::HttpClient < RestCore::Engine
   private
-  def request promise, env
+  def request env
     client = ::HTTPClient.new
     client.cookie_manager = nil
     client.follow_redirect_count = 0
@@ -17,25 +17,28 @@ class RestCore::HttpClient < RestCore::Engine
     payload, headers = payload_and_headers(env)
 
     if env[HIJACK]
-      request_async(client, payload, headers, promise, env)
+      request_async(client, payload, headers, env)
     else
-      request_sync(client, payload, headers, promise, env)
+      request_sync(client, payload, headers, env)
     end
   end
 
-  def request_sync client, payload, headers, promise, env
+  def request_sync client, payload, headers, env
     res = client.request(env[REQUEST_METHOD], env[REQUEST_URI], nil,
             payload, {'User-Agent' => 'Ruby'}.merge(headers))
 
-    promise.fulfill(res.content, res.status,
-                    normalize_headers(res.header.all))
+    {RESPONSE_STATUS  => res.status,
+     RESPONSE_HEADERS => normalize_headers(res.header.all),
+     RESPONSE_BODY    => res.content}
   end
 
-  def request_async client, payload, headers, promise, env
+  def request_async client, payload, headers, env
     res = client.request_async(env[REQUEST_METHOD], env[REQUEST_URI], nil,
             payload, {'User-Agent' => 'Ruby'}.merge(headers)).pop
 
-    promise.fulfill('', res.status,
-                    normalize_headers(res.header.all), res.content)
+    {RESPONSE_STATUS  => res.status,
+     RESPONSE_HEADERS => normalize_headers(res.header.all),
+     RESPONSE_BODY    => '',
+     RESPONSE_SOCKET  => res.content}
   end
 end

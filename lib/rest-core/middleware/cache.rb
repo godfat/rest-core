@@ -1,5 +1,6 @@
 
 require 'rest-core/event'
+require 'rest-core/promise'
 require 'rest-core/middleware'
 
 require 'digest/md5'
@@ -102,8 +103,12 @@ class RestCore::Cache
     _, status, headers, body =
       data.match(/\A(\d*)\n((?:[^\n]+\n)*)\n\n(.*)\Z/m).to_a
 
-    Promise.claim(res, k, body, status.to_i,
-      Hash[(headers||'').scan(/([^:]+): ([^\n]+)\n/)]).future_response
+    result = res.merge(RESPONSE_STATUS => status.to_i,
+                       RESPONSE_HEADERS =>
+                         Hash[(headers||'').scan(/([^:]+): ([^\n]+)\n/)],
+                       RESPONSE_BODY => body)
+
+    Promise.claim(result, &k).future_response
   end
 
   def cache_for? env
