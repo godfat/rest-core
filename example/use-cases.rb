@@ -4,6 +4,12 @@ RC.eagerload
 
 RC::Universal.pool_size = 0 # default to no thread pool
 
+RC::Universal.module_eval do
+  def default_query
+    {:access_token => ENV['FACEBOOK_ACCESS_TOKEN']}
+  end
+end
+
 def def_use_case name, &block
   singleton_class.send(:define_method, "#{name}_") do
     begin
