@@ -68,6 +68,8 @@ describe RC::Timeout do
     a.wait
   end
 
+  # ConcurrencyError: interrupted waiting for mutex
+  # https://travis-ci.org/godfat/rest-core/jobs/105298777
   would 'interrupt the task if timing out' do
     rd, wr = IO.pipe
     timer = Object.new.instance_eval do
