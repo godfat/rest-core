@@ -29,8 +29,7 @@ class RestCore::HttpClient < RestCore::Engine
 
     {RESPONSE_STATUS  => res.status,
      RESPONSE_HEADERS => normalize_headers(res.header.all),
-     RESPONSE_BODY    => res.content,
-     RESPONSE_SOCKET  => nil}
+     RESPONSE_BODY    => res.content}
   end
 
   def request_async client, payload, headers, env

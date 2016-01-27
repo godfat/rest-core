@@ -8,11 +8,20 @@ class RestCore::Engine
 
   def call env, &k
     promise = Promise.new(env[TIMER])
-    req     = env.merge(REQUEST_URI => request_uri(env)).
-                  merge(promise.future_response)
+    req     = env.merge(REQUEST_URI => request_uri(env))
 
-    promise.then{ |result| req.merge(result).merge(FAIL => env[FAIL]) }.
-            then(&k)
+    promise.then do |result|
+      case result
+      when Exception
+        if env[ASYNC]
+          req.merge(req[RESPONSE_KEY] => result)
+        else
+          req.merge(FAIL => env[FAIL] + [result])
+        end
+      else
+        req.merge(result)
+      end
+    end.then(&k)
 
     pool_size = env[CLIENT].class.pool_size
     if pool_size < 0
@@ -23,7 +32,7 @@ class RestCore::Engine
       promise.defer(env[CLIENT].class.thread_pool){ request(req) }
     end
 
-    req
+    req.merge(promise.future_response)
   end
 
   private
