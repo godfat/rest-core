@@ -108,7 +108,7 @@ class RestCore::Cache
                          Hash[(headers||'').scan(/([^:]+): ([^\n]+)\n/)],
                        RESPONSE_BODY => body)
 
-    Promise.claim(result, &k).future_response
+    result.merge(Promise.claim(result, &k).future_response)
   end
 
   def cache_for? env
