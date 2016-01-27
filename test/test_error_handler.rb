@@ -19,21 +19,22 @@ describe RC::ErrorHandler do
     would 'give an error with callback' do
       client.new.get('/', {}, RC::FAIL => [exp.new('fail')]){ |res|
         res.should.kind_of?(exp)
-      }
+      }.wait
     end
   end
 
   describe 'error_handler gives an exception' do
     would 'raise an error with future' do
       lambda{
-      client.new(:error_handler => lambda{ |res| exp.new }).
-        get('/', {}, RC::FAIL => [true])
+        client.new(:error_handler => lambda{ |res| exp.new }).
+          get('/', {}, RC::FAIL => [true])
       }.should.raise(exp)
     end
 
     would 'give an error with callback' do
       client.new(:error_handler => lambda{ |res| exp.new }).
-        get('/', {}, RC::FAIL => [true]){ |res| res.should.kind_of?(exp) }
+        get('/', {}, RC::FAIL => [true]){ |res| res.should.kind_of?(exp) }.
+        wait
     end
   end
 
