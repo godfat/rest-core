@@ -13,11 +13,7 @@ class RestCore::Engine
     promise.then do |result|
       case result
       when Exception
-        if env[ASYNC]
-          req.merge(req[RESPONSE_KEY] => result)
-        else
-          req.merge(FAIL => env[FAIL] + [result])
-        end
+        req.merge(FAIL => env[FAIL] + [result])
       else
         req.merge(result)
       end

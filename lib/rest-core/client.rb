@@ -216,7 +216,7 @@ module RestCore::Client
       if res[ASYNC]
         res.merge(response_key(res) => err)
       else
-        raise err
+        err
       end
     else
       res
