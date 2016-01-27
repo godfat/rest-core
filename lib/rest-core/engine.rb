@@ -8,7 +8,7 @@ class RestCore::Engine
 
   def call env, &k
     promise = Promise.new(env[TIMER])
-    req     = env.merge(REQUEST_URI => request_uri(env))
+    req     = env.merge(REQUEST_URI => request_uri(env), PROMISE => promise)
 
     promise.then do |result|
       case result
