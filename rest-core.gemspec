@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: rest-core 3.6.0 ruby lib
+# stub: rest-core 4.0.0 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "rest-core"
-  s.version = "3.6.0"
+  s.version = "4.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
@@ -36,7 +36,6 @@ Gem::Specification.new do |s|
   "lib/rest-core/error.rb",
   "lib/rest-core/event.rb",
   "lib/rest-core/event_source.rb",
-  "lib/rest-core/future.rb",
   "lib/rest-core/middleware.rb",
   "lib/rest-core/middleware/auth_basic.rb",
   "lib/rest-core/middleware/bypass.rb",
@@ -63,8 +62,6 @@ Gem::Specification.new do |s|
   "lib/rest-core/middleware/timeout.rb",
   "lib/rest-core/promise.rb",
   "lib/rest-core/test.rb",
-  "lib/rest-core/thread_pool.rb",
-  "lib/rest-core/timer.rb",
   "lib/rest-core/util/clash.rb",
   "lib/rest-core/util/config.rb",
   "lib/rest-core/util/dalli_extension.rb",
@@ -128,13 +125,11 @@ Gem::Specification.new do |s|
   "test/test_oauth2_header.rb",
   "test/test_parse_link.rb",
   "test/test_payload.rb",
-  "test/test_promise.rb",
   "test/test_query_response.rb",
   "test/test_retry.rb",
   "test/test_simple.rb",
   "test/test_smash.rb",
   "test/test_smash_response.rb",
-  "test/test_thread_pool.rb",
   "test/test_timeout.rb",
   "test/test_universal.rb"]
   s.homepage = "https://github.com/godfat/rest-core"
@@ -168,13 +163,11 @@ Gem::Specification.new do |s|
   "test/test_oauth2_header.rb",
   "test/test_parse_link.rb",
   "test/test_payload.rb",
-  "test/test_promise.rb",
   "test/test_query_response.rb",
   "test/test_retry.rb",
   "test/test_simple.rb",
   "test/test_smash.rb",
   "test/test_smash_response.rb",
-  "test/test_thread_pool.rb",
   "test/test_timeout.rb",
   "test/test_universal.rb"]
 
