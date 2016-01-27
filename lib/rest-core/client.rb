@@ -1,7 +1,6 @@
 
 require 'thread'
 require 'weakref'
-require 'rest-core'
 
 module RestCore; end
 module RestCore::Client
