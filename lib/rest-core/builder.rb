@@ -148,9 +148,8 @@ module RestCore
             ps.clear
           end
           current_promises.each do |p|
-            next unless p.weakref_alive?
             begin
-              p.wait
+              p.weakref_alive? && p.wait
             rescue WeakRef::RefError # it's gc'ed after we think it's alive
             end
           end
