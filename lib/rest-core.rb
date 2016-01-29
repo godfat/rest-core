@@ -95,11 +95,6 @@ module RestCore
       eagerload(c, loaded) if c.respond_to?(:constants) && !loaded[n]
     }
   end
-
-  # identity function
-  def self.id
-    @id ||= lambda{ |a| a }
-  end
 end
 
 RC = RestCore unless Object.const_defined?(:RC)

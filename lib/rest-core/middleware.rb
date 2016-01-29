@@ -35,8 +35,7 @@ module RestCore::Middleware
     mod.send(:include, accessor)
   end
 
-  def call env, &k; app.call(env, &(k || id)); end
-  def id          ; RC.id                    ; end
+  def call env, &k; app.call(env, &(k || :itself.to_proc)); end
   def fail env, obj
     if obj
       env.merge(FAIL => (env[FAIL] || []) + [obj])

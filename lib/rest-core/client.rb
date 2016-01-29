@@ -164,7 +164,7 @@ module RestCore::Client
 
   def request_full env, a=app, &k
     response = a.call(build_env({ASYNC => !!k}.merge(env))) do |res|
-      (k || RC.id).call(request_complete(res))
+      (k || :itself.to_proc).call(request_complete(res))
     end
 
     give_promise(response)
