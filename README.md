@@ -48,13 +48,15 @@ less memory, less conflicts, and run faster.
 ### Mandatory:
 
 * Tested with MRI (official CRuby), Rubinius and JRuby.
+* gem [promise_pool][]
+* gem [timers][]
 * gem [httpclient][]
 * gem [mime-types][]
-* gem [timers][]
 
+[promise_pool]: https://github.com/godfat/promise_pool
+[timers]: https://github.com/celluloid/timers
 [httpclient]: https://github.com/nahi/httpclient
 [mime-types]: https://github.com/halostatue/mime-types
-[timers]: https://github.com/celluloid/timers
 
 ### Optional:
 
@@ -773,6 +775,7 @@ the priority here is:
 
 * [Codementor](https://www.codementor.io/)
 * [PicCollage](http://pic-collage.com/)
+* [GW2 Account Viewer](https://www.godfat.org/gw2)
 
 ## CHANGES:
 
