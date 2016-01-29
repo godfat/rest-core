@@ -180,7 +180,7 @@ module RestCore
       # under ASYNC callback, response might not be a response hash
       # in that case (maybe in a user created engine), Client#wait
       # won't work because we have no way to track the promise.
-      if response.kind_of?(Hash) && response[PROMISE].kind_of?(Promise)
+      if response.kind_of?(Hash) && response[PROMISE]
         weak_promise = WeakRef.new(response[PROMISE])
         self.class.give_promise(weak_promise)
         self.class.give_promise(weak_promise, promises, mutex)
