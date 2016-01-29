@@ -137,7 +137,7 @@ describe RC::Cache do
     2.times{ c.get(*args).yield[RC::REQUEST_URI].should.eq uri }
   end
 
-  # Pork::Error: Missing assertions
+  # TODO: Pork::Error: Missing assertions
   # https://travis-ci.org/godfat/rest-core/jobs/105298775
   would 'preserve promise and preserve wrapped call' do
     c = json_client
