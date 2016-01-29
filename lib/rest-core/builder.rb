@@ -10,7 +10,7 @@ module RestCore
     singleton_class.module_eval do
       attr_writer :default_engine
       def default_engine
-        @default_engine ||= RestCore::HttpClient
+        @default_engine ||= HttpClient
       end
 
       def client *attrs, &block

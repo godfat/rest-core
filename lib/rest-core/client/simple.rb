@@ -2,5 +2,5 @@
 require 'rest-core/builder'
 
 module RestCore
-  Simple = RestCore::Builder.client
+  Simple = Builder.client
 end
