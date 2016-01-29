@@ -16,5 +16,6 @@ describe RC::Promise::Future do
     promise.future_headers .should.eq('A' => 'B')
     promise.future_socket  .should.kind_of?(StringIO)
     promise.future_failures.should.eq []
+    ([] + promise.future_failures).should.eq []
   end
 end

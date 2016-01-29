@@ -12,6 +12,10 @@ module RestCore
       def method_missing msg, *args, &block
         @promise.yield[@key].__send__(msg, *args, &block)
       end
+
+      def respond_to_missing? msg, *args, &block
+        @promise.yield[@key].respond_to?(msg, *args, &block)
+      end
     end
 
     def future_status  ; Future.new(self, RESPONSE_STATUS ); end
