@@ -1,4 +1,5 @@
 
+require 'rest-core/event'
 require 'rest-core/middleware'
 
 # http://tools.ietf.org/html/rfc6749

@@ -1,4 +1,5 @@
 
+require 'rest-core/event'
 require 'rest-core/middleware'
 require 'rest-core/util/hmac'
 

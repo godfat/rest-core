@@ -1,7 +1,9 @@
 
 require 'thread'
 require 'weakref'
+
 require 'rest-core/client'
+require 'rest-core/event_source'
 
 module RestCore; end
 class RestCore::Builder

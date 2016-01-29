@@ -1,5 +1,6 @@
 
 require 'promise_pool'
+
 require 'rest-core/builder'
 require 'rest-core/promise'
 
@@ -27,11 +28,10 @@ module RestCore
   PROMISE          = 'async.promise'
   HIJACK           = 'async.hijack'
 
+  Error = Class.new(RuntimeError)
+
   # core utilities
-  autoload :Error         , 'rest-core/error'
-  autoload :Event         , 'rest-core/event'
   autoload :Middleware    , 'rest-core/middleware'
-  autoload :EventSource   , 'rest-core/event_source'
 
   # oauth1 utilities
   autoload :ClientOauth1  , 'rest-core/client_oauth1'
