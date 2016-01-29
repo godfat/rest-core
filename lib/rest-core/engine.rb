@@ -6,7 +6,7 @@ require 'rest-core/util/payload'
 module RestCore
   class Engine
     def self.members; [:config_engine]; end
-    include RestCore::Middleware
+    include Middleware
 
     def call env, &k
       promise = Promise.new(env[TIMER])

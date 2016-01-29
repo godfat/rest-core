@@ -1,9 +1,11 @@
 
 require 'rest-core/middleware'
 
-class RestCore::Dry
-  include RestCore::Middleware
-  def call env
-    yield(env)
+module RestCore
+  class Dry
+    include Middleware
+    def call env
+      yield(env)
+    end
   end
 end

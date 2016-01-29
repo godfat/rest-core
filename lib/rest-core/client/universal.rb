@@ -1,4 +1,6 @@
 
+require 'rest-core/builder'
+
 module RestCore
   Universal = Builder.client do
     use DefaultSite   , nil
