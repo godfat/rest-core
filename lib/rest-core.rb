@@ -28,11 +28,6 @@ module RestCore
   PROMISE          = 'async.promise'
   HIJACK           = 'async.hijack'
 
-  Error = Class.new(RuntimeError)
-
-  # core utilities
-  autoload :Middleware    , 'rest-core/middleware'
-
   # oauth1 utilities
   autoload :ClientOauth1  , 'rest-core/client_oauth1'
 

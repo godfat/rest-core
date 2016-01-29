@@ -1,9 +1,6 @@
 
 module RestCore
-  EventStruct = Struct.new(:duration, :message) unless
-    RestCore.const_defined?(:EventStruct)
-
-  class Event < EventStruct
+  class Event < Struct.new(:duration, :message)
     def name; self.class.name[/(?<=::)\w+$/]; end
     def to_s
       if duration
@@ -13,11 +10,12 @@ module RestCore
       end
     end
   end
-  class Event::MultiDone    < Event; end
-  class Event::Requested    < Event; end
-  class Event::CacheHit     < Event; end
-  class Event::CacheCleared < Event; end
-  class Event::Failed       < Event; end
-  class Event::WithHeader   < Event; end
-  class Event::Retrying     < Event; end
+
+  Event::MultiDone    = Class.new(Event)
+  Event::Requested    = Class.new(Event)
+  Event::CacheHit     = Class.new(Event)
+  Event::CacheCleared = Class.new(Event)
+  Event::Failed       = Class.new(Event)
+  Event::WithHeader   = Class.new(Event)
+  Event::Retrying     = Class.new(Event)
 end
