@@ -48,11 +48,13 @@ less memory, less conflicts, and run faster.
 ### Mandatory:
 
 * Tested with MRI (official CRuby), Rubinius and JRuby.
+* gem [rest-builder][]
 * gem [promise_pool][]
 * gem [timers][]
 * gem [httpclient][]
 * gem [mime-types][]
 
+[rest-builder]: https://github.com/godfat/rest-builder
 [promise_pool]: https://github.com/godfat/promise_pool
 [timers]: https://github.com/celluloid/timers
 [httpclient]: https://github.com/nahi/httpclient
