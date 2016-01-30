@@ -1,6 +1,4 @@
 
-require 'rest-core/middleware'
-
 module RestCore
   class DefaultHeaders
     def self.members; [:headers]; end

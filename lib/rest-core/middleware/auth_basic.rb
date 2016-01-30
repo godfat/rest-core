@@ -1,6 +1,4 @@
 
-require 'rest-core/middleware'
-
 module RestCore
   class AuthBasic
     def self.members; [:username, :password]; end

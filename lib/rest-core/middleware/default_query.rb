@@ -1,6 +1,4 @@
 
-require 'rest-core/middleware'
-
 module RestCore
   class DefaultQuery
     def self.members; [:query]; end

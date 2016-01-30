@@ -1,6 +1,5 @@
 
 require 'rest-core/event'
-require 'rest-core/middleware'
 
 module RestCore
   class Retry

@@ -1,5 +1,4 @@
 
-require 'rest-core/middleware'
 require 'rest-core/util/parse_query'
 
 module RestCore

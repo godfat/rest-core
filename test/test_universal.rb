@@ -70,4 +70,11 @@ describe RC::Universal do
     errors.map(&:class).should.eq [Errno::ECONNREFUSED]*2
     called.map(&:class).should.eq [Errno::ECONNREFUSED]
   end
+
+  would 'not deadlock with ErrorHandler' do
+    c = RC::Universal.new(:log_method => false).
+               event_source('http://localhost:1')
+    c.onerror{ |e| e.should.kind_of?(Errno::ECONNREFUSED) }
+    c.start.wait
+  end
 end

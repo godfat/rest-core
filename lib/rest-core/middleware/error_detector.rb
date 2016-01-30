@@ -1,6 +1,4 @@
 
-require 'rest-core/middleware'
-
 module RestCore
   class ErrorDetector
     def self.members; [:error_detector]; end

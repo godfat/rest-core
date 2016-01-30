@@ -1,6 +1,4 @@
 
-require 'rest-core/middleware'
-
 module RestCore
   # http://tools.ietf.org/html/rfc6749
   class Oauth2Query

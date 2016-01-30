@@ -1,6 +1,4 @@
 
-require 'rest-core/middleware'
-
 module RestCore
   class FollowRedirect
     def self.members; [:max_redirects]; end

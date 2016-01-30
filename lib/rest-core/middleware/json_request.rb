@@ -1,5 +1,4 @@
 
-require 'rest-core/middleware'
 require 'rest-core/util/json'
 
 module RestCore

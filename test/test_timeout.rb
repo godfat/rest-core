@@ -1,6 +1,5 @@
 
 require 'rest-core/test'
-require 'rest-core/engine'
 
 describe RC::Timeout do
   app = RC::Timeout.new(RC::Dry.new, 0)

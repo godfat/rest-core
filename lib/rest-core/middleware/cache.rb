@@ -1,9 +1,6 @@
 
-require 'rest-core/event'
-require 'rest-core/promise'
-require 'rest-core/middleware'
-
 require 'digest/md5'
+require 'rest-core/event'
 
 module RestCore
   class Cache

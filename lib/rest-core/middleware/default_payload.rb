@@ -1,6 +1,4 @@
 
-require 'rest-core/middleware'
-
 module RestCore
   class DefaultPayload
     def self.members; [:payload]; end

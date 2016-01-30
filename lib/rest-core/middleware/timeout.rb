@@ -1,8 +1,6 @@
 
 require 'timeout'
 
-require 'rest-core/middleware'
-
 module RestCore
   class Timeout
     def self.members; [:timeout]; end

@@ -1,6 +1,4 @@
 
-require 'rest-core/middleware'
-
 module RestCore
   class ErrorHandler
     def self.members; [:error_handler]; end

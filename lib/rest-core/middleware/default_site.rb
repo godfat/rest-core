@@ -1,6 +1,4 @@
 
-require 'rest-core/middleware'
-
 module RestCore
   class DefaultSite
     def self.members; [:site]; end

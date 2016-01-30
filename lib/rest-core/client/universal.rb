@@ -1,8 +1,8 @@
 
-require 'rest-core/builder'
+require 'rest-core'
 
 module RestCore
-  Universal = Builder.client do
+  Universal = RestBuilder::Builder.client do
     use DefaultSite   , nil
     use DefaultHeaders, {}
     use DefaultQuery  , {}

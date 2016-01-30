@@ -1,6 +1,4 @@
 
-require 'rest-core/middleware'
-
 module RestCore
   class Defaults
     def self.members; [:defaults]; end

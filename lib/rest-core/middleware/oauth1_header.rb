@@ -1,9 +1,7 @@
 
-require 'rest-core/event'
-require 'rest-core/middleware'
-require 'rest-core/util/hmac'
-
 require 'openssl'
+require 'rest-core/event'
+require 'rest-core/util/hmac'
 
 module RestCore
   # http://tools.ietf.org/html/rfc5849
