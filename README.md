@@ -21,7 +21,7 @@ talk is in Mandarin. There's another talk about [The Promise of rest-core][]
 
 ## DESCRIPTION:
 
-Modular Ruby clients interface for REST APIs.
+Various rest-builder middleware for building REST clients.
 
 There has been an explosion in the number of REST APIs available today.
 To address the need for a way to access these APIs easily and elegantly,

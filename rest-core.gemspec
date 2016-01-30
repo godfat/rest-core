@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
   s.date = "2016-01-31"
-  s.description = "Modular Ruby clients interface for REST APIs.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/godfat/rest-more"
+  s.description = "Various rest-builder middleware for building REST clients.\n\nThere has been an explosion in the number of REST APIs available today.\nTo address the need for a way to access these APIs easily and elegantly,\nwe have developed rest-core, which consists of composable middleware\nthat allows you to build a REST client for any REST API. Or in the case of\ncommon APIs such as Facebook, Github, and Twitter, you can simply use the\ndedicated clients provided by [rest-more][].\n\n[rest-more]: https://github.com/godfat/rest-more"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
   ".gitignore",
@@ -94,7 +94,7 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/godfat/rest-core"
   s.licenses = ["Apache License 2.0"]
   s.rubygems_version = "2.5.1"
-  s.summary = "Modular Ruby clients interface for REST APIs."
+  s.summary = "Various rest-builder middleware for building REST clients."
   s.test_files = [
   "test/test_auth_basic.rb",
   "test/test_cache.rb",
