@@ -21,22 +21,18 @@ talk is in Mandarin. There's another talk about [The Promise of rest-core][]
 
 ## DESCRIPTION:
 
-Various rest-builder middleware for building REST clients.
+Various [rest-builder](https://github.com/godfat/rest-builder) middleware
+for building REST clients.
 
-There has been an explosion in the number of REST APIs available today.
-To address the need for a way to access these APIs easily and elegantly,
-we have developed rest-core, which consists of composable middleware
-that allows you to build a REST client for any REST API. Or in the case of
-common APIs such as Facebook, Github, and Twitter, you can simply use the
-dedicated clients provided by [rest-more][].
-
-[rest-more]: https://github.com/godfat/rest-more
+Checkout [rest-more](https://github.com/godfat/rest-more) for pre-built
+clients.
 
 ## FEATURES:
 
-* Modular interface for REST clients similar to WSGI/Rack for servers.
+* Modular interface for REST clients similar to WSGI/Rack for servers
+  via [rest-builder][].
 * Concurrent requests with synchronous or asynchronous interfaces with
-  threads.
+  threads via [promise_pool][].
 
 ## WHY?
 
@@ -556,88 +552,6 @@ simply ignore `:expires_in`.
 [RC::Retry]: lib/rest-core/middleware/retry.rb
 [RC::Timeout]: lib/rest-core/middleware/timeout.rb
 [moneta]: https://github.com/minad/moneta#expiration
-
-## Build Your Own Middleware:
-
-### How We Pick the Default Value:
-
-There are a number of ways to specify a default value, each with different
-priorities. Suppose we have a middleware which remembers an integer:
-
-``` ruby
-class HP
-  def self.members; [:hp]; end
-  include RC::Middleware
-  def call env, &k
-    puts "HP: #{hp(env)}"
-    app.call(env, &k)
-  end
-end
-Mage = RC::Builder.client do
-  use HP, 5 # the very last default
-end
-mage = Mage.new
-```
-
-1. The one passed to the request directly gets the first priority, e.g.
-
-``` ruby
-mage.get('http://example.com/', {}, :hp => 1) # prints HP: 1
-```
-
-2. The one saved as an instance variable in the client gets the 2nd place.
-
-``` ruby
-mage.hp = 2
-mage.get('http://example.com/')               # prints HP: 2
-mage.get('http://example.com/', {}, :hp => 1) # prints HP: 1
-mage.hp         # still 2
-mage.hp = false # disable hp
-mage.hp = nil   # reset to default
-```
-
-3. The method defined in the client instance named `default_hp` gets the 3rd.
-
-``` ruby
-class Mage
-  def default_hp
-    3
-  end
-end
-mage.get('http://example.com/')               # prints HP: 3
-mage.hp       # 3
-mage.hp = nil # reset default
-Mage.send(:remove_method, :default_hp)
-```
-
-4. The method defined in the client class named `default_hp` gets the 4rd.
-   P.S. In [rest-more][], with `RestCore::Config` it would generate a
-   `DefaultAttributes` module which defines this kind of default method and
-   then is extended into the client class. You could still define this method
-   to override the default though.
-
-``` ruby
-class Mage
-  def self.default_hp
-    4
-  end
-end
-mage.get('http://example.com/')               # prints HP: 4
-mage.hp       # 4
-mage.hp = nil # reset to default
-Mage.singleton_class.send(:remove_method, :default_hp)
-```
-
-5. The one defined in the middleware gets the last place.
-
-``` ruby
-mage.get('http://example.com/')               # prints HP: 5
-mage.hp       # 5
-mage.hp = nil # reset to default
-```
-
-You can find all the details in client.rb and middleware.rb. See the
-included method hooks.
 
 ## Advanced Concurrent HTTP Requests -- Embrace the Future
 
