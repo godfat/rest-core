@@ -1,5 +1,33 @@
 # CHANGES
 
+## rest-core 4.0.0 -- 2016-02-04
+
+Now the core functionality was extracted to a new gem, rest-builder.
+rest-core from now on would just bundle middleware and some utilities.
+Things like `RC::Builder` should still work for the sake of compatibility,
+but it's actually `RestBuilder::Builder` underneath. Note that the core
+concurrency facility was extracted to another new gem, promise_pool.
+Since some parts were also rewritten, things might change somehow.
+At least no public APIs were changed. It's completely compatible.
+
+### Incompatible changes
+
+* `RC::Simple` was removed. There's no point for that.
+* `RC.id` was removed, in favour of `:itself.to_proc`.
+* Include `RC::Middleware` would no longer include `RC` as well.
+
+### Enhancements
+
+* We no longer `autoload` a lot of stuffs, rather, we just load it.
+* Previously, only when you try to _peek_ the future, the callback would be
+  called. From now on, whenever the request is done, it would call the
+  callback regardless. However, if there's an exception, it won't be raised.
+  It would only raise whenever you _peek_ it. An obvious difference for this
+  is the `RC::CommonLogger`. Previously since callback would only be called
+  when you _peek_ it, the time would be the difference from request done to
+  you _peeked_ it. From now on, it would just be how much time the request
+  has been taken, regardless when you _peek_ it.
+
 ## rest-core 3.6.0 -- 2016-01-27
 
 ### Incompatible changes
