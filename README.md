@@ -15,9 +15,7 @@ talk is in Mandarin. There's another talk about [The Promise of rest-core][]
 * [github](https://github.com/godfat/rest-core)
 * [rubygems](https://rubygems.org/gems/rest-core)
 * [rdoc](http://rdoc.info/projects/godfat/rest-core)
-* [mailing list](http://www.freelists.org/list/rest-core)
-  Send your questions to: <rest-core@freelists.org> and you could read
-  through [archives](http://www.freelists.org/archives/rest-core)
+* [issues](https://github.com/godfat/rest-core/issues) (feel free to ask for support)
 
 ## DESCRIPTION:
 
