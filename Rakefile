@@ -1,24 +1,19 @@
 
 begin
-  require "#{dir = File.dirname(__FILE__)}/task/gemgem"
+  require "#{__dir__}/task/gemgem"
 rescue LoadError
   sh 'git submodule update --init --recursive'
   exec Gem.ruby, '-S', $PROGRAM_NAME, *ARGV
 end
 
-$LOAD_PATH.unshift(File.expand_path("#{dir}/rest-builder/lib"))
-$LOAD_PATH.unshift(File.expand_path("#{dir}/rest-builder/promise_pool/lib"))
-
-Gemgem.init(dir) do |s|
+Gemgem.init(__dir__, :submodules =>
+  %w[rest-builder
+     rest-builder/promise_pool]) do |s|
   require 'rest-core/version'
   s.name    = 'rest-core'
   s.version = RestCore::VERSION
-  %w[rest-builder].each do |g|
-    s.add_runtime_dependency(g)
-  end
 
-  # exclude rest-builder
-  s.files.reject!{ |f| f.start_with?('rest-builder/') }
+  %w[rest-builder].each(&s.method(:add_runtime_dependency))
 end
 
 desc 'Run console'
