@@ -68,7 +68,7 @@ module RestCore
       return res unless cache(res)
       return res unless cache_for?(res)
 
-      if expires_in(res).kind_of?(Fixnum) &&
+      if expires_in(res).kind_of?(Numeric) &&
          cache(res).respond_to?(:store)   &&
          cache(res).method(:store).arity == -3
 
