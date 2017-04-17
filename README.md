@@ -1,5 +1,7 @@
 # rest-core [![Build Status](https://secure.travis-ci.org/godfat/rest-core.png?branch=master)](http://travis-ci.org/godfat/rest-core) [![Coverage Status](https://coveralls.io/repos/godfat/rest-core/badge.png)](https://coveralls.io/r/godfat/rest-core) [![Join the chat at https://gitter.im/godfat/rest-core](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/godfat/rest-core)
 
+[![Join the chat at https://gitter.im/godfat/rest-core](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/godfat/rest-core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 by Lin Jen-Shin ([godfat](http://godfat.org))
 
 Lin Jen-Shin ([godfat][]) had given a talk about rest-core on
