@@ -16,6 +16,11 @@ Gemgem.init(__dir__, :submodules =>
   %w[rest-builder].each(&s.method(:add_runtime_dependency))
 end
 
+task :test do
+  # Try to workaround travis segfault
+  RestCore.eagerload
+end
+
 desc 'Run console'
 task 'console' do
   ARGV.shift
