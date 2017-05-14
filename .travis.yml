@@ -1,7 +1,8 @@
-sudo: false
+sudo: true
 language: ruby
 
 before_install:
+  - sudo apt-get -qq update
   - rvm get head
   - rvm reload
   - rvm remove $TRAVIS_RUBY_VERSION
