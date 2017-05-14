@@ -17,8 +17,7 @@ Gemgem.init(__dir__, :submodules =>
 end
 
 task :test do
-  # Try to workaround travis segfault
-  RestCore.eagerload
+  require ENV['json_lib'] if ENV['json_lib']
 end
 
 desc 'Run console'

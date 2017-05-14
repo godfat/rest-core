@@ -19,3 +19,7 @@ matrix:
 
   allow_failures:
   - rvm: rbx
+
+env:
+  - json_lib=json
+  - json_lib=yajl
