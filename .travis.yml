@@ -11,17 +11,20 @@ script: 'ruby -vr bundler/setup -S rake test'
 matrix:
   include:
     - rvm: 2.2.5
-      env: &env
-        - json_lib=json
-        - json_lib=yajl
+      env: json_lib=json
+    - rvm: 2.2.5
+      env: json_lib=yajl
     - rvm: 2.3.2
-      env: *env
+      env: json_lib=json
+    - rvm: 2.3.2
+      env: json_lib=yajl
     - rvm: 2.4.1
-      env: *env
+      env: json_lib=json
+    - rvm: 2.4.1
+      env: json_lib=yajl
     - rvm: jruby-9
       env: JRUBY_OPTS=--debug
     - rvm: rbx
-      env: *env
 
   allow_failures:
   - rvm: rbx
