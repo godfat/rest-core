@@ -1,12 +1,10 @@
-sudo: true
+sudo: false
 language: ruby
 
 before_install:
-  - sudo apt-get -qq update
   - rvm get head
   - rvm reload
-  - rvm remove $TRAVIS_RUBY_VERSION
-  - rvm use --install $TRAVIS_RUBY_VERSION --disable-binary --latest
+  - rvm use --install $TRAVIS_RUBY_VERSION --binary --latest
 install: 'gem install bundler; bundle install --retry=3'
 script: 'ruby -vr bundler/setup -S rake test'
 
