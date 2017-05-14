@@ -22,9 +22,17 @@ matrix:
       env: json_lib=json
     - rvm: 2.4.1
       env: json_lib=yajl
+    - rvm: ruby-head
+    - env: json_lib=json
+    - rvm: ruby-head
+    - env: json_lib=yajl
     - rvm: jruby-9
       env: JRUBY_OPTS=--debug
     - rvm: rbx
 
   allow_failures:
-  - rvm: rbx
+    - rvm: 2.4.1
+      env: json_lib=json
+    - rvm: 2.4.1
+      env: json_lib=yajl
+    - rvm: rbx
