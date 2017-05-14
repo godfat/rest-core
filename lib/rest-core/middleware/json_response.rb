@@ -28,11 +28,19 @@ module RestCore
     end
 
     def process response
-      # StackExchange returns the problematic BOM! in UTF-8, so we need to
-      # strip it or it would break JSON parsers (i.e. yajl-ruby and json)
-      body = response[RESPONSE_BODY].to_s.sub(/\A\xEF\xBB\xBF/, '')
-      response.merge(RESPONSE_BODY => Json.decode("[#{body}]").first)
-      # [this].first is not needed for yajl-ruby
+      body = response[RESPONSE_BODY]
+      json = if body.kind_of?(String)
+               Json.normalize(body)
+             else
+               # Yajl supports streaming, so let's pass it directly to make
+               # it possible to do streaming here. Although indeed we should
+               # use RESPONSE_SOCKET in this case, but doing that could
+               # introduce some incompatibility which I don't want to take
+               # care of for now.
+               body
+             end
+
+      response.merge(RESPONSE_BODY => Json.decode(json))
     rescue Json.const_get(:ParseError) => error
       fail(response, ParseError.new(error, body))
     end

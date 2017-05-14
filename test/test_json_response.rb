@@ -9,7 +9,9 @@ describe RC::JsonResponse do
     would 'do nothing' do
       expected = {RC::RESPONSE_BODY => nil,
                   RC::REQUEST_HEADERS => {'Accept' => 'application/json'}}
-      app.call({}){ |response| response.should.eq(expected) }
+      app.call(RC::RESPONSE_BODY => '') do |response|
+        response.should.eq(expected)
+      end
     end
 
     would 'decode' do
@@ -34,6 +36,22 @@ describe RC::JsonResponse do
         err.message    .should.include?(bad)
         err.body       .should.eq(bad)
         err.cause.class.should.eq(RC::Json.const_get(:ParseError))
+      end
+    end
+
+    would 'remove UTF-8 BOM' do
+      body = %Q{\xEF\xBB\xBF"UTF-8"}
+
+      app.call(RC::RESPONSE_BODY => body) do |response|
+        expect(response[RC::RESPONSE_BODY]).eq 'UTF-8'
+      end
+    end
+
+    would 'remove UTF-8 BOM for ASCII-8BIT' do
+      body = %Q{\xEF\xBB\xBF"UTF-8"}.force_encoding('ASCII-8BIT')
+
+      app.call(RC::RESPONSE_BODY => body) do |response|
+        expect(response[RC::RESPONSE_BODY]).eq 'UTF-8'
       end
     end
   end

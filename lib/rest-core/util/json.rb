@@ -61,5 +61,34 @@ module RestCore
     end
 
     select_json!(self)
+
+    def self.normalize json
+      empty_to_null(strip_bom(json))
+    end
+
+    def self.strip_bom json
+      case json.encoding.name
+      when 'UTF-8'
+        # StackExchange returns the problematic BOM! in UTF-8, so we
+        # need to strip it or it would break JSON parsers (i.e.
+        # yajl-ruby and json)
+        json.sub(/\A\xEF\xBB\xBF/u, '')
+      when 'ASCII-8BIT'
+        # In case if Content-Type doesn't have a charset for UTF-8,
+        # httpclient would set the response to ASCII-8BIT in this
+        # case.
+        json.sub(/\A\xEF\xBB\xBF/n, '')
+      else
+        json
+      end
+    end
+
+    def self.empty_to_null json
+      if json.empty?
+        'null'
+      else
+        json
+      end
+    end
   end
 end
