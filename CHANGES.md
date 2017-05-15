@@ -1,5 +1,14 @@
 # CHANGES
 
+## rest-core 4.0.1 -- 2017-05-15
+
+* [RC::Cache] Check against `Numeric` instead of `Fixnum` for Ruby 2.4
+  compatibility.
+* [RC::JsonResponse] Fix encoding issue when trying to remove BOM.
+  See https://github.com/godfat/rest-core/issues/24
+  and https://github.com/godfat/rest-core/commit/4123ca485ecc3b9d31749423f7039bfa1652a3a3
+  Thanks AshwiniDoddamaniFluke
+
 ## rest-core 4.0.0 -- 2016-02-04
 
 Now the core functionality was extracted to a new gem, rest-builder.
