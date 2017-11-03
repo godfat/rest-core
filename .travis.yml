@@ -1,38 +1,30 @@
 sudo: false
 language: ruby
 
-before_install:
-  - rvm get head
-  - rvm reload
-  - rvm use --install $TRAVIS_RUBY_VERSION --binary --latest
 install: 'gem install bundler; bundle install --retry=3'
 script: 'ruby -vr bundler/setup -S rake test'
 
 matrix:
   include:
-    - rvm: 2.2.5
+    - rvm: 2.3
       env: json_lib=json
-    - rvm: 2.2.5
+    - rvm: 2.3
       env: json_lib=yajl
-    - rvm: 2.3.2
+    - rvm: 2.4
       env: json_lib=json
-    - rvm: 2.3.2
-      env: json_lib=yajl
-    - rvm: 2.4.1
-      env: json_lib=json
-    - rvm: 2.4.1
+    - rvm: 2.4
       env: json_lib=yajl
     - rvm: ruby-head
       env: json_lib=json
     - rvm: ruby-head
       env: json_lib=yajl
-    - rvm: jruby-9
+    - rvm: jruby
       env: JRUBY_OPTS=--debug
     - rvm: rbx
 
   allow_failures:
-    - rvm: 2.4.1
+    - rvm: 2.4
       env: json_lib=json
-    - rvm: 2.4.1
+    - rvm: 2.4
       env: json_lib=yajl
     - rvm: rbx
