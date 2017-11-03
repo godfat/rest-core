@@ -23,7 +23,7 @@ describe RC::JsonRequest do
 
   would 'encode false and nil' do
     [[nil, 'null'], [false, 'false'], [true, 'true']].each do |(value, exp)|
-      [:post, :put, :patch].each do |meth|
+      [:post, :put, :patch, :delete].each do |meth|
         e = env.merge(RC::REQUEST_METHOD  => meth,
                       RC::REQUEST_PAYLOAD => value)
         app.call(e){ |res| res[RC::REQUEST_PAYLOAD].should.eq(exp) }
@@ -31,8 +31,8 @@ describe RC::JsonRequest do
     end
   end
 
-  would 'do nothing for get, delete, head, options' do
-    [:get, :delete, :head, :options].each do |meth|
+  would 'do nothing for get, head, options' do
+    [:get, :head, :options].each do |meth|
       e = env.merge(RC::REQUEST_PAYLOAD => {}, RC::REQUEST_METHOD => meth)
       app.call(e){ |res| res.should.eq e }
     end
