@@ -67,14 +67,17 @@ describe RC::Universal do
     RC::Universal.new(:error_callback => errors.method(:<<),
                       :max_retries => 1, :log_method => false).
       get(url, &called.method(:<<)).wait
-    errors.map(&:class).should.eq [Errno::ECONNREFUSED]*2
-    called.map(&:class).should.eq [Errno::ECONNREFUSED]
+
+    expect(errors.size).eq 2
+    expect(errors).all?{ |err| is_a(SystemCallError).match(err) }
+    expect(called.size).eq 1
+    expect(called).all?{ |err| is_a(SystemCallError).match(err) }
   end
 
   would 'not deadlock with ErrorHandler' do
     c = RC::Universal.new(:log_method => false).
                event_source('http://localhost:1')
-    c.onerror{ |e| e.should.kind_of?(Errno::ECONNREFUSED) }
+    c.onerror{ |e| e.should.kind_of?(SystemCallError) }
     c.start.wait
   end
 end
