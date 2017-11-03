@@ -69,9 +69,9 @@ describe RC::Universal do
       get(url, &called.method(:<<)).wait
 
     expect(errors.size).eq 2
-    expect(errors).all?{ |err| is_a(SystemCallError).match(err) }
+    errors.all?{ |err| expect(is_a(SystemCallError)).match(err) }
     expect(called.size).eq 1
-    expect(called).all?{ |err| is_a(SystemCallError).match(err) }
+    called.all?{ |err| expect(is_a(SystemCallError)).match(err) }
   end
 
   would 'not deadlock with ErrorHandler' do
