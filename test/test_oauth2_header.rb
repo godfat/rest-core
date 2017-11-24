@@ -3,7 +3,7 @@ require 'rest-core/test'
 
 describe RC::Oauth2Header do
   env  = {RC::REQUEST_HEADERS => {}}
-  auth = RC::Oauth2Header.new(RC::Dry.new)
+  auth = RC::Oauth2Header.new(RC::Identity.new)
 
   would 'do nothing if no access token' do
     auth.call(env){ |res| res.should.eq(env) }

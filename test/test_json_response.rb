@@ -3,7 +3,7 @@ require 'rest-core/test'
 
 describe RC::JsonResponse do
   describe 'app' do
-    app = RC::JsonResponse.new(RC::Dry.new, true)
+    app = RC::JsonResponse.new(RC::Identity.new, true)
     bad = 'bad json'
 
     would 'do nothing' do

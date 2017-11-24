@@ -3,7 +3,7 @@ require 'rest-core/test'
 
 describe RC::QueryResponse do
   describe 'app' do
-    app = RC::QueryResponse.new(RC::Dry.new, true)
+    app = RC::QueryResponse.new(RC::Identity.new, true)
     expected = {RC::RESPONSE_BODY => {},
                 RC::REQUEST_HEADERS =>
                   {'Accept' => 'application/x-www-form-urlencoded'}}

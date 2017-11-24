@@ -2,7 +2,7 @@
 require 'rest-core/test'
 
 describe RC::DefaultPayload do
-  app = RC::DefaultPayload.new(RC::Dry.new, {})
+  app = RC::DefaultPayload.new(RC::Identity.new, {})
   env = {RC::REQUEST_PAYLOAD => {}}
 
   before do
@@ -27,7 +27,7 @@ describe RC::DefaultPayload do
   end
 
   would 'also merge the very default payload' do
-    a = RC::DefaultPayload.new(RC::Dry.new, 'a' => 'b')
+    a = RC::DefaultPayload.new(RC::Identity.new, 'a' => 'b')
     a.call('payload' => {'b' => 'c'},
            RC::REQUEST_PAYLOAD => {'c' => 'd'}) do |r|
       r[RC::REQUEST_PAYLOAD].should.eq 'a' => 'b', 'b' => 'c', 'c' => 'd'

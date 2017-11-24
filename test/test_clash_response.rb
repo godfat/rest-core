@@ -3,7 +3,7 @@ require 'rest-core/test'
 
 describe RC::ClashResponse do
   describe 'app' do
-    app = RC::ClashResponse.new(RC::Dry.new, true)
+    app = RC::ClashResponse.new(RC::Identity.new, true)
 
     would 'do nothing' do
       env = {RC::RESPONSE_BODY => []}

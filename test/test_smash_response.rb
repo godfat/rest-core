@@ -3,7 +3,7 @@ require 'rest-core/test'
 
 describe RC::SmashResponse do
   describe 'app' do
-    app = RC::SmashResponse.new(RC::Dry.new, true)
+    app = RC::SmashResponse.new(RC::Identity.new, true)
 
     would 'do nothing' do
       env = {RC::RESPONSE_BODY => []}

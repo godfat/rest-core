@@ -3,7 +3,7 @@ require 'rest-core/test'
 
 describe RC::AuthBasic do
   before do
-    @auth = RC::AuthBasic.new(RC::Dry.new, nil, nil)
+    @auth = RC::AuthBasic.new(RC::Identity.new, nil, nil)
   end
 
   env = {RC::REQUEST_HEADERS => {}}

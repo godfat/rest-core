@@ -2,7 +2,7 @@
 require 'rest-core/test'
 
 describe RC::Timeout do
-  app = RC::Timeout.new(RC::Dry.new, 0)
+  app = RC::Timeout.new(RC::Identity.new, 0)
 
   after do
     WebMock.reset!

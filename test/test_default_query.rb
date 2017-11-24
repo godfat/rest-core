@@ -3,7 +3,7 @@ require 'rest-core/test'
 
 describe RC::DefaultQuery do
   before do
-    @app = RC::DefaultQuery.new(RC::Dry.new, {})
+    @app = RC::DefaultQuery.new(RC::Identity.new, {})
   end
 
   env = {RC::REQUEST_QUERY => {}}

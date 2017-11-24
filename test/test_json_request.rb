@@ -2,7 +2,7 @@
 require 'rest-core/test'
 
 describe RC::JsonRequest do
-  app = RC::JsonRequest.new(RC::Dry.new, true)
+  app = RC::JsonRequest.new(RC::Identity.new, true)
   env = {RC::REQUEST_HEADERS => {}, RC::REQUEST_METHOD => :post}
   request_params = {
     'key' => 'value',
@@ -39,7 +39,7 @@ describe RC::JsonRequest do
   end
 
   would 'do nothing if json_request is false' do
-    a = RC::JsonRequest.new(RC::Dry.new, false)
+    a = RC::JsonRequest.new(RC::Identity.new, false)
     a.call(env){ |res| res.should.eq env }
   end
 end
