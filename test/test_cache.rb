@@ -139,6 +139,7 @@ describe RC::Cache do
 
   # TODO: Pork::Error: Missing assertions
   # https://travis-ci.org/godfat/rest-core/jobs/105298775
+  # https://travis-ci.org/godfat/rest-core/jobs/306729633
   would 'preserve promise and preserve wrapped call' do
     c = json_client
     stub_request(:get, 'http://me').to_return(:body => '{"a":"b"}')

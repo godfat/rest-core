@@ -21,8 +21,11 @@ describe RC::JsonRequest do
         RC::REQUEST_PAYLOAD => RC::Json.encode(request_params))}
   end
 
-  would 'encode false and nil' do
-    [[nil, 'null'], [false, 'false'], [true, 'true']].each do |(value, exp)|
+  [[nil, 'null'],
+   [false, 'false'],
+   [true, 'true'],
+   [{}, '{}']].each do |(value, exp)|
+    would "encode #{value} as #{exp.inspect}" do
       [:post, :put, :patch, :delete].each do |meth|
         e = env.merge(RC::REQUEST_METHOD  => meth,
                       RC::REQUEST_PAYLOAD => value)
