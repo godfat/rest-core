@@ -8,19 +8,20 @@ describe RC::Universal do
     WebMock.reset!
   end
 
-  # TODO: RuntimeError: The request GET http://localhost:1/ with body nil was expected to execute 1 time but it executed 2 times
-  would 'only send payload for post, put, patch' do
+  would 'only send payload when there is something' do
+    m = [:get, :head, :options, :put, :post, :patch, :delete]
     c = RC::Universal.new(:log_method => false, :payload => '$payload')
-    [:get, :head, :options].each do |method|
+    m.each do |method|
       stub_request(method, url)
       c.send(method, url).tap{}
-      assert_requested(method, url, :body => nil)
+      assert_requested(method, url, :body => '$payload')
     end
 
-    [:put, :post, :patch, :delete].each do |method|
-      stub_request(method, url).with(:body => '$payload')
+    c = RC::Universal.new(:log_method => false)
+    m.each do |method|
+      stub_request(method, url).with(:body => nil)
       c.send(method, url).tap{}
-      assert_requested(method, url, :body => '$payload')
+      assert_requested(method, url, :body => nil)
     end
     ok
   end

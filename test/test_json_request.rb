@@ -31,9 +31,10 @@ describe RC::JsonRequest do
     end
   end
 
-  would 'do nothing for get, head, options' do
-    [:get, :head, :options].each do |meth|
-      e = env.merge(RC::REQUEST_PAYLOAD => {}, RC::REQUEST_METHOD => meth)
+  would 'do nothing if payload is not specified' do
+    [:get, :head, :options, :delete, :post].each do |meth|
+      e = env.merge(RC::REQUEST_PAYLOAD => RC::Payload::Unspecified.new,
+                    RC::REQUEST_METHOD => meth)
       app.call(e){ |res| res.should.eq e }
     end
   end
