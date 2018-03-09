@@ -24,7 +24,8 @@ describe RC::JsonRequest do
   [[nil, 'null'],
    [false, 'false'],
    [true, 'true'],
-   [{}, '{}']].each do |(value, exp)|
+   [{}, '{}'],
+   [RC::Payload::Unspecified.new, {}]].each do |(value, exp)|
     would "encode #{value} as #{exp.inspect}" do
       [:post, :put, :patch, :delete].each do |meth|
         e = env.merge(RC::REQUEST_METHOD  => meth,
