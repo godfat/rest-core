@@ -31,8 +31,6 @@ module RestCore
       body = response[RESPONSE_BODY]
       json = if body.kind_of?(String)
                Json.normalize(body)
-             elsif body.nil?
-               Json.encode(nil)
              else
                # Yajl supports streaming, so let's pass it directly to make
                # it possible to do streaming here. Although indeed we should
@@ -42,7 +40,7 @@ module RestCore
                body
              end
 
-      response.merge(RESPONSE_BODY => Json.decode(json))
+      response.merge(RESPONSE_BODY => json && Json.decode(json))
     rescue Json.const_get(:ParseError) => error
       fail(response, ParseError.new(error, body))
     end

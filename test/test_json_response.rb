@@ -20,6 +20,12 @@ describe RC::JsonResponse do
       app.call(RC::RESPONSE_BODY => '{}') do |response|
         response.should.eq(expected)
       end
+
+      expected = {RC::RESPONSE_BODY => nil,
+                  RC::REQUEST_HEADERS => {'Accept' => 'application/json'}}
+      app.call({}) do |response|
+        response.should.eq(expected)
+      end
     end
 
     would 'give proper parse error' do
