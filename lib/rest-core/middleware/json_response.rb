@@ -41,13 +41,10 @@ module RestCore
              end
 
       response.merge(RESPONSE_BODY => Json.decode(json))
+    rescue Json.const_get(:ParseError) => error
+      fail(response, ParseError.new(error, body))
     rescue => error
-      case error
-      when Json.const_get(:ParseError)
-        fail(response, ParseError.new(error, body))
-      else
-        fail(response, error)
-      end
+      fail(response, error)
     end
   end
 end
