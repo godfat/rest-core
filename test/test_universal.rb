@@ -17,6 +17,8 @@ describe RC::Universal do
       assert_requested(method, url, :body => '$payload')
     end
 
+    WebMock.reset!
+
     c = RC::Universal.new(:log_method => false)
     m.each do |method|
       stub_request(method, url).with(:body => nil)
