@@ -20,7 +20,9 @@ describe RC::JsonResponse do
       app.call(RC::RESPONSE_BODY => '{}') do |response|
         response.should.eq(expected)
       end
+    end
 
+    would 'not decode but just return nil if response body is nil' do
       expected = {RC::RESPONSE_BODY => nil,
                   RC::REQUEST_HEADERS => {'Accept' => 'application/json'}}
       app.call({}) do |response|
