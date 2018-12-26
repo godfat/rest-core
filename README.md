@@ -41,7 +41,7 @@ less memory, less conflicts, and run faster.
 
 ### Mandatory:
 
-* Tested with MRI (official CRuby), Rubinius and JRuby.
+* Tested with MRI (official CRuby) and JRuby.
 * gem [rest-builder][]
 * gem [promise_pool][]
 * gem [timers][]
@@ -720,7 +720,7 @@ the priority here is:
 
 Apache License 2.0 (Apache-2.0)
 
-Copyright (c) 2011-2018, Lin Jen-Shin (godfat)
+Copyright (c) 2011-2019, Lin Jen-Shin (godfat)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
