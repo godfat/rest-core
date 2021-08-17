@@ -79,9 +79,9 @@ module RestCore
       end
     end
 
-    def cache_store res, msg, value, *args
+    def cache_store res, msg, value, *args, **kargs
       start_time = Time.now
-      cache(res).send(msg, cache_key(res), value, *args)
+      cache(res).send(msg, cache_key(res), value, *args, **kargs)
 
       if value
         res
