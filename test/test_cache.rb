@@ -120,6 +120,29 @@ describe RC::Cache do
     c.cache.values.first.should.eq "200\n\n\n#{body}"
   end
 
+  [200, 203, 204, 206, 300, 301, 404, 405, 410, 414, 501].each do |status|
+    would "only cache for HTTP status #{status}" do
+      c = simple_client
+      stub_request(:get, 'http://me').
+        to_return(:body => body = 'ok', :status => status)
+      c.get('http://me').should.eq 'ok'
+      c.cache.values.first.should.eq "#{status}\n\n\n#{body}"
+    end
+  end
+
+  [201, 202,
+   302, 303, 304,
+   400, 401, 403, 406, 409,
+   500, 503, 504].each do |status|
+    would "not cache for HTTP status #{status}" do
+      c = simple_client
+      stub_request(:get, 'http://me').
+        to_return(:body => body = 'ok', :status => status)
+      c.get('http://me').should.eq 'ok'
+      c.cache.values.first.should.nil?
+    end
+  end
+
   would 'cache multiple headers' do
     c = simple_client
     stub_request(:get, 'http://me').to_return(:headers =>

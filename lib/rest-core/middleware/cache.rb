@@ -66,7 +66,7 @@ module RestCore
 
     def cache_for res
       return res unless cache(res)
-      return res unless cache_for?(res)
+      return res unless cache_for?(res) && cacheable_response?(res)
 
       if expires_in(res).kind_of?(Numeric) &&
          cache(res).respond_to?(:store)   &&
@@ -112,6 +112,12 @@ module RestCore
     def cache_for? env
       [:get, :head, :otpions].include?(env[REQUEST_METHOD]) &&
         !env[DRY] && !env[HIJACK]
+    end
+
+    def cacheable_response? res
+      # https://datatracker.ietf.org/doc/html/rfc7231#section-6.1
+      [200, 203, 204, 206, 300, 301, 404, 405, 410, 414, 501].
+        include?(res[RESPONSE_STATUS])
     end
 
     def header_cache_key env
