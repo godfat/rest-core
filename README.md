@@ -2,19 +2,18 @@
 
 by Lin Jen-Shin ([godfat](https://godfat.org))
 
-Lin Jen-Shin ([godfat][]) had given a talk about rest-core on
+Lin Jen-Shin had given a talk about rest-core on
 [RubyConf Taiwan 2011][talk]. The slide is in English, but the
 talk is in Mandarin. There's another talk about [The Promise of rest-core][]
 
-[godfat]: https://github.com/godfat
-[talk]: http://rubyconf.tw/2011/#6
-[The Promise of rest-core]: http://godfat.org/slide/2015-01-13-rest-core-promise/
+[talk]: https://rubyconf.tw/2011/#6
+[The Promise of rest-core]: https://godfat.org/slide/2015-01-13-rest-core-promise/
 
 ## LINKS:
 
 * [github](https://github.com/godfat/rest-core)
 * [rubygems](https://rubygems.org/gems/rest-core)
-* [rdoc](http://rdoc.info/projects/godfat/rest-core)
+* [rdoc](https://rubydoc.info/github/godfat/rest-core/master)
 * [issues](https://github.com/godfat/rest-core/issues) (feel free to ask for support)
 
 ## DESCRIPTION:
@@ -100,7 +99,7 @@ client = YourClient.new(:cache => {})
 client.get('godfat') # cache miss
 client.get('godfat') # cache hit
 
-client.site = 'http://github.com/api/v2/json/user/show/'
+client.site = 'https://github.com/api/v2/json/user/show/'
 client.get('godfat') # cache miss
 client.get('godfat') # cache hit
 ```
@@ -394,7 +393,7 @@ for more complex examples to build clients, and [slides][] from
 [rubyconf.tw/2011][talk] for concepts.
 
 [example/simple.rb]: example/simple.rb
-[slides]: http://www.godfat.org/slide/2011-08-27-rest-core.html
+[slides]: https://www.godfat.org/slide/2011-08-27-rest-core.html
 
 ## Playing Around:
 
@@ -609,7 +608,7 @@ puts "DONE"
 
 You can pick whatever works for you.
 
-[future]: http://en.wikipedia.org/wiki/Futures_and_promises
+[future]: https://en.wikipedia.org/wiki/Futures_and_promises
 
 A full runnable example is at: [example/simple.rb][]. If you want to know
 all the possible use cases, you can also see: [example/use-cases.rb][]. It's
@@ -687,9 +686,7 @@ the priority here is:
 
 ## Powered sites:
 
-* [Codementor](https://www.codementor.io/)
-* [PicCollage](http://pic-collage.com/)
-* [GW2 Account Viewer](https://www.godfat.org/gw2)
+* [GW2 Account Viewer](https://gw2.godfat.org)
 
 ## CHANGES:
 
