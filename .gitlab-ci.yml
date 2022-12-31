@@ -1,0 +1,72 @@
+
+stages:
+  - test
+
+.test:
+  stage: test
+  image: ruby:${RUBY_VERSION}-bullseye
+  variables:
+    GIT_DEPTH: "1"
+    GIT_SUBMODULE_STRATEGY: recursive
+    # httpclient does not work with frozen string literal
+    # RUBYOPT: --enable-frozen-string-literal
+  before_script:
+    - bundle install --retry=3
+    - unset CI # Coverage doesn't work well with frozen literal
+  script:
+    - ruby -vr bundler/setup -S rake test
+
+.json:
+  variables:
+    json_lib: json
+
+.yajl:
+  variables:
+    json_lib: yajl
+
+ruby:3.0 json:
+  extends:
+    - .test
+    - .json
+  variables:
+    RUBY_VERSION: '3.0'
+
+ruby:3.0 yajl:
+  extends:
+    - .test
+    - .yajl
+  variables:
+    RUBY_VERSION: '3.0'
+
+ruby:3.1 json:
+  extends:
+    - .test
+    - .json
+  variables:
+    RUBY_VERSION: '3.1'
+
+ruby:3.1 yajl:
+  extends:
+    - .test
+    - .yajl
+  variables:
+    RUBY_VERSION: '3.1'
+
+ruby:3.2 json:
+  extends:
+    - .test
+    - .json
+  variables:
+    RUBY_VERSION: '3.2'
+
+ruby:3.2 yajl:
+  extends:
+    - .test
+    - .yajl
+  variables:
+    RUBY_VERSION: '3.2'
+
+jruby:latest:
+  extends:
+    - .test
+  image: jruby:latest

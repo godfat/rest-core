@@ -8,13 +8,13 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Lin Jen-Shin (godfat)".freeze]
-  s.date = "2018-12-26"
+  s.date = "2023-01-01"
   s.description = "Various [rest-builder](https://github.com/godfat/rest-builder) middleware\nfor building REST clients.\n\nCheckout [rest-more](https://github.com/godfat/rest-more) for pre-built\nclients.".freeze
   s.email = ["godfat (XD) godfat.org".freeze]
   s.files = [
   ".gitignore".freeze,
+  ".gitlab-ci.yml".freeze,
   ".gitmodules".freeze,
-  ".travis.yml".freeze,
   "CHANGES.md".freeze,
   "Gemfile".freeze,
   "LICENSE".freeze,
@@ -93,7 +93,7 @@ Gem::Specification.new do |s|
   "test/test_universal.rb".freeze]
   s.homepage = "https://github.com/godfat/rest-core".freeze
   s.licenses = ["Apache-2.0".freeze]
-  s.rubygems_version = "3.0.1".freeze
+  s.rubygems_version = "3.4.1".freeze
   s.summary = "Various [rest-builder](https://github.com/godfat/rest-builder) middleware".freeze
   s.test_files = [
   "test/test_auth_basic.rb".freeze,
@@ -123,15 +123,7 @@ Gem::Specification.new do |s|
   "test/test_timeout.rb".freeze,
   "test/test_universal.rb".freeze]
 
-  if s.respond_to? :specification_version then
-    s.specification_version = 4
+  s.specification_version = 4
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<rest-builder>.freeze, [">= 0"])
-    else
-      s.add_dependency(%q<rest-builder>.freeze, [">= 0"])
-    end
-  else
-    s.add_dependency(%q<rest-builder>.freeze, [">= 0"])
-  end
+  s.add_runtime_dependency(%q<rest-builder>.freeze, [">= 0"])
 end

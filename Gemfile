@@ -3,6 +3,9 @@ source 'https://rubygems.org/'
 
 gemspec
 
+gem 'rest-builder', :path => 'rest-builder'
+gem 'promise_pool', :path => 'rest-builder/promise_pool'
+
 gem 'rake'
 gem 'pork'
 gem 'muack'
@@ -19,14 +22,6 @@ gem 'coveralls', :require => false if ENV['CI']
 
 platforms :ruby do
   gem 'yajl-ruby'
-end
-
-platforms :rbx do
-  gem 'rubysl-weakref'    # used in rest-core
-  gem 'rubysl-socket'     # used in test
-  gem 'rubysl-singleton'  # used in rake
-  gem 'rubysl-rexml'      # used in crack used in webmock
-  gem 'rubysl-bigdecimal' # used in crack used in webmock
 end
 
 platforms :jruby do

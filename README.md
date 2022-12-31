@@ -1,6 +1,6 @@
-# rest-core [![Build Status](https://secure.travis-ci.org/godfat/rest-core.png?branch=master)](http://travis-ci.org/godfat/rest-core) [![Coverage Status](https://coveralls.io/repos/godfat/rest-core/badge.png)](https://coveralls.io/r/godfat/rest-core) [![Join the chat at https://gitter.im/godfat/rest-core](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/godfat/rest-core)
+# rest-core [![Pipeline status](https://gitlab.com/godfat/rest-core/badges/master/pipeline.svg)](https://gitlab.com/godfat/rest-core/-/pipelines)
 
-by Lin Jen-Shin ([godfat](http://godfat.org))
+by Lin Jen-Shin ([godfat](https://godfat.org))
 
 Lin Jen-Shin ([godfat][]) had given a talk about rest-core on
 [RubyConf Taiwan 2011][talk]. The slide is in English, but the
